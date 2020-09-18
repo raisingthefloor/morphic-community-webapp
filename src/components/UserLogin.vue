@@ -9,21 +9,27 @@
     </b-alert>
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <b-form-group>
+        <label for="login-user-email">
+          Enter your email:
+        </label>
         <b-form-input
           v-model="$v.userInfo.email.$model"
           :state="validateState('email')"
-          label="Email"
-          placeholder="Enter your email"
+          placeholder="user@server.com"
+          id="login-user-email"
         />
         <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
       </b-form-group>
       <b-form-group>
+        <label for="login-user-password">
+          Enter your password:
+        </label>
         <b-form-input
           v-model="$v.userInfo.password.$model"
           :state="validateState('password')"
-          label="Password"
-          placeholder="Enter your password"
+          placeholder="Must be at least 6 characters"
           type="password"
+          id="login-user-password"
         />
         <b-form-invalid-feedback>This is a required field and must be at least 6 characters.</b-form-invalid-feedback>
       </b-form-group>
