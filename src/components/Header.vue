@@ -1,10 +1,12 @@
 <template>
   <div>
     <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top">
-      <b-navbar-brand to="/" title="Morphic Community">
-        <img src="/img/logo-color.svg" alt="logo">
-        Morphic Community
-      </b-navbar-brand>
+      <h1>
+        <b-navbar-brand to="/" title="Morphic Community">
+          <img src="/img/logo-color.svg" alt="logo">
+          Morphic Community
+        </b-navbar-brand>
+      </h1>
 
       <b-navbar-nav class="mr-auto">
         <b-nav-item to="/dashboard/" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard</b></b-nav-item>

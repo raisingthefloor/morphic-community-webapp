@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="mb-3" id="user-login-heading">Login</h3>
+    <h2 class="mb-3" id="user-login-heading">Login</h2>
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
