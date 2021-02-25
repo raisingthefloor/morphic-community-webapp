@@ -162,7 +162,7 @@ const validators = {
  * @type {Object<String,checkFunc>}
  */
 const checks = {
-    urlWorking: checkUrl
+    urlWorking: (value, barItem, paramKey) => checkUrl(value)
 };
 
 /**
@@ -529,12 +529,10 @@ export function checkForProblems(button, paramKey, live) {
 /**
  * Checks if a url is working.
  * @param {String} url The url
- * @param {BarItem} button The button.
- * @param {String} [paramKey] The parameter key (not used).
  * @param {Number} [timeout] milliseconds to wait [default: 10000].
- * @return {Promise} Resolves when done.
+ * @return {Promise<CheckResult>} Resolves when done.
  */
-async function checkUrl(url, button, paramKey, timeout = 10000) {
+export async function checkUrl(url = "", timeout = 10000) {
     let togo;
 
     console.log("Checking url", url);
@@ -542,12 +540,12 @@ async function checkUrl(url, button, paramKey, timeout = 10000) {
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
         // Try https
         const httpsUrl = "https://" + url;
-        const httpsResult = await checkUrl(httpsUrl, button, paramKey, timeout);
+        const httpsResult = await checkUrl(httpsUrl, timeout);
         let goodUrl;
         if (httpsResult.isProblem) {
             // Try http
             const httpUrl = "http://" + url;
-            const httpResult = await checkUrl(httpUrl, button, paramKey, Math.min(3000, timeout));
+            const httpResult = await checkUrl(httpUrl, Math.min(3000, timeout));
             if (httpResult.isProblem) {
                 togo = httpsResult;
             } else {
