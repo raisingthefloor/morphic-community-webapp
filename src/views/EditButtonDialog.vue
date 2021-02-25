@@ -98,7 +98,7 @@
                       </div>
 
                       <!-- favicon -->
-                      <div class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
+                      <div v-if="buttonFavicon" class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
                         <div
                                 @click="changeIcon('$favicon')"
                                 :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
@@ -245,10 +245,17 @@ export default {
 
             // Index of the active tab
             activeTab: 1,
+            // url for the favicon, if available
             buttonFavicon: null,
+            /**
+             * favicon availability for sites, which have already been checked
+             * @type {Object<String,Bool>}
+             */
+            knownFavicons: {},
             // true to select the "Button" tab after a button is selected on the first tab.
             returnToButtonTab: false,
             fieldChanged: 0
+
         };
     },
 
@@ -311,7 +318,9 @@ export default {
             this.button.configuration.favicon = (icon === "$favicon");
 
             if (this.button.configuration.favicon) {
-                this.button.configuration.image_url = this.getFavicon();
+                this.getFavicon().then(url => {
+                    this.button.configuration.image_url = url;
+                });
             } else {
                 this.button.configuration.image_url = icon;
             }
@@ -432,18 +441,42 @@ export default {
             });
         },
 
-        fixFavicon: function () {
-            this.buttonFavicon = this.getFavicon(this.button.configuration.url);
+        fixFavicon: async function () {
+            this.buttonFavicon = await this.getFavicon(this.button.configuration.url);
             // fix the image url, if it's a favicon
             if (this.button.configuration.favicon && this.button.configuration.url) {
                 this.button.configuration.image_url = this.buttonFavicon;
             }
         },
 
-        getFavicon: function (url) {
-            const getHost = /.*:\/\/([^/:]+)/;
-            var m = getHost.exec(url || this.button.configuration.url);
-            return m && `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
+        /**
+         * Gets the favicon for the given url, after checking it is available.
+         *
+         * @param {String} url The url
+         * @return {Promise<null|string>} Resolves with the favicon url.
+         */
+        getFavicon: async function (url) {
+            const lastCheck = this.knownFavicons[url];
+            let togo;
+
+            if (lastCheck === undefined) {
+                const getHost = /(.*:\/\/)?([^/:]+)/;
+                const m = getHost.exec(url);
+                const host = m && m[2];
+
+                if (host) {
+                    const imageUrl = `https://icons.duckduckgo.com/ip2/${host}.ico`;
+                    // Check the url before trying to load it.
+                    const result = await params.checkUrl(imageUrl);
+                    togo = result.isProblem ? null : imageUrl;
+                }
+
+                this.knownFavicons[url] = togo;
+            } else {
+                togo = lastCheck;
+            }
+
+            return togo;
         }
     },
     watch: {
@@ -453,8 +486,18 @@ export default {
 
                 this.fieldChanged = Math.random();
 
-                this.faviconTimer && clearTimeout(this.faviconTimer);
-                this.faviconTimer = setTimeout(() => this.fixFavicon(), 2000);
+                if (this.button.configuration.url) {
+                    // Update the favicon (delay the check for when the user is typing in the url).
+                    if (this.faviconTimer) {
+                        clearTimeout(this.faviconTimer);
+                    }
+
+                    if (this.knownFavicons[this.button.configuration.url] === undefined) {
+                        this.faviconTimer = setTimeout(() => this.fixFavicon(), 1000);
+                    } else {
+                        this.fixFavicon();
+                    }
+                }
             },
             deep: true
         }
