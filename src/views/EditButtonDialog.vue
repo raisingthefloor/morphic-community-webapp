@@ -351,9 +351,8 @@ export default {
             let promise;
             if (applyChanges) {
                 promise = params.checkForProblems(this.button).then(() => {
-                    const problems = Object.values(this.button.data.problems);
-                    if (problems.length > 0) {
-                        return this.showProblems(problems).then(value => value || "cancel");
+                    if (params.hasProblem(this.button)) {
+                        return this.showProblems().then(value => value || "cancel");
                     }
                 });
             } else {
@@ -377,10 +376,9 @@ export default {
 
         /**
          * Shows a message of problems.
-         * @param {Array<ItemProblems>} problems The problems.
          * @return {Promise<Boolean>} true to continue with saving.
          */
-        showProblems: function (problems) {
+        showProblems: function () {
             return this.showConfirm("This button still has some problems.", ["Continue", "Go back"]);
         },
         /**
