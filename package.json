@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_ENV=local vue-cli-service serve",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --modern",
     "build-dev": "vue-cli-service build --mode development --dest dev",
     "lint": "node_modules/.bin/eslint src/**/*.{js,vue}"
   },
