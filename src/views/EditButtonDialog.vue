@@ -202,7 +202,7 @@ ul.relatedButtons {
 
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons } from "@/utils/constants";
+import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons, allButtons } from "@/utils/constants";
 import * as params from "@/utils/params";
 import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/dashboardV2/BarItemFields";
@@ -267,6 +267,19 @@ export default {
         listedIcons: function () {
             const defaultIcon = defaultIcons[this.button.data.buttonKey];
             const iconKeys = [];
+
+            if (this.button.configuration.subkind === "make" && this.button.data.parameters.url !== undefined) {
+                // For custom url buttons, see if there's a pre-defined button for this site
+                const host = this.getHost(this.button.configuration.url).replace(/^www\./, "");
+                /** @type {BarItem} */
+                const other = Object.values(allButtons).find(b => {
+                    return b.configuration.url && host === this.getHost(b.configuration.url).replace(/^www\./, "");
+                });
+
+                if (other && other.configuration.image_url && !other.configuration.image_url.includes("/")) {
+                    iconKeys.push(other.configuration.image_url);
+                }
+            }
 
             // Get the icons of the same category.
             const subkind = this.button.configuration.relatedSubkind || this.button.configuration.subkind;
@@ -460,9 +473,7 @@ export default {
             let togo;
 
             if (lastCheck === undefined) {
-                const getHost = /(.*:\/\/)?([^/:]+)/;
-                const m = getHost.exec(url);
-                const host = m && m[2];
+                const host = this.getHost(url);
 
                 if (host) {
                     const imageUrl = `https://icons.duckduckgo.com/ip2/${host}.ico`;
@@ -477,6 +488,17 @@ export default {
             }
 
             return togo;
+        },
+
+        /**
+         * Gets the host portion of a url.
+         * @param {String} url The url.
+         * @return {String} The host portion of the url.
+         */
+        getHost: function (url) {
+            const getHost = /(.*?:\/\/)?([^/:]+)/;
+            const m = url && getHost.exec(url);
+            return m && m[2];
         }
     },
     watch: {
