@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
+// @ts-ignore
 import Vuelidate from "vuelidate";
 import { HTTP } from "@/services/index";
 import { icons } from "@/utils/constants";
@@ -18,7 +19,7 @@ if (token) {
 }
 
 HTTP.interceptors.response.use(undefined, function (err) {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         if (err.message.indexOf("401") > 1) {
             store.dispatch("logout");
             resolve();
@@ -32,7 +33,7 @@ Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 Vue.use(Vuex);
 
-var toastSheet;
+var toastSheet: HTMLStyleElement;
 
 Vue.mixin({
     methods: {
@@ -49,10 +50,13 @@ Vue.mixin({
         showMessage(message, title, options) {
 
             if (!toastSheet) {
-                const navHeight = document.querySelector("nav#top .navbar-nav").getBoundingClientRect().bottom;
-                toastSheet = document.createElement("style");
-                toastSheet.innerHTML = `.toast-height {margin-top:${navHeight}px}`;
-                document.body.appendChild(toastSheet);
+                const nav = document.querySelector("nav#top .navbar-nav");
+                if (nav) {
+                    const navHeight = nav.getBoundingClientRect().bottom;
+                    toastSheet = document.createElement("style");
+                    toastSheet.innerHTML = `.toast-height {margin-top:${navHeight}px}`;
+                    document.body.appendChild(toastSheet);
+                }
             }
 
             this.$root.$bvToast.toast(message, Object.assign({
@@ -120,9 +124,12 @@ Vue.mixin({
          * @return {Boolean} true if in focus mode.
          */
         focusMode: function () {
+            // @ts-ignore
             return this.$route.path.includes("/focused/");
         },
+        // @ts-ignore
         communityId: function () { return this.$store.getters.communityId; },
+        // @ts-ignore
         userId: function () { return this.$store.getters.userId; },
         console: () => console
     }
