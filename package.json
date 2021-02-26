@@ -7,7 +7,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-dev": "vue-cli-service build --mode development --dest dev",
-    "lint": "node_modules/.bin/eslint src/**/*.{js,vue}"
+    "lint": "node_modules/.bin/eslint src/**/*.{js,vue} tests/**/*.js",
+    "test": "echo there are no tests; fail"
   },
   "dependencies": {
     "@popperjs/core": "2.5.4",
