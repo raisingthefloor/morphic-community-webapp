@@ -209,7 +209,9 @@ export default {
             newButtonIndex: undefined,
             /** @type {BarItem} */
             button: {
+                /** @type {BarItemConfiguration} */
                 configuration: {},
+                /** @type {BarItemData} */
                 data: {}
             },
             colors: colors,

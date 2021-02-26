@@ -17,6 +17,7 @@
  * @property {String} editGroupTab Name of the group tab on the edit dialog.
  * @property {String} kind The kind of all items (undefined if any differ)
  * @property {Boolean} related True if the items are related (shows the group tab in the edit dialog)
+ * @property {Boolean} hasSecondary True there are secondary items in the group (item.is_primary is false)
  * @property {BarItemConfiguration} more Configuration for the more item.
  * @property {Object<String,BarItem>} items The buttons.
  */
@@ -49,7 +50,6 @@
  * @property {GUID} barId The bar this item belongs to.
  * @property {String} id Unique identifier.
  * @property {String} kind The kind of item (url, application, action).
- * @property {String} subkind The item category (email, news).
  * @property {Boolean} is_primary
  * @property {BarItemData} data Web-app data.
  * @property {BarItemConfiguration} configuration Bar item options
@@ -59,7 +59,9 @@
  * BarItem data for the web-app
  * @typedef {Object} BarItemData
  * @property {String} buttonKey Key in the buttons object, where this item was taken from.
+ * @property {String} subkind The item category (email, news).
  * @property {Boolean} [isPlaceholder] true if this button is a place-holder, where the site has not been chosen.
+ * @property {Boolean} [isExpander] true if this item is used in the catalog to show the secondary items.
  * @property {Boolean} catalogItem true if this instance is in the catalog (not added to the bar)
  * @property {String} catalogLabel Label in the catalog (if different to `label`).
  * @property {String} category Category in the catalog

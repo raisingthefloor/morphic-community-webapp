@@ -249,23 +249,55 @@
           <template v-slot:drag-image="">
             <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
           </template>
-          <div id="buttonsPanel" class="fill-height bg-silver p-3">
-            <!-- <b-input-group id="search-group" size="sm" class="mb-3">
-              <b-form-input type="text" disabled></b-form-input>
-              <b-input-group-append>
-                <b-button variant="primary" disabled><b-icon-search></b-icon-search></b-button>
-              </b-input-group-append>
-            </b-input-group> -->
 
-            <ul class="buttonsCatalogListing linkList list-unstyled mb-0" style="overflow-y: scroll; max-height: 630px;">
-              <template v-for="(buttonGroup, subkind) in buttonCatalog">
-                <li v-if="!buttonGroup.hidden" :key="subkind" class="ButtonsCatalogHeader">
-                  <h3>{{buttonGroup.title}}</h3>
-                  <ul class="ButtonsCatalogEntries">
+          <div id="buttonsPanel"
+               class="fill-height bg-silver" :class="{
+                noResults: searchState === 'noResults',
+                gotResults: searchState === 'gotResults',
+                searchResults: !!searchState
+               }" >
+
+            <!-- search -->
+            <b-input-group id="search-group" class="catalogSearch" size="sm" >
+              <b-form-input type="search" placeholder="Search buttons" v-model="searchText" />
+              <b-input-group-append>
+                <b-button variant="outline-secondary"><b-icon-search /></b-button>
+              </b-input-group-append>
+            </b-input-group>
+
+            <ul v-for="(catalog, isSearchResult) in [buttonCatalog, searchResult]"
+                :key="isSearchResult"
+                class="buttonCatalogListing linkList list-unstyled"
+                :class="{ searchResults: isSearchResult}"
+                style="overflow-y: scroll; max-height: 630px;">
+
+              <li v-if="isSearchResult && searchResult && searchResult.itemsFound.hidden">
+                <small>No buttons where found while searching for '<code>{{searchText}}</code>'</small>
+              </li>
+              <template v-for="(buttonGroup, subkind) in catalog">
+                <li v-if="!buttonGroup.hidden"
+                    :key="subkind"
+                    :ref="`catalogGroup_${subkind}`"
+                    class="catalogGroup"
+                    :class="{
+                        hasSecondary: buttonGroup.hasSecondary,
+                        showSecondary: secondaryItemsShown[subkind],
+                        searchResult: buttonGroup.isSearchResult
+                    }">
+
+                  <h3 v-if="buttonGroup.title">{{buttonGroup.title}}</h3>
+
+                  <ul class="buttonCatalogEntries">
                     <template v-for="(button, buttonId) in buttonGroup.items">
-                      <li v-if="button.is_primary"
-                          :key="buttonId"
-                          :class="button.configuration.image_url ? '':'noImage'" class="buttonsCatalogEntry"
+                      <li :key="button.data.buttonKey"
+                          class="buttonCatalogEntry"
+                          :class="{
+                              noImage: !button.configuration.image_url && !button.data.isExpander,
+                              secondaryItem: !button.is_primary,
+                              expander: button.data.isExpander,
+                          }"
+                          :style="{order: button.searchResult && button.searchResult.order}"
+                          :title="button.configuration.description"
                           :ref="'catalog_' + buttonId"
                           tabindex="-1"
                           @keypress="onCatalogItemKeyPress($event, button)"
@@ -276,12 +308,27 @@
                           <template v-slot:drag-image>
                             <PreviewItem :item="button" :noImage="true" class="noImage" />
                           </template>
+
                           <!-- Define looks when not selected -->
-                          <b-link v-if="buttonId !== expandedCatalogButtonId" @click="expandCatalogButton(button, buttonId, $event)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'" class="buttonsCatalogEntry nonExpandedCatalogEntry">
-                            <div class="imageWrapper">
-                              <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
-                            </div>{{ button.data.catalogLabel || button.configuration.label }}
+                          <b-link v-if="buttonId !== expandedCatalogButtonId"
+                                  @click="expandCatalogButton(button, buttonId, subkind)"
+                                  :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
+                                  class="buttonCatalogEntry nonExpandedCatalogEntry">
+                            <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}">
+                              <b-iconstack v-if="button.data.isExpander">
+                                <b-icon stacked icon="circle-fill" />
+                                <b-icon stacked icon="caret-right-fill"
+                                        scale="0.9"
+                                        class="text-white" />
+                              </b-iconstack>
+
+                              <b-img v-else-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
+                            </div>
+                            <span v-html="getCatalogItemLabel(button, buttonGroup.searchWords)" />
+<!--                            <span v-if="button.searchResult && button.searchResult.label" v-html="button.searchResult.label"/>-->
+<!--                            <span >{{ button.data.catalogLabel || button.configuration.label }}</span>-->
                           </b-link>
+
                           <!-- Define looks when selected (expanded) -->
                           <div v-else class="active" @click="expandedCatalogButtonId = undefined"
                           >
@@ -437,13 +484,9 @@
 
     #preview-bar {
       border: 1px solid #002957;
-      background: white;
-      border-left: 1px solid #002957;
       // vertical line separating bar from drawer
-      background-image: linear-gradient(#000, #000);
       background-size: 1px 100%;
-      background-repeat: no-repeat;
-      background-position: right 122px bottom 0px;
+      background: white linear-gradient(#000, #000) no-repeat right 122px bottom 0px;
 
       display: flex;
       justify-content: center;
@@ -511,77 +554,127 @@
 
   #buttonsPanel {
 
-    .ButtonsCatalogHeader {
+    padding: 0.5rem;
+
+    .catalogSearch {
+    }
+
+    img:before {
+      content: " ";
+    }
+
+    // Hide the listing if search is used
+    &.searchResults {
+      .buttonCatalogListing:not(.searchResults) {
+        display: none;
+      }
+    }
+    &:not(.searchResults) {
+      .buttonCatalogListing.searchResults {
+        display: none;
+      }
+    }
+
+    .buttonCatalogListing {
+      padding: 0.5rem;
+
       h3 {
         font-size: 1.30rem;
         margin-bottom: 6px;
-        margin-top: 15px;
+        margin-top: 0;
         font-weight: bold;
       }
-    }
-img:before {
-  content:  " ";
-}
-    .ButtonsCatalogEntries {
-      padding-left: 30px;
-      list-style: none;
 
-      .buttonsCatalogEntry {
+      .catalogGroup {
+        margin-bottom: 1em;
 
-        position: relative;
-
-        .imageWrapper {
-          // Position the icon to the left, and remove it from the flow.
-          display: inline-block;
-          position: relative;
-          left: -23px;
-          width: 0;
-          overflow: visible;
-
-          img {
-            transition: all 0.2s ease-in-out;
-          }
-        }
-
-        a:hover {
-          .imageWrapper img {
-            transform: scale(1.5);
-          }
-        }
-
-        &.noImage {
-          img {
+        // Hide secondary items.
+        &:not(.showSecondary, .searchResult) {
+          .secondaryItem {
             display: none;
           }
         }
 
-        .active {
-          background-color: #e0f1d7;
-          border: solid 1px #008145;
-          border-radius: 5px;
-          padding: 10px;
-
-          .buttons {
-            display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
+        &.showSecondary {
+          .expanderIcon > * {
+            transform: rotate(90deg) !important;
           }
+        }
 
-          h3 {
-            margin-top: 15px;
-            font-size: 20px;
-            margin-bottom: 0px;
-          }
+        .buttonCatalogEntries {
+          display: flex;
+          flex-direction: column;
+          padding-left: 30px;
+          list-style: none;
 
-          div.description {
-            font-size: 14px;
-          }
+          .buttonCatalogEntry {
+            position: relative;
 
-          div.help {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 15px;
-            line-height: 18px;
+            // show the primary items first
+            &:not(.secondaryItem) {
+              order: 0;
+            }
+            &.expander {
+              order: 1;
+            }
+            &.secondaryItem {
+              order: 2;
+            }
+
+            .imageWrapper {
+              // Position the icon to the left, and remove it from the flow.
+              display: inline-block;
+              position: relative;
+              left: -23px;
+              width: 0;
+              overflow: visible;
+
+              & > * {
+                transition: all 0.2s ease-in-out;
+              }
+            }
+
+            a:hover {
+              .imageWrapper > * {
+                transform: scale(1.5);
+              }
+            }
+
+            &.noImage {
+              img {
+                display: none;
+              }
+            }
+
+            .active {
+              background-color: #e0f1d7;
+              border: solid 1px #008145;
+              border-radius: 5px;
+              padding: 10px;
+
+              .buttons {
+                display: flex;
+                justify-content: space-around;
+                align-items: flex-end;
+              }
+
+              h3 {
+                margin-top: 15px;
+                font-size: 20px;
+                margin-bottom: 0px;
+              }
+
+              div.description {
+                font-size: 14px;
+              }
+
+              div.help {
+                font-size: 14px;
+                font-weight: bold;
+                margin-top: 15px;
+                line-height: 18px;
+              }
+            }
           }
         }
       }
@@ -676,14 +769,14 @@ img:before {
       display: inline-block;
     }
 
-    .buttonsCatalogEntry {
+    .buttonCatalogEntry {
       width: 100%;
       display: block;
     }
   }
 
   #preview-bar, #preview-drawer {
-    .buttonsCatalogEntry {
+    .buttonCatalogEntry {
       .active {
         background-color: transparent;
         border: 0;
@@ -725,10 +818,11 @@ import {
     updateCommunityBar,
     updateCommunityMember
 } from "@/services/communityService";
-import { buttonCatalog, colors, MESSAGES } from "@/utils/constants";
+import { buttonCatalog, colors, MESSAGES, allButtons } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as Bar from "@/utils/bar";
+import * as search from "@/utils/search";
 import EditButtonDialog from "@/views/EditButtonDialog";
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
 
@@ -1052,11 +1146,32 @@ export default {
                 this.dropToBar({data: button});
             }
         },
-        expandCatalogButton: function (button, buttonId, e) {
-            this.expandedCatalogButtonId = buttonId;
-            this.expandedCatalogButton = button;
-            this.$refs["catalog_" + buttonId][0].focus();
+        expandCatalogButton: function (button, buttonId, subkind) {
+            if (!button) {
+                this.expandedCatalogButtonId = undefined;
+                this.expandedCatalogButton = undefined;
+            } else if (button.data.isExpander) {
+                this.showSecondaryItems(subkind);
+                this.expandedCatalogButtonId = undefined;
+                this.expandedCatalogButton = undefined;
+            } else {
+                this.expandedCatalogButtonId = buttonId;
+                this.expandedCatalogButton = button;
+                this.$refs["catalog_" + buttonId][0].focus();
+            }
+        },
 
+        /**
+         * Toggles the catalog items under the "Other" - causes the secondary items to show/hide.
+         * @param {String} subkind The catalog group id.
+         * @param {Boolean} [show] true/false to show/hide, omit to toggle.
+         */
+        showSecondaryItems: function (subkind, show) {
+            if (show === undefined) {
+                this.secondaryItemsShown[subkind] = !this.secondaryItemsShown[subkind];
+            } else {
+                this.secondaryItemsShown[subkind] = show;
+            }
         },
 
         /**
@@ -1145,6 +1260,66 @@ export default {
                     }
                 });
             }
+        },
+        /**
+         * Returns the label for an item in the catalog.
+         * @param {BarItem} button The button
+         * @param {Array<String>} [searchWords] The words from the search, to highlight.
+         * @return {String} Label for the item, as raw HTML.
+         */
+        getCatalogItemLabel: function (button, searchWords) {
+            const label = button.data.catalogLabel || button.configuration.label;
+            // escape any html
+            const escaped = new Option(label).innerHTML;
+
+            let html;
+            if (searchWords && searchWords.length > 0) {
+                const highlight = new RegExp(searchWords.join("|"), "gi");
+                html = escaped.replace(highlight, "<b>$&</b>");
+            } else {
+                html = escaped;
+            }
+
+            return html;
+        },
+        searchCatalog() {
+            if (this.searchText.length > 0) {
+                const queryWords = this.searchText.toLowerCase().replace(/[^a-z0-9\s]/g, " ").trim().split(/\s+/g);
+                // Only the top 20 - they are slow to render.
+                const results = search.catalogSearch(queryWords)
+                    .sort((a, b) => a.order - b.order)
+                    .slice(0, 20);
+
+                /** @type {ButtonCatalogItem} */
+                const groups = {
+                    itemsFound: {
+                        isSearchResult: true,
+                        searchWords: queryWords,
+                        hasSecondary: false,
+                        items: {},
+                        hidden: results.length === 0
+                    }
+                };
+
+                // Make a catalog group for the results.
+                results.forEach(result => {
+                    /** @type {BarItem} */
+                    if (result.buttonKey) {
+                        const item = JSON.parse(JSON.stringify(allButtons[result.buttonKey]));
+                        item.searchResult = result;
+
+                        groups.itemsFound.items[result.buttonKey] = item;
+                    } else if (result.groupKey) {
+                        groups[result.groupKey] = JSON.parse(JSON.stringify(buttonCatalog[result.groupKey]));
+                    }
+                });
+
+                this.searchResult = groups;
+                this.searchState = results.length > 0 ? "gotResults" : "noResults";
+            } else {
+                this.searchState = null;
+                this.searchResult = null;
+            }
         }
     },
     computed: {
@@ -1206,6 +1381,10 @@ export default {
                 Bar.checkBar(this.barDetails);
             },
             deep: true
+        },
+        searchText: function () {
+            this.expandCatalogButton(null);
+            this.searchCatalog();
         }
     },
     beforeRouteUpdate(to, from, next) {
@@ -1316,7 +1495,28 @@ export default {
             },
             predefinedBars: predefinedBars,
             colors: colors,
-            checkBarTimer: null
+            checkBarTimer: null,
+
+            /**
+             * The display of secondary items in each catalog group.
+             * @type {Object<String,Boolean>}
+             */
+            secondaryItemsShown: Object.keys(buttonCatalog).reduce((map, key) => {
+                map[key] = false;
+                return map;
+            }, {}),
+
+            /**
+             * Catalog search text
+             * @type {String}
+             */
+            searchText: "",
+            /** null, "gotResults" or "noResults" */
+            searchState: null,
+            showSearchResults: false,
+
+            /** @type {ButtonCatalog} */
+            searchResult: false
         };
     }
 };

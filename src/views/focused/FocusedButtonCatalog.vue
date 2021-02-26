@@ -9,13 +9,13 @@
         Cancel
       </b-button>
       <p />
-      <ul class="buttonsCatalogListing linkList list-unstyled mb-0">
+      <ul class="buttonCatalogListing linkList list-unstyled mb-0">
         <!-- Button catalog headings -->
-        <li v-for="(buttonGroup, subkind) in buttonCatalog" :key="subkind" class="buttonsCatalogHeader">
+        <li v-for="(buttonGroup, subkind) in buttonCatalog" :key="subkind" class="buttonCatalogHeader">
           <h3 :class="'header_' + subkind">{{buttonGroup.title}}</h3>
-          <ul class="ButtonsCatalogEntries">
-            <li v-for="(button, buttonKey) in buttonGroup.items" :key="buttonKey" class="buttonsCatalogEntry">
-              <b-button v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonsCatalogEntry nonExpandedCatalogEntry">
+          <ul class="buttonCatalogEntries">
+            <li v-for="(button, buttonKey) in buttonGroup.items" :key="buttonKey" class="buttonCatalogEntry">
+              <b-button v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonCatalogEntry nonExpandedCatalogEntry">
                 <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" :alt="item.configuration.label + ' logo'" />
                   {{ button.configuration.label }}
               </b-button>
@@ -53,17 +53,17 @@
 
 <style lang="scss">
 
-  .buttonsCatalogHeader {
+  .buttonCatalogHeader {
       h3 {
         font-size: 1.30rem;
         margin-bottom: 6px;
         margin-top: 15px;
         font-weight: bold;
       }
-    .ButtonsCatalogEntries {
+    .buttonCatalogEntries {
       padding-inline-start: 17px;
       list-style: none;
-      .buttonsCatalogEntry {
+      .buttonCatalogEntry {
         .active {
           background-color: #e0f1d7;
           border: solid 1px #008145;

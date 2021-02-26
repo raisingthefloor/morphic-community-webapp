@@ -30,7 +30,7 @@
                               color: (buttonKey === button.data.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
                               'background-color': (buttonKey === button.data.buttonKey) ? (item.configuration.color || colors.blue) : ''
                             }"
-                            class="buttonsCatalogEntry editRelatedItem"
+                            class="buttonCatalogEntry editRelatedItem"
                             @click="setButton(item)">
                       <div class="imageWrapper">
                         <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" :alt="item.configuration.label + ' logo'" />
