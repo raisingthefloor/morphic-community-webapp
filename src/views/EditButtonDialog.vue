@@ -455,7 +455,7 @@ export default {
         },
 
         fixFavicon: async function () {
-            this.buttonFavicon = await this.getFavicon(this.button.configuration.url);
+            this.buttonFavicon = this.button.configuration.url && await this.getFavicon(this.button.configuration.url);
             // fix the image url, if it's a favicon
             if (this.button.configuration.favicon && this.button.configuration.url) {
                 this.button.configuration.image_url = this.buttonFavicon;
@@ -519,6 +519,8 @@ export default {
                     } else {
                         this.fixFavicon();
                     }
+                } else {
+                    this.buttonFavicon = null;
                 }
             },
             deep: true
