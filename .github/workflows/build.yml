@@ -23,6 +23,9 @@ jobs:
       - name: Looking for crap code
         run: npm run lint
 
+      - name: Running unit tests
+        run: npm test
+
       - name: Building prod
         run: npm run build
 
