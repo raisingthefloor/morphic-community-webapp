@@ -1,13 +1,12 @@
 <template>
   <b-jumbotron class="mb-0" bg-variant="light" id="login-register" role="main">
     <b-row>
-      <b-col md="2"></b-col>
-      <b-col md="4">
+      <b-col md="1"></b-col>
+      <b-col md="4" class="ml-md-2 mr-lg-5">
         <h2 class="mb-3" id="community-heading">Register Community</h2>
         <UserRegistration />
       </b-col>
-      <b-col md="1"></b-col>
-      <b-col md="3">
+      <b-col md="4" class="pl-md-5 pr-lg-5">
         <UserLogin />
       </b-col>
       <b-col md="2"></b-col>

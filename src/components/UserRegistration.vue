@@ -3,130 +3,57 @@
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
-    <b-form-group
-      label="Community:"
-      label-for="community-name"
-    >
-     <b-input-group>
-        <b-form-input
-          v-model="$v.form.communityName.$model"
-          :state="validateState('communityName')"
-          placeholder="my-community"
-          id="community-name"
-        />
-        <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
-      </b-input-group>
-    </b-form-group>
-    <b-form-group
-      label="Enter your email:"
-      label-for="community-user-email"
-    >
-      <b-form-input
-        v-model="$v.form.email.$model"
-        :state="validateState('email')"
-        placeholder="user@somewhere.com"
-        id="community-user-email"
-      />
-      <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
-    </b-form-group>
-    <b-form-group
-      label="First name:"
-      label-for="community-first-name"
-    >
-      <b-form-input
-        v-model="form.firstName"
-        placeholder="Pat"
-        id="community-first-name"
-      />
-    </b-form-group>
-    <b-form-group
-      label="Last name:"
-      label-for="community-last-name"
-    >
-      <b-form-input
-        v-model="form.lastName"
-        placeholder="Smith"
-        id="community-last-name"
-      />
-    </b-form-group>
-    <b-form-group
-      label="Password:"
-      label-for="community-user-password"
-    >
-      <b-form-input
-        v-model="$v.form.password.$model"
-        :state="validateState('password')"
-        placeholder="Enter password"
-        type="password"
-        id="community-user-password"
-      />
-      <b-form-invalid-feedback>This is a required field and must be at least 6 characters.</b-form-invalid-feedback>
-    </b-form-group>
-    <b-form-group
-      label="Password confirmation:"
-      label-for="community-user-password-confirm"
-    >
-      <b-form-input
-        v-model="$v.form.confirmPassword.$model"
-        :state="validateState('confirmPassword')"
-        placeholder="Re-enter password"
-        type="password"
-        id="community-user-password-confirm"
-      />
-      <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
-    </b-form-group>
-<!--     <br>
-    <legend>Subscription Plan</legend>
-    <b-form-group id="subscription-plans">
-      <b-form-radio v-model="$v.form.subscriptionPlan.$model" name="bronze" value="bronze">
-        <h5 class="text-bronze"><b>Bronze Tier</b></h5>
-        <h6 class="mb-0"><b>$10</b>/mo for <b>10</b> member community</h6>
-      </b-form-radio>
-      <b-form-radio v-model="$v.form.subscriptionPlan.$model" name="silver" value="silver">
-        <h5 class="text-secondary"><b>Silver Tier</b></h5>
-        <h6 class="mb-0"><b>$15</b>/mo for <b>20</b> member community</h6>
-      </b-form-radio>
-      <b-form-radio v-model="$v.form.subscriptionPlan.$model" name="gold" value="gold">
-        <h5 class="text-warning"><b>Gold Tier</b></h5>
-        <h6 class="mb-0"><b>$20</b>/mo for <b>50</b> member community</h6>
-      </b-form-radio>
-      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
-    </b-form-group>
-    <br>
-    <legend>Payment Gateway</legend>
-    <b-form-group id="payment-gateways">
-      <b-form-radio v-model="$v.form.paymentOptions.$model" name="stripe" value="stripe">
-        <img src="/img/payment-icon-stripe.svg" alt="Stripe">
-      </b-form-radio>
-      <b-form-invalid-feedback>This is a required field.</b-form-invalid-feedback>
-    </b-form-group> -->
+
+    <ValidatedInput id="community-name"
+                    label="Community"
+                    :validation="$v.form.communityName"
+                    placeholder="my-community"
+    />
+    <ValidatedInput id="community-user-email"
+                    label="Enter your email"
+                    :validation="$v.form.email"
+                    placeholder="user@somewhere.com"
+    />
+    <ValidatedInput id="community-first-name"
+                    label="First name"
+                    v-model="form.firstName"
+                    placeholder="Pat"
+    />
+    <ValidatedInput id="community-last-name"
+                    label="Last name"
+                    v-model="form.lastName"
+                    placeholder="Smith"
+    />
+    <ValidatedInput id="community-user-new-password"
+                    label="Password"
+                    :validation="$v.form.password"
+                    placeholder="Enter password"
+                    type="password"
+                    :errors="{minLength: 'Passwords must be at least 6 characters'}"
+    />
+
+    <ValidatedInput id="community-user-new-password-confirm"
+                    label="Password confirmation"
+                    :validation="$v.form.confirmPassword"
+                    placeholder="Re-enter password"
+                    type="password"
+    />
+    <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
     <b-button type="submit" variant="primary">Create new Community</b-button>
   </b-form>
 </template>
 
 <style>
-  #subscription-plans .custom-radio,
-  #payment-gateways .custom-radio {
-    background: white;
-    border: 1px solid #ddd;
-    padding: 1rem 1rem 1rem 2.5rem;
-    margin-bottom: .5rem;
-  }
-  #subscription-plans label {
-    width: 100%;
-  }
-  #payment-gateways img {
-    height: 2rem;
-    vertical-align: baseline;
-  }
 </style>
 
 <script>
 import { validationMixin } from "vuelidate";
-import { required, minLength, sameAs, email } from "vuelidate/lib/validators";
+import { email, minLength, required, sameAs } from "vuelidate/lib/validators";
 import { ERROR_MAP, MESSAGES } from "@/utils/constants";
+import ValidatedInput from "@/components/ValidatedInput";
 
 export default {
+    components: {ValidatedInput},
     mixins: [validationMixin],
     data() {
         return {
@@ -137,8 +64,6 @@ export default {
                 lastName: "",
                 password: "",
                 confirmPassword: ""
-                // subscriptionPlan: 'bronze',
-                // paymentOptions: 'stripe'
             },
             errorAlert: false,
             errorMessage: null
@@ -161,12 +86,6 @@ export default {
                 required,
                 sameAsPassword: sameAs("password")
             }
-            // subscriptionPlan: {
-            //   required
-            // },
-            // paymentOptions: {
-            //   required
-            // }
         }
     },
     methods: {
