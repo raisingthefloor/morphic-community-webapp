@@ -52,7 +52,8 @@ export default {
             },
             errorAlert: false,
             errorMessage: null,
-            emailValidationError: MESSAGES.emailValidationError
+            emailValidationError: MESSAGES.emailValidationError,
+            recaptchaToken: ""
         };
     },
     validations: {
@@ -62,6 +63,10 @@ export default {
                 email
             }
         }
+    },
+    async mounted() {
+        await this.$recaptchaLoaded();
+        this.recaptchaToken = await this.$recaptcha("login");
     },
     methods: {
         validateState(name) {
@@ -73,7 +78,11 @@ export default {
             if (this.$v.form.$anyError) {
                 return;
             }
-            this.$store.dispatch("resetPassword", this.$v.form.$model)
+            const body = {
+                email: this.$v.form.$model.email,
+                g_recaptcha_response: this.recaptchaToken
+            };
+            this.$store.dispatch("resetPassword", body)
                 .then(() => {
                     this.showMessage(MESSAGES.successfulReset);
                     this.$router.push("/");

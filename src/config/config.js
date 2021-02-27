@@ -24,3 +24,4 @@ const CONF = {
 };
 
 export const CONFIG = CONF[ENV];
+export const RECAPTCHATOKEN = '6LcAv7cZAAAAAFeZSLJK2JnKRp8PmD266Wgp-pDy'
