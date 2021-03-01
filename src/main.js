@@ -5,11 +5,11 @@ import router from "./router";
 import store from "./store";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import Vuelidate from "vuelidate";
-import { VueReCaptcha } from 'vue-recaptcha-v3'
+import { VueReCaptcha } from "vue-recaptcha-v3";
 import { HTTP } from "@/services/index";
 import { icons } from "@/utils/constants";
 import * as Bar from "@/utils/bar";
-import { RECAPTCHATOKEN } from '@/config/config'
+import { CONFIG } from "@/config/config";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -33,7 +33,7 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 Vue.use(Vuex);
-Vue.use(VueReCaptcha, { siteKey: RECAPTCHATOKEN })
+Vue.use(VueReCaptcha, { siteKey: CONFIG.RECAPTCHA_SITEKEY });
 
 var toastSheet;
 
