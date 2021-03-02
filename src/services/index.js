@@ -1,7 +1,9 @@
 import axios from "axios";
-import { API_URL } from "@/utils/constants";
+// Getting the API url directly from the config, rather than the constants (which depend on something that depends
+// on this file)
+import { CONFIG } from "@/config/config";
 
 export const HTTP = axios.create({
-    baseURL: API_URL,
+    baseURL: CONFIG.API_URL,
     headers: { "Content-Type": "application/json; charset=utf-8" }
 });

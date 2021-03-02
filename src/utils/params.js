@@ -75,7 +75,7 @@ export const allParameters = {
             url: "This isn't a valid url."
         },
         checks: {
-            urlWorking: {}
+            // urlWorking: {}
         }
     },
     skypeId: {

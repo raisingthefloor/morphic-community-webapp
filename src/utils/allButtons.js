@@ -203,17 +203,6 @@ export const allButtons = {
             image_url: "calendar"
         }
     },
-    calendar_website: {
-        kind: "link",
-        is_primary: true,
-        configuration: {
-            subkind: "calendar",
-            label: "Google Calendar",
-            color: "blue",
-            url: "https://calendar.google.com/calendar/r",
-            description: "Opens the Google Calendar for the user if they are signed in."
-        }
-    },
     calendly: {
         kind: "link",
         is_primary: true,
@@ -371,7 +360,7 @@ export const allButtons = {
         kind: "link",
         is_primary: true,
         configuration: {
-            subkind: "email",
+            subkind: "local-email",
             label: "E-mail",
             color: "blue",
             image_url: "mail",
@@ -837,7 +826,7 @@ export const allButtons = {
         kind: "application",
         is_primary: true,
         configuration: {
-            subkind: "calendar",
+            subkind: "local-calendar",
             label: "Calendar App",
             description: "Opens the local Calendar Application.",
             default: "calendar",
