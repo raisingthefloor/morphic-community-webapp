@@ -28,7 +28,7 @@ const CONF = {
     LOCAL: {
         // Local development server will redirect all API requests (/v1/*) to the local API server (see vue.config.js)
         API_URL: process.env.VUE_APP_API_URL ?? new URL(location.href).origin,
-        // Valid for ste-test.net
+        // Valid for ste-test.net: to test locally, use localhost.ste-test.net
         RECAPTCHA_SITEKEY: href.host.match(/^[0-9.:]+$/) ? null : "6LcgxGoaAAAAACb4-Sdm1xj5UWQiuyYAieFZUhL4"
     },
 

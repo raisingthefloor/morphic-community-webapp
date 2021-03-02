@@ -48,7 +48,6 @@ export default {
         autocomplete: String
     },
     data() {
-        console.log(this.label, this.value);
         return {
             labelText: this.noComma ? this.label : `${this.label}:`,
             inputId: this.id || "input" + Math.random(),
