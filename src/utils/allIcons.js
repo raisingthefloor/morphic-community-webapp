@@ -124,11 +124,10 @@ export const allIcons = {
     whatsapp: "logo_whatsapp.svg",
     wpsoffice: "logo_wpsOffice.png",
     wsj: "logo_wsj.svg",
-    yahoomail: "logo_yahoomail.svg",
     yahoo: "logo_yahoo.svg",
+    yahoomail: "logo_yahoomail.svg",
     youtube: "logo_youtube.svg",
     youtubemusic: "logo_youtubeMusic.svg",
     news$newspaper: "news/newspaper.svg",
-    provenance: "provenance.gsheet",
     windowmaximize: "window-maximize.svg"
 };

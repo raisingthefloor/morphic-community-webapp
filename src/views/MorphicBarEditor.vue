@@ -234,9 +234,9 @@
                 <b-img src="/img/logo-color.svg" alt="Morphic Logo" />
               </div>
               <div class="openDrawerIconHolder">
-                <b-button @click="openDrawer = !openDrawer">
+                <span @click="openDrawer = !openDrawer" class="">
                   <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
-                </b-button>
+                </span>
               </div>
             </div>
           </div>
@@ -303,10 +303,10 @@
                           @keypress="onCatalogItemKeyPress($event, button)"
                       >
                         <!-- Render each button as draggable -->
-                        <drag :data="button" type="catalogButtonNoImage">
+                        <drag :data="button" type="catalogButtonWithImage">
                           <!-- Define looks when dragged -->
                           <template v-slot:drag-image>
-                            <PreviewItem :item="button" :noImage="true" class="noImage" />
+                            <PreviewItem :item="button" :noImage="false" xclass="noImage" />
                           </template>
 
                           <!-- Define looks when not selected -->
@@ -484,9 +484,12 @@
 
     #preview-bar {
       border: 1px solid #002957;
+      background: white;
       // vertical line separating bar from drawer
+      background-image: linear-gradient(#000, #000);
       background-size: 1px 100%;
-      background: white linear-gradient(#000, #000) no-repeat right 122px bottom 0px;
+      background-repeat: no-repeat;
+      background-position: right 122px bottom 0px;
 
       display: flex;
       justify-content: center;
@@ -548,6 +551,10 @@
         text-align: center;
         width: 120px;
         padding: 15px 0 15px 0;
+      }
+
+      .openDrawerIconHolder > span {
+        cursor: pointer;
       }
     }
   }

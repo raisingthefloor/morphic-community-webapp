@@ -3,14 +3,15 @@
            @ok="okClicked" @cancel="closeDialog(false)" @hide="onHide"
            size="lg" scrollable centered
            footer-bg-variant="light"
-           :ok-title="nextButton ? 'Next' : 'Update Button'"
-           :ok-disabled="button && button.data.isPlaceholder"
            :title="dialogTitle">
 
     <template #modal-footer="{ok, cancel, hide}" >
-        <b-button @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove button</b-button>
+        <b-button @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove</b-button>
         <b-button @click="cancel()" variant="secondary">Cancel</b-button>
-        <b-button @click="ok()" variant="primary">Update Button</b-button>
+        <b-button @click="ok()"
+                  variant="primary"
+                  :disabled="button && button.data.isPlaceholder"
+        >{{nextButton ? 'Next' : 'Save'}}</b-button>
     </template>
     <div v-if="button">
       <b-form>
