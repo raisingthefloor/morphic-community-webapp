@@ -33,7 +33,14 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 Vue.use(Vuex);
-Vue.use(VueReCaptcha, { siteKey: CONFIG.RECAPTCHA_SITEKEY });
+if (CONFIG.RECAPTCHA_SITEKEY) {
+    Vue.use(VueReCaptcha, {
+        loaderOptions: {
+            autoHideBadge: true
+        },
+        siteKey: CONFIG.RECAPTCHA_SITEKEY
+    });
+}
 
 var toastSheet;
 

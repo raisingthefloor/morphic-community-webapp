@@ -9,6 +9,7 @@
                       label="Enter your email"
                       placeholder="user@example.com"
                       :validation="$v.userInfo.email"
+                      @input="storeResetEmail"
       />
       <ValidatedInput id="login-user-password"
                       label="Enter your password"
@@ -30,9 +31,8 @@
                   :disabled="$v.userInfo.$anyError"
         >Login</b-button>
       </b-form-checkbox-group>
-      <br>
-      <b-button type="submit" variant="primary">Login</b-button>
-      <!-- <b-button to="/reset-password" variant="success" class="ml-1">Lost Password</b-button> -->
+      <br/>
+      <b-link to="/reset-password" variant="link">Forgot Password</b-link>
     </b-form>
   </div>
 </template>
@@ -78,6 +78,9 @@ export default {
         }
     },
     methods: {
+        storeResetEmail() {
+            this.$store.commit("reset_password_email", this.userInfo.email);
+        },
         onSubmit() {
             this.$v.userInfo.$touch();
             if (this.$v.userInfo.$anyError) {

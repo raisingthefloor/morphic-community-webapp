@@ -11,6 +11,7 @@
             :placeholder="placeholder"
             :id="inputId"
             :type="type"
+            :autocomplete="autocomplete"
     />
     <b-form-invalid-feedback>
       <span v-if="state === false">{{ errorText }}</span>
@@ -43,14 +44,15 @@ export default {
         placeholder: String,
         type: String,
         noComma: Boolean,
-        value: String
+        value: String,
+        autocomplete: String
     },
     data() {
         console.log(this.label, this.value);
         return {
             labelText: this.noComma ? this.label : `${this.label}:`,
             inputId: this.id || "input" + Math.random(),
-            errorMessages: Object.assign({}, defaultErrorMessages, this.errors),
+            errorMessages: Object.assign({}, defaultErrorMessages, this.errors)
         };
     },
     computed: {
@@ -72,10 +74,10 @@ export default {
     },
     methods: {
         onInput($event) {
-            this.$emit("input", $event);
             if (this.validation) {
                 this.validation.$model = $event;
             }
+            this.$emit("input", $event);
         }
     }
 };
