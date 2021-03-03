@@ -1,5 +1,6 @@
 <template>
   <div>
+      <b-alert :show="billingInfo.trial_end_days < 20" dismissible style="margin: auto">You have {{ billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
     <b-row>
       <b-col md="2">
         <CommunityManager :community="community" :bars="list" :members="members" ref="CommunityManager" />
@@ -93,6 +94,7 @@ import {
     getCommunityMembers,
     updateCommunityMember
 } from "@/services/communityService";
+import * as billingService from "@/services/billingService";
 
 export default {
     name: "Dashboard",
@@ -109,7 +111,8 @@ export default {
             showHints: true,
             showHideHintsText: "Hide hints",
             arrows: [],
-            barsHintCss: {}
+            barsHintCss: {},
+            billingInfo: null
         };
     },
     computed: {
@@ -130,6 +133,9 @@ export default {
                 }
             }
             return list;
+        },
+        trial_left: function () {
+            return this.loadBilling();
         }
     },
     mounted: function () {
@@ -139,6 +145,7 @@ export default {
         this.$nextTick(function () {
             window.addEventListener("resize", function () { that.$forceUpdate(); });
         });
+        this.loadBilling();
     },
     beforeDestroy: function () {
         this.cleanUpArrows();
@@ -309,6 +316,11 @@ export default {
         cleanUpArrows: function () {
             this.arrows.forEach(arrow => arrow.remove());
             this.arrows = [];
+        },
+        loadBilling: function () {
+            return billingService.getBillingInfo(this.communityId).then((info) => {
+                this.billingInfo = info.data;
+            });
         }
     }
 };
