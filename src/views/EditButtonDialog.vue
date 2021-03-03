@@ -467,7 +467,7 @@ export default {
          * Gets the favicon for the given url, after checking it is available.
          *
          * @param {String} url The url
-         * @return {Promise<null|string>} Resolves with the favicon url.
+         * @return {Promise<null|String>} Resolves with the favicon url.
          */
         getFavicon: async function (url) {
             const lastCheck = this.knownFavicons[url];
