@@ -63,6 +63,7 @@
     }
 
     .openDrawerIconHolder {
+      cursor: pointer;
       .b-icon {
         // margin-left: -19px;
         right: 104px;
@@ -90,6 +91,7 @@
   button.btn.btn-link {
     padding: 0;
     vertical-align: baseline;
+    text-align: left;
   }
 
 </style>

@@ -15,7 +15,7 @@ export const predefinedBars = [
             allButtons.gmail,
             allButtons.reddit,
             allButtons.facebook,
-            allButtons.skype
+            allButtons.skype_app
         ]
     },
     {
@@ -26,7 +26,7 @@ export const predefinedBars = [
         items: [
             allButtons.gmail,
             allButtons.reddit,
-            allButtons.skype
+            allButtons.skype_app
         ]
     },
     {
@@ -48,7 +48,7 @@ export const predefinedBars = [
         desc: "This is predefined default bar with some items inside, use it as a start...",
         items: [
             allButtons.gmail,
-            allButtons.skype,
+            allButtons.skype_app,
             allButtons.facebook
         ]
     }

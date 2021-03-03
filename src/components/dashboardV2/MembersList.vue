@@ -10,17 +10,16 @@
     <!-- The CM counts as a member of the Community, so by default there's always one member -->
     <ul class="list-unstyled">
       <li v-for="(member, index) in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
-        <b-link :to="{ name: 'MorphicBar Editor', query: { barId: member.bar_id || community.default_bar_id, memberId: member.id } }" :ref="'member' + index">
+        <b-link :to="getBarEditRoute(member)" :ref="'member' + index" class="stretched-link">
           <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
           <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
           <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a community bar">*&nbsp;</span>
           <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
-          <br>
         </b-link>
         <div v-if="member.id === activeMemberId">
           <div v-if="member.state === 'uninvited'" class="small pb-2">
-            Uninvited, you can send him invitation<br>
+            Uninvited, you can send them an invitation<br>
             <b-button size="sm" variant="light" class="btn-block" @click="getEmailAndSendInvite(member)">Send Invitation</b-button>
           </div>
           <div v-else-if="member.state === 'invited'" class="small pb-2">
@@ -38,6 +37,7 @@
     ul {
       margin: 0 -1rem 1rem -1rem;
       li {
+        position: relative;
         padding: 0 1rem;
         &.active {
           padding: .25rem 1rem;
@@ -58,6 +58,7 @@
 
 <script>
 import { inviteCommunityMember } from "@/services/communityService";
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "MembersList",
@@ -107,7 +108,16 @@ export default {
                 }
             }
             return false;
+        },
+        /**
+         * Get the bar editor route for a member's bar.
+         * @param {CommunityMember} member The member.
+         * @return {Object} The location.
+         */
+        getBarEditRoute(member) {
+            return Bar.getUserBarEditRoute(member, this.community.default_bar_id);
         }
+
     }
 };
 </script>

@@ -11,7 +11,7 @@
     <!-- <p><b-link disabled>Community settings</b-link></p> -->
     <ul v-if="communityBars.length > 0" class="list-unstyled">
       <li v-for="bar in communityBars" :key="bar.id" >
-        <b-link :to="{ name: 'Focused: Bar Editor', query: { barId: bar.id } }">
+        <b-link :to="getBarEditRoute(bar)">
          {{ bar.name === "Default" ? "Default Bar" : bar.name }}
         </b-link>
       </li>
@@ -29,7 +29,7 @@
   <h2>Members in your community</h2>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
-        <b-link v-if="member.bar_id" :to="{ name: 'Focused: Bar Editor', query: { barId: member.bar_id, memberId: member.id } }">
+        <b-link v-if="member.bar_id" :to="getUserBarEditRoute(member)">
           {{ member.first_name }} {{ member.last_name }}
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
           <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" v-b-tooltip.hover title="Using a community bar"></b-icon>
@@ -65,6 +65,7 @@
 <script>
 import { MESSAGES } from "@/utils/constants";
 import { getCommunityBars, getCommunity, getCommunityMembers } from "@/services/communityService";
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "FocusedHome",
@@ -206,8 +207,13 @@ export default {
         },
         addPersonClicked: function () {
             this.$router.push({ path: "/focused/person", query: { } });
+        },
+        getBarEditRoute: function (bar) {
+            return Bar.getBarEditRoute(bar, true);
+        },
+        getUserBarEditRoute: function (member) {
+            return Bar.getUserBarEditRoute(member, this.community && this.community.default_bar_id, true);
         }
     }
-
 };
 </script>

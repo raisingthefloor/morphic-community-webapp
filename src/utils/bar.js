@@ -215,3 +215,35 @@ function itemSimilar(a, b) {
 
     return similar;
 };
+
+/**
+ * Gets the route to edit a community bar.
+ * @param {BarDetails} bar The bar.
+ * @param {Boolean} [focused] If true, link to the focused editor.
+ * @return {Object} A location descriptor object to the bar editor.
+ */
+export function getBarEditRoute(bar, focused) {
+    return {
+        name: focused ? "Focused: Bar Editor" : "MorphicBar Editor",
+        query: {
+            barId: bar.id
+        }
+    };
+}
+
+/**
+ * Gets the route to edit a user's bar.
+ * @param {CommunityMember} member The member who the bar belongs to, if editing a user-specific bar.
+ * @param {GUID} defaultBarId The default community bar if the member does not have their own bar.
+ * @param {Boolean} [focused] If true, link to the focused editor.
+ * @return {Object} A location descriptor object to the bar editor.
+ */
+export function getUserBarEditRoute(member, defaultBarId, focused) {
+    return {
+        name: focused ? "Focused: Bar Editor" : "MorphicBar Editor",
+        query: {
+            barId: member.bar_id || defaultBarId,
+            memberId: member.id
+        }
+    };
+}
