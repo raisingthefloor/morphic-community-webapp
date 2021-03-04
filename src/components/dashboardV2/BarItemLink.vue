@@ -1,7 +1,7 @@
 <template>
   <PreviewItem v-if="showButton"
                :item="barItem"
-               @click="$emit('click', {data: item})"
+               @click="$emit('click', {data: barItem})"
                @mouseover="$emit('mouseover', {data: barItem})"
                @mouseleave="$emit('mouseleave', {data: barItem})"
                :to="editLink"
@@ -10,7 +10,7 @@
           variant="link"
           class="barItemLink"
           :style="{ color: barItem.configuration.color }"
-          @click="$emit('click', {data: item})"
+          @click="$emit('click', {data: barItem})"
           @mouseover="$emit('mouseover', {data: barItem})"
           @mouseleave="$emit('mouseleave', {data: barItem})"
           :to="editLink"
