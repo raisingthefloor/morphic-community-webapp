@@ -1,6 +1,7 @@
 <template>
   <div>
-      <b-alert :show="billingInfo.trial_end_days < 20" dismissible style="margin: auto">You have {{ billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
+      <b-alert :show="billingInfo && billingInfo.trial_end_days > 0" variant="warning" dismissible style="margin: auto">You have {{ billingInfo && billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
+      <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
     <b-row>
       <b-col md="2">
         <CommunityManager :community="community" :bars="list" :members="members" ref="CommunityManager" />
@@ -133,9 +134,6 @@ export default {
                 }
             }
             return list;
-        },
-        trial_left: function () {
-            return this.loadBilling();
         }
     },
     mounted: function () {

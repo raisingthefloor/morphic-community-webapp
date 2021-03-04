@@ -1,7 +1,6 @@
 <template>
   <div>
     <b-alert variant="success" :show="displayMessage">
-        <h4>You have 6 days left of your free trial</h4>
       <span> {{ messageData }}</span>
     </b-alert>
     <BlockLoginRegister />
