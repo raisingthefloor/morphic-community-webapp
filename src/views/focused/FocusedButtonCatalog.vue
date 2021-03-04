@@ -115,7 +115,7 @@
 
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import { saveCommunityBar, getCommunityBar, createCommunityBar, getCommunityMember, updateCommunityMember } from "@/services/communityService";
-import { buttonCatalog, colors, icons, subkindIcons } from "@/utils/constants";
+import { buttonCatalog, colors, icons } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import * as Bar from "@/utils/bar";
 
@@ -237,8 +237,7 @@ export default {
             barDetails: {},
             predefinedBars: predefinedBars,
             colors: colors,
-            icons: icons,
-            subkindIcons: subkindIcons
+            icons: icons
         };
     }
 };
