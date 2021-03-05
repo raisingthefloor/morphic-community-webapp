@@ -36,7 +36,8 @@ const CONF = {
     },
     PR_TEST: {
         // Used for testing pull requests
-        API_URL: process.env.VUE_APP_API_URL ?? "https://api.morphic.ste-test.net"
+        API_URL: process.env.VUE_APP_API_URL ?? "https://api.morphic.ste-test.net",
+        RECAPTCHA_SITEKEY: "6LcgxGoaAAAAACb4-Sdm1xj5UWQiuyYAieFZUhL4"
     },
 
     // "live" development (https://communitynew.morphic.dev)
