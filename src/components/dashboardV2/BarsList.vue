@@ -2,7 +2,7 @@
   <Div id="BarsList">
     <ul v-if="orderedBars.length > 0" class="list-unstyled">
       <li v-for="(bar, index) in orderedBars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
-        <b-link v-if="bar.is_shared" :to="{ name: 'MorphicBar Editor', query: { barId: bar.id } }" :ref="'bar' + index">
+        <b-link v-if="bar.is_shared" :to="getBarEditRoute(bar)" :ref="'bar' + index" class="stretched-link">
           {{ bar.name === "Default" ? "Default Bar" : bar.name }}
         </b-link>
       </li>
@@ -19,6 +19,7 @@
     ul {
       margin: 0 -1rem 1rem -1rem;
       li {
+        position: relative;
         padding: 0 1rem;
         &.active {
           padding: .25rem 1rem;
@@ -37,12 +38,16 @@
 </style>
 
 <script>
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "BarsList",
     props: {
         bars: Array,
         activeBarId: String
+    },
+    methods: {
+        getBarEditRoute: Bar.getBarEditRoute
     },
     computed: {
         orderedBars: function () {

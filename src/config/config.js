@@ -5,6 +5,9 @@ var ENV;
 if (href.host === "communitynew.morphic.dev") {
     // Hack to force the dev site to always use the dev api server.
     ENV = "DEVELOPMENT";
+} else if (href.host.match(/^pr-\d+\.morphic\.ste-test\.net$/)) {
+    // A similar hack to force a test site to always use the test api server.
+    ENV = "PR_TEST";
 } else {
     ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toUpperCase() : "LOCAL";
 }
@@ -30,6 +33,10 @@ const CONF = {
         API_URL: process.env.VUE_APP_API_URL ?? new URL(location.href).origin,
         // Valid for ste-test.net: to test locally, use localhost.ste-test.net
         RECAPTCHA_SITEKEY: href.host.match(/^[0-9.:]+$/) ? null : "6LcgxGoaAAAAACb4-Sdm1xj5UWQiuyYAieFZUhL4"
+    },
+    PR_TEST: {
+        // Used for testing pull requests
+        API_URL: process.env.VUE_APP_API_URL ?? "https://api.morphic.ste-test.net"
     },
 
     // "live" development (https://communitynew.morphic.dev)

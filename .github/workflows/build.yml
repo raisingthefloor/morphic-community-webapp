@@ -1,6 +1,6 @@
 name: check and build
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -26,8 +26,48 @@ jobs:
       - name: Building prod
         run: npm run build
 
-      - name: Building dev
-        run: npm run build-dev
+      - name: Packing build
+        run: tar -czvf web-app.tar.gz dist/
+
+      - name: Getting build hash
+        run: sha256sum web-app.tar.gz | cut -d ' ' -f 1 | xxd -r -ps | base64 | sed 's,^,hash=,' >> $GITHUB_ENV
+
+      - name: Commenting
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const link = `https://pr-${context.issue.number}.morphic.ste-test.net/`;
+            const commentBody = `## ${link}\n\n${process.env.hash}`;
+
+            const getComments = github.issues.listComments.endpoint.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number
+            });
+
+            const comments = await github.paginate(getComments);
+
+            const botComment = comments.find(comment => {
+                return comment.user.type === "Bot" && comment.user.login === "github-actions[bot]" && comment.body.includes(link);
+            });
+
+            const newComment = {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+            };
+
+            if (botComment) {
+                newComment.comment_id = botComment.id;
+                github.issues.updateComment(newComment);
+            } else {
+                newComment.issue_number = context.issue.number;
+                github.issues.createComment(newComment);
+            }
+
+      - name: Uploading build
+        run: curl -v -Fbuild=@web-app.tar.gz https://build.morphic.ste-test.net/build/upload/${{ github.event.number }}
 
       - name: Archiving prod
         uses: actions/upload-artifact@v2
@@ -35,8 +75,6 @@ jobs:
           name: webapp-prod
           path: dist/
 
-      - name: Archiving dev
-        uses: actions/upload-artifact@v2
-        with:
-          name: webapp-dev
-          path: dev/
+
+
+
