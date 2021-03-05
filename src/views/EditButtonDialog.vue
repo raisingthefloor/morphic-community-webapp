@@ -99,7 +99,7 @@
                       </div>
 
                       <!-- favicon -->
-                      <div class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
+                      <div v-if="buttonFavicon" class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
                         <div
                                 @click="changeIcon('$favicon')"
                                 :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
@@ -203,7 +203,7 @@ ul.relatedButtons {
 
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons } from "@/utils/constants";
+import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons, allButtons } from "@/utils/constants";
 import * as params from "@/utils/params";
 import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/dashboardV2/BarItemFields";
@@ -246,10 +246,17 @@ export default {
 
             // Index of the active tab
             activeTab: 1,
+            // url for the favicon, if available
             buttonFavicon: null,
+            /**
+             * favicon availability for sites, which have already been checked
+             * @type {Object<String,Bool>}
+             */
+            knownFavicons: {},
             // true to select the "Button" tab after a button is selected on the first tab.
             returnToButtonTab: false,
             fieldChanged: 0
+
         };
     },
 
@@ -261,6 +268,19 @@ export default {
         listedIcons: function () {
             const defaultIcon = defaultIcons[this.button.data.buttonKey];
             const iconKeys = [];
+
+            if (this.button.configuration.subkind === "make" && this.button.data.parameters.url !== undefined) {
+                // For custom url buttons, see if there's a pre-defined button for this site
+                const host = this.getHost(this.button.configuration.url).replace(/^www\./, "");
+                /** @type {BarItem} */
+                const other = Object.values(allButtons).find(b => {
+                    return b.configuration.url && host === this.getHost(b.configuration.url).replace(/^www\./, "");
+                });
+
+                if (other && other.configuration.image_url && !other.configuration.image_url.includes("/")) {
+                    iconKeys.push(other.configuration.image_url);
+                }
+            }
 
             // Get the icons of the same category.
             const subkind = this.button.configuration.relatedSubkind || this.button.configuration.subkind;
@@ -312,7 +332,9 @@ export default {
             this.button.configuration.favicon = (icon === "$favicon");
 
             if (this.button.configuration.favicon) {
-                this.button.configuration.image_url = this.getFavicon();
+                this.getFavicon().then(url => {
+                    this.button.configuration.image_url = url;
+                });
             } else {
                 this.button.configuration.image_url = icon;
             }
@@ -352,9 +374,8 @@ export default {
             let promise;
             if (applyChanges) {
                 promise = params.checkForProblems(this.button).then(() => {
-                    const problems = Object.values(this.button.data.problems);
-                    if (problems.length > 0) {
-                        return this.showProblems(problems).then(value => value || "cancel");
+                    if (params.hasProblem(this.button)) {
+                        return this.showProblems().then(value => value || "cancel");
                     }
                 });
             } else {
@@ -378,10 +399,9 @@ export default {
 
         /**
          * Shows a message of problems.
-         * @param {Array<ItemProblems>} problems The problems.
          * @return {Promise<Boolean>} true to continue with saving.
          */
-        showProblems: function (problems) {
+        showProblems: function () {
             return this.showConfirm("This button still has some problems.", ["Continue", "Go back"]);
         },
         /**
@@ -435,18 +455,51 @@ export default {
             });
         },
 
-        fixFavicon: function () {
-            this.buttonFavicon = this.getFavicon(this.button.configuration.url);
+        fixFavicon: async function () {
+            this.buttonFavicon = this.button.configuration.url && await this.getFavicon(this.button.configuration.url);
             // fix the image url, if it's a favicon
             if (this.button.configuration.favicon && this.button.configuration.url) {
                 this.button.configuration.image_url = this.buttonFavicon;
             }
         },
 
-        getFavicon: function (url) {
-            const getHost = /.*:\/\/([^/:]+)/;
-            var m = getHost.exec(url || this.button.configuration.url);
-            return m && `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
+        /**
+         * Gets the favicon for the given url, after checking it is available.
+         *
+         * @param {String} url The url
+         * @return {Promise<null|String>} Resolves with the favicon url.
+         */
+        getFavicon: async function (url) {
+            const lastCheck = this.knownFavicons[url];
+            let togo;
+
+            if (lastCheck === undefined) {
+                const host = this.getHost(url);
+
+                if (host) {
+                    const imageUrl = `https://icons.duckduckgo.com/ip2/${host}.ico`;
+                    // Check the url before trying to load it.
+                    const result = await params.checkUrl(imageUrl);
+                    togo = result.isProblem ? null : imageUrl;
+                }
+
+                this.knownFavicons[url] = togo;
+            } else {
+                togo = lastCheck;
+            }
+
+            return togo;
+        },
+
+        /**
+         * Gets the host portion of a url.
+         * @param {String} url The url.
+         * @return {String} The host portion of the url.
+         */
+        getHost: function (url) {
+            const getHost = /(.*?:\/\/)?([^/:]+)/;
+            const m = url && getHost.exec(url);
+            return m && m[2];
         }
     },
     watch: {
@@ -456,8 +509,20 @@ export default {
 
                 this.fieldChanged = Math.random();
 
-                this.faviconTimer && clearTimeout(this.faviconTimer);
-                this.faviconTimer = setTimeout(() => this.fixFavicon(), 2000);
+                if (this.button.configuration.url) {
+                    // Update the favicon (delay the check for when the user is typing in the url).
+                    if (this.faviconTimer) {
+                        clearTimeout(this.faviconTimer);
+                    }
+
+                    if (this.knownFavicons[this.button.configuration.url] === undefined) {
+                        this.faviconTimer = setTimeout(() => this.fixFavicon(), 1000);
+                    } else {
+                        this.fixFavicon();
+                    }
+                } else {
+                    this.buttonFavicon = null;
+                }
             },
             deep: true
         }

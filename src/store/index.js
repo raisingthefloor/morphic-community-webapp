@@ -16,7 +16,8 @@ export default new Vuex.Store({
         community: {},
         errorMessage: {},
         unsavedChanges: false,
-        unsavedBar: {}
+        unsavedBar: {},
+        resetPasswordEmail: ""
     },
     mutations: {
         auth_request(state) {
@@ -37,6 +38,9 @@ export default new Vuex.Store({
             state.token = "";
             state.userId = "";
             state.communityId = "";
+        },
+        reset_password_email(state, email) {
+            state.resetPasswordEmail = email;
         },
         reset_password(state) {
             state.status = "reset_password";
@@ -177,6 +181,7 @@ export default new Vuex.Store({
         communityId: state => state.communityId,
         unsavedChanges: state => state.unsavedChanges,
         /** @type {BarDetails} */
-        unsavedBar: state => state.unsavedBar
+        unsavedBar: state => state.unsavedBar,
+        resetPasswordEmail: state => state.resetPasswordEmail
     }
 });
