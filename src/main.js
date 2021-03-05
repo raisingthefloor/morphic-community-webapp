@@ -126,8 +126,8 @@ Vue.mixin({
          * @return {Promise<String>} Resolves with the token.
          */
         async getRecaptchaToken(action) {
-            this.showRecaptchaBadge(true);
             await this.$recaptchaLoaded();
+            this.showRecaptchaBadge(true);
             return await this.$recaptcha(action);
         },
 
