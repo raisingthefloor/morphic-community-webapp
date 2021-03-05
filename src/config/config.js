@@ -24,7 +24,7 @@ if (href.host === "communitynew.morphic.dev") {
 const CONF = {
     // Applies to all environments, unless overridden
     BASE: {
-        RECAPTCHA_SITEKEY: "6LcAv7cZAAAAAFeZSLJK2JnKRp8PmD266Wgp-pDy"
+        RECAPTCHA_SITEKEY: "6Lc1hfsUAAAAAGFReCJUUva4LHF30XG5pIoJr2Nl"
     },
 
     // Local development (npm run dev)
