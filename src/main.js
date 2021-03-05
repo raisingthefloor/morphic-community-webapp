@@ -5,9 +5,11 @@ import router from "./router";
 import store from "./store";
 import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 import Vuelidate from "vuelidate";
+import { VueReCaptcha } from "vue-recaptcha-v3";
 import { HTTP } from "@/services/index";
 import { icons } from "@/utils/constants";
 import * as Bar from "@/utils/bar";
+import { CONFIG } from "@/config/config";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -31,6 +33,11 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 Vue.use(Vuex);
+if (CONFIG.RECAPTCHA_SITEKEY) {
+    Vue.use(VueReCaptcha, {
+        siteKey: CONFIG.RECAPTCHA_SITEKEY
+    });
+}
 
 var toastSheet;
 
@@ -111,8 +118,30 @@ Vue.mixin({
          */
         generateId(item) {
             return Bar.generateId(item);
-        }
+        },
 
+        /**
+         * Gets the recaptcha token (and shows the badge)
+         * @param {String} action The recaptcha action.
+         * @return {Promise<String>} Resolves with the token.
+         */
+        async getRecaptchaToken(action) {
+            await this.$recaptchaLoaded();
+            this.showRecaptchaBadge(true);
+            return await this.$recaptcha(action);
+        },
+
+        /**
+         * Show or hide the recaptcha badge.
+         * @param {Boolean} show true to show.
+         */
+        showRecaptchaBadge(show) {
+            document.body.classList.toggle("show-recaptcha", !!show);
+        }
+    },
+    mounted() {
+        // Hide the badge by default.
+        this.showRecaptchaBadge(false);
     },
     computed: {
         /**

@@ -5,31 +5,25 @@
       </b-col>
       <b-col md="6">
         <h3>Reset your password</h3>
-        <p class="lead">Please enter the email address you are registered with and we will send you message with your temporary password.</p>
+        <p class="lead">Please enter the email address you used to register with, and we will email you temporary password to you.</p>
         <br />
         <b-form @submit.stop.prevent="onSubmit">
           <b-alert variant="danger" :show="errorAlert">
             {{ errorMessage }}
           </b-alert>
-          <b-form-group>
-            <b-form-input
-              v-model="$v.form.email.$model"
-              :state="validateState('email')"
-              label="Email"
-              placeholder="Enter your email address"
-            />
-            <b-form-invalid-feedback>{{ emailValidationError }}</b-form-invalid-feedback>
-          </b-form-group>
-          <br/>
+          <ValidatedInput id="login-user-email"
+                          label="Enter your email address"
+                          placeholder="user@example.com"
+                          :validation="$v.form.email"
+          />
+
           <b-row>
             <b-col md="6">
-              <b-button disabled type="submit" variant="primary">Reset Password</b-button>
-              <b-button to="/" variant="success" class="ml-1">Login</b-button>
+              <b-link to="/" variant="success" class="ml-1">Return to Login</b-link>
             </b-col>
-            <b-col md="6">
-              <div class="small text-right">
-                <b-button to="/" size="sm" variant="outline-secondary" class="ml-2">Cancel</b-button>
-              </div>
+
+            <b-col md="6" style="text-align: right" >
+              <b-button type="submit" variant="primary">Reset Password</b-button>
             </b-col>
           </b-row>
         </b-form>
@@ -43,16 +37,19 @@
 <script>
 import { required, email } from "vuelidate/lib/validators";
 import { ERROR_MAP, MESSAGES } from "@/utils/constants";
+import ValidatedInput from "@/components/ValidatedInput";
 
 export default {
+    components: {ValidatedInput},
     data() {
         return {
             form: {
-                email: ""
+                email: this.$store.getters.resetPasswordEmail || ""
             },
             errorAlert: false,
             errorMessage: null,
-            emailValidationError: MESSAGES.emailValidationError
+            emailValidationError: MESSAGES.emailValidationError,
+            recaptchaToken: null
         };
     },
     validations: {
@@ -62,6 +59,9 @@ export default {
                 email
             }
         }
+    },
+    async mounted() {
+        this.recaptchaToken = await this.getRecaptchaToken("requestpasswordreset");
     },
     methods: {
         validateState(name) {
@@ -73,7 +73,11 @@ export default {
             if (this.$v.form.$anyError) {
                 return;
             }
-            this.$store.dispatch("resetPassword", this.$v.form.$model)
+            const body = {
+                email: this.$v.form.$model.email,
+                g_recaptcha_response: this.recaptchaToken
+            };
+            this.$store.dispatch("resetPassword", body)
                 .then(() => {
                     this.showMessage(MESSAGES.successfulReset);
                     this.$router.push("/");

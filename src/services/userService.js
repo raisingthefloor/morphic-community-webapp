@@ -19,9 +19,6 @@ export function register(user) {
     return HTTP.post("/v1/register/username", auth);
 }
 
-export function resetPassword({ email }) {
-    const data = {
-        email: email
-    };
-    return HTTP.post("/user/reset-password", data);
+export function resetPassword(body) {
+    return HTTP.post("/v1/auth/username/password_reset/request", body);
 }

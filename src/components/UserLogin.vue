@@ -5,30 +5,18 @@
       {{ errorMessage }}
     </b-alert>
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
-      <b-form-group
-        label="Enter your email:"
-        label-for="login-user-email"
-      >
-        <b-form-input
-          v-model="$v.userInfo.email.$model"
-          :state="validateState('email')"
-          placeholder="user@server.com"
-          id="login-user-email"
-        />
-        <b-form-invalid-feedback>This is a required field and must be a valid email address.</b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group
-        label="Enter your password:"
-        label-for="login-user-password"
-      >
-        <b-form-input
-          v-model="$v.userInfo.password.$model"
-          :state="validateState('password')"
-          type="password"
-          id="login-user-password"
-        />
-        <b-form-invalid-feedback>This is a required field and must be at least 6 characters.</b-form-invalid-feedback>
-      </b-form-group>
+      <ValidatedInput id="login-user-email"
+                      label="Enter your email"
+                      placeholder="user@example.com"
+                      :validation="$v.userInfo.email"
+                      @input="storeResetEmail"
+      />
+      <ValidatedInput id="login-user-password"
+                      label="Enter your password"
+                      :validation="$v.userInfo.password"
+                      type="password"
+      />
+
       <b-form-checkbox-group>
         <b-form-checkbox
           v-model="userInfo.keep_logged"
@@ -37,20 +25,35 @@
         >
           Keep me logged in
         </b-form-checkbox>
+        <b-button type="submit"
+                  id="loginButton"
+                  variant="primary"
+                  :disabled="$v.userInfo.$anyError"
+        >Login</b-button>
       </b-form-checkbox-group>
-      <br>
-      <b-button type="submit" variant="primary">Login</b-button>
-      <!-- <b-button to="/reset-password" variant="success" class="ml-1">Lost Password</b-button> -->
+      <br/>
+      <b-link to="/reset-password" variant="link">Forgot Password</b-link>
     </b-form>
   </div>
 </template>
 
+<style lang="scss">
+#loginButton {
+  padding-left: 2em;
+  padding-right: 2em;
+  float: right;
+}
+</style>
+
 <script>
 import { validationMixin } from "vuelidate";
-import { required, email, minLength } from "vuelidate/lib/validators";
+import { required, email } from "vuelidate/lib/validators";
 import { ERROR_MAP } from "@/utils/constants";
+import ValidatedInput from "@/components/ValidatedInput";
+
 
 export default {
+    components: {ValidatedInput},
     mixins: [validationMixin],
     data() {
         return {
@@ -70,15 +73,13 @@ export default {
                 email
             },
             password: {
-                required,
-                minLength: minLength(6)
+                required
             }
         }
     },
     methods: {
-        validateState(name) {
-            const { $dirty, $error } = this.$v.userInfo[name];
-            return $dirty ? !$error : null;
+        storeResetEmail() {
+            this.$store.commit("reset_password_email", this.userInfo.email);
         },
         onSubmit() {
             this.$v.userInfo.$touch();

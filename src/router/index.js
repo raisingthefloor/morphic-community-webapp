@@ -6,6 +6,8 @@ import store from "@/store";
 import Home from "@/views/Home.vue";
 import Terms from "@/views/Terms.vue";
 
+import ResetPassword from "@/views/ResetPassword.vue";
+
 import MyCommunity from "@/views/MyCommunity.vue";
 import MyCommunities from "@/views/MyCommunities.vue";
 
@@ -103,14 +105,14 @@ const routes = [
             authRoute: true
         }
     },
-    // {
-    //   path: '/reset-password',
-    //   name: 'Reset Password',
-    //   component: ResetPassword,
-    //   meta: {
-    //     title: 'Reset Password :: Morphic Community'
-    //   }
-    // },
+    {
+        path: "/reset-password",
+        name: "Reset Password",
+        component: ResetPassword,
+        meta: {
+            title: "Reset Password :: Morphic Community"
+        }
+    },
 
     // Dashboard mockups, needs to be properly renamed and re-arranged when starting to implement the API
     {

@@ -12,22 +12,47 @@ if (href.host === "communitynew.morphic.dev") {
     ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toUpperCase() : "LOCAL";
 }
 
+/**
+ * @typedef {Object} CONFIG
+ * @property {String} API_URL The API server.
+ * @property {String} RECAPTCHA_SITEKEY Site key for recaptcha.
+ */
 
+/**
+ * @type {Object<String,CONFIG>}
+ */
 const CONF = {
+    // Applies to all environments, unless overridden
+    BASE: {
+    },
+
+    // Local development (npm run dev)
     LOCAL: {
         // Local development server will redirect all API requests (/v1/*) to the local API server (see vue.config.js)
-        API_URL: process.env.VUE_APP_API_URL ?? new URL(location.href).origin
+        API_URL: process.env.VUE_APP_API_URL ?? new URL(location.href).origin,
+        // Valid for ste-test.net: to test locally, use localhost.ste-test.net
+        RECAPTCHA_SITEKEY: href.host.match(/^[0-9.:]+$/) ? null : "6LcgxGoaAAAAACb4-Sdm1xj5UWQiuyYAieFZUhL4"
     },
     PR_TEST: {
         // Used for testing pull requests
-        API_URL: process.env.VUE_APP_API_URL ?? "https://api.morphic.ste-test.net"
+        API_URL: process.env.VUE_APP_API_URL ?? "https://api.morphic.ste-test.net",
+        RECAPTCHA_SITEKEY: "6LcgxGoaAAAAACb4-Sdm1xj5UWQiuyYAieFZUhL4"
     },
+
+    // "live" development (https://communitynew.morphic.dev)
     DEVELOPMENT: {
-        API_URL: "https://api.morphic.dev"
+        API_URL: "https://api.morphic.dev",
+        RECAPTCHA_SITEKEY: "6Lc1hfsUAAAAAGFReCJUUva4LHF30XG5pIoJr2Nl"
     },
+
+    // production
     PRODUCTION: {
-        API_URL: "https://api.morphic.org"
+        API_URL: "https://api.morphic.org",
+        RECAPTCHA_SITEKEY: "6LcuEM0ZAAAAABafZkUPUBAAcj5BNw2rd3fuNMC2"
     }
 };
 
-export const CONFIG = CONF[ENV];
+/**
+ * @type {CONFIG}
+ */
+export const CONFIG = Object.assign({}, CONF.BASE, CONF[ENV]);
