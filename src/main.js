@@ -35,9 +35,6 @@ Vue.use(Vuelidate);
 Vue.use(Vuex);
 if (CONFIG.RECAPTCHA_SITEKEY) {
     Vue.use(VueReCaptcha, {
-        loaderOptions: {
-            autoHideBadge: true
-        },
         siteKey: CONFIG.RECAPTCHA_SITEKEY
     });
 }
@@ -121,8 +118,30 @@ Vue.mixin({
          */
         generateId(item) {
             return Bar.generateId(item);
-        }
+        },
 
+        /**
+         * Gets the recaptcha token (and shows the badge)
+         * @param {String} action The recaptcha action.
+         * @return {Promise<String>} Resolves with the token.
+         */
+        async getRecaptchaToken(action) {
+            this.showRecaptchaBadge(true);
+            await this.$recaptchaLoaded();
+            return await this.$recaptcha(action);
+        },
+
+        /**
+         * Show or hide the recaptcha badge.
+         * @param {Boolean} show true to show.
+         */
+        showRecaptchaBadge(show) {
+            document.body.classList.toggle("show-recaptcha", !!show);
+        }
+    },
+    mounted() {
+        // Hide the badge by default.
+        this.showRecaptchaBadge(false);
     },
     computed: {
         /**

@@ -94,6 +94,10 @@
     text-align: left;
   }
 
+  // this is shown when the recaptcha token is used by getRecaptchaToken()
+  body:not(.show-recaptcha) .grecaptcha-badge {
+    visibility: hidden;
+  }
 </style>
 
 <script>

@@ -61,9 +61,7 @@ export default {
         }
     },
     async mounted() {
-        await this.$recaptchaLoaded();
-        const token = await this.$recaptcha("requestpasswordreset");
-        this.recaptchaToken = token;
+        this.recaptchaToken = await this.getRecaptchaToken("requestpasswordreset");
     },
     methods: {
         validateState(name) {
