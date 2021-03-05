@@ -48,7 +48,8 @@ export default {
             },
             errorAlert: false,
             errorMessage: null,
-            emailValidationError: MESSAGES.emailValidationError
+            emailValidationError: MESSAGES.emailValidationError,
+            recaptchaToken: null
         };
     },
     validations: {
@@ -61,7 +62,8 @@ export default {
     },
     async mounted() {
         await this.$recaptchaLoaded();
-        this.recaptchaToken = await this.$recaptcha("requestpasswordreset");
+        const token = await this.$recaptcha("requestpasswordreset");
+        this.recaptchaToken = token;
     },
     methods: {
         validateState(name) {
