@@ -24,7 +24,6 @@ if (href.host === "communitynew.morphic.dev") {
 const CONF = {
     // Applies to all environments, unless overridden
     BASE: {
-        RECAPTCHA_SITEKEY: "6Lc1hfsUAAAAAGFReCJUUva4LHF30XG5pIoJr2Nl"
     },
 
     // Local development (npm run dev)
@@ -42,12 +41,14 @@ const CONF = {
 
     // "live" development (https://communitynew.morphic.dev)
     DEVELOPMENT: {
-        API_URL: "https://api.morphic.dev"
+        API_URL: "https://api.morphic.dev",
+        RECAPTCHA_SITEKEY: "6Lc1hfsUAAAAAGFReCJUUva4LHF30XG5pIoJr2Nl"
     },
 
     // production
     PRODUCTION: {
-        API_URL: "https://api.morphic.org"
+        API_URL: "https://api.morphic.org",
+        RECAPTCHA_SITEKEY: "6LcuEM0ZAAAAABafZkUPUBAAcj5BNw2rd3fuNMC2"
     }
 };
 
