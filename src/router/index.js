@@ -26,7 +26,6 @@ import FocusedBarEditor from "@/views/focused/FocusedBarEditor.vue";
 import FocusedButtonCatalog from "@/views/focused/FocusedButtonCatalog.vue";
 import FocusedPeopleUsingBar from "@/views/focused/FocusedPeopleUsingBar.vue";
 import FocusedPersonPage from "@/views/focused/FocusedPersonPage.vue";
-import FocusedBarSettings from "@/views/focused/FocusedBarSettings.vue";
 import FocusedButtonEdit from "@/views/focused/FocusedButtonEdit.vue";
 import FocusedAddCommunityBar from "@/views/focused/FocusedAddCommunityBar.vue";
 
@@ -209,14 +208,6 @@ const routes = [
         component: FocusedPersonPage,
         meta: {
             title: "Focused :: Member"
-        }
-    },
-    {
-        path: "/focused/bar-settings",
-        name: "Focused: Bar settings",
-        component: FocusedBarSettings,
-        meta: {
-            title: "Focused :: Bar settings"
         }
     },
     {

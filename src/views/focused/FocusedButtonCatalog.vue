@@ -15,8 +15,8 @@
           <h3 :class="'header_' + subkind">{{buttonGroup.title}}</h3>
           <ul class="buttonCatalogEntries">
             <li v-for="(button, buttonKey) in buttonGroup.items" :key="buttonKey" class="buttonCatalogEntry">
-              <b-button v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonCatalogEntry nonExpandedCatalogEntry">
-                <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" :alt="item.configuration.label + ' logo'" />
+              <b-button variant="link" v-if="currentlyActiveButton != buttonKey" @click="buttonActivated(buttonKey, button)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"  class="buttonCatalogEntry nonExpandedCatalogEntry">
+                <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)" :alt="button.configuration.label + ' logo'" />
                   {{ button.configuration.label }}
               </b-button>
 
@@ -115,7 +115,7 @@
 
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import { saveCommunityBar, getCommunityBar, createCommunityBar, getCommunityMember, updateCommunityMember } from "@/services/communityService";
-import { buttonCatalog, colors, icons, subkindIcons } from "@/utils/constants";
+import { buttonCatalog, colors, icons } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import * as Bar from "@/utils/bar";
 
@@ -216,6 +216,7 @@ export default {
                     console.error(err);
                 });
         }
+        window.scrollTo(0, 0);
     },
     watch: {
         predefinedButtons: function (newValue, oldValue) {
@@ -236,8 +237,7 @@ export default {
             barDetails: {},
             predefinedBars: predefinedBars,
             colors: colors,
-            icons: icons,
-            subkindIcons: subkindIcons
+            icons: icons
         };
     }
 };

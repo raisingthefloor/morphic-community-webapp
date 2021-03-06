@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="button">
     <h1>Edit Button: {{ button.configuration && button.configuration.label}} </h1>
     <button @click="deleteButton" class="text-danger">Remove Button</button>
     <b-col lg="5">
@@ -7,23 +7,6 @@
 
        <BarItemFields v-if="!!button" :bar-item="button"/>
 
-       <!--
-       <div v-for="(value, paramKey, index) in button.data.parameters"
-            :key="paramKey"
-            role="group" class="mb-3">
-         <b-form-group :label="allParameters[paramKey].label"
-                       :label-for="'barItem_' + paramKey"
-                       :invalid-feedback="editValidation(paramKey)">
-           <b-form-input :id="'barItem_' + paramKey"
-                         :name="paramKey"
-                         v-model="button.data.parameters[paramKey]"
-                         :state="!editValidation(paramKey)"
-                         :autofocus="!index"
-                         v-bind="allParameters[paramKey].attrs"
-           />
-         </b-form-group>
-       </div>
--->
         <!-- TODO CHANGE ICONS -->
 
         <b-form-group id="color" label="Color for button" label-for="button-color-input">
@@ -153,7 +136,6 @@ export default {
         this.buttonIndex = this.$route.query.buttonIndex;
         this.buttonId = this.$route.query.buttonId;
         this.newButtonIndex = this.buttonIndex;
-        this.communityId = this.$route.query.communityId;
         this.memberId = this.$route.query.memberId;
 
         const unsavedBar = this.$store.getters.unsavedBar;
@@ -202,18 +184,12 @@ export default {
             barId: undefined,
             buttonIndex: undefined,
             buttonId: undefined,
-            communityId: undefined,
             memberId: undefined,
             memberDetails: undefined,
             originalButton: undefined,
             newButtonIndex: undefined,
             /** @type {BarItem} */
-            button: {
-                /** @type {BarItemConfiguration} */
-                configuration: {},
-                /** @type {BarItemData} */
-                data: {}
-            },
+            button: undefined,
             colors: colors,
             availablePositions: {},
             allParameters: params.allParameters

@@ -86,46 +86,16 @@
 
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
 import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember } from "@/services/communityService";
-import { availableItems, colors, icons, subkindIcons, MESSAGES } from "@/utils/constants";
+import { colors, icons, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import * as Bar from "@/utils/bar";
 
 export default {
-    name: "MemberInvite",
+    name: "FocusedBarEditor",
     components: {
         BarItemLink
     },
     methods: {
-        getMakeAButtons: function () {
-            const buttons = [];
-            if (availableItems && availableItems.length > 0) {
-                for (let i = 0; i < availableItems.length; i++) {
-                    if (availableItems[i].configuration.subkind) {
-                        const item = availableItems[i];
-                        item.isActive = false;
-                        item.configuration.color = item.configuration.color || "";
-                        item.configuration.image_url = item.configuration.image_url || "";
-                        buttons.push(item);
-                    }
-                }
-            }
-            return buttons;
-        },
-        getPredefinedButtons: function () {
-            const buttons = [];
-            if (availableItems && availableItems.length > 0) {
-                for (let i = 0; i < availableItems.length; i++) {
-                    if (!availableItems[i].configuration.subkind) {
-                        const item = availableItems[i];
-                        item.isActive = false;
-                        item.configuration.color = item.configuration.color || "";
-                        item.configuration.image_url = item.configuration.image_url || "";
-                        buttons.push(item);
-                    }
-                }
-            }
-            return buttons;
-        },
         getDrawerItems: function (items) {
             const data = [];
             if (items && items.length > 0) {
@@ -156,38 +126,6 @@ export default {
             }
             this.primaryItems = data;
         },
-        // deleteUser: function () {
-        //   deleteCommunityMember(this.communityId, this.memberDetails.id)
-        //     .then((resp) => {
-        //       if (resp.status === 200) {
-        //         this.successMessage = MESSAGES.successfulMemberDelete
-        //         this.successAlert = true
-        //         setTimeout(() => {
-        //           this.$router.push('/dashboard')
-        //         }, 3000)
-        //       }
-        //     })
-        //     .catch(err => {
-        //       console.error(err)
-        //     })
-        // },
-        // changeUserRole: function () {
-        //   if (this.memberDetails.role === 'member') {
-        //     this.memberDetails.role = 'manager'
-        //   } else {
-        //     this.memberDetails.role = 'member'
-        //   }
-        //   updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-        //     .then((resp) => {
-        //       if (resp.status === 200) {
-        //         this.successMessage = MESSAGES.successfulRoleChange
-        //         this.successAlert = true
-        //       }
-        //     })
-        //     .catch(err => {
-        //       console.error(err)
-        //     })
-        // },
         addPersonalBar: function () {
             if (this.barDetails.is_shared) {
                 this.onSave = true;
@@ -368,7 +306,6 @@ export default {
         refreshButton: function (updated) {
             // updating the data in a button (on edit)
             this.editDialogDetails = false;
-            this.editDialogSubkindIcons = true;
             if (updated) {
                 this.isChanged = true;
             }
@@ -458,15 +395,6 @@ export default {
             } else {
                 return false;
             }
-        },
-        editSubKindIcons: function () {
-            const data = {};
-            if (this.buttonEditStorage.configuration.subkind && this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind]) {
-                for (let i = 0; i < this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind].length; i++) {
-                    data[this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i]] = this.configuration.subkindIcons[this.buttonEditStorage.configuration.subkind][i];
-                }
-            }
-            return data;
         }
     },
     mounted() {
@@ -518,18 +446,6 @@ export default {
                     firstButton[0].$el.focus();
                 }
             }, 500);
-        },
-        makeAButtons: function (newValue, oldValue) {
-            if (!this.dragMakeAButton) {
-                this.makeAButtons = oldValue;
-                this.dragMakeAButton = true;
-            }
-        },
-        predefinedButtons: function (newValue, oldValue) {
-            if (!this.dragPredefinedButton) {
-                this.predefinedButtons = oldValue;
-                this.dragPredefinedButton = true;
-            }
         },
         primaryItems: function (newValue, oldValue) {
             if (oldValue.length === 0 && !this.initialChangesPrimaryItems) {
@@ -646,7 +562,6 @@ export default {
             newBar: false,
             openDrawer: false,
             editDialogDetails: false,
-            editDialogSubkindIcons: true,
             tab: 0,
             dragFromEditor: false,
             isChanged: false,
@@ -676,8 +591,6 @@ export default {
             drawerItems: [],
             drawerItemsSecond: [],
             primaryItems: [],
-            makeAButtons: this.getMakeAButtons(),
-            predefinedButtons: this.getPredefinedButtons(),
 
             // configurations
             preview: {
@@ -703,8 +616,7 @@ export default {
             },
             predefinedBars: predefinedBars,
             colors: colors,
-            icons: icons,
-            subkindIcons: subkindIcons
+            icons: icons
         };
     }
 };
