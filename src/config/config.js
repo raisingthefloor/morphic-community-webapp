@@ -16,6 +16,9 @@ if (href.host === "communitynew.morphic.dev") {
  * @typedef {Object} CONFIG
  * @property {String} API_URL The API server.
  * @property {String} RECAPTCHA_SITEKEY Site key for recaptcha.
+ * @property {Boolean} DISABLE_FAVICONS true to allow the use of favicons in buttons.
+ * @property {String} ENV The environment key (eg, "LOCAL", "DEVELOPMENT", "PRODUCTION")
+ * @property {Boolean} PRODUCTION true if production.
  */
 
 /**
@@ -24,6 +27,9 @@ if (href.host === "communitynew.morphic.dev") {
 const CONF = {
     // Applies to all environments, unless overridden
     BASE: {
+        DISABLE_FAVICONS: false,
+        ENV: ENV,
+        PRODUCTION: false
     },
 
     // Local development (npm run dev)
@@ -48,7 +54,8 @@ const CONF = {
     // production
     PRODUCTION: {
         API_URL: "https://api.morphic.org",
-        RECAPTCHA_SITEKEY: "6LcuEM0ZAAAAABafZkUPUBAAcj5BNw2rd3fuNMC2"
+        RECAPTCHA_SITEKEY: "6LcuEM0ZAAAAABafZkUPUBAAcj5BNw2rd3fuNMC2",
+        PRODUCTION: true
     }
 };
 

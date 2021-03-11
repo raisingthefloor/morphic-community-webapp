@@ -51,6 +51,7 @@
  * @property {String} id Unique identifier.
  * @property {String} kind The kind of item (url, application, action).
  * @property {Boolean} is_primary
+ * @property {Boolean?} production true for production only, false for never in production. undefined for both.
  * @property {BarItemData} data Web-app data.
  * @property {BarItemConfiguration} configuration Bar item options
  **/
