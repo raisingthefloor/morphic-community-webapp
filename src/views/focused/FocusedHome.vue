@@ -26,7 +26,7 @@
       </b-form>
     </p>
 
-  <h2>Members in your community</h2>
+  <h2>Members in your group</h2>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="getUserBarEditRoute(member)">
