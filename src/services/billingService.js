@@ -1,4 +1,5 @@
 import { HTTP } from "@/services/index";
+import { CONFIG } from "@/config/config";
 
 /**
  * @typedef {String} GUID
@@ -20,7 +21,11 @@ export function getCommunityPlans() {
  * @return {Promise<AxiosResponse<BillingInfo>>} Response
  */
 export function getBillingInfo(communityId) {
-    return HTTP.get(`/v1/communities/${communityId}/billing`);
+    return HTTP.get(`/v1/communities/${communityId}/billing`).then(res => {
+        if (CONFIG.DISABLE_TRIAL) {
+            delete res.data.trial_end_days;
+        }
+    });
 }
 
 /**

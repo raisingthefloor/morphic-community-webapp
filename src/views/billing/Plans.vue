@@ -13,7 +13,7 @@
             class="text-danger">
           Your trial ends in {{ billingInfo.trial_end_days }} days.
         </li>
-        <li v-else
+        <li v-else-if="billingInfo.trial_end_days === 0"
             class="text-danger">
           <strong>Your trial will end today.</strong>
         </li>
