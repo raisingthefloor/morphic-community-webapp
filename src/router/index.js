@@ -82,7 +82,7 @@ const routes = [
         name: "MyCommunities",
         component: MyCommunities,
         meta: {
-            title: "My Communities :: Morphic",
+            title: "My Groups :: Morphic",
             authRoute: true
         }
     },
@@ -180,10 +180,10 @@ const routes = [
     },
     {
         path: "/focused/add-community-bar",
-        name: "Focused: Add Community Bar",
+        name: "Focused: Add Group Bar",
         component: FocusedAddCommunityBar,
         meta: {
-            title: "Focused :: Add community Bar"
+            title: "Focused :: Add group Bar"
         }
     },
     {

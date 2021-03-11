@@ -17,7 +17,7 @@
         <!--
         <b-nav-item v-if="isLoggedIn" exact-active-class="active" to="/my-community">
           <b-icon-person-fill></b-icon-person-fill>
-          My Community
+          My Group
         </b-nav-item>
         -->
         <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">

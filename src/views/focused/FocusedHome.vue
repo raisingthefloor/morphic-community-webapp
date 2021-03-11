@@ -22,7 +22,7 @@
     </p>
     <p>
       <b-form action="#/focused/add-community-bar">
-        <b-button type="submit" variant="primary">Add a community bar</b-button>
+        <b-button type="submit" variant="primary">Add a group bar</b-button>
       </b-form>
     </p>
 
@@ -32,7 +32,7 @@
         <b-link v-if="member.bar_id" :to="getUserBarEditRoute(member)">
           {{ member.first_name }} {{ member.last_name }}
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
-          <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" v-b-tooltip.hover title="Using a community bar"></b-icon>
+          <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" v-b-tooltip.hover title="Using a group bar"></b-icon>
           <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
           <br>
         </b-link>

@@ -13,7 +13,7 @@
   </div>
 
   <div v-else-if="isAddMemberView">
-    <h1>Add a new member to the community</h1>
+    <h1>Add a new member to the group</h1>
     <b-form>
       <b-form-group label="First name" label-for="firstName_input">
         <b-form-input v-model="firstNameInput" id="firstName_input" class="mb-2"></b-form-input>
@@ -31,13 +31,13 @@
   <div v-else>
     <h1>Member: {{ memberDetails.first_name }} {{ memberDetails.last_name }}</h1>
     <ul>
-      <li>{{memberDetails.role == "member" ? "Is a regular member" : "Is a community manager"}}</li>
+      <li>{{memberDetails.role == "member" ? "Is a regular member" : "Is a group manager"}}</li>
       <li>Joined: 2020-10-10</li>
-      <li>Invited by: Community Manager Handle</li>
+      <li>Invited by: Group Manager Handle</li>
       <li>Last used Morphic 3 days ago</li>
     </ul>
 
-    <b-button variant="warning" @click="changeUserRole">{{memberDetails.role == "member" ? "Make member a Community Manager" : "Remove community manager role"}}</b-button>
+    <b-button variant="warning" @click="changeUserRole">{{memberDetails.role == "member" ? "Make member a Group Manager" : "Remove group manager role"}}</b-button>
     <b-button variant="danger" @click="deleteMemberClicked">Delete member</b-button>
     <b-button @click="sendInviteClicked">
       <span v-if="memberDetails.state == 'uninvited'">Invite member</span>

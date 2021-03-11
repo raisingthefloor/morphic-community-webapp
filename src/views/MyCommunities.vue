@@ -1,12 +1,12 @@
 <template>
   <b-jumbotron class="bg-light">
     <b-modal id="deleteConfirm" @ok="deleteCommunity" title="Delete a community" footer-bg-variant="light" ok-title="Delete community">
-      <p class="my-4">Please confirm the deletion of that community?</p>
+      <p class="my-4">Please confirm the deletion of that group?</p>
     </b-modal>
-    <h3>My Communities</h3>
+    <h3>My Groups</h3>
     <p>Sed bibendum neque vel lorem maximus, ut euismod dui ultricies. Vestibulum sed ipsum in arcu facilisis posuere id sit amet risus. In sed cursus turpis. Duis ligula magna, tempor id mattis non, sollicitudin vel nisl. </p>
     <b-button variant="primary" disabled>
-      Create New Community
+      Create New Group
     </b-button>
     <hr class="mt-5 mb-5" />
     <b-card-group columns>
@@ -19,7 +19,7 @@
       class="mb-5"
       >
         <b-card-text>
-          Community Page:
+          Group Page:
           <br/>
           <a :href="'https://' + community.name + '.' + host" class="card-link">{{ community.name + '.' + host }}</a>
         </b-card-text>
@@ -46,7 +46,7 @@
         <b-card-text>
           <!-- <b-button :href="'https://' + community.name + '.' + host" variant="success"> -->
           <b-button :to="{ name: 'Dashboard', params: { community: community }}"   variant="success">
-            <b-icon-arrow-bar-right></b-icon-arrow-bar-right> Visit Community
+            <b-icon-arrow-bar-right></b-icon-arrow-bar-right> Visit Group
           </b-button>
           <b-button variant="danger" class="ml-1" v-b-modal.deleteConfirm @click="setCommunityId(community.id)">Delete</b-button>
         </b-card-text>

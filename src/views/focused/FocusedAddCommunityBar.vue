@@ -1,6 +1,6 @@
 <template>
   <div class="FocuedAddCommunityBar">
-    <h1>Select starting point for new community bar</h1>
+    <h1>Select starting point for new group bar</h1>
 
     <ul class="barsList">
         <li class="barEntry" >
@@ -75,7 +75,7 @@ export default {
         selectedBar: function (bar) {
             const barToSave = {
                 is_shared: true,
-                name: "My Community Bar"
+                name: "My Group Bar"
             };
             barToSave.items = bar ? bar.items : [];
 

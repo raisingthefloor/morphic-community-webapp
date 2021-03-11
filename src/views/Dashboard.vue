@@ -26,7 +26,7 @@
                     Add a new member
                   </div>
                   <div v-else>
-                    Add a new member to your community by clicking the Plus button
+                    Add a new member to your group by clicking the Plus button
                   </div>
                 </div>
                 <div v-if="members.length > 1" ref="EditMemberHint">

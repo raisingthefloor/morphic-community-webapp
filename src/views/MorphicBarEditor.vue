@@ -65,7 +65,7 @@
                         @click="saveBar"
                         :variant="isChanged ? 'success' : 'outline-dark'"
                         class="updateButton"
-                        size="sm"><b-icon-arrow-repeat/> Save this to Community Bar</b-button>
+                        size="sm"><b-icon-arrow-repeat/> Save this to Group Bar</b-button>
             </div>
           </div>
 
@@ -964,7 +964,7 @@ export default {
         },
         changeUserBarToCommunityBar: function () {
             if (this.isChanged || !this.barDetails.is_shared) {
-                if (!confirm("Warning! Changing to a different community bar will delete all MorphicBar customizations for this member.")) {
+                if (!confirm("Warning! Changing to a different group bar will delete all MorphicBar customizations for this member.")) {
                     return;
                 }
             }
