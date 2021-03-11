@@ -98,6 +98,11 @@
   body:not(.show-recaptcha) .grecaptcha-badge {
     visibility: hidden;
   }
+
+  // hide things that are not production-ready, or vice-versa
+  body.production .notProduction, body:not(.production) .onlyProduction {
+    display: none;
+  }
 </style>
 
 <script>

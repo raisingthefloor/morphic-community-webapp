@@ -122,7 +122,7 @@
               </b-tab>
 
               <!-- Bar settings tab -->
-              <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled>
+              <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled title-item-class="notProduction">
                 <template #title>
                   <b-icon-gear-fill/> Morphic Bar settings
                 </template>
@@ -143,8 +143,8 @@
                 </b-card>
               </b-tab>
 
-              <!-- Bar settings tab -->
-              <b-tab @click="editorTabIndex = (editorTabIndex === 3 ? 0 : 3)" disabled>
+              <!-- Try it tab -->
+              <b-tab @click="editorTabIndex = (editorTabIndex === 3 ? 0 : 3)" disabled title-item-class="notProduction">
                 <template #title>
                   <b-icon-display/> Try it
                 </template>
