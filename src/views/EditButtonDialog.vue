@@ -457,7 +457,7 @@ export default {
         },
 
         fixFavicon: async function () {
-            this.buttonFavicon = CONFIG.ENABLE_FAVICONS && this.button.configuration.url && await this.getFavicon(this.button.configuration.url);
+            this.buttonFavicon = !CONFIG.DISABLE_FAVICONS && this.button.configuration.url && await this.getFavicon(this.button.configuration.url);
             // fix the image url, if it's a favicon
             if (this.button.configuration.favicon && this.button.configuration.url) {
                 this.button.configuration.image_url = this.buttonFavicon;
@@ -473,7 +473,7 @@ export default {
         getFavicon: async function (url) {
             let togo;
 
-            if (CONFIG.ENABLE_FAVICONS) {
+            if (!CONFIG.DISABLE_FAVICONS) {
                 const lastCheck = this.knownFavicons[url];
                 if (lastCheck === undefined) {
                     const host = this.getHost(url);
