@@ -101,8 +101,8 @@
 
                   <!-- member's own bar -->
                   <ul v-if="activeMemberId" class="list-unstyled">
-                    <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Community Manager</b-link></li>
-                    <li v-else><b-link v-b-modal.roleChangeConfirm>Remove community manager role from member</b-link></li>
+                    <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Group Manager</b-link></li>
+                    <li v-else><b-link v-b-modal.roleChangeConfirm>Remove group manager role from member</b-link></li>
                     <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
                     <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
                     <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
@@ -154,7 +154,7 @@
                   <b-card-title><b-icon-display/> Try this bar on your own computer</b-card-title>
 
                   <b-card-sub-title>
-                    You need to have Morphic installed on your computer to try out bars in your community.
+                    You need to have Morphic installed on your computer to try out bars in your group.
                   </b-card-sub-title>
 
                   <p>

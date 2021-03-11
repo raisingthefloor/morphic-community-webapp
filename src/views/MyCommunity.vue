@@ -5,8 +5,8 @@
     <div v-else>
       <TextInputDialog
               id="communityNameDialog"
-              title="Rename community"
-              prompt="Enter the new community name"
+              title="Rename group"
+              prompt="Enter the new group name"
               v-model="community.name"
               @ok="updateCommunityName"
       />
@@ -54,7 +54,7 @@
                               class="text-danger"
                               @click.prevent.stop="removeManager(member)"
                               :disabled="member.isThisUser"
-                    >Remove as community manager</b-button>
+                    >Remove as group manager</b-button>
                 </span>
                 <b-tooltip v-if="member.isThisUser"
                            target="RemoveMyself"

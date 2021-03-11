@@ -50,7 +50,7 @@ Displays the subscription plans - either for a new user, or to change an existin
               Savings of {{ plan.savings_text }} with {{(plan.months === 6) ? "6 month" : "annual"}} payment discount.
             </p>
 
-            <p v-if="!plan.available" class="text-danger">Your current community is too large for this plan.</p>
+            <p v-if="!plan.available" class="text-danger">Your current group is too large for this plan.</p>
 
           </div>
         </b-form-radio>

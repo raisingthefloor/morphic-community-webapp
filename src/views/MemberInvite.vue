@@ -18,7 +18,7 @@
                   <b-form @submit.stop.prevent="onSubmit">
                     <b-form-group
                       id="first-name"
-                      label="Name or Nickname (only seen by the Community Manager)"
+                      label="Name or Nickname (only seen by the Group Manager)"
                       label-for="firstName"
                     >
                       <b-form-input
