@@ -229,13 +229,6 @@ export const allButtons = {
     clipboard: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Text Size",
-            description: "Changes the Text Size",
-            identifier: "screen-zoom",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -244,6 +237,13 @@ export const allButtons = {
                     "-"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Text Size",
+            description: "Changes the Text Size",
+            identifier: "screen-zoom",
+            color: "blue"
         }
     },
     cnbc: {
@@ -273,13 +273,6 @@ export const allButtons = {
     color_vision: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Color Vision",
-            description: "Turns Color Vision filters On/Off",
-            identifier: "color-vision",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -288,6 +281,13 @@ export const allButtons = {
                     "Off"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Color Vision",
+            description: "Turns Color Vision filters On/Off",
+            identifier: "color-vision",
+            color: "blue"
         }
     },
     contacts_app: {
@@ -328,13 +328,6 @@ export const allButtons = {
     dark_mode: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Dark Mode",
-            description: "Turns Dark Mode On/Off",
-            identifier: "dark-mode",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -343,6 +336,13 @@ export const allButtons = {
                     "Off"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Dark Mode",
+            description: "Turns Dark Mode On/Off",
+            identifier: "dark-mode",
+            color: "blue"
         }
     },
     deezer: {
@@ -359,6 +359,7 @@ export const allButtons = {
     default_mail_app: {
         kind: "link",
         is_primary: true,
+        production: false,
         configuration: {
             subkind: "local-email",
             label: "E-mail",
@@ -609,13 +610,6 @@ export const allButtons = {
     high_contrast: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Contrast",
-            description: "Turns Contrast On/Off",
-            identifier: "high-contrast",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -624,6 +618,13 @@ export const allButtons = {
                     "Off"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Contrast",
+            description: "Turns Contrast On/Off",
+            identifier: "high-contrast",
+            color: "blue"
         }
     },
     home_app: {
@@ -720,6 +721,7 @@ export const allButtons = {
     imessage_app: {
         kind: "application",
         is_primary: true,
+        production: false,
         configuration: {
             subkind: "action",
             label: "Help via iMessage",
@@ -860,13 +862,6 @@ export const allButtons = {
     magnifier: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Magnifier",
-            description: "Turns Screen Magnifier On/Off",
-            identifier: "magnify",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -875,6 +870,13 @@ export const allButtons = {
                     "Hide"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Magnifier",
+            description: "Turns Screen Magnifier On/Off",
+            identifier: "magnify",
+            color: "blue"
         }
     },
     mail_app: {
@@ -1168,13 +1170,6 @@ export const allButtons = {
     night_mode: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Night Mode",
-            description: "Turns Night Mode On/Off",
-            identifier: "night-mode",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -1183,6 +1178,13 @@ export const allButtons = {
                     "Off"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Night Mode",
+            description: "Turns Night Mode On/Off",
+            identifier: "night-mode",
+            color: "blue"
         }
     },
     notes_app: {
@@ -1235,6 +1237,13 @@ export const allButtons = {
     open_app: {
         kind: "application",
         is_primary: true,
+        data: {
+            focusedLink: "app",
+            isPlaceholder: true,
+            catalog: "make",
+            catalogLabel: "To open an Application"
+        },
+        production: false,
         configuration: {
             subkind: "app",
             label: "Open App",
@@ -1242,17 +1251,14 @@ export const allButtons = {
             default: "\"\"",
             color: "blue",
             image_url: "windowmaximize"
-        },
-        data: {
-            focusedLink: "app",
-            isPlaceholder: true,
-            catalog: "make",
-            catalogLabel: "To open an Application"
         }
     },
     open_link: {
         kind: "link",
         is_primary: true,
+        data: {
+            catalogLabel: "To open a Web Page"
+        },
         configuration: {
             subkind: "make",
             label: "Open Web Page",
@@ -1260,9 +1266,6 @@ export const allButtons = {
             image_url: "globe",
             url: "$url",
             description: "Allows you to create a button that opens a Web Page."
-        },
-        data: {
-            catalogLabel: "To open a Web Page"
         }
     },
     opera_app: {
@@ -1418,13 +1421,6 @@ export const allButtons = {
     read_aloud: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Read Aloud",
-            description: "A button that reads out the selected text.",
-            identifier: "read-aloud",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -1433,6 +1429,13 @@ export const allButtons = {
                     "[]"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Read Aloud",
+            description: "A button that reads out the selected text.",
+            identifier: "read-aloud",
+            color: "blue"
         }
     },
     reddit: {
@@ -1508,6 +1511,7 @@ export const allButtons = {
     skype_app: {
         kind: "link",
         is_primary: null,
+        kind$win: "application",
         configuration: {
             subkind: "call",
             label: "Skype",
@@ -1516,8 +1520,7 @@ export const allButtons = {
             image_url: "skype",
             url: "skype:$skypeId?$skypeAction",
             shell: true
-        },
-        kind$win: "application"
+        }
     },
     slack_app: {
         kind: "application",
@@ -1781,18 +1784,18 @@ export const allButtons = {
     turn_off: {
         kind: "action",
         is_primary: true,
+        data: {
+            visual: {
+                type: "",
+                buttons: ""
+            }
+        },
         configuration: {
             subkind: "action",
             label: "Log-off Computer",
             description: "Logs the user off the Computer",
             identifier: "log-off",
             color: "blue"
-        },
-        data: {
-            visual: {
-                type: "",
-                buttons: ""
-            }
         }
     },
     tv_app: {
@@ -1893,13 +1896,6 @@ export const allButtons = {
     volume: {
         kind: "action",
         is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Volume",
-            description: "Changes the System Volume Up/Down.",
-            identifier: "volume",
-            color: "blue"
-        },
         data: {
             visual: {
                 type: "multiButton",
@@ -1908,6 +1904,13 @@ export const allButtons = {
                     "-"
                 ]
             }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Volume",
+            description: "Changes the System Volume Up/Down.",
+            identifier: "volume",
+            color: "blue"
         }
     },
     walmart: {
@@ -2067,6 +2070,7 @@ export const allButtons = {
     zoom_app: {
         kind: "application",
         is_primary: true,
+        production: false,
         configuration: {
             subkind: "meeting",
             label: "Zoom",

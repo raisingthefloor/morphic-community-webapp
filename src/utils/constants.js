@@ -107,6 +107,14 @@ Object.keys(allIconsSrc).forEach(iconId => {
     }
 });
 
+Object.keys(allButtonsSrc).forEach(key => {
+    // filter out the ones that aren't production-ready (or are production-only)
+    if (allButtonsSrc[key].production !== undefined) {
+        if (allButtonsSrc[key].production !== CONFIG.PRODUCTION) {
+            delete allButtonsSrc[key];
+        }
+    }
+});
 
 /**
  * All defined buttons.
