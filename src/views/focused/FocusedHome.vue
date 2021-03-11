@@ -1,6 +1,6 @@
 <template>
 <html>
-  <h1>Your Morphic Community: {{ community.name }} </h1>
+  <h1>Your Morphic: {{ community.name }} </h1>
   <ul>
     <!-- <li><a >Group Settings</a></li>
     <li><a >Add a community</a></li>

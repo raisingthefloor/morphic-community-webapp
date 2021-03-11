@@ -2,9 +2,9 @@
   <div>
     <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav">
       <h1>
-        <b-navbar-brand to="/" title="Morphic Community">
+        <b-navbar-brand to="/" title="Morphic">
           <img src="/img/logo-color.svg" alt="logo">
-          Morphic Community
+          Morphic
         </b-navbar-brand>
       </h1>
 

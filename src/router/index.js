@@ -37,7 +37,7 @@ const routes = [
         name: "Home",
         component: Home,
         meta: {
-            title: "Home :: Morphic Community",
+            title: "Home :: Morphic",
             locked: true
         }
     },
@@ -47,7 +47,7 @@ const routes = [
         component: Home,
         props: { messageId: "sessionTimedOut" },
         meta: {
-            title: "Home :: Morphic Community",
+            title: "Home :: Morphic",
             locked: true
         }
     },
@@ -56,7 +56,7 @@ const routes = [
         name: "Terms of Use",
         component: Terms,
         meta: {
-            title: "Terms Of Use :: Morphic Community"
+            title: "Terms Of Use :: Morphic"
         }
     },
     // {
@@ -64,7 +64,7 @@ const routes = [
     //   name: 'Registration',
     //   component: Registration,
     //   meta: {
-    //     title: 'Community Registration :: Morphic Community',
+    //     title: 'Community Registration :: Morphic',
     //     locked: true
     //   }
     // },
@@ -73,7 +73,7 @@ const routes = [
         name: "MyCommunity",
         component: MyCommunity,
         meta: {
-            title: "My Community :: Morphic Community",
+            title: "My Community :: Morphic",
             authRoute: true
         }
     },
@@ -82,7 +82,7 @@ const routes = [
         name: "MyCommunities",
         component: MyCommunities,
         meta: {
-            title: "My Communities :: Morphic Community",
+            title: "My Communities :: Morphic",
             authRoute: true
         }
     },
@@ -91,7 +91,7 @@ const routes = [
         name: "Plans",
         component: Plans,
         meta: {
-            title: "Plans :: Morphic Community",
+            title: "Plans :: Morphic",
             authRoute: true
         }
     },
@@ -100,7 +100,7 @@ const routes = [
         name: "BillingDetails",
         component: BillingDetails,
         meta: {
-            title: "Billing :: Morphic Community",
+            title: "Billing :: Morphic",
             authRoute: true
         }
     },
@@ -109,7 +109,7 @@ const routes = [
         name: "Reset Password",
         component: ResetPassword,
         meta: {
-            title: "Reset Password :: Morphic Community"
+            title: "Reset Password :: Morphic"
         }
     },
 
@@ -119,7 +119,7 @@ const routes = [
         name: "Dashboard",
         component: Dashboard,
         meta: {
-            title: "Dashboard :: Morphic Community",
+            title: "Dashboard :: Morphic",
             authRoute: true
         }
     },
@@ -128,7 +128,7 @@ const routes = [
         name: "MorphicBar Preconfigured",
         component: MorphicBarPreconfigured,
         meta: {
-            title: "Pick a bar :: Morphic Community",
+            title: "Pick a bar :: Morphic",
             authRoute: true
         }
     },
@@ -137,7 +137,7 @@ const routes = [
         name: "MorphicBar Editor",
         component: MorphicBarEditor,
         meta: {
-            title: "MorphicBar Editor :: Morphic Community",
+            title: "MorphicBar Editor :: Morphic",
             authRoute: true
         }
     },
@@ -146,7 +146,7 @@ const routes = [
         name: "Member Invite",
         component: MemberInvite,
         meta: {
-            title: "Member Invite :: Morphic Community",
+            title: "Member Invite :: Morphic",
             authRoute: true
         }
     },
@@ -155,7 +155,7 @@ const routes = [
     //   name: 'Member Editor',
     //   component: MemberEditor,
     //   meta: {
-    //     title: 'Member Details :: Morphic Community',
+    //     title: 'Member Details :: Morphic',
     //     authRoute: true
     //   }
     // },
