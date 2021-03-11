@@ -207,6 +207,7 @@ import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icon
 import * as params from "@/utils/params";
 import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/dashboardV2/BarItemFields";
+import { CONFIG } from "@/config/config";
 
 export default {
     name: "EditButtonDialog",
@@ -456,7 +457,7 @@ export default {
         },
 
         fixFavicon: async function () {
-            this.buttonFavicon = this.button.configuration.url && await this.getFavicon(this.button.configuration.url);
+            this.buttonFavicon = CONFIG.ENABLE_FAVICONS && this.button.configuration.url && await this.getFavicon(this.button.configuration.url);
             // fix the image url, if it's a favicon
             if (this.button.configuration.favicon && this.button.configuration.url) {
                 this.button.configuration.image_url = this.buttonFavicon;
@@ -470,24 +471,25 @@ export default {
          * @return {Promise<null|String>} Resolves with the favicon url.
          */
         getFavicon: async function (url) {
-            const lastCheck = this.knownFavicons[url];
             let togo;
 
-            if (lastCheck === undefined) {
-                const host = this.getHost(url);
+            if (CONFIG.ENABLE_FAVICONS) {
+                const lastCheck = this.knownFavicons[url];
+                if (lastCheck === undefined) {
+                    const host = this.getHost(url);
 
-                if (host) {
-                    const imageUrl = `https://icons.duckduckgo.com/ip2/${host}.ico`;
-                    // Check the url before trying to load it.
-                    const result = await params.checkUrl(imageUrl);
-                    togo = result.isProblem ? null : imageUrl;
+                    if (host) {
+                        const imageUrl = `https://icons.duckduckgo.com/ip2/${host}.ico`;
+                        // Check the url before trying to load it.
+                        const result = await params.checkUrl(imageUrl);
+                        togo = result.isProblem ? null : imageUrl;
+                    }
+
+                    this.knownFavicons[url] = togo;
+                } else {
+                    togo = lastCheck;
                 }
-
-                this.knownFavicons[url] = togo;
-            } else {
-                togo = lastCheck;
             }
-
             return togo;
         },
 
