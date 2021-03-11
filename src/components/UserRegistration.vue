@@ -5,9 +5,9 @@
     </b-alert>
 
     <ValidatedInput id="community-name"
-                    label="Community"
+                    label="Group"
                     :validation="$v.form.communityName"
-                    placeholder="my-community"
+                    placeholder="my-group"
     />
     <ValidatedInput id="community-user-email"
                     label="Enter your email"
@@ -39,7 +39,7 @@
                     type="password"
     />
     <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
-    <b-button type="submit" variant="primary">Create new Community</b-button>
+    <b-button type="submit" variant="primary">Create new Group</b-button>
   </b-form>
 </template>
 
