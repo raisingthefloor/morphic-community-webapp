@@ -142,6 +142,9 @@ Vue.mixin({
     mounted() {
         // Hide the badge by default.
         this.showRecaptchaBadge(false);
+
+        // Apply the production-only condition
+        document.body.classList.toggle("production", this.CONFIG.PRODUCTION);
     },
     computed: {
         /**
