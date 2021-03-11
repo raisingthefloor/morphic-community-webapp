@@ -2,13 +2,13 @@
 <html>
   <h1>Your Morphic Community: {{ community.name }} </h1>
   <ul>
-    <!-- <li><a >Community Settings</a></li>
+    <!-- <li><a >Group Settings</a></li>
     <li><a >Add a community</a></li>
     <li><a >Switch to a different community</a></li> -->
   </ul>
 
-  <h2>Community Bars</h2>
-    <!-- <p><b-link disabled>Community settings</b-link></p> -->
+  <h2>Group Bars</h2>
+    <!-- <p><b-link disabled>Group Settings</b-link></p> -->
     <ul v-if="communityBars.length > 0" class="list-unstyled">
       <li v-for="bar in communityBars" :key="bar.id" >
         <b-link :to="getBarEditRoute(bar)">

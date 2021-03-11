@@ -1569,7 +1569,7 @@ export default {
              * @type {Array<BarDetails>} */
             barsList: [],
             /**
-             * Community bars
+             * Group Bars
              * @type {Array<BarDetails>}
              */
             sharedBars: [],

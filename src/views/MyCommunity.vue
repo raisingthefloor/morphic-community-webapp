@@ -1,6 +1,6 @@
 <template>
   <div class="  ">
-    <h4>Community Settings</h4>
+    <h4>Group Settings</h4>
     <div v-if="!community"></div>
     <div v-else>
       <TextInputDialog
@@ -34,9 +34,9 @@
           </b-list-group>
         </b-card>
 
-        <h3>Managers for this community</h3>
+        <h3>Managers for this group</h3>
         Managers can see, remove, and invite members, make and edit Morphic Bars, pay and change subscription plans
-        for the community, and remove other community members.
+        for the group, and remove other group members.
 
         <ul class="memberList">
           <li class="member" v-for="(member) in members"
