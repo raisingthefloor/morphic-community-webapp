@@ -18,6 +18,7 @@
  * @property {String} kind The kind of all items (undefined if any differ)
  * @property {Boolean} related True if the items are related (shows the group tab in the edit dialog)
  * @property {Boolean} hasSecondary True there are secondary items in the group (item.is_primary is false)
+ * @property {Boolean} hidden true to not display this group.
  * @property {BarItemConfiguration} more Configuration for the more item.
  * @property {Object<String,BarItem>} items The buttons.
  */
