@@ -153,7 +153,8 @@ Vue.mixin({
         },
         communityId: function () { return this.$store.getters.communityId; },
         userId: function () { return this.$store.getters.userId; },
-        console: () => console
+        console: () => console,
+        CONFIG: () => CONFIG
     }
 });
 
