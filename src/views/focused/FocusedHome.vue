@@ -1,14 +1,14 @@
 <template>
 <html>
-  <h1>Your Morphic Community: {{ community.name }} </h1>
+  <h1>Your Morphic: {{ community.name }} </h1>
   <ul>
-    <!-- <li><a >Community Settings</a></li>
+    <!-- <li><a >Group Settings</a></li>
     <li><a >Add a community</a></li>
     <li><a >Switch to a different community</a></li> -->
   </ul>
 
-  <h2>Community Bars</h2>
-    <!-- <p><b-link disabled>Community settings</b-link></p> -->
+  <h2>Group Bars</h2>
+    <!-- <p><b-link disabled>Group Settings</b-link></p> -->
     <ul v-if="communityBars.length > 0" class="list-unstyled">
       <li v-for="bar in communityBars" :key="bar.id" >
         <b-link :to="getBarEditRoute(bar)">
@@ -22,17 +22,17 @@
     </p>
     <p>
       <b-form action="#/focused/add-community-bar">
-        <b-button type="submit" variant="primary">Add a community bar</b-button>
+        <b-button type="submit" variant="primary">Add a group bar</b-button>
       </b-form>
     </p>
 
-  <h2>Members in your community</h2>
+  <h2>Members in your group</h2>
   <ul v-if="members.length > 0" class="list-unstyled">
       <li v-for="member in members" :key="member.id" >
         <b-link v-if="member.bar_id" :to="getUserBarEditRoute(member)">
           {{ member.first_name }} {{ member.last_name }}
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
-          <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" v-b-tooltip.hover title="Using a community bar"></b-icon>
+          <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" v-b-tooltip.hover title="Using a group bar"></b-icon>
           <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
           <br>
         </b-link>

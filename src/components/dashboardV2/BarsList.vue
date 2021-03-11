@@ -8,7 +8,7 @@
       </li>
     </ul>
     <p v-else>
-      <i>No bars in the community</i><br>
+      <i>No bars in the group</i><br>
       Click on the plus button just above to add your first one
     </p>
   </div>

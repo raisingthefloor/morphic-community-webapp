@@ -1,8 +1,8 @@
 <template>
 
   <div class="focusBarEditor">
-    <h1>{{memberDetails.id ? "Bar for " + memberName : "Community bar: " + barDetails.name}}</h1>
-    <b-link to="/focused/home" >Go back to community home</b-link>
+    <h1>{{memberDetails.id ? "Bar for " + memberName : "Group bar: " + barDetails.name}}</h1>
+    <b-link to="/focused/home" >Go back to home page</b-link>
     <br />
       <b-link v-if="$route.query.memberId" :to="{ path: '/focused/person', query: { memberId: memberId } }">
         <b-icon-person-circle></b-icon-person-circle>

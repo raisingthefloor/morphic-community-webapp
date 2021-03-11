@@ -13,8 +13,8 @@
         <b-link :to="getBarEditRoute(member)" :ref="'member' + index" class="stretched-link">
           <b v-if="member.bar_id === activeBarId">{{ member.first_name }} {{ member.last_name }}</b>
           <span v-else>{{ member.first_name }} {{ member.last_name }}</span>
-          <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a community bar">*&nbsp;</span>
-          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
+          <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a group bar">*&nbsp;</span>
+          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a group manager"></b-icon>
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
         </b-link>
         <div v-if="member.id === activeMemberId">

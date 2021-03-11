@@ -5,7 +5,7 @@ import { HTTP } from "@/services/index";
  */
 
 /**
- * Get the list of active billing plans for Morphic Community
+ * Get the list of active billing plans for Morphic
  * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1planscommunity
  * @return {Promise<AxiosResponse<BillingPlans>>} Response
  */

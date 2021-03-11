@@ -2,10 +2,10 @@
   <div id="CommunityManager" class="bar-people-controls fill-height bg-green p-3">
     <h4><b>{{ community.name }}</b></h4>
     <p class="text-right small">
-      (<b-link :to="{ name: 'MyCommunity'}">Community settings</b-link>)
+      (<b-link :to="{ name: 'MyCommunity'}">Group Settings</b-link>)
     </p>
     <h5>
-      <b>Community Bars</b>
+      <b>Group Bars</b>
       <b-link to="/dashboard/morphicbar-preconfigured" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
     </h5>
     <BarsList :bars="bars" :activeBarId="activeBarId" ref="BarsList"/>
