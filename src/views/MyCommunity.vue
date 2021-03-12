@@ -299,7 +299,7 @@ export default {
                 const confirm = this.showConfirm(
                     `${member.fullName} will no longer be able to manage this community.`,
                     ["Remove", "Cancel"],
-                    `Remove '${member.fullName}' as community manager`,
+                    `Remove '${member.fullName}' as group manager`,
                     {
                         okVariant: "danger"
                     });
