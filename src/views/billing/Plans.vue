@@ -3,7 +3,7 @@
 
     <b-container>
       <ul v-if="billingInfo && community" class="list-unstyled">
-        <li>Community: {{community.name}}</li>
+        <li>Group: {{community.name}}</li>
         <li>Current members: {{community.member_count}}</li>
         <li v-if="billingInfo.trial_end_days < 0"
             class="text-danger">
@@ -26,10 +26,10 @@
       <div>
         <p class="lead">Not sure you want to stay with Morphic?</p>
         <p>
-          If you no longer want to manage your community, you can close it. Once the community is closed, all of
-          your community members will lose there personalizations. Each person will see the basic Morphic Bar.
+          If you no longer want to manage your group, you can close it. Once the group is closed, all of
+          your group members will lose there personalizations. Each person will see the basic Morphic Bar.
         </p>
-          <b-button variant="danger">Close your community</b-button>
+          <b-button variant="danger">Close your group</b-button>
       </div>
     </b-container>
 

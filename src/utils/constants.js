@@ -408,6 +408,9 @@ Object.keys(buttonCatalog).forEach(key => {
     if (!group.related && group.related !== false) {
         group.related = values.length > 1;
     }
+
+    // Hide groups with no items.
+    group.hidden = group.hidden || Object.values(group.items).length === 0;
 });
 
 // Distinguish buttons for an app and site of the same name.

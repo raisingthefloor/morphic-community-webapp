@@ -29,7 +29,8 @@ const CONF = {
     // Applies to all environments, unless overridden
     BASE: {
         ENV: ENV,
-        PRODUCTION: false
+        PRODUCTION: false,
+        RECAPTCHA_SITEKEY: "6LcDs3waAAAAAFGKPHxnNuPBO__5LqaEybnS6wn0"
     },
 
     // Local development (npm run dev)
@@ -47,14 +48,12 @@ const CONF = {
 
     // "live" development (https://communitynew.morphic.dev)
     DEVELOPMENT: {
-        API_URL: "https://api.morphic.dev",
-        RECAPTCHA_SITEKEY: "6Lc1hfsUAAAAAGFReCJUUva4LHF30XG5pIoJr2Nl"
+        API_URL: "https://api.morphic.dev"
     },
 
     // production
     PRODUCTION: {
         API_URL: "https://api.morphic.org",
-        RECAPTCHA_SITEKEY: "6LcuEM0ZAAAAABafZkUPUBAAcj5BNw2rd3fuNMC2",
         PRODUCTION: true,
         DISABLE_TRIAL: true,
         DISABLE_FAVICONS: true

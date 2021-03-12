@@ -17,7 +17,7 @@
       </li>
     </ul>
     <p v-else>
-      <i>No bars in the community</i><br>
+      <i>No bars in the group</i><br>
       Click on the button to add your first one<br><br>
     </p>
     <p>
@@ -33,14 +33,14 @@
           {{ member.first_name }} {{ member.last_name }}
           <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
           <b-icon v-if="isCommunityBar(member.bar_id)" class="communityBarSymbol" icon="globe" variant="dark" v-b-tooltip.hover title="Using a group bar"></b-icon>
-          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a community manager"></b-icon>
+          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a group manager"></b-icon>
           <br>
         </b-link>
       </li>
     </ul>
     <p v-else>
-      <i>Nobody in the community</i><br>
-      Click on the button to add somebody to your community<br><br>
+      <i>Nobody in the group</i><br>
+      Click on the button to add somebody to your group<br><br>
     </p>
     <p>
       <b-form>

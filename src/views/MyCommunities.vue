@@ -1,6 +1,6 @@
 <template>
   <b-jumbotron class="bg-light">
-    <b-modal id="deleteConfirm" @ok="deleteCommunity" title="Delete a community" footer-bg-variant="light" ok-title="Delete community">
+    <b-modal id="deleteConfirm" @ok="deleteCommunity" title="Delete a group" footer-bg-variant="light" ok-title="Delete group">
       <p class="my-4">Please confirm the deletion of that group?</p>
     </b-modal>
     <h3>My Groups</h3>
