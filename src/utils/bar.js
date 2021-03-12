@@ -13,6 +13,23 @@ export function getItemBar(barItem) {
 }
 
 /**
+ * Gets a friendly name of a bar.
+ * @param {BarDetails} bar The bar.
+ * @return {String} Name of the bar.
+ */
+export function getBarName(bar) {
+    var name;
+    if (bar.name === "Default") {
+        name = "Default Bar";
+    } else if (bar.is_shared) {
+        name = bar.name;
+    } else {
+        name = `Bar for ${bar.name}`;
+    }
+    return name;
+}
+
+/**
  * Gets the index of a bar item in a bar.
  * @param {BarItem} barItem The item to add (either from the catalog, or the service.
  * @param {BarDetails} [bar] The bar.
