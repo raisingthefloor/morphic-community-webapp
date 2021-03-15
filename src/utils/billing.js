@@ -122,11 +122,9 @@ export function getPlans() {
     } else {
         togo = billingService.getCommunityPlans().then(result => {
             allPlans = {};
-
             result.data.plans.forEach(plan => {
                 allPlans[plan.id] = Object.assign({}, plan, planExtras[plan.id]);
             });
-
             // calculate any bulk-buy savings
             Object.values(allPlans).forEach(p => {
                 const savings = getSavings(p);
@@ -138,7 +136,6 @@ export function getPlans() {
             return JSON.parse(JSON.stringify(allPlans));
         });
     }
-
     return togo;
 }
 
@@ -147,7 +144,7 @@ export function getPlans() {
  * @param {BillingPlan} plan The plan.
  * @return {String} The savings, currency formatted for display.
  */
-function getSavings(plan) {
+export function getSavings(plan) {
     var togo;
 
     if (plan.currency !== "USD") {
@@ -168,6 +165,5 @@ function getSavings(plan) {
             }
         }
     }
-
     return togo;
 }
