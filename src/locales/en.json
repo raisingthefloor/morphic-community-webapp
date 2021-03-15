@@ -64,8 +64,28 @@
   "MyCommunity":  {
   },
   "PlanPicker": {
+    "12-month-payment": "(paid annually)",
+    "6-month-payment": "(paid semiannually)",
+    "contact_link": "Contact us for more information",
+    "current-plan-marker": "Your current plan",
+    "enterprise-information": "Morphic also offers enterprise plans for larger groups, universities, companies, and organizations.",
+    "future-upgrade-hint": "Not sure how many members you will have? You can upgrade your subscription whenever you need to.",
+    "payment_button": "Continue to Payment",
+    "plan-limit": "none | Manage 1 member | Manage up to {n} members",
+    "plan-monthly-price": "{price} per month",
+    "plan-savings": "Savings of {savings} with annual payment discount.",
+    "plan-too-small": "Your current group is too large for this plan.",
+    "renew-monthly": "automatically renews monthly until canceled"
   },
   "Plans":  {
+    "close_button": "Close your group",
+    "group_bullet": "Group: {name}",
+    "leave_heading": "Not sure you want to stay with Morphic?",
+    "leave_text": "If you no longer want to manage your group, you can close it. Once the group is closed, all of\n          your group members will lose there personalizations. Each person will see the basic Morphic Bar.",
+    "member-count_bullet": "Current members: {member_count}",
+    "pick-subscription_heading": "Pick a subscription",
+    "trial-ended": "Your trial ends today. | Your trial ended yesterday. | Your trial ended {n} days ago.",
+    "trial-ending": "Your trial ends today. | Your trial will end tomorrow. | Your trial will ended in {n} days."
   },
   "PreviewItem": {
   },

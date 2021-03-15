@@ -3,33 +3,27 @@
 
     <b-container>
       <ul v-if="billingInfo && community" class="list-unstyled">
-        <li>Group: {{community.name}}</li>
-        <li>Current members: {{community.member_count}}</li>
-        <li v-if="billingInfo.trial_end_days < 0"
+        <li v-t>{{ $t('Plans.group_bullet', community) }}</li>
+        <li v-t>{{ $t('Plans.member-count_bullet', community) }}</li>
+        <li v-if="billingInfo.trial_end_days <= 0"
             class="text-danger">
-          <strong>Your trial ended {{ -billingInfo.trial_end_days }} days ago.</strong>
+          <strong>{{ $tc('Plans.trial-ended', -billingInfo.trial_end_days) }}</strong>
         </li>
-        <li v-else-if="billingInfo.trial_end_days > 0"
+        <li v-else-if="billingInfo.trial_end_days >= 0"
             class="text-danger">
-          Your trial ends in {{ billingInfo.trial_end_days }} days.
-        </li>
-        <li v-else-if="billingInfo.trial_end_days === 0"
-            class="text-danger">
-          <strong>Your trial will end today.</strong>
+          {{ $tc('Plans.trial-ending', billingInfo.trial_end_days) }}
+
         </li>
       </ul>
 
-    <h1>Pick a subscription</h1>
+    <h1 v-t="'Plans.pick-subscription_heading'" />
 
       <PlanPicker v-if="billingInfo && community" :billing-info="billingInfo" :community="community" />
 
       <div>
-        <p class="lead">Not sure you want to stay with Morphic?</p>
-        <p>
-          If you no longer want to manage your group, you can close it. Once the group is closed, all of
-          your group members will lose there personalizations. Each person will see the basic Morphic Bar.
-        </p>
-          <b-button variant="danger">Close your group</b-button>
+        <p class="lead" v-t="'Plans.leave_heading'" />
+        <p v-t="'Plans.leave_text'" />
+          <b-button variant="danger" v-t="'Plans.close_button'" />
       </div>
     </b-container>
 
@@ -74,6 +68,7 @@ export default {
         loadBilling: function () {
             return billingService.getBillingInfo(this.communityId).then((r) => {
                 this.billingInfo = r.data;
+                this.billingInfo.trial_end_days = 0;
             });
         }
     }
