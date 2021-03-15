@@ -25,6 +25,8 @@ export function getBillingInfo(communityId) {
         if (CONFIG.DISABLE_TRIAL) {
             delete res.data.trial_end_days;
         }
+
+        return res;
     });
 }
 
