@@ -1,9 +1,89 @@
 {
-  "reset-password": {
+  "App": {
+  },
+  "BarExplainer": {
+  },
+  "BarItemFields":  {
+  },
+  "BarItemLink": {
+  },
+  "BarPreview":  {
+  },
+  "BarsList": {
+  },
+  "BillingDetails":  {
+  },
+  "BlockLoginRegister": {
+  },
+  "CommunityManager":  {
+  },
+  "Dashboard": {
+  },
+  "DrawerPreview":  {
+  },
+  "EditButtonDialog": {
+  },
+  "FocusedAddCommunityBar":  {
+  },
+  "FocusedBarEditor": {
+  },
+  "FocusedButtonCatalog":  {
+  },
+  "FocusedButtonEdit": {
+  },
+  "FocusedHome":  {
+  },
+  "FocusedPeopleUsingBar": {
+  },
+  "FocusedPersonPage":  {
+  },
+  "Footer": {
+  },
+  "Header":  {
+  },
+  "Home": {
+  },
+  "MemberEditor":  {
+  },
+  "MemberInvite": {
+  },
+  "MembersList":  {
+  },
+  "MorphicBarEditor": {
+  },
+  "MorphicBarPreconfigured":  {
+  },
+  "MyCommunities": {
+  },
+  "MyCommunity":  {
+  },
+  "PlanPicker": {
+  },
+  "Plans":  {
+  },
+  "PreviewItem": {
+  },
+  "Registration":  {
+  },
+  "RenderList": {
+  },
+  "RenderListItem":  {
+  },
+  "ResetPassword": {
     "enter-your-email-address": "Enter your email address",
     "instructions": "Please enter the email address you used to register with, and we will email you temporary password to you.",
     "heading": "Reset your password",
     "reset-password_button": "Reset Password",
     "return-to-login_link": "Return to Login"
+  },
+  "Terms":  {
+  },
+  "TextInputDialog": {
+  },
+  "UserLogin":  {
+  },
+  "UserRegistration": {
+  },
+  "ValidatedInput":  {
   }
 }

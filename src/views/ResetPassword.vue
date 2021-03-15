@@ -4,26 +4,26 @@
       <b-col md="3">
       </b-col>
       <b-col md="6">
-        <h3 v-t="'reset-password.heading'" />
-        <p class="lead" v-t="'reset-password.instructions'" />
+        <h3 v-t="'ResetPassword.heading'" />
+        <p class="lead" v-t="'ResetPassword.instructions'" />
         <br />
         <b-form @submit.stop.prevent="onSubmit">
           <b-alert variant="danger" :show="errorAlert">
             {{ errorMessage }}
           </b-alert>
           <ValidatedInput id="login-user-email"
-                          :label="$t('reset-password.enter-your-email-address')"
+                          :label="$t('ResetPassword.enter-your-email-address')"
                           placeholder="user@example.com"
                           :validation="$v.form.email"
           />
 
           <b-row>
             <b-col md="6">
-              <b-link to="/" variant="success" class="ml-1" v-t="'reset-password.return-to-login_link'" />
+              <b-link to="/" variant="success" class="ml-1" v-t="'ResetPassword.return-to-login_link'" />
             </b-col>
 
             <b-col md="6" style="text-align: right" >
-              <b-button type="submit" variant="primary" v-t="'reset-password.reset-password_button'" />
+              <b-button type="submit" variant="primary" v-t="'ResetPassword.reset-password_button'" />
             </b-col>
           </b-row>
         </b-form>
