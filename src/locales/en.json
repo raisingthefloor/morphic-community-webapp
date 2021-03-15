@@ -38,6 +38,7 @@
   "FocusedPersonPage":  {
   },
   "Footer": {
+    "copyright": "Copyright © {year} Raising the Floor - US Inc. All rights Reserved."
   },
   "Header":  {
     "dashboard_link": "Dashboard Mode",
