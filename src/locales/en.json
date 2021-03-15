@@ -1,2 +1,9 @@
 {
+  "reset-password": {
+    "enter-your-email-address": "Enter your email address",
+    "instructions": "Please enter the email address you used to register with, and we will email you temporary password to you.",
+    "heading": "Reset your password",
+    "reset-password_button": "Reset Password",
+    "return-to-login_link": "Return to Login"
+  }
 }
