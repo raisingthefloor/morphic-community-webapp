@@ -16,7 +16,7 @@ export default new Vuex.Store({
         community: {},
         errorMessage: {},
         unsavedChanges: false,
-        unsavedBar: {},
+        unsavedBar: JSON.parse(localStorage.getItem("unsavedBar") || "null"),
         resetPasswordEmail: ""
     },
     mutations: {
@@ -171,6 +171,11 @@ export default new Vuex.Store({
             commit("unsavedChanges", isChanged);
         },
         unsavedBar({ commit }, barDetails) {
+            if (barDetails) {
+                localStorage.setItem("unsavedBar", JSON.stringify(barDetails));
+            } else {
+                localStorage.removeItem("unsavedBar");
+            }
             commit("unsavedBar", barDetails);
         }
     },

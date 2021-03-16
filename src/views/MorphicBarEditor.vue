@@ -18,6 +18,17 @@
         <b-form-input v-model="invitationEmail" id="email" placeholder="myemail@mail.com" class="mb-2"></b-form-input>
       </b-form-group>
     </b-modal>
+
+    <b-modal id="unsavedChanges" title="Unsaved Changes">
+      <p>You have made some changes to this bar, but they are not saved yet.</p>
+      <p>If you leave now, the recent modifications will be lost.</p>
+
+      <template #modal-footer="{ ok, cancel, hide }">
+        <b-button @click="cancel()" variant="secondary">Cancel</b-button>
+        <b-button @click="hide('no-save')" variant="secondary">Continue, without saving</b-button>
+        <b-button @click="hide('save')" variant="primary">Save</b-button>
+      </template>
+    </b-modal>
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
@@ -32,7 +43,7 @@
           <div id="bar-info">
             <div class="bar-name">
               <!-- Bar selection -->
-              <h2>
+              <h2 v-if="barDetails.name">
                 {{barName}}
 
                 <!-- rename bar -->
@@ -251,7 +262,11 @@
             <!-- Buttons Bar -->
             <div id="preview-bar">
               <div class="barPreviewEditor" ref="myref">
-                <drop-list :items="barDetails.items" :class="openDrawer && 'showDrawer'" class="buttonsList draggable-area" @insert="dropToBar" @reorder="$event.apply(barDetails.items)">
+                <drop-list :items="barDetails.items"
+                           :class="openDrawer && 'showDrawer'"
+                           class="buttonsList draggable-area"
+                           @insert="dropToBar"
+                           @reorder="dragReorder">
                   <template v-slot:item="{item}">
                     <drag :key="item.id"
                       @dragstart="setDragInProgress(true)"
@@ -914,6 +929,10 @@ export default {
             this.addBarItem(event.data, event.index, noImage || event.type === "catalogButtonNoImage");
             return true;
         },
+        dragReorder: function (event) {
+            event.apply(this.barDetails.items);
+            this.onBarChanged();
+        },
 
         /**
          * Add an item to the bar.
@@ -930,7 +949,7 @@ export default {
 
             // close any expanded button
             this.expandedCatalogButtonId = undefined;
-            this.setBarChanged();
+            this.onBarChanged();
 
 
             var showEdit;
@@ -946,14 +965,23 @@ export default {
             }
         },
 
-        setBarChanged: function () {
+        /**
+         * Called when the bar changes, after it is loaded.
+         */
+        onBarChanged: function () {
             this.isChanged = true;
+            this.storeUnsavedBar();
+        },
+
+        storeUnsavedBar: function () {
             this.barSelectedInDropdown = "customized";
             Bar.checkBar(this.barDetails);
+            this.$store.dispatch("unsavedChanges", this.isChanged);
+            this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
         },
 
         revertBar: function () {
-            if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will loose all unsaved changes!")) {
+            if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will lose all unsaved changes!")) {
                 this.isChanged = false;
                 this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
                 this.barSelectedInDropdown = this.barDetails.id;
@@ -1007,6 +1035,7 @@ export default {
             };
             const index = itemList.findIndex(x => compareObjects(x, item));
             itemList.splice(index, 1);
+            this.onBarChanged();
         },
 
         getEmailAndSendInvite() {
@@ -1032,8 +1061,29 @@ export default {
         },
 
         /** Loads the initial bar data */
-        loadBarData: function () {
+        loadBarData: async function () {
             var barId = this.$route.query.barId;
+
+            // If there is a bar unsaved, redirect to that one instead.
+            /** @type {BarDetails} */
+            const unsavedBar = this.$store.getters.unsavedBar;
+            if (unsavedBar && unsavedBar.id !== barId) {
+                const barName = Bar.getBarName(unsavedBar);
+                const message = `There is already a bar (${barName}) that has unsaved changes. The recent changes will be lost if you continue.`;
+                const ok = await this.showConfirm(message,
+                    ["Continue", `Go to ${barName}`],
+                    "Unsaved Changes",
+                    {
+                        cancelVariant: "primary"
+                    }
+                );
+
+                if (!ok) {
+                    this.$router.push(this.getBarEditRoute(unsavedBar));
+                    return;
+                }
+            }
+
 
             if (barId === "new") {
                 // Create a new empty bar.
@@ -1055,12 +1105,13 @@ export default {
                 const unsavedBar = this.$store.getters.unsavedBar;
                 if (unsavedBar && unsavedBar.id === barId) {
                     this.barDetails = unsavedBar;
+                    this.onBarChanged();
                 } else {
                     // Load a saved bar.
                     getCommunityBar(this.communityId, barId)
                         .then(resp => {
                             this.barDetails = resp.data;
-                            this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
+                            this.updateOriginalBarDetails();
                         })
                         .catch(err => {
                             console.error(err);
@@ -1170,6 +1221,11 @@ export default {
                     console.error(err);
                 });
         },
+
+        /**
+         * Saves the bar.
+         * @return {Promise} Resolves when complete.
+         */
         saveBar: function () {
             this.onSave = true;
             const data = this.barDetails;
@@ -1181,16 +1237,13 @@ export default {
                 item.configuration.image_path = this.getIconUrl(item.configuration.image_url);
             });
 
-            updateCommunityBar(this.communityId, this.$route.query.barId, data)
+            return updateCommunityBar(this.communityId, this.$route.query.barId, data)
                 .then((resp) => {
                     if (resp.status === 200) {
                         this.showMessage(MESSAGES.barUpdated);
                         this.isChanged = false;
                         this.updateOriginalBarDetails();
                     }
-                })
-                .catch(err => {
-                    console.error(err);
                 });
         },
         deleteBar: function () {
@@ -1253,7 +1306,7 @@ export default {
                 this.editDialog.showDialog(item).then(changed => {
                     Bar.checkBar(this.barDetails);
                     if (changed) {
-                        this.setBarChanged();
+                        this.onBarChanged();
                     }
                     this.$forceUpdate();
                 });
@@ -1428,6 +1481,29 @@ export default {
                 this.searchState = null;
                 this.searchResult = null;
             }
+        },
+        /**
+         * Confirms if the user wants to leave the page, if there have been unsaved changes
+         * @return {Promise<Boolean>} Resolves with true to move to the next page.
+         */
+        leavePage: async function () {
+            var nextPage = true;
+            if (this.isChanged) {
+                const dialogResult = await this.showModalDialog("unsavedChanges");
+
+                switch (dialogResult) {
+                case "save":
+                    await this.saveBar();
+                    break;
+                case "no-save":
+                    break;
+                default:
+                    nextPage = false;
+                    break;
+                }
+            }
+
+            return nextPage;
         }
     },
     computed: {
@@ -1437,15 +1513,7 @@ export default {
          * @return {String} The bar title.
          */
         barName: function () {
-            var name;
-            if (this.barDetails.name === "Default") {
-                name = "Default Bar";
-            } else if (this.barDetails.is_shared) {
-                name = this.barDetails.name;
-            } else {
-                name = `Bar for ${this.barDetails.name}`;
-            }
-            return name;
+            return Bar.getBarName(this.barDetails);
         }
 
     },
@@ -1495,8 +1563,7 @@ export default {
             }
         },
         isChanged: function () {
-            this.$store.dispatch("unsavedChanges", this.isChanged);
-            this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
+            this.storeUnsavedBar();
         },
         "$route.query": function () {
             this.members = [];
@@ -1504,41 +1571,18 @@ export default {
             this.initialChangesDrawerItems = false;
             this.loadAllData();
         },
-        barDetails: {
-            handler: function (newValue, oldValue) {
-                Bar.checkBar(this.barDetails);
-            },
-            deep: true
-        },
         searchText: function () {
             this.expandCatalogButton(null);
             this.searchCatalog();
         }
     },
-    beforeRouteUpdate(to, from, next) {
-        if (this.isChanged) {
-            const confirm = window.confirm(this.leavePageMessage);
-            if (confirm) {
-                this.isChanged = false;
-                next();
-            } else {
-                next(false);
-            }
-        } else {
-            next();
-        }
+    async beforeRouteUpdate(to, from, next) {
+        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;
+        next(proceed);
     },
-    beforeRouteLeave(to, from, next) {
-        if (this.isChanged) {
-            const confirm = window.confirm(this.leavePageMessage);
-            if (confirm) {
-                next();
-            } else {
-                next(false);
-            }
-        } else {
-            next();
-        }
+    async beforeRouteLeave(to, from, next) {
+        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;
+        next(proceed);
     },
     beforeUpdate() {
         this.refreshBar();
