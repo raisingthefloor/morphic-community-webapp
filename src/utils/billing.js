@@ -131,6 +131,7 @@ export function getPlans() {
                 if (savings) {
                     p.savings_text = savings;
                 }
+                p.months = 99;
             });
 
             return JSON.parse(JSON.stringify(allPlans));
