@@ -93,6 +93,28 @@ Vue.mixin({
         },
 
         /**
+         * Displays a modal dialog, resolving when the dialog is dismissed.
+         * @param {String} modalId The id of the modal dialog.
+         * @return {Promise<String>} Resolves with the trigger value of the modal's hide event.
+         */
+        showModalDialog(modalId) {
+            return new Promise((resolve, reject) => {
+
+                const onHide = (event, id) => {
+                    if (id === modalId) {
+                        resolve(event.trigger);
+                        this.$root.$off("bv::modal::hide", onHide);
+                    }
+                };
+
+                this.$root.$on("bv::modal::hide", onHide);
+
+                this.$bvModal.show(modalId);
+            });
+
+        },
+
+        /**
          * Gets the url of an icon
          * @param {String} image The icon identified (from image_url)
          * @return {String} The url.
