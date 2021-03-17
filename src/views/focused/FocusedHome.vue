@@ -63,7 +63,6 @@
 </style>
 
 <script>
-import { MESSAGES } from "@/utils/constants";
 import { getCommunityBars, getCommunity, getCommunityMembers } from "@/services/communityService";
 import * as Bar from "@/utils/bar";
 
@@ -107,14 +106,9 @@ export default {
     },
     methods: {
         logout: function () {
-            if (this.disableLogout) {
-                window.confirm(MESSAGES.logoutAlert);
-            } else {
-                this.$store.dispatch("logout")
-                    .then(() => {
-                        this.$router.push("/");
-                    });
-            }
+            this.$store.dispatch("logout").then(() => {
+                this.$router.push("/");
+            });
         },
         loadData: function () {
             return new Promise((resolve, reject) => {

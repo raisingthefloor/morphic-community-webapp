@@ -28,7 +28,7 @@ Inspect [src/config/config.js](src/config/config.js) and [vue.config.js](vue.con
 
 ### Compiles and hot-reloads for development
 
-    npm run serve
+    npm run dev
 
 ### Compiles and minifies for production
 
@@ -37,6 +37,10 @@ Inspect [src/config/config.js](src/config/config.js) and [vue.config.js](vue.con
 ### Lints and fixes files
 
     npm run lint
+
+### Unit tests
+
+    npm test
 
 ### Customize configuration
 

@@ -57,15 +57,11 @@
 </style>
 
 <script>
-import { MESSAGES } from "@/utils/constants";
 
 export default {
     computed: {
         isLoggedIn: function () {
             return this.$store.getters.isLoggedIn;
-        },
-        disableLogout: function () {
-            return this.$store.getters.unsavedChanges;
         },
         focusedUrl: function () {
             return this.getUrl(true).href;
@@ -77,14 +73,9 @@ export default {
 
     methods: {
         logout: function () {
-            if (this.disableLogout) {
-                window.confirm(MESSAGES.logoutAlert);
-            } else {
-                this.$store.dispatch("logout")
-                    .then(() => {
-                        this.$router.push("/");
-                    });
-            }
+            this.$store.dispatch("logout").then(() => {
+                this.$router.push("/");
+            });
         },
         getBarId: function () {
             return this.$route.query.barId;

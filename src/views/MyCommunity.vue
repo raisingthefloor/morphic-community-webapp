@@ -248,6 +248,7 @@ export default {
                     this.billingInfo = r.data;
                 }),
                 billing.getPlans().then(plans => {
+                    console.log(plans);
                     this.plans = plans;
                 })
             ]);
