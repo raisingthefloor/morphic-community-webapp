@@ -17,7 +17,11 @@ export default new Vuex.Store({
         errorMessage: {},
         unsavedChanges: false,
         unsavedBar: JSON.parse(localStorage.getItem("unsavedBar") || "null"),
-        resetPasswordEmail: ""
+        resetPasswordEmail: "",
+        // The url the visitor used, before authenticating - redirect to this after login completes.
+        beforeLoginPage: undefined,
+        // The page which "/" redirects authenticated users to (when not the default)
+        homePage: undefined
     },
     mutations: {
         auth_request(state) {
@@ -63,6 +67,12 @@ export default new Vuex.Store({
         },
         unsavedBar(state, barDetails) {
             state.unsavedBar = barDetails;
+        },
+        beforeLoginPage(state, url) {
+            state.beforeLoginPage = url;
+        },
+        homePage(state, url) {
+            state.homePage = url;
         }
     },
     actions: {
@@ -95,7 +105,7 @@ export default new Vuex.Store({
                         localStorage.setItem("userId", data.user.id);
                         HTTP.defaults.headers.common.Authorization = `Bearer ${data.token}`;
                         commit("auth_success", data);
-                        resolve(resp);
+                        resolve("/");
                     })
                     .catch(err => {
                         commit("auth_error", err);
@@ -187,6 +197,8 @@ export default new Vuex.Store({
         unsavedChanges: state => state.unsavedChanges,
         /** @type {BarDetails} */
         unsavedBar: state => state.unsavedBar,
-        resetPasswordEmail: state => state.resetPasswordEmail
+        resetPasswordEmail: state => state.resetPasswordEmail,
+        beforeLoginPage: state => state.beforeLoginPage,
+        homePage: state => state.homePage
     }
 });

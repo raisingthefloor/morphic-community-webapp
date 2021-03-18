@@ -31,14 +31,43 @@ import FocusedAddCommunityBar from "@/views/focused/FocusedAddCommunityBar.vue";
 
 Vue.use(VueRouter);
 
+/**
+ * Meta-data for a route.
+ * @typedef {Object} RouteMeta
+ * @property {String} title The page title.
+ * @property {Boolean} home true if this the home page ("/").
+ * @property {Boolean} redirect true if this is not a real page, just used to redirect to another.
+ * @property {Boolean} authHome true if this the default home page for authenticated users ("/dashboard").
+ * @property {Boolean|"only"} public true if this page can be accessed without authentication. "only" if it can only
+ *  be accessed without authentication (authenticated users are redirected away).
+ */
+
+/**
+ * @typedef {RouteRecord} AppRouteRecord
+ * @property {RouteMeta} meta Extra route data
+ */
+
+/**
+ * @type {Array<AppRouteRecord>}
+ */
 const routes = [
     {
+        // Redirects to /login or /dashboard (or whatever the user's home page is)
         path: "/",
         name: "Home",
+        meta: {
+            home: true,
+            public: true,
+            redirect: true
+        }
+    },
+    {
+        path: "/login",
+        name: "Login",
         component: Home,
         meta: {
             title: "Home :: Morphic",
-            locked: true
+            public: "only"
         }
     },
     {
@@ -48,7 +77,7 @@ const routes = [
         props: { messageId: "sessionTimedOut" },
         meta: {
             title: "Home :: Morphic",
-            locked: true
+            public: "only"
         }
     },
     {
@@ -56,7 +85,8 @@ const routes = [
         name: "Terms of Use",
         component: Terms,
         meta: {
-            title: "Terms Of Use :: Morphic"
+            title: "Terms Of Use :: Morphic",
+            public: true
         }
     },
     // {
@@ -73,8 +103,7 @@ const routes = [
         name: "MyCommunity",
         component: MyCommunity,
         meta: {
-            title: "My Community :: Morphic",
-            authRoute: true
+            title: "My Community :: Morphic"
         }
     },
     {
@@ -82,8 +111,7 @@ const routes = [
         name: "MyCommunities",
         component: MyCommunities,
         meta: {
-            title: "My Groups :: Morphic",
-            authRoute: true
+            title: "My Groups :: Morphic"
         }
     },
     {
@@ -91,8 +119,23 @@ const routes = [
         name: "Plans",
         component: Plans,
         meta: {
-            title: "Plans :: Morphic",
-            authRoute: true
+            title: "Plans :: Morphic"
+        }
+    },
+    {
+        path: "/billing/no-subscription",
+        name: "NoSubscription",
+        component: NoSubscription,
+        meta: {
+            title: "Plans :: No Subscription"
+        }
+    },
+    {
+        path: "/early-release-program",
+        name: "EarlyReleaseProgram",
+        component: EarlyReleaseProgram,
+        meta: {
+            title: "MorphicBar Early Release Program"
         }
     },
     {
@@ -100,8 +143,7 @@ const routes = [
         name: "BillingDetails",
         component: BillingDetails,
         meta: {
-            title: "Billing :: Morphic",
-            authRoute: true
+            title: "Billing :: Morphic"
         }
     },
     {
@@ -109,7 +151,8 @@ const routes = [
         name: "Reset Password",
         component: ResetPassword,
         meta: {
-            title: "Reset Password :: Morphic"
+            title: "Reset Password :: Morphic",
+            public: "only"
         }
     },
 
@@ -120,7 +163,7 @@ const routes = [
         component: Dashboard,
         meta: {
             title: "Dashboard :: Morphic",
-            authRoute: true
+            authHome: true
         }
     },
     {
@@ -128,8 +171,7 @@ const routes = [
         name: "MorphicBar Preconfigured",
         component: MorphicBarPreconfigured,
         meta: {
-            title: "Pick a bar :: Morphic",
-            authRoute: true
+            title: "Pick a bar :: Morphic"
         }
     },
     {
@@ -137,8 +179,7 @@ const routes = [
         name: "MorphicBar Editor",
         component: MorphicBarEditor,
         meta: {
-            title: "MorphicBar Editor :: Morphic",
-            authRoute: true
+            title: "MorphicBar Editor :: Morphic"
         }
     },
     {
@@ -146,8 +187,7 @@ const routes = [
         name: "Member Invite",
         component: MemberInvite,
         meta: {
-            title: "Member Invite :: Morphic",
-            authRoute: true
+            title: "Member Invite :: Morphic"
         }
     },
     // {
@@ -166,8 +206,7 @@ const routes = [
         name: "Home: Bar and Member Page",
         component: FocusedHome,
         meta: {
-            title: "Focused :: Home",
-            authRoute: true
+            title: "Focused :: Home"
         }
     },
     {
@@ -224,23 +263,61 @@ const router = new VueRouter({
     routes
 });
 
+const authHomeRoute = routes.find(r => r.meta.authHome);
+const homeRoute = routes.find(r => r.meta.home);
+
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.authRoute)) {
+
+    // Merge the route meta data
+    /** @type {RouteMeta} */
+    const meta = to.matched.reduce((obj, cur) => Object.assign(obj, cur.meta), {});
+
+    let redirect;
+    if (meta.home) {
+        // the home page, /
         if (store.getters.isLoggedIn) {
-            next();
-            return;
+            if (store.getters.beforeLoginPage) {
+                // redirect back to the page visited before login
+                redirect = store.getters.beforeLoginPage;
+                store.commit("beforeLoginPage", undefined);
+            } else {
+                // redirect to the auth home page
+                redirect = store.getters.homePage || authHomeRoute.path;
+            }
+        } else {
+            // show the login form
+            redirect = "/login";
         }
-        next("/");
-    } else if (to.matched.some(record => record.meta.locked)) {
-        if (!store.getters.isLoggedIn) {
-            next();
-            return;
-        }
-        next("/dashboard");
-    } else {
-        next();
+    } else if (!meta.public && !store.getters.isLoggedIn) {
+        // User needs to be authenticated for this page.
+        store.commit("beforeLoginPage", to.fullPath);
+        redirect = "/login";
+    } else if (meta.public === "only" && store.getters.isLoggedIn) {
+        // Authenticated users can't access this page.
+        redirect = homeRoute.path;
     }
+
+    next(redirect);
 });
+
+// Make the router not report navigation failures, due to redirecting from / to a different page.
+const routerPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location, onComplete, onAbort) {
+    let result;
+    if (onComplete || onAbort) {
+        result = routerPush.call(this, location, onComplete, onAbort);
+    } else {
+        result = routerPush.call(this, location).catch(reason => {
+            // Resolve navigation failures to the home page.
+            const ignore = VueRouter.isNavigationFailure(reason) && reason.to?.meta?.redirect;
+            return ignore
+                ? reason
+                : Promise.reject(reason);
+        });
+    }
+
+    return result;
+};
 
 router.afterEach((to) => {
     Vue.nextTick(() => {
