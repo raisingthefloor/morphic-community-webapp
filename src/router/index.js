@@ -5,6 +5,7 @@ import store from "@/store";
 // General Marketing, Login and Register Components
 import Home from "@/views/Home.vue";
 import Terms from "@/views/Terms.vue";
+import Registration from "@/views/Registration";
 
 import ResetPassword from "@/views/ResetPassword.vue";
 
@@ -28,6 +29,7 @@ import FocusedPeopleUsingBar from "@/views/focused/FocusedPeopleUsingBar.vue";
 import FocusedPersonPage from "@/views/focused/FocusedPersonPage.vue";
 import FocusedButtonEdit from "@/views/focused/FocusedButtonEdit.vue";
 import FocusedAddCommunityBar from "@/views/focused/FocusedAddCommunityBar.vue";
+
 
 Vue.use(VueRouter);
 
@@ -148,6 +150,14 @@ const routes = [
         meta: {
             title: "Member Invite :: Morphic",
             authRoute: true
+        }
+    },
+    {
+        path: "/register",
+        name: "Register",
+        component: Registration,
+        meta: {
+            title: "Register :: Morphic"
         }
     },
     // {
