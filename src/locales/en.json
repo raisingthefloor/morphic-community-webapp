@@ -21,6 +21,17 @@
   },
   "DrawerPreview":  {
   },
+  "EarlyReleaseProgram": {
+    "account-created": "Your account has been created.",
+    "already-joined": "You already have an account",
+    "create-dialog-ok_button": "Create Account",
+    "create-dialog-prompt": "What would you like to name this account?",
+    "create-dialog-text-hint": "Examples: Your name, organization name, other...",
+    "create-dialog-title": "Create your account",
+    "heading": "Morphic Early Release Program",
+    "intro": "Welcome to Morphic.",
+    "join_link": "Click here to begin"
+  },
   "EditButtonDialog": {
   },
   "FocusedAddCommunityBar":  {
@@ -62,6 +73,12 @@
   "MyCommunities": {
   },
   "MyCommunity":  {
+  },
+  "NoSubscription": {
+    "go-to-signup_link": "Click here to go to sign up page for Morphic Plus",
+    "morphic-early-release-program": "Morphic Early Release Program",
+    "morphic-plus-is-free": "Morphic Plus is free through the",
+    "no-subscription-message": "In order to create custom Morphic Bars you need to have a Morphic Plus subscription"
   },
   "PlanPicker": {
     "12-month-payment": "(paid annually)",

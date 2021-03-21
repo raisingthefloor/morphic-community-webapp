@@ -87,10 +87,10 @@ export default {
                 return;
             }
             this.$store.dispatch("login", this.$v.userInfo.$model)
-                .then(() => {
+                .then((dest) => {
                     this.userInfo.email = "";
                     this.userInfo.password = "";
-                    this.$router.push("/dashboard");
+                    this.$router.push(dest);
                 })
                 .catch(err => {
                     if (err.response) {

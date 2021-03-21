@@ -9,8 +9,8 @@
       </h1>
 
       <b-navbar-nav class="mr-auto">
-        <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
-        <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.focus-mode_link'" /></b-nav-item>
+        <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn && hasAccount" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
+        <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn && hasAccount" exact-active-class="active"><b v-t="'Header.focus-mode_link'" /></b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav>
@@ -60,9 +60,6 @@
 
 export default {
     computed: {
-        isLoggedIn: function () {
-            return this.$store.getters.isLoggedIn;
-        },
         focusedUrl: function () {
             return this.getUrl(true).href;
         },

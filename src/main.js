@@ -10,6 +10,7 @@ import { HTTP } from "@/services/index";
 import { icons } from "@/utils/constants";
 import * as Bar from "@/utils/bar";
 import { CONFIG } from "@/config/config";
+import externalLinks from "@/config/externalLinks";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -140,7 +141,11 @@ Vue.mixin({
          * @return {String} The ID.
          */
         generateId(item) {
-            return Bar.generateId(item);
+            if (typeof(item) === "string") {
+                return item + Math.floor(Math.random() * 10e10);
+            } else {
+                return Bar.generateId(item);
+            }
         },
 
         /**
@@ -177,10 +182,13 @@ Vue.mixin({
         focusMode: function () {
             return this.$route.path.includes("/focused/");
         },
+        isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
+        hasAccount: function () { return this.$store.getters.hasAccount; },
         communityId: function () { return this.$store.getters.communityId; },
         userId: function () { return this.$store.getters.userId; },
         console: () => console,
-        CONFIG: () => CONFIG
+        CONFIG: () => CONFIG,
+        externalLinks: () => externalLinks
     }
 });
 

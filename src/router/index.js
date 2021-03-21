@@ -13,6 +13,9 @@ import MyCommunities from "@/views/MyCommunities.vue";
 
 import Plans from "@/views/billing/Plans.vue";
 import BillingDetails from "@/views/billing/BillingDetails.vue";
+import NoSubscription from "@/views/billing/NoSubscription.vue";
+
+import EarlyReleaseProgram from "@/views/billing/EarlyReleaseProgram.vue";
 
 // Dashboard Components
 import Dashboard from "@/views/Dashboard.vue";
@@ -38,6 +41,7 @@ Vue.use(VueRouter);
  * @property {Boolean} home true if this the home page ("/").
  * @property {Boolean} redirect true if this is not a real page, just used to redirect to another.
  * @property {Boolean} authHome true if this the default home page for authenticated users ("/dashboard").
+ * @property {Boolean} noAccount true if an authenticated user with no account can access.
  * @property {Boolean|"only"} public true if this page can be accessed without authentication. "only" if it can only
  *  be accessed without authentication (authenticated users are redirected away).
  */
@@ -127,7 +131,8 @@ const routes = [
         name: "NoSubscription",
         component: NoSubscription,
         meta: {
-            title: "Plans :: No Subscription"
+            title: "Plans :: No Subscription",
+            noAccount: true
         }
     },
     {
@@ -135,7 +140,17 @@ const routes = [
         name: "EarlyReleaseProgram",
         component: EarlyReleaseProgram,
         meta: {
-            title: "MorphicBar Early Release Program"
+            title: "MorphicBar Early Release Program",
+            public: true
+        }
+    },
+    {
+        path: "/early-release-program/join",
+        name: "EarlyReleaseProgram.Join",
+        component: EarlyReleaseProgram,
+        meta: {
+            title: "MorphicBar Early Release Program",
+            noAccount: true
         }
     },
     {
@@ -273,6 +288,7 @@ router.beforeEach((to, from, next) => {
     const meta = to.matched.reduce((obj, cur) => Object.assign(obj, cur.meta), {});
 
     let redirect;
+
     if (meta.home) {
         // the home page, /
         if (store.getters.isLoggedIn) {
@@ -280,20 +296,26 @@ router.beforeEach((to, from, next) => {
                 // redirect back to the page visited before login
                 redirect = store.getters.beforeLoginPage;
                 store.commit("beforeLoginPage", undefined);
+            } else if (!store.getters.hasAccount) {
+                // no account - tell them to get one.
+                redirect = {name: "NoSubscription"};
             } else {
                 // redirect to the auth home page
                 redirect = store.getters.homePage || authHomeRoute.path;
             }
         } else {
             // show the login form
-            redirect = "/login";
+            redirect = {name: "Login"};
         }
     } else if (!meta.public && !store.getters.isLoggedIn) {
         // User needs to be authenticated for this page.
         store.commit("beforeLoginPage", to.fullPath);
-        redirect = "/login";
+        redirect = {name: "Login"};
     } else if (meta.public === "only" && store.getters.isLoggedIn) {
         // Authenticated users can't access this page.
+        redirect = homeRoute.path;
+    } else if (!meta.public && !meta.noAccount && !store.getters.hasAccount) {
+        // only account holders can access this page
         redirect = homeRoute.path;
     }
 

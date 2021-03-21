@@ -51,7 +51,8 @@ export default {
         return {
             labelText: this.noComma ? this.label : `${this.label}:`,
             inputId: this.id || "input" + Math.random(),
-            errorMessages: Object.assign({}, defaultErrorMessages, this.errors)
+            errorMessages: Object.assign({}, defaultErrorMessages, this.errors),
+            currentValue: this.value || (this.validation && this.validation.$model)
         };
     },
     computed: {
@@ -69,6 +70,9 @@ export default {
                 }
             }
             return result;
+        },
+        inputValue: function () {
+            return this.currentValue;
         }
     },
     methods: {
@@ -76,6 +80,7 @@ export default {
             if (this.validation) {
                 this.validation.$model = $event;
             }
+            this.currentValue = $event;
             this.$emit("input", $event);
         }
     }

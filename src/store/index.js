@@ -93,26 +93,30 @@ export default new Vuex.Store({
                     });
             });
         },
-        login({ commit }, user) {
-            return new Promise((resolve, reject) => {
-                login(user)
-                    .then(resp => {
-                        const data = {
-                            user: resp.data.user,
-                            token: resp.data.token
-                        };
-                        localStorage.setItem("token", data.token);
-                        localStorage.setItem("userId", data.user.id);
-                        HTTP.defaults.headers.common.Authorization = `Bearer ${data.token}`;
-                        commit("auth_success", data);
-                        resolve("/");
-                    })
-                    .catch(err => {
-                        commit("auth_error", err);
-                        localStorage.removeItem("token");
-                        reject(err);
-                    });
-            });
+        async login({ commit, dispatch, state }, user) {
+            let userData;
+            try {
+                const resp = await login(user);
+                userData = {
+                    user: resp.data.user,
+                    token: resp.data.token
+                };
+            } catch (err) {
+                commit("auth_error", err);
+                localStorage.removeItem("token");
+                throw err;
+            }
+
+            localStorage.setItem("token", userData.token);
+            localStorage.setItem("userId", userData.user.id);
+            HTTP.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
+
+            commit("auth_success", userData);
+
+            // Get the communities the user is part of (ignore the rejection, it's ok if not).
+            await dispatch("userCommunities", state.userId).catch(e => undefined);
+
+            return "/";
         },
         logout({ commit }) {
             return new Promise((resolve, reject) => {
@@ -194,6 +198,7 @@ export default new Vuex.Store({
         authStatus: state => state.status,
         userId: state => state.userId,
         communityId: state => state.communityId,
+        hasAccount: state => !!state.communityId,
         unsavedChanges: state => state.unsavedChanges,
         /** @type {BarDetails} */
         unsavedBar: state => state.unsavedBar,
