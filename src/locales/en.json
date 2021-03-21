@@ -124,6 +124,13 @@
   "TextInputDialog": {
   },
   "UserLogin":  {
+    "email_label": "Sign in with Email",
+    "email_placeholder": "user@example.com",
+    "heading": "Sign into Morphic",
+    "login_button": "Sign in",
+    "no-account_link": "I do not have a Morphic account yet",
+    "password-reset_link": "Forgot Password?",
+    "password_label": "Password for Morphic"
   },
   "UserRegistration": {
   },
