@@ -1,38 +1,38 @@
 <template>
   <div>
-    <h2 class="mb-3" id="user-login-heading">Login</h2>
+    <h2 class="mb-3" id="user-login-heading" style="font-weight: bold">Sign into Morphic</h2>
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <ValidatedInput id="login-user-email"
-                      label="Enter your email"
+                      label="Sign in with Email"
                       placeholder="user@example.com"
                       :validation="$v.userInfo.email"
                       @input="storeResetEmail"
       />
+<!--        <b-link to="/reset-password" variant="link">Forgot Password</b-link>-->
       <ValidatedInput id="login-user-password"
-                      label="Enter your password"
+                      label="Password for Morphic"
                       :validation="$v.userInfo.password"
                       type="password"
+                      linktext="Forget Password?"
+                      to="/reset-password"
       />
+         <div style="margin-top: 100px; height: 200px;">
+             <b-link style="color: inherit; text-decoration: none;" to="/register">
+                 <div style="height: 40px; border: 1px solid black; border-radius: 5px; width: 300px; display: flex; justify-content: center; align-items: center; margin-left: auto; margin-right: auto">
+                     I do not have Morphic account yet
+                 </div>
+             </b-link>
+             <b-button type="submit"
+                       id="loginButton"
+                       :disabled="$v.userInfo.$anyError"
+                       style="margin-top: 70px; background-color: green"
 
-      <b-form-checkbox-group>
-        <b-form-checkbox
-          v-model="userInfo.keep_logged"
-          value="1"
-          unchecked-value="0"
-        >
-          Keep me logged in
-        </b-form-checkbox>
-        <b-button type="submit"
-                  id="loginButton"
-                  variant="primary"
-                  :disabled="$v.userInfo.$anyError"
-        >Login</b-button>
-      </b-form-checkbox-group>
+             >Sign in</b-button>
+         </div>
       <br/>
-      <b-link to="/reset-password" variant="link">Forgot Password</b-link>
     </b-form>
   </div>
 </template>

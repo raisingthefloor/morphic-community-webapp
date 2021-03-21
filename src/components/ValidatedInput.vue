@@ -1,22 +1,34 @@
 <!-- form input group for a text input field, which handles validation -->
 <template>
-  <b-form-group
-          :label="labelText"
-          :label-for="inputId"
-  >
-    <b-form-input
-            :value="value || (validation && validation.$model)"
-            @input="onInput"
-            :state="state"
-            :placeholder="placeholder"
-            :id="inputId"
-            :type="type"
-            :autocomplete="autocomplete"
-    />
-    <b-form-invalid-feedback>
-      <span v-if="state === false">{{ errorText }}</span>
-    </b-form-invalid-feedback>
-  </b-form-group>
+  <div>
+    <b-form-group
+        :label="labelText"
+        :label-for="inputId"
+        label-cols="9"
+        label-align="left"
+        class="mb-0"
+        style="height: 30px"
+    >
+    <div style="display: flex; justify-content: flex-end; align-items: center;">
+        <b-link  :to="to" variant="link" style="font-size: 15px;" >{{linktext}}</b-link>
+   </div>
+    </b-form-group>
+    <b-form-group>
+      <b-form-input
+          :value="value || (validation && validation.$model)"
+          @input="onInput"
+          :state="state"
+          :placeholder="placeholder"
+          :id="inputId"
+          :type="type"
+          :autocomplete="autocomplete"
+          style="height: 40px"
+      />
+      <b-form-invalid-feedback>
+        <span v-if="state === false">{{ errorText }}</span>
+      </b-form-invalid-feedback>
+    </b-form-group>
+  </div>
 </template>
 
 <style lang="scss">
@@ -45,7 +57,9 @@ export default {
         type: String,
         noComma: Boolean,
         value: String,
-        autocomplete: String
+        autocomplete: String,
+        linktext: String,
+        to: String
     },
     data() {
         return {
