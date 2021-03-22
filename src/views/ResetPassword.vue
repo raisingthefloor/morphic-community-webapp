@@ -4,26 +4,26 @@
       <b-col md="3">
       </b-col>
       <b-col md="6">
-        <h3>Reset your password</h3>
-        <p class="lead">Please enter the email address you used to register with, and we will email you temporary password to you.</p>
+        <h3 v-t="'ResetPassword.heading'" />
+        <p class="lead" v-t="'ResetPassword.instructions'" />
         <br />
         <b-form @submit.stop.prevent="onSubmit">
           <b-alert variant="danger" :show="errorAlert">
             {{ errorMessage }}
           </b-alert>
           <ValidatedInput id="login-user-email"
-                          label="Enter your email address"
+                          :label="$t('ResetPassword.enter-your-email-address')"
                           placeholder="user@example.com"
                           :validation="$v.form.email"
           />
 
           <b-row>
             <b-col md="6">
-              <b-link to="/" variant="success" class="ml-1">Return to Login</b-link>
+              <b-link to="/" variant="success" class="ml-1" v-t="'ResetPassword.return-to-login_link'" />
             </b-col>
 
             <b-col md="6" style="text-align: right" >
-              <b-button type="submit" variant="primary">Reset Password</b-button>
+              <b-button type="submit" variant="primary" v-t="'ResetPassword.reset-password_button'" />
             </b-col>
           </b-row>
         </b-form>
@@ -48,8 +48,8 @@ export default {
             },
             errorAlert: false,
             errorMessage: null,
-            emailValidationError: MESSAGES.emailValidationError,
-            recaptchaToken: null
+            recaptchaToken: null,
+            firstName: ""
         };
     },
     validations: {

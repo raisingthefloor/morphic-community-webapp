@@ -6,10 +6,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "node_modules/.bin/eslint src/**/*.{js,vue} tests/**/*.js",
+    "lint": "node_modules/.bin/eslint src/**/*.{js,vue} tests/**/*.js && npm run i18n:report",
     "build-dev": "vue-cli-service build --mode development --dest dev",
     "dev": "NODE_ENV=local vue-cli-service serve",
-    "test": "npm run test:unit"
+    "test": "npm run test:unit",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
     "@popperjs/core": "2.5.4",
@@ -19,6 +20,7 @@
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-easy-dnd": "^1.8.4",
+    "vue-i18n": "^8.22.3",
     "vue-recaptcha-v3": "^1.9.0",
     "vue-router": "^3.2.0",
     "vuedraggable": "^2.24.1",
@@ -49,6 +51,7 @@
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "vue-jest": "^2.6.0",
+    "vue-cli-plugin-i18n": "~2.0.1",
     "vue-template-compiler": "^2.6.11"
   },
   "env": {

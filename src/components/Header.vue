@@ -2,15 +2,15 @@
   <div>
     <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav">
       <h1>
-        <b-navbar-brand to="/" title="Morphic">
+        <b-navbar-brand to="/" :title="$t('Header.navbar-branding_title')">
           <img src="/img/logo-color.svg" alt="logo">
-          Morphic
+          <span v-t="'Header.navbar-branding'" />
         </b-navbar-brand>
       </h1>
 
       <b-navbar-nav class="mr-auto">
-        <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Dashboard Mode</b></b-nav-item>
-        <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b>Focus/Mobile Mode</b></b-nav-item>
+        <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
+        <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.focus-mode_link'" /></b-nav-item>
       </b-navbar-nav>
 
       <b-navbar-nav>
@@ -21,8 +21,8 @@
         </b-nav-item>
         -->
         <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
-          <b-icon-box-arrow-right aria-hidden="true"></b-icon-box-arrow-right>
-          Logout
+          <b-icon-box-arrow-right aria-hidden="true" />
+          <span v-t="'Header.logout_link'" />
         </b-nav-item>
       </b-navbar-nav>
     </b-navbar>

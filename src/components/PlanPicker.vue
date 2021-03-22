@@ -3,7 +3,7 @@ Displays the subscription plans - either for a new user, or to change an existin
 -->
 <template>
   <b-form-radio-group v-if="monthlyPlans && longPlans" plain style="margin-bottom: 1.5em">
-    <p v-if="!community">Not sure how many members you will have? You can upgrade your subscription whenever you need to.</p>
+    <p v-if="!community||1">{{ $t('PlanPicker.future-upgrade-hint') }}</p>
 
     <b-row v-for="(monthly) in [false, true]"
            :key="monthly"
@@ -38,19 +38,17 @@ Displays the subscription plans - either for a new user, or to change an existin
           </div>
 
           <div class="planBody">
-            <strong class="currentPlanOnly text-primary">Your current plan</strong>
-            <p>Manage up to {{plan.member_limit}} members</p>
+            <strong class="currentPlanOnly text-primary">{{ $t('PlanPicker.current-plan-marker') }}</strong>
+            <p>{{ $tc('PlanPicker.plan-limit', plan.member_limit) }}</p>
             <p>
-              {{plan.monthly_price_text}} per month<br/>
-              <span v-if="monthly">automatically renews monthly until canceled</span>
-              <span v-else-if="plan.months === 6">(paid semiannually)</span>
-              <span v-else-if="plan.months === 12">(paid annually)</span>
+              <span>{{ $t('PlanPicker.plan-monthly-price', {price: plan.monthly_price_text}) }}</span><br/>
+              <span v-if="monthly">{{ $t('PlanPicker.renew-monthly') }}</span>
+              <span v-else-if="plan.months === 6">{{ $t('PlanPicker.6-month-payment') }}</span>
+              <span v-else-if="plan.months === 12">{{ $t('PlanPicker.12-month-payment') }}</span>
             </p>
-            <p v-if="!monthly && plan.savings_text">
-              Savings of {{ plan.savings_text }} with {{(plan.months === 6) ? "6 month" : "annual"}} payment discount.
-            </p>
+            <p v-if="!monthly && plan.savings_text">{{ $t('PlanPicker.plan-savings', {savings: plan.savings_text}) }}</p>
 
-            <p v-if="!plan.available" class="text-danger">Your current group is too large for this plan.</p>
+            <p v-if="!plan.available" class="text-danger">{{ $t('PlanPicker.plan-too-small') }}</p>
 
           </div>
         </b-form-radio>
@@ -63,14 +61,12 @@ Displays the subscription plans - either for a new user, or to change an existin
       <b-col md="8">
         <div class="hasIcon">
           <b-icon icon="info-circle-fill" variant="info"/>
-          <span>
-                Morphic also offers enterprise plans for larger groups, universities, companies, and organizations.
-                For more information <b-link>contact us</b-link>.
-              </span>
+          <span>{{ $t('PlanPicker.enterprise-information') }}<b-link v-t="'PlanPicker.contact_link'" />.
+          </span>
         </div>
       </b-col>
       <b-col md="4" style="text-align: right">
-        <b-button variant="primary" :disabled="!newPlanSelected" size="lg">Continue to Payment</b-button>
+        <b-button variant="primary" :disabled="!newPlanSelected" size="lg">{{ $t('PlanPicker.payment_button') }}</b-button>
       </b-col>
     </b-row>
   </b-form-radio-group>

@@ -13,6 +13,7 @@ import { CONFIG } from "@/config/config";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+import i18n from "./i18n/i18n";
 
 const token = localStorage.getItem("token");
 if (token) {
@@ -187,5 +188,6 @@ Vue.config.productionTip = false;
 new Vue({
     router,
     store,
+    i18n,
     render: h => h(App)
 }).$mount("#app");
