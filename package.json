@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "node_modules/.bin/eslint src/**/*.{js,vue} && npm run i18n:report",
+    "lint": "node_modules/.bin/eslint src/**/*.{js,vue} tests/**/*.js && npm run i18n:report",
     "build-dev": "vue-cli-service build --mode development --dest dev",
     "dev": "NODE_ENV=local vue-cli-service serve",
     "test": "npm run test:unit",
