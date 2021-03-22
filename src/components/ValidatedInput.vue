@@ -24,6 +24,7 @@
           :autocomplete="autocomplete"
           style="height: 40px"
       />
+      <span>{{inputInfo}}</span>
       <b-form-invalid-feedback>
         <span v-if="state === false">{{ errorText }}</span>
       </b-form-invalid-feedback>
@@ -59,7 +60,8 @@ export default {
         value: String,
         autocomplete: String,
         linktext: String,
-        to: String
+        to: String,
+        inputInfo: String
     },
     data() {
         return {
