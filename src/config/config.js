@@ -30,7 +30,8 @@ const CONF = {
     BASE: {
         ENV: ENV,
         PRODUCTION: false,
-        RECAPTCHA_SITEKEY: "6LcDs3waAAAAAFGKPHxnNuPBO__5LqaEybnS6wn0"
+        RECAPTCHA_SITEKEY: "6LcDs3waAAAAAFGKPHxnNuPBO__5LqaEybnS6wn0",
+        DISABLE_TRIAL: true
     },
 
     // Local development (npm run dev)
@@ -55,7 +56,6 @@ const CONF = {
     PRODUCTION: {
         API_URL: "https://api.morphic.org",
         PRODUCTION: true,
-        DISABLE_TRIAL: true,
         DISABLE_FAVICONS: true
     }
 };
