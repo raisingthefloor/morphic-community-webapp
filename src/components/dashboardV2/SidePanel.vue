@@ -1,22 +1,25 @@
 <template>
   <div id="SidePanel" class="bar-people-controls fill-height bg-green">
     <h4>{{ community.name }}</h4>
-    <p class="text-right small">
-      (<b-link :to="{ name: 'MyCommunity'}">Group Settings</b-link>)
-    </p>
-    <h5>
-      <b>Group Bars</b>
-      <b-link to="/dashboard/morphicbar-preconfigured" class="icon-add"><b-icon-plus-circle-fill variant="success"></b-icon-plus-circle-fill></b-link>
-    </h5>
-    <BarsList :bars="bars" :activeBarId="activeBarId" ref="BarsList"/>
+    <div class="itemList">
+      <b-link :to="{ name: 'MyCommunity'}">Account Settings</b-link>
+    </div>
 
-    <h5>
-      <div>
-        <b>Members ({{community.member_count}} of {{community.member_limit}})</b>
-        <b-link to="/dashboard/member-invite" class="icon-add" id="AddNewMember"><b-icon-plus-circle-fill variant="success" id="AddPeopleIcon" ref="AddPeopleIcon" ></b-icon-plus-circle-fill></b-link>
-      </div>
-    </h5>
-    <MembersList :members="members" :community="community" :activeBarId="activeBarId" :bars="bars" :activeMemberId="activeMemberId" ref="MembersList"/>
+    <h5>My Morphic Bars</h5>
+    <BarsList ref="BarsList"
+              :bars="bars"
+              :activeBarId="activeBarId"
+    />
+
+    <h5>Members ({{community.member_count}} of {{community.member_limit}})</h5>
+    <MembersList ref="MembersList"
+                 :members="members"
+                 :community="community"
+                 :activeBarId="activeBarId"
+                 :bars="bars"
+                 :activeMemberId="activeMemberId"
+    />
+
   </div>
 </template>
 
@@ -26,6 +29,44 @@
 
   .bg-green {
     background: #a5d58a url(/img/bg-green.png) repeat-x bottom;
+  }
+
+
+  #SidePanel {
+    h4, h5 {
+      font-weight: bold;
+    }
+
+    & > :not(.itemList) {
+      padding-left: 0.4rem;
+      padding-right: 0.4rem;
+    }
+
+    .itemList {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1em;
+
+      a {
+        padding: 0.1rem 0.4rem;
+        color: black;
+        &.active {
+          background-color: green;
+          color: white;
+        }
+
+        &.addNewLink {
+          &:before {
+            content: '[';
+          }
+
+          &:after {
+            content: ']';
+          }
+        }
+      }
+    }
+
   }
 
   .bar-people-controls {

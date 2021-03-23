@@ -1,40 +1,21 @@
 <template>
-  <Div id="BarsList">
-    <ul v-if="orderedBars.length > 0" class="list-unstyled">
-      <li v-for="(bar, index) in orderedBars" :key="bar.id" :class="{ active: bar.id === activeBarId }">
-        <b-link v-if="bar.is_shared" :to="getBarEditRoute(bar)" :ref="'bar' + index" class="stretched-link">
-          {{ bar.name === "Default" ? "Default Bar" : bar.name }}
-        </b-link>
-      </li>
-    </ul>
-    <p v-else>
-      <i>No bars in the group</i><br>
-      Click on the plus button just above to add your first one
-    </p>
+  <div id="BarsList" class="itemList">
+    <b-link :to="{ name: 'MorphicBar Editor', query: { barId: 'new' } }"
+            class="addNewLink"
+    >Add a new bar</b-link>
+    <b-link v-for="(bar, index) in orderedBars" :key="bar.id"
+            :to="getBarEditRoute(bar)"
+            :ref="'bar' + index"
+            :class="{
+                  active: bar.id === activeBarId
+              }"
+    >
+      {{ bar.name === "Default" ? "Default Bar" : bar.name }}
+    </b-link>
   </div>
 </template>
 
-<style lang="scss">
-  #BarsList {
-    ul {
-      margin: 0 -1rem 1rem -1rem;
-      li {
-        position: relative;
-        padding: 0 1rem;
-        &.active {
-          padding: .25rem 1rem;
-          background: green;
-          a {
-            color: white;
-          }
-        }
-        a {
-          display: inline;
-          padding: 0 0.75rem 0 0;
-        }
-      }
-    }
-  }
+<style lang="scss" scoped>
 </style>
 
 <script>
@@ -44,14 +25,15 @@ export default {
     name: "BarsList",
     props: {
         bars: Array,
-        activeBarId: String
+        activeBarId: String,
+        heading: String
     },
     methods: {
         getBarEditRoute: Bar.getBarEditRoute
     },
     computed: {
         orderedBars: function () {
-            const alphabetical = this.bars;
+            const alphabetical = this.bars.filter(b => b.is_shared);
             alphabetical.sort((a, b) => (a.name < b.name) ? 1 : ((a.name > b.name) ? -1 : 0));
             alphabetical.reverse();
             alphabetical.sort((a, b) => a.name === "Default" ? -1 : b.name === "Default" ? 1 : 0);
