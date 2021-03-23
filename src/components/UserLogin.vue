@@ -1,34 +1,36 @@
 <template>
   <div>
-    <h2 class="mb-3" id="user-login-heading" v-t="'UserLogin.heading'" />
+    <h2 class="mb-3" id="user-login-heading" style="font-weight: bold">Sign into Morphic</h2>
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <ValidatedInput id="login-user-email"
-                      :label="$t('UserLogin.email_label')"
-                      :placeholder="$t('UserLogin.email_placeholder')"
+                      label="Sign in with Email"
+                      placeholder="user@example.com"
                       :validation="$v.userInfo.email"
                       @input="storeResetEmail"
       />
 <!--        <b-link to="/reset-password" variant="link">Forgot Password</b-link>-->
       <ValidatedInput id="login-user-password"
-                      :label="$t('UserLogin.password_label')"
+                      label="Password for Morphic"
                       :validation="$v.userInfo.password"
                       type="password"
-                      :linktext="$t('UserLogin.password-reset_link')"
+                      linktext="Forget Password?"
                       to="/reset-password"
       />
          <div style="margin-top: 100px; height: 200px;">
              <b-link style="color: inherit; text-decoration: none;" to="/register">
-                 <div style="height: 40px; border: 1px solid black; border-radius: 5px; width: 300px; display: flex; justify-content: center; align-items: center; margin-left: auto; margin-right: auto" v-t="'UserLogin.no-account_link'" />
+                 <div style="height: 40px; border: 1px solid black; border-radius: 5px; width: 300px; display: flex; justify-content: center; align-items: center; margin-left: auto; margin-right: auto">
+                     I do not have Morphic account yet
+                 </div>
              </b-link>
              <b-button type="submit"
                        id="loginButton"
                        :disabled="$v.userInfo.$anyError"
                        style="margin-top: 70px; background-color: green"
 
-              v-t="'UserLogin.login_button'" />
+             >Sign in</b-button>
          </div>
       <br/>
     </b-form>
