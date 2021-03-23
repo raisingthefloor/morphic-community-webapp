@@ -88,7 +88,7 @@
     }
   }
 
-  button.btn.btn-link {
+  button.btn.btn-link, a.btn.btn-link {
     padding: 0;
     vertical-align: baseline;
     text-align: left;

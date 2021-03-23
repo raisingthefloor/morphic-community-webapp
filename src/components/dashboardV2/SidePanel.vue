@@ -1,5 +1,5 @@
 <template>
-  <div id="SideBar" class="bar-people-controls fill-height bg-green">
+  <div id="SidePanel" class="bar-people-controls fill-height bg-green">
     <h4>{{ community.name }}</h4>
     <p class="text-right small">
       (<b-link :to="{ name: 'MyCommunity'}">Group Settings</b-link>)
@@ -48,7 +48,7 @@ import MembersList from "@/components/dashboardV2/MembersList";
 import BarsList from "@/components/dashboardV2/BarsList";
 
 export default {
-    name: "SideBar",
+    name: "SidePanel",
     components: {
         MembersList,
         BarsList

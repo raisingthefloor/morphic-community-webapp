@@ -34,7 +34,7 @@
     <!-- EDITOR v2 -->
     <b-row no-gutters id="EditorContainer">
       <b-col md="2">
-        <SideBar :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="activeMemberId ? null : barDetails.id" />
+        <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="activeMemberId ? null : barDetails.id" />
       </b-col>
       <b-col md="8">
         <div id="barEditor" class="pt-2">
@@ -885,7 +885,7 @@
 
 <script>
 
-import SideBar from "@/components/dashboardV2/SideBar";
+import SidePanel from "@/components/dashboardV2/SidePanel";
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import {
     createCommunityBar,
@@ -915,7 +915,7 @@ export default {
         TextInputDialog,
         BarItemLink,
         EditButtonDialog,
-        SideBar,
+        SidePanel,
         PreviewItem,
         Drag,
         Drop,
