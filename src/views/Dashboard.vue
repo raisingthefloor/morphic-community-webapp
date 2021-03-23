@@ -4,7 +4,7 @@
       <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
     <b-row>
       <b-col md="2">
-        <CommunityManager :community="community" :bars="list" :members="members" ref="CommunityManager" />
+        <SideBar :community="community" :bars="list" :members="members" ref="SideBar" />
       </b-col>
       <b-col md="5" fluid>
         <div v-if="members.length > 0" class="info-box pt-3 pb-3">
@@ -88,7 +88,7 @@
 <script>
 import * as ArrowLine from "arrow-line";
 import { createPopper } from "@popperjs/core";
-import CommunityManager from "@/components/dashboardV2/CommunityManager";
+import SideBar from "@/components/dashboardV2/SideBar";
 import {
     getCommunity,
     getCommunityBars,
@@ -100,7 +100,7 @@ import * as billingService from "@/services/billingService";
 export default {
     name: "Dashboard",
     components: {
-        CommunityManager
+        SideBar
     },
     data() {
         return {
@@ -253,16 +253,16 @@ export default {
 
             var pairs = [
                 // hint, point to, [point from]
-                [this.$refs.BarsHint, "#CommunityManager #BarsList > ul > li:first-child > :first-child"],
-                [this.$refs.MembersHint, "#CommunityManager #AddNewMember"],
+                [this.$refs.BarsHint, "#SideBar #BarsList > ul > li:first-child > :first-child"],
+                [this.$refs.MembersHint, "#SideBar #AddNewMember"],
                 [
                     this.$refs.EditMemberHint,
-                    "#CommunityManager #MembersList ul > li:first-child > :first-child",
+                    "#SideBar #MembersList ul > li:first-child > :first-child",
                     this.$refs.EditMemberHint && this.$refs.EditMemberHint.querySelector(":first-child")
                 ]
             ];
 
-            const communityManager = document.querySelector("#CommunityManager");
+            const sideBar = document.querySelector("#SideBar");
 
             // Resolve the selectors
             pairs = pairs.map(p => p.map(ref => (typeof(ref) === "string") ? document.querySelector(ref) : ref));
@@ -275,7 +275,7 @@ export default {
                 const virtualElement = {
                     getBoundingClientRect() {
                         const rect = target.getBoundingClientRect();
-                        rect.width = communityManager.getBoundingClientRect().right - rect.left + 30;
+                        rect.width = sideBar.getBoundingClientRect().right - rect.left + 30;
                         return rect;
                     }
                 };

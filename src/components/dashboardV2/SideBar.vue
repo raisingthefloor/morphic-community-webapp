@@ -1,6 +1,6 @@
 <template>
-  <div id="CommunityManager" class="bar-people-controls fill-height bg-green p-3">
-    <h4><b>{{ community.name }}</b></h4>
+  <div id="SideBar" class="bar-people-controls fill-height bg-green">
+    <h4>{{ community.name }}</h4>
     <p class="text-right small">
       (<b-link :to="{ name: 'MyCommunity'}">Group Settings</b-link>)
     </p>
@@ -48,7 +48,7 @@ import MembersList from "@/components/dashboardV2/MembersList";
 import BarsList from "@/components/dashboardV2/BarsList";
 
 export default {
-    name: "CommunityManager",
+    name: "SideBar",
     components: {
         MembersList,
         BarsList
