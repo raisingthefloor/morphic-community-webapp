@@ -125,7 +125,7 @@ export default new Vuex.Store({
                 localStorage.removeItem("userId");
                 localStorage.removeItem("communityId");
                 delete HTTP.defaults.headers.common.Authorization;
-                window.location.href = "/#/session-timed-out/";
+                window.location.href = "/#/";
                 resolve();
             });
         },
