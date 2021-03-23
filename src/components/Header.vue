@@ -3,7 +3,7 @@
     <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav">
       <h1>
         <b-navbar-brand to="/" :title="$t('Header.navbar-branding_title')">
-          <img src="/img/logo-color.svg" alt="logo">
+          <img src="/img/logo-color.svg" alt="logo">&nbsp;
           <span v-t="'Header.navbar-branding'" />
         </b-navbar-brand>
       </h1>
@@ -21,7 +21,7 @@
         </b-nav-item>
         -->
         <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
-          <b-icon-box-arrow-right aria-hidden="true" />
+          <b-icon-box-arrow-right aria-hidden="true" />&nbsp;
           <span v-t="'Header.logout_link'" />
         </b-nav-item>
       </b-navbar-nav>
