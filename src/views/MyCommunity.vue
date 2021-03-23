@@ -47,16 +47,16 @@
               <b-icon icon="person-circle"/>
             </div>
             <div class="memberContent">
-              <b-link class="name" @click.self.stop="toggleExpand(member)">{{member.fullName}}</b-link>
+              <b-link class="name" @click.self.stop="toggleExpand(member)">{{member.displayName}}</b-link>
               <div class="details">
-                <span :tabindex="member.isThisUser ? -1 : undefined" :id="member.isThisUser ? 'RemoveMyself' : ''" @click.prevent.stop>
+                <span :tabindex="member.isCurrent ? -1 : undefined" :id="member.isCurrent ? 'RemoveMyself' : ''" @click.prevent.stop>
                   <b-button variant="link"
                               class="text-danger"
                               @click.prevent.stop="removeManager(member)"
-                              :disabled="member.isThisUser"
+                              :disabled="member.isCurrent"
                     >Remove as group manager</b-button>
                 </span>
-                <b-tooltip v-if="member.isThisUser"
+                <b-tooltip v-if="member.isCurrent"
                            target="RemoveMyself"
                            variant="warning"
                            placement="right"
@@ -224,16 +224,7 @@ export default {
                 this.members = {};
 
                 members.forEach(member => {
-                    member.isThisUser = member.userId === this.userId;
-                    Object.defineProperty(member, "fullName", {
-                        get() {
-                            const full = this.first_name + " " + this.last_name;
-                            return this.isThisUser ? `${full} (You)` : full;
-                        }
-                    });
-
                     this.members[member.id] = member;
-
                 });
             });
         },
@@ -296,7 +287,7 @@ export default {
          */
         removeManager: function (member) {
 
-            if (!member.isThisUser) {
+            if (!member.isCurrent) {
                 const confirm = this.showConfirm(
                     `${member.fullName} will no longer be able to manage this community.`,
                     ["Remove", "Cancel"],

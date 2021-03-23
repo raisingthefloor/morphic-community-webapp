@@ -127,6 +127,6 @@
  * @property {State} state The member's state.
  * @property {String} bar_id The member's bar_id (null means use community default_bar_id).
  * @property {String} userId The member's userId.
- * @property {Boolean} isThisUser true if this member is the current user accessing the site.
+ * @property {Boolean} isCurrent true if this member is the current user accessing the site.
  */
 

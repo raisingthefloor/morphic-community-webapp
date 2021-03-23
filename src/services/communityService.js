@@ -169,7 +169,20 @@ export function deleteCommunityBar(communityId, barId) {
  * @return {Promise<AxiosResponse<{CommunityMembersResult}>>} Response.
  */
 export function getCommunityMembers(communityId) {
-    return HTTP.get(`/v1/communities/${communityId}/members`);
+    return HTTP.get(`/v1/communities/${communityId}/members`).then((r) => {
+        var userId = localStorage.getItem("userId");
+
+        r.data.members.forEach(member => {
+            member.isCurrent = userId && member.userId === userId;
+            Object.defineProperty(member, "fullName", {
+                get() {
+                    return `${this.first_name} ${this.last_name}`.trim();
+                }
+            });
+        });
+
+        return r;
+    });
 }
 
 /**
