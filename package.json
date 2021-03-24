@@ -50,8 +50,8 @@
     "jest-mock-axios": "^4.3.0",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
-    "vue-jest": "^2.6.0",
     "vue-cli-plugin-i18n": "~2.0.1",
+    "vue-jest": "^2.6.0",
     "vue-template-compiler": "^2.6.11"
   },
   "env": {

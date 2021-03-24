@@ -1,5 +1,5 @@
 <template>
-  <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
+  <b-container fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header />
     <router-view />
     <Footer />
@@ -109,7 +109,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { loadLocaleMessagesAsync } from "@/i18n/i18n";
-
 export default {
     name: "App",
 
@@ -124,11 +123,9 @@ export default {
     },
     mounted() {
         const work = [];
-
         // Set the locale to the lang= parameter on the URL, or use what was detected.
         const locale = this.$route.query.lang || this.$i18n.locale;
         work.push(this.setLocale(locale));
-
         Promise.all(work).then(() => {
             this.loaded = true;
         });

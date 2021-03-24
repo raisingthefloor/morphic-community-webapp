@@ -215,6 +215,14 @@ const routes = [
             title: "Register :: Morphic"
         }
     },
+    {
+        path: "/register",
+        name: "Register",
+        component: Registration,
+        meta: {
+            title: "Register :: Morphic"
+        }
+    },
     // {
     //   path: '/dashboard/member/:memberId',
     //   name: 'Member Editor',
