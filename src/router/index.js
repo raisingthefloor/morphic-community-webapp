@@ -38,14 +38,17 @@ Vue.use(VueRouter);
 
 /**
  * Meta-data for a route.
+ *
+ * All pages require authentication, unless explicitly stated otherwise with the `public` field.
+ *
  * @typedef {Object} RouteMeta
  * @property {String} title The page title.
- * @property {Boolean} home true if this the home page ("/").
- * @property {Boolean} redirect true if this is not a real page, just used to redirect to another.
- * @property {Boolean} authHome true if this the default home page for authenticated users ("/dashboard").
- * @property {Boolean} noAccount true if an authenticated user with no account can access.
  * @property {Boolean|"only"} public true if this page can be accessed without authentication. "only" if it can only
  *  be accessed without authentication (authenticated users are redirected away).
+ * @property {Boolean} noAccount true if an authenticated user with no account can access.
+ * @property {Boolean} redirect true if this is not a real page, just used to redirect to another (hides routing errors).
+ * @property {Boolean} authHome true if this the default home page for authenticated users ("/dashboard").
+ * @property {Boolean} home true if this the home page ("/").
  */
 
 /**
@@ -95,15 +98,6 @@ const routes = [
             public: true
         }
     },
-    // {
-    //   path: '/registration',
-    //   name: 'Registration',
-    //   component: Registration,
-    //   meta: {
-    //     title: 'Community Registration :: Morphic',
-    //     locked: true
-    //   }
-    // },
     {
         path: "/my-community",
         name: "MyCommunity",
@@ -212,15 +206,8 @@ const routes = [
         name: "Register",
         component: Registration,
         meta: {
-            title: "Register :: Morphic"
-        }
-    },
-    {
-        path: "/register",
-        name: "Register",
-        component: Registration,
-        meta: {
-            title: "Register :: Morphic"
+            title: "Register :: Morphic",
+            public: "only"
         }
     },
     // {
