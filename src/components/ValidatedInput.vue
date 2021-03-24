@@ -9,9 +9,7 @@
         class="mb-0"
         style="height: 30px"
     >
-    <div style="display: flex; justify-content: flex-end; align-items: center;">
-        <b-link  :to="to" variant="link" style="font-size: 15px;" >{{linktext}}</b-link>
-   </div>
+
     </b-form-group>
     <b-form-group>
       <b-form-input
@@ -22,8 +20,11 @@
           :id="inputId"
           :type="type"
           :autocomplete="autocomplete"
-          style="height: 40px"
+          class="h-20 w-80"
       />
+        <div style="display: flex; justify-content: flex-end; align-items: center;">
+            <b-link  :to="to" variant="link" style="font-size: 15px;" >{{linktext}}</b-link>
+        </div>
       <span>{{inputInfo}}</span>
       <b-form-invalid-feedback>
         <span v-if="state === false">{{ errorText }}</span>

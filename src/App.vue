@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
+  <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header />
     <router-view />
     <Footer />
@@ -8,7 +8,7 @@
 
 <style lang="scss">
   $primary-color: #002957;
-  $secondary-color: #84c661;
+  $secondary-color: #028004;
 
   body {
     font-family: 'Open Sans', sans-serif !important;
