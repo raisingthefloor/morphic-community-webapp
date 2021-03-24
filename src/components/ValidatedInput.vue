@@ -60,9 +60,6 @@ export default {
         value: String,
         autocomplete: String,
         linktext: String,
-        to: String
-        autocomplete: String,
-        linktext: String,
         to: String,
         inputInfo: String
     },
