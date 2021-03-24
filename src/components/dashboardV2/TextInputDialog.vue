@@ -1,15 +1,22 @@
+<!-- A dialog that accepts a single text field -->
 <template>
   <b-modal :id="id" :title="title"
            @ok="onOK"
            @cancel="onCancel"
-           @show="newValue = value"
+           @show="newValue = value, changed = false"
+           :ok-title="okTitle"
+           :cancel-title="cancelTitle"
   >
     <b-form-group :label="prompt">
       <b-form-input v-model="newValue"
+                    ref="textInput"
                     autofocus required
+                    :placeholder="placeholder"
                     @keydown.native.enter="onEnter"
-                    :state="newValue === value ? null : (newValue !== '')"
+                    @input="changed = true"
+                    :state="changed ? newValue !== '' : null"
       />
+      <small v-if="lowerText">{{lowerText}}</small>
     </b-form-group>
   </b-modal>
 
@@ -28,14 +35,25 @@
 export default {
     name: "TextInputDialog",
     props: {
+        /** Dialog title */
         title: String,
+        /** Text above the field */
         prompt: String,
+        /** Placeholder text for the input field */
+        placeholder: String,
+        /** Initial field value */
         value: String,
-        id: String
+        /** Modal ID */
+        id: String,
+        /** Small text under the field */
+        lowerText: String,
+        okTitle: String,
+        cancelTitle: String
     },
     data: function () {
         return {
-            newValue: null
+            newValue: null,
+            changed: false
         };
     },
     methods: {
@@ -49,6 +67,13 @@ export default {
          */
         onOK: function (event) {
             event.preventDefault();
+
+            if (this.newValue === "") {
+                this.changed = true;
+                this.$refs.textInput.$el.focus();
+                return;
+            }
+
             const okEvent = {
                 oldValue: this.value,
                 newValue: this.newValue,
