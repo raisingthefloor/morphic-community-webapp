@@ -142,13 +142,13 @@ export default new Vuex.Store({
                     });
             });
         },
-        newCommunity({ commit }, name) {
+        newCommunity({ commit, dispatch, state }, name) {
             return new Promise((resolve, reject) => {
                 createNewCommunity(name)
                     .then(resp => {
                         const community = resp.data.community;
                         commit("new_community", community);
-                        resolve();
+                        dispatch("userCommunities", state.userId).catch(e => undefined).then(resolve);
                     })
                     .catch(err => {
                         commit("community_error");
