@@ -161,7 +161,8 @@ export default new Vuex.Store({
                 getUserCommunities(userId)
                     .then(resp => {
                         const communities = resp.data.communities;
-                        if (communities.length !== 0) {
+                        const managedCommunities = communities.filter(c => c.role === "manager");
+                        if (managedCommunities.length !== 0) {
                             localStorage.setItem("communityId", communities[0].id);
                             commit("community", communities[0].id);
                             resolve(communities);
