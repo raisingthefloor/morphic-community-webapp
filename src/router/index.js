@@ -32,6 +32,7 @@ import FocusedPeopleUsingBar from "@/views/focused/FocusedPeopleUsingBar.vue";
 import FocusedPersonPage from "@/views/focused/FocusedPersonPage.vue";
 import FocusedButtonEdit from "@/views/focused/FocusedButtonEdit.vue";
 import FocusedAddCommunityBar from "@/views/focused/FocusedAddCommunityBar.vue";
+import RegistrationInvite from "@/views/RegistrationInvite";
 
 
 Vue.use(VueRouter);
@@ -205,6 +206,15 @@ const routes = [
         path: "/register",
         name: "Register",
         component: Registration,
+        meta: {
+            title: "Register :: Morphic",
+            public: "only"
+        }
+    },
+    {
+        path: "/register/invite",
+        name: "Register",
+        component: RegistrationInvite,
         meta: {
             title: "Register :: Morphic",
             public: "only"

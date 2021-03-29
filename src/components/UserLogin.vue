@@ -16,21 +16,29 @@
                       label="Password for Morphic"
                       :validation="$v.userInfo.password"
                       type="password"
-                      linktext="Forget Password?"
+                      linktext="Forgot Password?"
                       to="/reset-password"
       />
-         <div style="margin-top: 100px; height: 200px;">
-             <b-link style="color: inherit; text-decoration: none;" to="/register">
-                 <div style="height: 40px; border: 1px solid black; border-radius: 5px; width: 300px; display: flex; justify-content: center; align-items: center; margin-left: auto; margin-right: auto">
-                     I do not have Morphic account yet
-                 </div>
-             </b-link>
-             <b-button type="submit"
-                       id="loginButton"
-                       :disabled="$v.userInfo.$anyError"
-                       style="margin-top: 70px; background-color: green"
+        <b-form-checkbox-group>
+<!--            <b-form-checkbox-->
+<!--                v-model="userInfo.keep_logged"-->
+<!--                value="1"-->
+<!--                unchecked-value="0"-->
+<!--            >-->
+<!--                Keep me logged in-->
+<!--            </b-form-checkbox>-->
+            <b-link style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 100%" to="/register">
+                I do not have Morphic account yet
+            </b-link>
+            <b-button type="submit"
+                      id="loginButton"
+                      :disabled="$v.userInfo.$anyError"
+                      variant="success"
+                      class="w-25"
+            >Sign in</b-button>
+        </b-form-checkbox-group>
+         <div style="margin-top: 120px; height: 200px;">
 
-             >Sign in</b-button>
          </div>
       <br/>
     </b-form>
