@@ -15,6 +15,7 @@
                      :lower-text="$t('EarlyReleaseProgram.create-dialog-text-hint')"
                      :ok-title="$t('EarlyReleaseProgram.create-dialog-ok_button')"
                      v-model="accountName"
+                     centered
                      @ok="accountNameDialogOK"
     />
 
@@ -51,7 +52,12 @@ export default {
     methods: {
         start() {
             if (this.isLoggedIn) {
-                this.$bvModal.show("accountNameDialog");
+                if (this.hasAccount) {
+                    this.showMessage(this.$t("EarlyReleaseProgram.already-joined"));
+                    this.$router.push("/");
+                } else {
+                    this.$bvModal.show("accountNameDialog");
+                }
             } else {
                 // Route points to this page, but enforces login.
                 this.$router.push({name: "EarlyReleaseProgram.Join"});
@@ -81,7 +87,7 @@ export default {
                 this.showMessage(this.$t("EarlyReleaseProgram.account-created"));
             }
 
-            this.$router.push("/dashboard");
+            this.$router.push("/");
 
         }
     }

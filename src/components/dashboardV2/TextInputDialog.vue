@@ -6,6 +6,7 @@
            @show="newValue = value, changed = false"
            :ok-title="okTitle"
            :cancel-title="cancelTitle"
+           :centered="centered"
   >
     <b-form-group :label="prompt">
       <b-form-input v-model="newValue"
@@ -48,7 +49,8 @@ export default {
         /** Small text under the field */
         lowerText: String,
         okTitle: String,
-        cancelTitle: String
+        cancelTitle: String,
+        centered: Boolean
     },
     data: function () {
         return {
