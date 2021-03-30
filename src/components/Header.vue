@@ -1,12 +1,10 @@
 <template>
   <div>
-    <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav">
-      <h1>
-        <b-navbar-brand to="/" :title="$t('Header.navbar-branding_title')">
-          <img src="/img/logo-color.svg" alt="logo">
-          <span v-t="'Header.navbar-branding'" class="ml-2" />
-        </b-navbar-brand>
-      </h1>
+    <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav" tag="header">
+      <b-navbar-brand to="/" :title="$t('Header.navbar-branding_title')">
+        <img src="/img/logo-color.svg" alt="logo">
+        <span v-t="'Header.navbar-branding'" class="ml-2" />
+      </b-navbar-brand>
 
       <b-navbar-nav class="mr-auto">
         <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
@@ -29,31 +27,32 @@
   </div>
 </template>
 
-<style>
-  nav#top {
-  }
+<style lang="scss">
+  header#top {
 
-  nav#top a.nav-link:focus {
-    outline: 0;
-  }
-  nav#top a.nav-link.active {
-    color: white;
-    background: #002957;
-    border-bottom: 3px solid #84c661;
-  }
+    a.nav-link:focus {
+      outline: 0;
+    }
 
-  nav#top .logout-nav-item a.nav-link {
-    color: black
-  }
+    a.nav-link.active {
+      color: white;
+      background: #002957;
+      border-bottom: 3px solid #84c661;
+    }
 
-  .navbar-brand img {
-    height: 2rem;
-  }
+    .logout-nav-item a.nav-link {
+      color: black
+    }
 
-  nav#top .mr-auto .nav-link {
-    color: rgba(0, 0, 0, 0.65);
-  }
+    .navbar-brand img {
+      height: 2rem;
+    }
 
+    .mr-auto .nav-link {
+      color: rgba(0, 0, 0, 0.65);
+    }
+
+  }
 </style>
 
 <script>
