@@ -124,7 +124,7 @@
   "TextInputDialog": {
   },
   "UserLogin":  {
-    "create-account_link": "I do not have Morphic account yet",
+    "create-account_link": "I do not have a Morphic account yet",
     "email_label": "Sign in with Email",
     "heading": "Sign into Morphic",
     "password-reset_link": "I forgot my password",
