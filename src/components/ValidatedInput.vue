@@ -22,8 +22,8 @@
           :autocomplete="autocomplete"
           class="h-20 w-80"
       />
-        <div style="display: flex; justify-content: flex-end; align-items: center;">
-            <b-link  :to="to" variant="link" style="font-size: 15px;" >{{linktext}}</b-link>
+        <div v-if="to && linktext" style="display: flex; justify-content: flex-end; align-items: center;">
+            <b-link :to="to" variant="link" style="font-size: 15px;" >{{linktext}}</b-link>
         </div>
       <span>{{inputInfo}}</span>
       <b-form-invalid-feedback>
