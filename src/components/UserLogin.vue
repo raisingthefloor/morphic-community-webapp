@@ -28,22 +28,24 @@
 <!--                Keep me logged in-->
 <!--            </b-form-checkbox>-->
 <!--        </b-form-checkbox-group>-->
-            <b-button type="submit"
-                      id="loginButton"
-                      :disabled="$v.userInfo.$anyError"
-                      variant="success"
-                      class="w-25"
-             v-t="'UserLogin.sign-in_button'" />
-            <b-link :to="{name: 'Register'}" v-t="'UserLogin.create-account_link'" />
+      <div class="loginAction">
+        <b-button type="submit"
+                  id="loginButton"
+                  variant="success"
+                  class="w-25"
+         v-t="'UserLogin.sign-in_button'" />
+      </div>
+      <div class="loginAction">
+        <b-link :to="{name: 'Register'}" v-t="'UserLogin.create-account_link'" />
+      </div>
     </b-form>
   </div>
 </template>
 
 <style lang="scss">
-#loginButton {
-  padding-left: 2em;
-  padding-right: 2em;
-  float: right;
+.loginAction {
+  text-align: center;
+  margin-top: 1em;
 }
 </style>
 
