@@ -1,22 +1,22 @@
 <template>
   <div>
-    <h2 class="mb-3" id="user-login-heading" style="font-weight: bold">Sign into Morphic</h2>
+    <h2 class="mb-3" id="user-login-heading" style="font-weight: bold" v-t="'UserLogin.heading'" />
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <ValidatedInput id="login-user-email"
-                      label="Sign in with Email"
+                      :label="$t('UserLogin.email_label')"
                       placeholder="user@example.com"
                       :validation="$v.userInfo.email"
                       @input="storeResetEmail"
       />
-<!--        <b-link to="/reset-password" variant="link">Forgot Password</b-link>-->
+
       <ValidatedInput id="login-user-password"
-                      label="Password for Morphic"
+                      :label="$t('UserLogin.password_label')"
                       :validation="$v.userInfo.password"
                       type="password"
-                      linktext="Forgot Password?"
+                      :linktext="$t('UserLogin.password-reset_link')"
                       to="/reset-password"
       />
         <b-form-checkbox-group>
@@ -27,15 +27,13 @@
 <!--            >-->
 <!--                Keep me logged in-->
 <!--            </b-form-checkbox>-->
-            <b-link style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 100%" to="/register">
-                I do not have Morphic account yet
-            </b-link>
+            <b-link style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 100%" to="/register" v-t="'UserLogin.create-account_link'" />
             <b-button type="submit"
                       id="loginButton"
                       :disabled="$v.userInfo.$anyError"
                       variant="success"
                       class="w-25"
-            >Sign in</b-button>
+             v-t="'UserLogin.sign-in_button'" />
         </b-form-checkbox-group>
          <div style="margin-top: 120px; height: 200px;">
 
