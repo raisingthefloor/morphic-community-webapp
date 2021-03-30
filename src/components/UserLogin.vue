@@ -19,7 +19,7 @@
                       :linktext="$t('UserLogin.password-reset_link')"
                       to="/reset-password"
       />
-        <b-form-checkbox-group>
+<!--        <b-form-checkbox-group>-->
 <!--            <b-form-checkbox-->
 <!--                v-model="userInfo.keep_logged"-->
 <!--                value="1"-->
@@ -27,18 +27,14 @@
 <!--            >-->
 <!--                Keep me logged in-->
 <!--            </b-form-checkbox>-->
-            <b-link style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 100%" to="/register" v-t="'UserLogin.create-account_link'" />
+<!--        </b-form-checkbox-group>-->
             <b-button type="submit"
                       id="loginButton"
                       :disabled="$v.userInfo.$anyError"
                       variant="success"
                       class="w-25"
              v-t="'UserLogin.sign-in_button'" />
-        </b-form-checkbox-group>
-         <div style="margin-top: 120px; height: 200px;">
-
-         </div>
-      <br/>
+            <b-link :to="{name: 'Register'}" v-t="'UserLogin.create-account_link'" />
     </b-form>
   </div>
 </template>
