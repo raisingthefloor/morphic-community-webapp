@@ -1,7 +1,7 @@
 <template>
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header />
-    <router-view />
+    <router-view role="main" />
     <Footer />
   </b-container>
 </template>

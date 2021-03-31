@@ -1,34 +1,36 @@
 <template>
-  <div>
-    <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav" tag="header">
-      <b-navbar-brand to="/" :title="$t('Header.navbar-branding_title')">
-        <img src="/img/logo-color.svg" alt="logo">
-        <span v-t="'Header.navbar-branding'" class="ml-2" />
-      </b-navbar-brand>
+  <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav" tag="div" role="">
+    <b-navbar-brand to="/" role="banner">
+      <img src="/img/logo-color.svg" alt="">
+      <span v-t="'Header.navbar-branding'" class="ml-2" />
+    </b-navbar-brand>
 
-      <b-navbar-nav class="mr-auto">
-        <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
-        <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.focus-mode_link'" /></b-nav-item>
-      </b-navbar-nav>
+    <b-navbar-nav v-if="$route.name !== 'Login'" role="navigation">
+      <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
+      <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.focus-mode_link'" /></b-nav-item>
 
-      <b-navbar-nav>
-        <!--
-        <b-nav-item v-if="isLoggedIn" exact-active-class="active" to="/my-community">
-          <b-icon-person-fill></b-icon-person-fill>
-          My Group
-        </b-nav-item>
-        -->
-        <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
-          <b-icon-box-arrow-right aria-hidden="true" />
-          <span v-t="'Header.logout_link'" />
-        </b-nav-item>
-      </b-navbar-nav>
-    </b-navbar>
-  </div>
+      <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
+        <b-icon-box-arrow-right aria-hidden="true" />&nbsp;
+        <span v-t="'Header.logout_link'" />
+      </b-nav-item>
+      <b-nav-item v-else href="#/login" class="logout-nav-item">
+        <b-icon-box-arrow-in-right aria-hidden="true" />&nbsp;
+        <span v-t="'Header.login_link'" />
+      </b-nav-item>
+    </b-navbar-nav>
+  </b-navbar>
 </template>
 
 <style lang="scss">
-  header#top {
+  #top {
+    display: flex;
+
+    .navbar-nav {
+      flex-grow: 1;
+      & > :last-child {
+        margin-left: auto;
+      }
+    }
 
     a.nav-link:focus {
       outline: 0;
@@ -40,8 +42,10 @@
       border-bottom: 3px solid #84c661;
     }
 
-    .logout-nav-item a.nav-link {
-      color: black
+    .logout-nav-item {
+      a.nav-link {
+        color: black;
+      }
     }
 
     .navbar-brand img {

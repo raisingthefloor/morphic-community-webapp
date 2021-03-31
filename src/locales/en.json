@@ -55,8 +55,8 @@
     "dashboard_link": "Dashboard Mode",
     "focus-mode_link": "Focus/Mobile Mode",
     "logout_link": "Logout",
-    "navbar-branding": "Morphic",
-    "navbar-branding_title": "Morphic"
+    "login_link": "Login",
+    "navbar-branding": "Morphic"
   },
   "Home": {
   },
