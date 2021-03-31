@@ -19,6 +19,8 @@
                       :linktext="$t('UserLogin.password-reset_link')"
                       to="/reset-password"
       />
+
+      <b-link to="/reset-password" v-t="'UserLogin.password-reset_link'" class="alignRight" />
 <!--        <b-form-checkbox-group>-->
 <!--            <b-form-checkbox-->
 <!--                v-model="userInfo.keep_logged"-->

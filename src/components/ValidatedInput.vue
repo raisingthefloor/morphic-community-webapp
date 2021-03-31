@@ -27,12 +27,9 @@
       </template>
 
       <template #description>
-      <div v-if="to && linktext" style="display: flex; justify-content: flex-end; align-items: center;">
-          <b-link :to="to" variant="link" style="font-size: 1rem;" >{{linktext}}</b-link>
-      </div>
+        <span v-if="description">{{description}}</span>
       </template>
 
-      <span>{{inputInfo}}</span>
     </b-form-group>
   </div>
 </template>
@@ -71,9 +68,7 @@ export default {
         noColon: Boolean,
         value: String,
         autocomplete: String,
-        linktext: String,
-        to: String,
-        inputInfo: String,
+        description: String,
         autofocus: Boolean
     },
     data() {

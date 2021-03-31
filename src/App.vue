@@ -103,6 +103,12 @@
   body.production .notProduction, body:not(.production) .onlyProduction {
     display: none;
   }
+
+  .alignRight {
+    display: block;
+    margin-left: auto;
+    width: fit-content;
+  }
 </style>
 
 <script>
