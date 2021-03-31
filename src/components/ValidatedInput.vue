@@ -19,6 +19,7 @@
           :autocomplete="autocomplete"
           class="h-20 w-80"
           :aria-required="required"
+          :autofocus="autofocus"
       />
 
       <template #invalid-feedback>
@@ -72,7 +73,8 @@ export default {
         autocomplete: String,
         linktext: String,
         to: String,
-        inputInfo: String
+        inputInfo: String,
+        autofocus: Boolean
     },
     data() {
         return {

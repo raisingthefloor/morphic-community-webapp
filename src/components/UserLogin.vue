@@ -7,9 +7,9 @@
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <ValidatedInput id="login-user-email"
                       :label="$t('UserLogin.email_label')"
-                      placeholder="user@example.com"
                       :validation="$v.userInfo.email"
                       @input="storeResetEmail"
+                      autofocus
       />
 
       <ValidatedInput id="login-user-password"
