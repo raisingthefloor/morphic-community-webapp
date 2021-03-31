@@ -5,7 +5,7 @@
       </b-col>
       <b-col md="6">
         <h3 v-t="'ResetPassword.heading'" />
-        <p class="lead" v-t="'ResetPassword.instructions'" />
+        <p id="instructions" class="lead" v-t="'ResetPassword.instructions'" />
         <br />
         <b-form @submit.stop.prevent="onSubmit">
           <b-alert variant="danger" :show="errorAlert">
@@ -15,6 +15,8 @@
                           :label="$t('ResetPassword.enter-your-email-address')"
                           placeholder="user@example.com"
                           :validation="$v.form.email"
+                          autofocus
+                          aria-describedby="instructions"
           />
 
           <b-row>
