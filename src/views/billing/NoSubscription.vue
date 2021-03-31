@@ -10,7 +10,7 @@
 
       <p>
         (<span v-t="'NoSubscription.morphic-plus-is-free'" />&nbsp;
-        <b-link :to="externalLinks.earlyReleaseProgram" v-t="'NoSubscription.morphic-early-release-program'" />)
+        <b-link :href="externalLinks.earlyReleaseProgram" v-t="'NoSubscription.morphic-early-release-program'" />)
       </p>
 
     </div>
