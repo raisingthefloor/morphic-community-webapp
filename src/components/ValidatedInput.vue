@@ -4,23 +4,30 @@
     <b-form-group
         :label="labelText"
         :label-for="inputId"
+        :class="{
+            validatedInputGroup: true,
+            passwordToggle: !!passwordToggle,
+            passwordConfirm: !!passwordConfirm
+        }"
     >
 
       <template #label>{{labelText}}<span v-if="required" class="requiredText" aria-hidden="true">Required</span></template>
 
       <b-form-input
           :value="value || (validation && validation.$model)"
+          ref="inputField"
           @input="onInput"
           @blur="onBlur"
           :state="state"
           :id="inputId"
           class="h-20 w-80"
           :aria-required="required"
+          :type="inputType"
           v-bind="$attrs"
       />
 
       <template #invalid-feedback>
-        <span v-if="state === false">{{ errorText }}&nbsp;</span>
+        <span v-if="state === false">{{ errorText }}</span>
       </template>
 
       <template #description>
@@ -28,6 +35,18 @@
       </template>
 
     </b-form-group>
+
+    <b-button v-if="passwordToggle"
+              ref="toggleButton"
+              @click="togglePassword"
+              @focus="lastFocus = $event.relatedTarget"
+              variant="info"
+              class="showPasswordButton"
+              size="sm">
+      <b-icon :icon="showPassword ? 'eye-slash' : 'eye'"/>
+      {{ showPassword ? "Hide password" : "Show password" }}
+    </b-button>
+
   </div>
 </template>
 
@@ -40,6 +59,17 @@
 .invalid-feedback span {
   font-size: 0.9rem;
 }
+
+button.showPasswordButton {
+  margin-left: auto !important;
+  display: block;
+}
+.validatedInputGroup.form-group:not(.passwordConfirm) {
+  button.showPasswordButton {
+    float: right;
+  }
+}
+
 </style>
 
 <script>
@@ -62,13 +92,19 @@ export default {
         id: String,
         noColon: Boolean,
         value: String,
-        description: String
+        description: String,
+        type: String,
+        /** Show the toggle button to show/hide the password */
+        passwordToggle: Boolean,
+        /** ID of the related password confirm input */
+        passwordConfirm: String
     },
     data() {
         return {
             inputId: this.id || "input" + Math.random(),
             errorMessages: Object.assign({}, defaultErrorMessages, this.errors),
-            currentValue: this.value || (this.validation && this.validation.$model)
+            currentValue: this.value || (this.validation && this.validation.$model),
+            showPassword: undefined
         };
     },
     computed: {
@@ -95,6 +131,22 @@ export default {
         },
         inputValue: function () {
             return this.currentValue;
+        },
+        inputType: function () {
+            const show = this.showPassword;
+            return this.passwordToggle
+                ? (show ? "text" : "password")
+                : this.type;
+        }
+    },
+    mounted() {
+        if (this.passwordToggle && !this.passwordConfirm) {
+            try {
+                // Move the toggle button closer to the input
+                this.$refs.inputField.$el.parentNode.insertBefore(this.$refs.toggleButton, this.$refs.inputField.$el.nextSibling);
+            } catch {
+                // This is only display-related, so errors (probably due to browser compatibility) can be safely ignored
+            }
         }
     },
     methods: {
@@ -109,6 +161,35 @@ export default {
             if (this.validation) {
                 this.validation.$touch();
             }
+        },
+        /**
+         * Toggles whether or not the password text should be visible.
+         *
+         * This changes the type between `password` and `text`, and focuses the last password input.
+         *
+         */
+        togglePassword() {
+            this.showPassword = !this.showPassword;
+            this.$emit("toggle-password", this.showPassword);
+
+            // Update the password confirmation
+            const confirmElem = this.passwordConfirm && window.document.querySelector(`#${this.passwordConfirm}`);
+            if (confirmElem) {
+                confirmElem.type = this.inputType;
+            }
+
+            // Set the focus to the last password field used.
+            let focusElem;
+            if (this.passwordConfirm && this.lastFocus && this.lastFocus.id === confirmElem.id) {
+                focusElem = confirmElem;
+            } else {
+                focusElem = this.$refs.inputField;
+            }
+
+            setTimeout(() => {
+                focusElem.focus();
+                focusElem.selectionStart = 0xff;
+            }, 100);
         }
     }
 };

@@ -16,8 +16,9 @@
                       :label="$t('UserLogin.password_label')"
                       :validation="$v.userInfo.password"
                       type="password"
+                      password-toggle
       />
-
+      <br/>
       <b-link to="/reset-password" v-t="'UserLogin.password-reset_link'" class="alignRight" />
 <!--        <b-form-checkbox-group>-->
 <!--            <b-form-checkbox-->

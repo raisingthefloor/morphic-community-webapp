@@ -105,8 +105,8 @@
   }
 
   .alignRight {
-    display: block;
-    margin-left: auto;
+    display: block !important;
+    margin-left: auto !important;
     width: fit-content;
   }
 </style>

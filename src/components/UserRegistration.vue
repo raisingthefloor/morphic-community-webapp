@@ -16,8 +16,11 @@
                     placeholder="Enter password"
                     type="password"
                     :errors="{minLength: 'Passwords must be at least 6 characters'}"
+                    password-toggle
+                    password-confirm="new-password-confirm"
     />
     <ValidatedInput id="new-password-confirm"
+                    ref="passwordConfirm"
                     label="Password confirmation"
                     :validation="$v.form.confirmPassword"
                     placeholder="Re-enter password"
