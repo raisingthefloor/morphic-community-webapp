@@ -22,12 +22,11 @@
                       placeholder="Re-enter password"
                       type="password"
       />
-      <ValidatedInput id="community-name"
-                      label="What would you like to name the account?"
-                      :validation="$v.form.communityName"
-                      input-info="(examples: John Doe, Acme Corporation, Church)"
-
-      />
+<!--      <ValidatedInput id="community-name"-->
+<!--                      label="What would you like to name the account?"-->
+<!--                      :validation="$v.form.communityName"-->
+<!--                      input-info="(examples: John Doe, Acme Corporation, Church)"-->
+<!--      />-->
     <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
       <div style="display: flex; flex-direction: column; justify-content: flex-start; margin-bottom: 50px">
           <b-link  v-if="createAccount" class="mb-3" style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 270px" to="/" >
@@ -78,9 +77,9 @@ export default {
     },
     validations: {
         form: {
-            communityName: {
-                required
-            },
+            // communityName: {
+            //     required
+            // },
             email: {
                 required,
                 email
@@ -108,13 +107,15 @@ export default {
             this.$store.dispatch("register", this.$v.form.$model)
                 .then(() => {
                     this.showMessage(MESSAGES.successfulRegistration);
-                    this.$store.dispatch("login", this.$v.form.$model)
-                        .then(() => {
-                            this.$store.dispatch("newCommunity", this.$v.form.$model.communityName)
-                                .then(() => {
-                                    this.$router.push("/dashboard");
-                                });
-                        });
+                    this.$store.dispatch("login", this.$v.form.$model).then(dest => {
+                        this.$router.push(dest);
+                    });
+                    // .then(() => {
+                    //     this.$store.dispatch("newCommunity", this.$v.form.$model.communityName)
+                    //         .then(() => {
+                    //             this.$router.push("/dashboard");
+                    //         });
+                    // });
                 })
                 .catch(err => {
                     if (err.response) {
