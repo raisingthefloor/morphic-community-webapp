@@ -16,8 +16,6 @@
                       :label="$t('UserLogin.password_label')"
                       :validation="$v.userInfo.password"
                       type="password"
-                      :linktext="$t('UserLogin.password-reset_link')"
-                      to="/reset-password"
       />
 
       <b-link to="/reset-password" v-t="'UserLogin.password-reset_link'" class="alignRight" />

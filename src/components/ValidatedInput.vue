@@ -13,13 +13,10 @@
           @input="onInput"
           @blur="onBlur"
           :state="state"
-          :placeholder="placeholder"
           :id="inputId"
-          :type="type"
-          :autocomplete="autocomplete"
           class="h-20 w-80"
           :aria-required="required"
-          :autofocus="autofocus"
+          v-bind="$attrs"
       />
 
       <template #invalid-feedback>
@@ -63,13 +60,9 @@ export default {
         errors: Object,
         label: String,
         id: String,
-        placeholder: String,
-        type: String,
         noColon: Boolean,
         value: String,
-        autocomplete: String,
-        description: String,
-        autofocus: Boolean
+        description: String
     },
     data() {
         return {
