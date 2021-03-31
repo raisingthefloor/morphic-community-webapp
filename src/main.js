@@ -165,6 +165,24 @@ Vue.mixin({
          */
         showRecaptchaBadge(show) {
             document.body.classList.toggle("show-recaptcha", !!show);
+        },
+
+        /**
+         * Validates a form, sets the focus to the first invalid field.
+         * @param {Object} model The validation model (this.$v, or a validation group within it)
+         * @return {Boolean} true if the form is valid.
+         */
+        validateForm(model) {
+            model.$touch();
+            const valid = !model.$anyError;
+            if (!valid) {
+                const field = this.$el.querySelector(".is-invalid, :invalid");
+                if (field) {
+                    field.focus();
+                }
+            }
+
+            return valid;
         }
     },
     mounted() {

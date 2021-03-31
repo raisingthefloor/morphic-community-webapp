@@ -4,44 +4,54 @@
     <b-form-group
         :label="labelText"
         :label-for="inputId"
-        label-cols="9"
-        label-align="left"
-        class="mb-0"
-        style="height: 30px"
     >
 
-    </b-form-group>
-    <b-form-group>
+      <template #label>{{labelText}}<span v-if="required" class="requiredText" aria-hidden="true">Required</span></template>
+
       <b-form-input
           :value="value || (validation && validation.$model)"
           @input="onInput"
+          @blur="onBlur"
           :state="state"
           :placeholder="placeholder"
           :id="inputId"
           :type="type"
           :autocomplete="autocomplete"
           class="h-20 w-80"
+          :aria-required="required"
       />
-        <div v-if="to && linktext" style="display: flex; justify-content: flex-end; align-items: center;">
-            <b-link :to="to" variant="link" style="font-size: 15px;" >{{linktext}}</b-link>
-        </div>
+
+      <template #invalid-feedback>
+        <span v-if="state === false">{{ errorText }}&nbsp;</span>
+      </template>
+
+      <template #description>
+      <div v-if="to && linktext" style="display: flex; justify-content: flex-end; align-items: center;">
+          <b-link :to="to" variant="link" style="font-size: 1rem;" >{{linktext}}</b-link>
+      </div>
+      </template>
+
       <span>{{inputInfo}}</span>
-      <b-form-invalid-feedback>
-        <span v-if="state === false">{{ errorText }}</span>
-      </b-form-invalid-feedback>
     </b-form-group>
   </div>
 </template>
 
 <style lang="scss">
-
+.requiredText {
+  float: right;
+  margin-top: 0.5em;
+  font-size: 0.9rem;
+}
+.invalid-feedback span {
+  font-size: 0.9rem;
+}
 </style>
 
 <script>
 
 const defaultErrorMessages = {
-    email: "Please enter a valid email address",
-    required: "Required",
+    email: "Please enter a valid email address.",
+    required: "This field is required",
     sameAsPassword: "Passwords do not match"
 };
 
@@ -57,7 +67,7 @@ export default {
         id: String,
         placeholder: String,
         type: String,
-        noComma: Boolean,
+        noColon: Boolean,
         value: String,
         autocomplete: String,
         linktext: String,
@@ -66,7 +76,6 @@ export default {
     },
     data() {
         return {
-            labelText: this.noComma ? this.label : `${this.label}:`,
             inputId: this.id || "input" + Math.random(),
             errorMessages: Object.assign({}, defaultErrorMessages, this.errors),
             currentValue: this.value || (this.validation && this.validation.$model)
@@ -75,6 +84,12 @@ export default {
     computed: {
         state: function () {
             return (this.validation && this.validation.$anyDirty) ? !this.validation.$anyError : null;
+        },
+        required: function () {
+            return this.validation && this.validation.required !== undefined;
+        },
+        labelText: function () {
+            return this.noColon ? this.label : `${this.label}:`;
         },
         errorText: function () {
             let result;
@@ -99,6 +114,11 @@ export default {
             }
             this.currentValue = $event;
             this.$emit("input", $event);
+        },
+        onBlur($event) {
+            if (this.validation) {
+                this.validation.$touch();
+            }
         }
     }
 };

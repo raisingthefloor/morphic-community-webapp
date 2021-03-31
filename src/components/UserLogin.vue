@@ -33,7 +33,7 @@
                   id="loginButton"
                   variant="success"
                   class="w-25"
-         v-t="'UserLogin.sign-in_button'" />
+                  v-t="'UserLogin.sign-in_button'" />
       </div>
       <div class="loginAction">
         <b-link :to="{name: 'Register'}" v-t="'UserLogin.create-account_link'" />
@@ -86,10 +86,10 @@ export default {
             this.$store.commit("reset_password_email", this.userInfo.email);
         },
         onSubmit() {
-            this.$v.userInfo.$touch();
-            if (this.$v.userInfo.$anyError) {
+            if (!this.validateForm(this.$v.userInfo)) {
                 return;
             }
+
             this.$store.dispatch("login", this.$v.userInfo.$model)
                 .then((dest) => {
                     this.userInfo.email = "";
