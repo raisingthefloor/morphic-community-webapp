@@ -1,25 +1,26 @@
 <template>
   <div>
-    <h2 class="mb-3" id="user-login-heading" style="font-weight: bold">Sign into Morphic</h2>
+    <h1 class="mb-3" id="user-login-heading" v-t="'UserLogin.heading'" />
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
     <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
       <ValidatedInput id="login-user-email"
-                      label="Sign in with Email"
-                      placeholder="user@example.com"
+                      :label="$t('UserLogin.email_label')"
                       :validation="$v.userInfo.email"
                       @input="storeResetEmail"
+                      autofocus
       />
-<!--        <b-link to="/reset-password" variant="link">Forgot Password</b-link>-->
+
       <ValidatedInput id="login-user-password"
-                      label="Password for Morphic"
+                      :label="$t('UserLogin.password_label')"
                       :validation="$v.userInfo.password"
                       type="password"
-                      linktext="Forgot Password?"
-                      to="/reset-password"
+                      password-toggle
       />
-        <b-form-checkbox-group>
+      <br/>
+      <b-link to="/reset-password" v-t="'UserLogin.password-reset_link'" class="alignRight" />
+<!--        <b-form-checkbox-group>-->
 <!--            <b-form-checkbox-->
 <!--                v-model="userInfo.keep_logged"-->
 <!--                value="1"-->
@@ -27,29 +28,25 @@
 <!--            >-->
 <!--                Keep me logged in-->
 <!--            </b-form-checkbox>-->
-            <b-link style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 100%" to="/register">
-                I do not have Morphic account yet
-            </b-link>
-            <b-button type="submit"
-                      id="loginButton"
-                      :disabled="$v.userInfo.$anyError"
-                      variant="success"
-                      class="w-25"
-            >Sign in</b-button>
-        </b-form-checkbox-group>
-         <div style="margin-top: 120px; height: 200px;">
-
-         </div>
-      <br/>
+<!--        </b-form-checkbox-group>-->
+      <div class="loginAction">
+        <b-button type="submit"
+                  id="loginButton"
+                  variant="success"
+                  class="w-25"
+                  v-t="'UserLogin.sign-in_button'" />
+      </div>
+      <div class="loginAction">
+        <b-link :to="{name: 'Register'}" v-t="'UserLogin.create-account_link'" />
+      </div>
     </b-form>
   </div>
 </template>
 
 <style lang="scss">
-#loginButton {
-  padding-left: 2em;
-  padding-right: 2em;
-  float: right;
+.loginAction {
+  text-align: center;
+  margin-top: 1em;
 }
 </style>
 
@@ -90,10 +87,10 @@ export default {
             this.$store.commit("reset_password_email", this.userInfo.email);
         },
         onSubmit() {
-            this.$v.userInfo.$touch();
-            if (this.$v.userInfo.$anyError) {
+            if (!this.validateForm(this.$v.userInfo)) {
                 return;
             }
+
             this.$store.dispatch("login", this.$v.userInfo.$model)
                 .then((dest) => {
                     this.userInfo.email = "";

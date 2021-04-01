@@ -1,7 +1,7 @@
 <template>
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header />
-    <router-view />
+    <router-view role="main" />
     <Footer />
   </b-container>
 </template>
@@ -102,6 +102,12 @@
   // hide things that are not production-ready, or vice-versa
   body.production .notProduction, body:not(.production) .onlyProduction {
     display: none;
+  }
+
+  .alignRight {
+    display: block !important;
+    margin-left: auto !important;
+    width: fit-content;
   }
 </style>
 

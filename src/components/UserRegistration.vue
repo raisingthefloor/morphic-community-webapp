@@ -3,30 +3,34 @@
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
-    <ValidatedInput id="community-user-email"
+    <ValidatedInput id="email"
                     label="Email"
                     :validation="$v.form.email"
                     placeholder="user@somewhere.com"
-                    input-info="You will need to confirm using email send to you"
+                    description="You will need to confirm using email send to you"
     />
-    <ValidatedInput id="community-user-new-password"
+    <ValidatedInput id="new-password"
+                    ref="newPassword"
                     label="Password"
                     :validation="$v.form.password"
                     placeholder="Enter password"
                     type="password"
                     :errors="{minLength: 'Passwords must be at least 6 characters'}"
+                    password-toggle
+                    password-confirm="new-password-confirm"
     />
-      <ValidatedInput id="community-user-new-password-confirm"
-                      label="Password confirmation"
-                      :validation="$v.form.confirmPassword"
-                      placeholder="Re-enter password"
-                      type="password"
-      />
-<!--      <ValidatedInput id="community-name"-->
-<!--                      label="What would you like to name the account?"-->
-<!--                      :validation="$v.form.communityName"-->
-<!--                      input-info="(examples: John Doe, Acme Corporation, Church)"-->
-<!--      />-->
+    <ValidatedInput id="new-password-confirm"
+                    ref="passwordConfirm"
+                    label="Password confirmation"
+                    :validation="$v.form.confirmPassword"
+                    placeholder="Re-enter password"
+                    type="password"
+    />
+<!--    <ValidatedInput id="community-name"-->
+<!--                    label="What would you like to name the account?"-->
+<!--                    :validation="$v.form.communityName"-->
+<!--                    description="(examples: John Doe, Acme Corporation, Church)"-->
+<!--    />-->
     <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
       <div style="display: flex; flex-direction: column; justify-content: flex-start; margin-bottom: 50px">
           <b-link  v-if="createAccount" class="mb-3" style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 270px" to="/" >
