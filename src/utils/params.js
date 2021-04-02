@@ -586,7 +586,7 @@ export async function checkUrl(url = "", timeout = 10000) {
 
             // Use the API service for http requests - the browser will be unable to access http links
             // from a https page.
-            const useApi = (urlParsed.protocol === "http:");
+            const useApi = true; // Always using the api - CORS will not allow other urls to respond
             if (useApi) {
                 const u = encodeURIComponent(urlParsed.toString());
                 requestUrl = `/v1/validate/link/${u}`;
