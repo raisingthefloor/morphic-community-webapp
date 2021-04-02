@@ -60,8 +60,8 @@ export default {
             }
         }
     },
-    async mounted() {
-        this.recaptchaToken = await this.getRecaptchaToken("requestpasswordreset");
+    mounted() {
+        setTimeout(() => this.showRecaptchaBadge(true), 100);
     },
     methods: {
         validateState(name) {
@@ -73,6 +73,8 @@ export default {
             if (this.$v.form.$anyError) {
                 return;
             }
+            this.recaptchaToken = await this.getRecaptchaToken("requestpasswordreset");
+
             const body = {
                 email: this.$v.form.$model.email,
                 g_recaptcha_response: this.recaptchaToken

@@ -58,7 +58,7 @@ Vue.mixin({
         showMessage(message, title, options) {
 
             if (!toastSheet) {
-                const navHeight = document.querySelector("nav#top .navbar-nav").getBoundingClientRect().bottom;
+                const navHeight = document.querySelector("#top .navbar-nav").getBoundingClientRect().bottom;
                 toastSheet = document.createElement("style");
                 toastSheet.innerHTML = `.toast-height {margin-top:${navHeight}px}`;
                 document.body.appendChild(toastSheet);
@@ -149,18 +149,19 @@ Vue.mixin({
         },
 
         /**
-         * Gets the recaptcha token (and shows the badge)
+         * Gets the recaptcha token.
          * @param {String} action The recaptcha action.
          * @return {Promise<String>} Resolves with the token.
          */
         async getRecaptchaToken(action) {
-            await this.$recaptchaLoaded();
-            this.showRecaptchaBadge(true);
-            return await this.$recaptcha(action);
+            if (this.$recaptchaLoaded) {
+                await this.$recaptchaLoaded();
+                return await this.$recaptcha(action);
+            }
         },
 
         /**
-         * Show or hide the recaptcha badge.
+         * Show or hide the recaptcha badge (this needs to be shown when the token is used for something).
          * @param {Boolean} show true to show.
          */
         showRecaptchaBadge(show) {
