@@ -220,7 +220,14 @@ export function inviteCommunityMember(communityId, memberId, email) {
  * @return {BarDetails} The bar.
  */
 function storeBar(bar) {
+    /** @type {BarDetails} */
     const togo = JSON.parse(JSON.stringify(bar));
+
+    // Make sure it has a name
+    if (!togo.name) {
+        togo.name = "Unnamed";
+    }
+
     togo.items.forEach(item => {
         item.is_primary = !!item.is_primary;
         if (item.kind === "application") {
