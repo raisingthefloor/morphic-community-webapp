@@ -828,6 +828,7 @@ export const allButtons = {
     local_calendar_app: {
         kind: "application",
         is_primary: true,
+        production: false,
         configuration: {
             subkind: "local-calendar",
             label: "Calendar App",
