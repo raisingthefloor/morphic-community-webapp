@@ -37,7 +37,7 @@
               {{ createAccount }}
           </b-link>
           <div>By signing up for Morphic you are agreeing to the</div>
-          <div><b-link to="#">Terms of Use</b-link> and <b-link to="https://morphic.org/privacy-policy/">Privacy Policies</b-link></div>
+          <div><b-link to="#">Terms of Use</b-link> and <b-link  :href="externalLinks.privacyPolicy">Privacy Policies</b-link></div>
       </div>
       <div style="display: flex; justify-content: space-between">
           <b-link style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px" to="/">
