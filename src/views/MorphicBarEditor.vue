@@ -1503,6 +1503,12 @@ export default {
                 }
             }
 
+            if (nextPage) {
+                // Discard the current bar, if moving to another page.
+                this.isChanged = false;
+                this.storeUnsavedBar();
+            }
+
             return nextPage;
         }
     },
