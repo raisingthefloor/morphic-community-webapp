@@ -32,6 +32,10 @@
 
       <template #description>
         <span v-if="description">{{description}}</span>
+        <!-- Reserves space for the validation error, to stop fields below being nudged down -->
+        <div v-if="state !== false" class="invalid-feedback invalid-feedback-reserved" aria-hidden="true">
+          <span>.</span>
+        </div>
       </template>
 
     </b-form-group>
@@ -58,6 +62,11 @@
 }
 .invalid-feedback span {
   font-size: 0.9rem;
+}
+
+.invalid-feedback-reserved {
+  display: block !important;
+  visibility: hidden;
 }
 
 button.showPasswordButton {
