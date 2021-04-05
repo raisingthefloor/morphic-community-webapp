@@ -38,7 +38,6 @@
 
 <script>
 import { required, email } from "vuelidate/lib/validators";
-import { ERROR_MAP, MESSAGES } from "@/utils/constants";
 import ValidatedInput from "@/components/ValidatedInput";
 
 export default {
@@ -83,17 +82,10 @@ export default {
             };
             this.$store.dispatch("resetPassword", body)
                 .then(() => {
-                    this.showMessage(MESSAGES.successfulReset);
+                    this.showMessage(this.$t("ResetPassword.success"));
                     this.$router.push("/");
                 })
-                .catch(err => {
-                    if (err.response) {
-                        this.errorMessage = (err.response.message ? err.response.message : (ERROR_MAP[err.response.status] ? ERROR_MAP[err.response.status] : "Something went wrong"));
-                    } else {
-                        this.errorMessage = ERROR_MAP[500];
-                    }
-                    this.errorAlert = true;
-                });
+                .catch(this.handleServerError);
         }
     }
 };

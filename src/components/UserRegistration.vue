@@ -55,7 +55,6 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { email, minLength, required, sameAs } from "vuelidate/lib/validators";
-import { ERROR_MAP, MESSAGES } from "@/utils/constants";
 import ValidatedInput from "@/components/ValidatedInput";
 
 export default {
@@ -110,8 +109,8 @@ export default {
             }
             this.$store.dispatch("register", this.$v.form.$model)
                 .then(() => {
-                    this.showMessage(MESSAGES.successfulRegistration);
-                    this.$store.dispatch("login", this.$v.form.$model).then(dest => {
+                    this.showMessage(this.$t("UserRegistration.success"));
+                    return this.$store.dispatch("login", this.$v.form.$model).then(dest => {
                         this.$router.push(dest);
                     });
                     // .then(() => {
@@ -121,20 +120,7 @@ export default {
                     //         });
                     // });
                 })
-                .catch(err => {
-                    if (err.response) {
-                        if (err.response.data.error === "existing_email") {
-                            this.errorMessage = ERROR_MAP[2];
-                        } else if (err.response.data.error === "existing_username") {
-                            this.errorMessage = ERROR_MAP[3];
-                        } else {
-                            this.errorMessage = ERROR_MAP[err.response.status] || "Something went wrong";
-                        }
-                    } else {
-                        this.errorMessage = ERROR_MAP[500];
-                    }
-                    this.errorAlert = true;
-                });
+                .catch(this.handleServerError);
         }
     }
 };

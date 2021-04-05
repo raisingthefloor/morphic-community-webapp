@@ -57,20 +57,27 @@ export function getErrorMessage(err, includeTitle) {
         togo.title = i18n.t("Errors.generic-title", {action: action});
     }
 
-    const errorCode = err.response?.status || err.code;
-
     if (err.userMessage) {
         // A message has been explicitly defined.
         togo.message = err.userMessage;
     } else if (err.response) {
         // Use the error code from the response
-        const responseError = err.response?.data?.error;
-        if (responseError) {
-            togo.message = i18n.t(`Errors.${responseError}`, {errorCode: responseError});
-        } else {
+        const errorCode = err.response.data?.error;
+        if (errorCode) {
+            const messageKey = `Errors.${errorCode}`;
+            const responseError = i18n.t(messageKey, {errorCode: errorCode});
+
+            if (responseError && responseError !== messageKey) {
+                togo.message = responseError;
+            }
+        }
+
+        if (!togo.message) {
             // Use the http status code to create an error message.
+            const errorCode = err.response?.status || err.code;
             const statusMessageKey = `Errors.http.${err.response.status}`;
             togo.message = i18n.t(statusMessageKey, {errorCode: errorCode});
+
             if (!togo.message || togo.message === statusMessageKey) {
                 // No message - just quote the server status.
                 togo.message = i18n.t("Errors.generic-server-error", {message: `${err.response.statusText} (${err.response.status})`});

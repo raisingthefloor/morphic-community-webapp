@@ -1,6 +1,5 @@
 import { HTTP } from "@/services/index";
 import { CONFIG } from "@/config/config";
-import { update } from "vue-i18n/src/directive";
 
 /**
  * @typedef {String} GUID

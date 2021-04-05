@@ -47,6 +47,18 @@ var toastSheet;
 Vue.mixin({
     methods: {
         getErrorMessage: getErrorMessage,
+
+        /**
+         * Handles an error, if this component has the errorMessage and errorAlert fields.
+         * @param {Error} err The error object.
+         */
+        handleServerError(err) {
+            if (this.errorMessage !== undefined && this.errorAlert !== undefined) {
+                err.handled = true;
+                this.errorMessage = this.getErrorMessage(err);
+                this.errorAlert = true;
+            }
+        },
         /**
          * Makes an array from value, if it's not an array.
          * @param {Array|Object} value The value.
