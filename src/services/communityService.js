@@ -137,14 +137,14 @@ export function saveCommunityBar(communityId, barId, barDetails) {
  * Updates a community bar.
  * (appears to be a duplicate of saveCommunityBar)
  * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#put-4
+ * @deprecated Use saveCommunityBar
  * @param {GUID} communityId The community ID.
  * @param {GUID} barId The bar ID.
  * @param {BarDetails} bar The bar.
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function updateCommunityBar(communityId, barId, bar) {
-    bar.name = null;
-    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, storeBar(bar), {action: "update bar"});
+    return saveCommunityBar(communityId, barId, bar);
 }
 
 /**
