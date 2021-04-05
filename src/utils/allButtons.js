@@ -194,6 +194,7 @@ export const allButtons = {
     calendar_app: {
         kind: "application",
         is_primary: null,
+        production: false,
         configuration: {
             subkind: "app",
             label: "Calendar",
