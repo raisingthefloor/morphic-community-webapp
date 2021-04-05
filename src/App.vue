@@ -115,6 +115,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { loadLocaleMessagesAsync } from "@/i18n/i18n";
+import * as errorHandler from "@/utils/errorHandler";
+
 export default {
     name: "App",
 
@@ -135,6 +137,8 @@ export default {
         Promise.all(work).then(() => {
             this.loaded = true;
         });
+
+        errorHandler.useErrorHandler(this.showError);
     },
     methods: {
         /**
