@@ -52,7 +52,7 @@ describe("Billing Test", () => {
     });
 
     test("Get Savings", () => {
-        const plan = {
+        const newPlan = {
             id: "basic-1-month",
             active: true,
             default: true,
@@ -66,7 +66,7 @@ describe("Billing Test", () => {
             price_text: "$6",
             monthly_price_text: "$6"
         };
-        const savings = getSavings(plan);
-        console.log(savings);
+        const savings = getSavings(newPlan);
+        console.log({savings});
     });
 });
