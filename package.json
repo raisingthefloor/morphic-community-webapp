@@ -9,7 +9,7 @@
     "lint": "node_modules/.bin/eslint src/**/*.{js,vue} tests/**/*.js && npm run i18n:report",
     "build-dev": "vue-cli-service build --mode development --dest dev",
     "dev": "NODE_ENV=local vue-cli-service serve",
-    "test": "npm run test:unit",
+    "test": "jest --no-cache",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\""
   },
   "dependencies": {
@@ -31,6 +31,8 @@
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/vue": "^5.6.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "^4.4.3",
     "@vue/cli-plugin-unit-jest": "~4.5.0",

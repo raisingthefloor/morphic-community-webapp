@@ -60,7 +60,7 @@ Vue.use(VueRouter);
 /**
  * @type {Array<AppRouteRecord>}
  */
-const routes = [
+export const routes = [
     {
         // Redirects to /login or /dashboard (or whatever the user's home page is)
         path: "/",
