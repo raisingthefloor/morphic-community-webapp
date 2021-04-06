@@ -14,12 +14,23 @@ import i18n from "@/i18n/i18n";
  */
 
 /**
- * Hook into the HTTP class to display generic error messages on failures.
+ * Hook into the HTTP class to display error messages on failures.
+ * If an error is handled already, it should set the `handled` field to true to prevent this error being reported.
+ *
  * @param {ShowErrorFunc} showError The callback to present an error message.
  */
 export function useErrorHandler(showError) {
+    if (HTTP.errorHandlerId !== undefined) {
+        // Only one error handler is required.
+        HTTP.interceptors.response.eject(HTTP.errorHandlerId);
+    }
+
     HTTP.errorHandlerId = HTTP.interceptors.response.use(undefined, (err) => {
+        // Called when the HTTP request rejects.
         return new Promise((resolve, reject) => {
+            // Using a timer to ensure this is being executed after any request-specific error handling.
+            // This is due promises being stacked, and there's no way to tell if the promise rejection is going to
+            // be handled after this one.
             setTimeout(() => {
                 if (!err.handled) {
                     const errorMessage = getErrorMessage(err, true);
@@ -39,8 +50,8 @@ export function useErrorHandler(showError) {
  * The message is based from one of the following fields in the Error object, in priority:
  * - err.userMessage
  * - err.response.data.error: an error code form the service, which is localised.
- * - err.response.statusCode: localised generic message based on the HTTP status code
- * - err.response.status
+ * - err.response.status: localised generic message based on the HTTP status code
+ * - err.response.statusText
  * - err.message
  * - A generic message.
  *
