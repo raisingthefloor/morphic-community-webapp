@@ -3,43 +3,49 @@
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
-
-    <ValidatedInput id="community-name"
-                    label="Group"
-                    :validation="$v.form.communityName"
-                    placeholder="my-group"
-    />
-    <ValidatedInput id="community-user-email"
-                    label="Enter your email"
+    <ValidatedInput id="email"
+                    label="Email"
                     :validation="$v.form.email"
                     placeholder="user@somewhere.com"
+                    description="You will need to confirm using email send to you"
     />
-    <ValidatedInput id="community-first-name"
-                    label="First name"
-                    v-model="form.firstName"
-                    placeholder="Pat"
-    />
-    <ValidatedInput id="community-last-name"
-                    label="Last name"
-                    v-model="form.lastName"
-                    placeholder="Smith"
-    />
-    <ValidatedInput id="community-user-new-password"
+    <ValidatedInput id="new-password"
+                    ref="newPassword"
                     label="Password"
                     :validation="$v.form.password"
                     placeholder="Enter password"
                     type="password"
                     :errors="{minLength: 'Passwords must be at least 6 characters'}"
+                    password-toggle
+                    password-confirm="new-password-confirm"
     />
-
-    <ValidatedInput id="community-user-new-password-confirm"
+    <ValidatedInput id="new-password-confirm"
+                    ref="passwordConfirm"
                     label="Password confirmation"
                     :validation="$v.form.confirmPassword"
                     placeholder="Re-enter password"
                     type="password"
     />
+<!--    <ValidatedInput id="community-name"-->
+<!--                    label="What would you like to name the account?"-->
+<!--                    :validation="$v.form.communityName"-->
+<!--                    description="(examples: John Doe, Acme Corporation, Church)"-->
+<!--    />-->
     <b-form-invalid-feedback>This is a required field and must match password.</b-form-invalid-feedback>
-    <b-button type="submit" variant="primary">Create new Group</b-button>
+      <div style="display: flex; flex-direction: column; justify-content: flex-start; margin-bottom: 50px">
+          <b-link  v-if="createAccount" class="mb-3" style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px; width: 270px" to="/" >
+              {{ createAccount }}
+          </b-link>
+          <div>By signing up for Morphic you are agreeing to the</div>
+          <div><b-link to="#">Terms of Use</b-link> and <b-link  :href="externalLinks.privacyPolicy">Privacy Policies</b-link></div>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+          <b-link style="color: inherit; text-decoration: none; border: 1px solid black; padding: 10px; border-radius: 5px" to="/">
+              {{ backLink }}
+          </b-link>
+          <b-button type="submit" variant="success" class="w-25">{{ submitButtonText }}</b-button>
+      </div>
+
   </b-form>
 </template>
 
@@ -54,14 +60,18 @@ import ValidatedInput from "@/components/ValidatedInput";
 
 export default {
     components: {ValidatedInput},
+    props: {
+        backLink: String,
+        submitButtonText: String,
+        createAccount: String,
+        linkStyle: String
+    },
     mixins: [validationMixin],
     data() {
         return {
             form: {
                 communityName: "",
                 email: "",
-                firstName: "",
-                lastName: "",
                 password: "",
                 confirmPassword: ""
             },
@@ -71,9 +81,9 @@ export default {
     },
     validations: {
         form: {
-            communityName: {
-                required
-            },
+            // communityName: {
+            //     required
+            // },
             email: {
                 required,
                 email
@@ -101,13 +111,15 @@ export default {
             this.$store.dispatch("register", this.$v.form.$model)
                 .then(() => {
                     this.showMessage(MESSAGES.successfulRegistration);
-                    this.$store.dispatch("login", this.$v.form.$model)
-                        .then(() => {
-                            this.$store.dispatch("newCommunity", this.$v.form.$model.communityName)
-                                .then(() => {
-                                    this.$router.push("/dashboard");
-                                });
-                        });
+                    this.$store.dispatch("login", this.$v.form.$model).then(dest => {
+                        this.$router.push(dest);
+                    });
+                    // .then(() => {
+                    //     this.$store.dispatch("newCommunity", this.$v.form.$model.communityName)
+                    //         .then(() => {
+                    //             this.$router.push("/dashboard");
+                    //         });
+                    // });
                 })
                 .catch(err => {
                     if (err.response) {

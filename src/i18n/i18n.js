@@ -20,6 +20,7 @@ export async function loadLocaleMessagesAsync(overrideLocale) {
         try {
             const messages = await import(/* webpackChunkName: "locale-[request]" */ "@/locales/" + locale + ".json");
 
+            console.error("set", locale, messages);
             i18n.setLocaleMessage(locale, messages);
             loadedLanguages.push(locale);
         } catch (err) {

@@ -10,6 +10,7 @@ import { HTTP } from "@/services/index";
 import { icons } from "@/utils/constants";
 import * as Bar from "@/utils/bar";
 import { CONFIG } from "@/config/config";
+import externalLinks from "@/config/externalLinks";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -57,7 +58,7 @@ Vue.mixin({
         showMessage(message, title, options) {
 
             if (!toastSheet) {
-                const navHeight = document.querySelector("nav#top .navbar-nav").getBoundingClientRect().bottom;
+                const navHeight = document.querySelector("#top .navbar-nav").getBoundingClientRect().bottom;
                 toastSheet = document.createElement("style");
                 toastSheet.innerHTML = `.toast-height {margin-top:${navHeight}px}`;
                 document.body.appendChild(toastSheet);
@@ -140,26 +141,49 @@ Vue.mixin({
          * @return {String} The ID.
          */
         generateId(item) {
-            return Bar.generateId(item);
+            if (typeof(item) === "string") {
+                return item + Math.floor(Math.random() * 10e10);
+            } else {
+                return Bar.generateId(item);
+            }
         },
 
         /**
-         * Gets the recaptcha token (and shows the badge)
+         * Gets the recaptcha token.
          * @param {String} action The recaptcha action.
          * @return {Promise<String>} Resolves with the token.
          */
         async getRecaptchaToken(action) {
-            await this.$recaptchaLoaded();
-            this.showRecaptchaBadge(true);
-            return await this.$recaptcha(action);
+            if (this.$recaptchaLoaded) {
+                await this.$recaptchaLoaded();
+                return await this.$recaptcha(action);
+            }
         },
 
         /**
-         * Show or hide the recaptcha badge.
+         * Show or hide the recaptcha badge (this needs to be shown when the token is used for something).
          * @param {Boolean} show true to show.
          */
         showRecaptchaBadge(show) {
             document.body.classList.toggle("show-recaptcha", !!show);
+        },
+
+        /**
+         * Validates a form, sets the focus to the first invalid field.
+         * @param {Object} model The validation model (this.$v, or a validation group within it)
+         * @return {Boolean} true if the form is valid.
+         */
+        validateForm(model) {
+            model.$touch();
+            const valid = !model.$anyError;
+            if (!valid) {
+                const field = this.$el.querySelector(".is-invalid, :invalid");
+                if (field) {
+                    field.focus();
+                }
+            }
+
+            return valid;
         }
     },
     mounted() {
@@ -177,10 +201,13 @@ Vue.mixin({
         focusMode: function () {
             return this.$route.path.includes("/focused/");
         },
+        isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
+        hasAccount: function () { return this.$store.getters.hasAccount; },
         communityId: function () { return this.$store.getters.communityId; },
         userId: function () { return this.$store.getters.userId; },
         console: () => console,
-        CONFIG: () => CONFIG
+        CONFIG: () => CONFIG,
+        externalLinks: () => externalLinks
     }
 });
 
