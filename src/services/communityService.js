@@ -12,7 +12,7 @@ import * as Bar from "@/utils/bar";
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function getUserCommunities(userId) {
-    return HTTP.get(`/v1/users/${userId}/communities`);
+    return HTTP.get(`/v1/users/${userId}/communities`, {action: "get user communities"});
 }
 
 /**
@@ -25,7 +25,7 @@ export function createNewCommunity(name) {
     const data = {
         name: name
     };
-    return HTTP.post("/v1/communities", data);
+    return HTTP.post("/v1/communities", data, {action: "create new community"});
 }
 
 /**
@@ -35,7 +35,7 @@ export function createNewCommunity(name) {
  * @return {Promise<AxiosResponse<Community>>} Response
  */
 export function getCommunity(communityId) {
-    return HTTP.get(`/v1/communities/${communityId}`);
+    return HTTP.get(`/v1/communities/${communityId}`, {action: "get community"});
 }
 
 /**
@@ -50,7 +50,7 @@ export function updateCommunity(communityId, name, defaultBarId) {
     return HTTP.put(`/v1/communities/${communityId}`, {
         name: name,
         default_bar_id: defaultBarId
-    });
+    }, {action: "update community"});
 }
 
 /**
@@ -60,7 +60,7 @@ export function updateCommunity(communityId, name, defaultBarId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function deleteUserCommunity(communityId) {
-    return HTTP.delete(`/v1/communities/${communityId}`);
+    return HTTP.delete(`/v1/communities/${communityId}`, {action: "delete user community"});
 }
 
 /**
@@ -70,7 +70,7 @@ export function deleteUserCommunity(communityId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function getCommunityBars(communityId) {
-    return HTTP.get(`/v1/communities/${communityId}/bars`);
+    return HTTP.get(`/v1/communities/${communityId}/bars`, {action: "get bars"});
 }
 
 /**
@@ -81,7 +81,7 @@ export function getCommunityBars(communityId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function createCommunityBar(communityId, data) {
-    return HTTP.post(`/v1/communities/${communityId}/bars`, storeBar(data));
+    return HTTP.post(`/v1/communities/${communityId}/bars`, storeBar(data), {action: "create bar"});
 }
 
 /**
@@ -118,7 +118,7 @@ export function getCommunityBar(communityId, barId) {
             });
         }
         return resp;
-    });
+    }, {action: "get bar"});
 }
 
 /**
@@ -130,20 +130,21 @@ export function getCommunityBar(communityId, barId) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function saveCommunityBar(communityId, barId, barDetails) {
-    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, storeBar(barDetails));
+    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, storeBar(barDetails), {action: "save bar"});
 }
 
 /**
  * Updates a community bar.
  * (appears to be a duplicate of saveCommunityBar)
  * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#put-4
+ * @deprecated Use saveCommunityBar
  * @param {GUID} communityId The community ID.
  * @param {GUID} barId The bar ID.
  * @param {BarDetails} bar The bar.
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function updateCommunityBar(communityId, barId, bar) {
-    return HTTP.put(`/v1/communities/${communityId}/bars/${barId}`, storeBar(bar));
+    return saveCommunityBar(communityId, barId, bar);
 }
 
 /**
@@ -154,7 +155,7 @@ export function updateCommunityBar(communityId, barId, bar) {
  * @return {Promise<AxiosResponse<Any>>} Response
  */
 export function deleteCommunityBar(communityId, barId) {
-    return HTTP.delete(`/v1/communities/${communityId}/bars/${barId}`);
+    return HTTP.delete(`/v1/communities/${communityId}/bars/${barId}`, {action: "delete bar"});
 }
 
 /**
@@ -169,7 +170,7 @@ export function deleteCommunityBar(communityId, barId) {
  * @return {Promise<AxiosResponse<{CommunityMembersResult}>>} Response.
  */
 export function getCommunityMembers(communityId) {
-    return HTTP.get(`/v1/communities/${communityId}/members`);
+    return HTTP.get(`/v1/communities/${communityId}/members`, {action: "get members"});
 }
 
 /**
@@ -180,7 +181,7 @@ export function getCommunityMembers(communityId) {
  * @return {Promise<AxiosResponse<CommunityMember>>} Result
  */
 export function addCommunityMember(communityId, member) {
-    return HTTP.post(`/v1/communities/${communityId}/members`, member);
+    return HTTP.post(`/v1/communities/${communityId}/members`, member, {action: "add member"});
 }
 
 /**
@@ -191,7 +192,7 @@ export function addCommunityMember(communityId, member) {
  * @return {Promise<AxiosResponse<CommunityMember>>} Response.
  */
 export function getCommunityMember(communityId, memberId) {
-    return HTTP.get(`/v1/communities/${communityId}/members/${memberId}`);
+    return HTTP.get(`/v1/communities/${communityId}/members/${memberId}`, {action: "get member"});
 }
 
 /**
@@ -203,15 +204,30 @@ export function getCommunityMember(communityId, memberId) {
  * @return {Promise<AxiosResponse<Any>>} Response.
  */
 export function updateCommunityMember(communityId, memberId, member) {
-    return HTTP.put(`/v1/communities/${communityId}/members/${memberId}`, member);
+    return HTTP.put(`/v1/communities/${communityId}/members/${memberId}`, member, {action: "update member"});
 }
 
+/**
+ * Removes a member from a community.
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1communitiescidmembersid
+ * @param {GUID} communityId The community ID.
+ * @param {GUID} memberId The member ID.
+ * @return {Promise<AxiosResponse<Any>>} Response.
+ */
 export function deleteCommunityMember(communityId, memberId) {
-    return HTTP.delete(`/v1/communities/${communityId}/members/${memberId}`);
+    return HTTP.delete(`/v1/communities/${communityId}/members/${memberId}`, {action: "delete member"});
 }
 
+/**
+ * Send a new invitation for a community member.
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1communitiesidinvitations
+ * @param {GUID} communityId The community ID.
+ * @param {GUID} memberId The member ID.
+ * @param {String} email The member's email address, if not already added.
+ * @return {Promise<AxiosResponse<Any>>} Response.
+ */
 export function inviteCommunityMember(communityId, memberId, email) {
-    return HTTP.post(`/v1/communities/${communityId}/invitations`, { member_id: memberId, email: email });
+    return HTTP.post(`/v1/communities/${communityId}/invitations`, { member_id: memberId, email: email }, {action: "invite member"});
 }
 
 /**

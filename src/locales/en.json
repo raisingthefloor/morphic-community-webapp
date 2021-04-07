@@ -1,4 +1,17 @@
 {
+  "Errors": {
+    "generic-server-error": "Server error: {message}",
+    "generic-title": "Unable to {action}",
+    "generic-action": "perform the last action",
+    "invalid_credentials": "That email address or password has not been recognized.",
+    "missing_required": "A required field is missing.",
+    "existing_email": "There is already an account associated with that email address.",
+    "existing_username": "There is already an account which uses that user name.",
+    "http": {
+      "404": "Unable to access to the server. Please try again later.",
+      "500": "There is a problem with the server. Please try again later."
+    }
+  },
   "App": {
   },
   "BarExplainer": {
@@ -117,7 +130,8 @@
     "instructions": "Please enter your email address, and we will email you instructions to you on how to reset your password.",
     "heading": "Reset your password",
     "reset-password_button": "Reset Password",
-    "return-to-login_link": "Return to Login"
+    "return-to-login_link": "Return to Login",
+    "success": "Instructions to recover your password have been emailed to you."
   },
   "Terms":  {
   },
@@ -132,6 +146,7 @@
     "sign-in_button": "Sign in"
   },
   "UserRegistration": {
+    "success": "Registration completed successfully"
   },
   "ValidatedInput":  {
   }
