@@ -21,8 +21,12 @@
             :validation="$v.newValue"
             v-bind="$attrs"
       />
-      <small v-if="lowerText">{{lowerText}}</small>
-    </b-form-group>
+
+    <template #modal-footer="{ ok, cancel }" class="hello">
+      <b-alert :show="errorAlert" variant="danger" class="small p-2">{{ errorMessage }}</b-alert>
+      <b-button @click="cancel()" variant="secondary">{{ cancelTitle || "Cancel" }}</b-button>
+      <b-button @click="ok()" variant="primary">{{ okTitle || "OK" }}</b-button>
+    </template>
   </b-modal>
 
 </template>
@@ -132,6 +136,10 @@ export default {
                     this.$emit("input", this.newValue);
                     this.hideDialog();
                 }
+            }).catch(err => {
+                // TODO: make it more sexy when MOR-450 is merged
+                this.errorMessage = err.message;
+                this.errorAlert = true;
             });
 
         },
@@ -148,4 +156,13 @@ export default {
     display: none;
   }
 
+  footer.modal-footer {
+    flex-wrap: nowrap;
+
+    .alert {
+      margin-right: auto;
+      width: fit-content;
+    }
+  }
+}
 </style>
