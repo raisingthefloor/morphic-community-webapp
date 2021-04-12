@@ -49,7 +49,6 @@ export const defaultApps = {
             image_url: "globe",
             label: "Web Browser",
             default: "browser",
-            exe$win: "http:"
         }
     }
 };
