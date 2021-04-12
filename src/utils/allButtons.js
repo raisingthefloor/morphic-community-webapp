@@ -185,8 +185,7 @@ export const allButtons = {
         configuration: {
             subkind: "app",
             label: "Calculator",
-            exe: "open -a Calculator",
-            exe$win: "calculator:",
+            exe: "calculator",
             color: "blue",
             image_url: "calculator"
         }
