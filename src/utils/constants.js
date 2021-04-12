@@ -29,13 +29,6 @@ export const colors = {
 
 
 export const defaultApps = {
-    calendar: {
-        title: "Default Calendar App",
-        configuration: {
-            label: "Calendar",
-            default: "calendar"
-        }
-    },
     email: {
         title: "Default Email Client",
         configuration: {
