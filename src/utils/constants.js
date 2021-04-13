@@ -5,23 +5,13 @@ import * as params from "./params.js";
 import * as Bar from "./bar.js";
 
 export const API_URL = CONFIG.API_URL;
-export const ERROR_MAP = {
-    1: "Incorrect username or password!",
-    2: "That email address already exists!",
-    3: "Username already exists!",
-    404: "Cannot connect to the server right now! Please try again in couple of minutes.",
-    500: "Network error, cannot connect to the server! Please check your internet connection."
-};
+
 export const MESSAGES = {
-    successfulRegistration: "Registration completed successfully",
-    successfulReset: "Reset password successful",
-    emailValidationError: "This is a required field and must be a valid email address.",
     successfulSave: "Successfully saved",
     barUpdated: "Bar successfully saved.",
     barAdded: "Bar successfully added.",
     sessionTimedOut: "Your session was expired. Please login again.",
     leavePageAlert: "Do you really want to leave? You have unsaved changes!",
-    logoutAlert: "Please save, or discard your chances before logging out!",
     successfulRoleChange: "Member role changed successfully",
     successfulMemberDelete: "Member deleted successfully.",
     successfulBarDelete: "Bar successfully deleted."
@@ -39,13 +29,6 @@ export const colors = {
 
 
 export const defaultApps = {
-    calendar: {
-        title: "Default Calendar App",
-        configuration: {
-            label: "Calendar",
-            default: "calendar"
-        }
-    },
     email: {
         title: "Default Email Client",
         configuration: {
@@ -59,7 +42,6 @@ export const defaultApps = {
             image_url: "globe",
             label: "Web Browser",
             default: "browser",
-            exe$win: "http:"
         }
     }
 };

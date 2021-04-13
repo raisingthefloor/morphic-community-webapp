@@ -11,7 +11,7 @@ import { CONFIG } from "@/config/config";
  * @return {Promise<AxiosResponse<BillingPlans>>} Response
  */
 export function getCommunityPlans() {
-    return HTTP.get("/v1/plans/community");
+    return HTTP.get("/v1/plans/community", {action: "get plans"});
 }
 
 /**
@@ -21,7 +21,7 @@ export function getCommunityPlans() {
  * @return {Promise<AxiosResponse<BillingInfo>>} Response
  */
 export function getBillingInfo(communityId) {
-    return HTTP.get(`/v1/communities/${communityId}/billing`).then(res => {
+    return HTTP.get(`/v1/communities/${communityId}/billing`, {action: "get billing info"}).then(res => {
         if (CONFIG.DISABLE_TRIAL) {
             delete res.data.trial_end_days;
         }
@@ -42,7 +42,7 @@ export function updateBillingInfo(communityId, planId, contactMemberId) {
     return HTTP.put(`/v1/communities/${communityId}/billing`, {
         plan_id: planId,
         contact_member_id: contactMemberId
-    });
+    }, {action: "update billing info"});
 }
 
 /**
@@ -55,7 +55,7 @@ export function updateBillingInfo(communityId, planId, contactMemberId) {
 export function updateBillingCard(communityId, token) {
     return HTTP.post(`/v1/communities/${communityId}/billing/card`, {
         token: token
-    });
+    }, {action: "update billing card"});
 }
 
 /**
@@ -65,5 +65,5 @@ export function updateBillingCard(communityId, token) {
  * @return {Promise<AxiosResponse<BillingInfo>>} Response
  */
 export function cancelBillingCard(communityId) {
-    return HTTP.post(`/v1/communities/${communityId}/billing/cancel`, {});
+    return HTTP.post(`/v1/communities/${communityId}/billing/cancel`, {action: "cancel billing card"});
 }

@@ -53,7 +53,6 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
-import { ERROR_MAP } from "@/utils/constants";
 import ValidatedInput from "@/components/ValidatedInput";
 
 
@@ -97,18 +96,7 @@ export default {
                     this.userInfo.password = "";
                     this.$router.push(dest);
                 })
-                .catch(err => {
-                    if (err.response) {
-                        if (err.response.data.error === "invalid_credentials") {
-                            this.errorMessage = ERROR_MAP[1];
-                        } else {
-                            this.errorMessage = ERROR_MAP[err.response.status] || "Something went wrong";
-                        }
-                    } else {
-                        this.errorMessage = ERROR_MAP[500];
-                    }
-                    this.errorAlert = true;
-                });
+                .catch(this.handleServerError);
         }
     }
 };

@@ -11,6 +11,7 @@ import { icons } from "@/utils/constants";
 import * as Bar from "@/utils/bar";
 import { CONFIG } from "@/config/config";
 import externalLinks from "@/config/externalLinks";
+import { getErrorMessage } from "@/utils/errorHandler";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -45,6 +46,19 @@ var toastSheet;
 
 Vue.mixin({
     methods: {
+        getErrorMessage: getErrorMessage,
+
+        /**
+         * Handles an error, if this component has the errorMessage and errorAlert fields.
+         * @param {Error} err The error object.
+         */
+        handleServerError(err) {
+            if (this.errorMessage !== undefined && this.errorAlert !== undefined) {
+                err.handled = true;
+                this.errorMessage = this.getErrorMessage(err);
+                this.errorAlert = true;
+            }
+        },
         /**
          * Makes an array from value, if it's not an array.
          * @param {Array|Object} value The value.
@@ -70,6 +84,16 @@ Vue.mixin({
                 noCloseButton: !title,
                 toastClass: "toast-height",
                 toaster: "b-toaster-top-center"
+            }, options));
+        },
+
+        showError(message, title, options) {
+            this.$root.$bvToast.toast(message, Object.assign({
+                variant: "danger",
+                title: title,
+                toaster: "b-toaster-top-center",
+                autoHideDelay: 30000,
+                solid: true
             }, options));
         },
 
