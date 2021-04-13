@@ -15,7 +15,7 @@
                 :to="getBarEditRoute(bar)"
                 :ref="'bar' + index"
                 class="barLink"
-        >{{ bar.name === "Default" ? i18n.t('BarsList.default-bar') : bar.name }}
+        >{{ bar.name === "Default" ? $t('BarsList.default-bar') : bar.name }}
         </b-link>
       </li>
     </ul>
