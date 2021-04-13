@@ -2,10 +2,11 @@
   <div id="SidePanel" class="bar-people-controls fill-height bg-green">
     <h2>{{ community.name }}</h2>
     <div class="accountInfo">
-      <b-link :to="{ name: 'MyCommunity'}">Account Settings</b-link>
+      <b-link :to="{ name: 'MyCommunity'}" v-t="'SidePanel.account-settings_link'" />
     </div>
 
-    <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">My MorphicBars
+    <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
+      {{ $t('SidePanel.own-bars_heading') }}
       <span class="expander">
         <b-icon class="expandIcon" icon="plus" />
       </span>
@@ -15,7 +16,7 @@
               :activeBarId="activeBarId"
     />
 
-    <h3 ref="MembersMorphicBars" @click="expandClick($refs.MembersMorphicBars)" class="expandable expanded">MorphicBars for Others
+    <h3 ref="MembersMorphicBars" @click="expandClick($refs.MembersMorphicBars)" class="expandable expanded">{{ $t('SidePanel.other-bars_heading') }}
       <span class="expander">
         <b-icon class="expandIcon" icon="plus" />
       </span>

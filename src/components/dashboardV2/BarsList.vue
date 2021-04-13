@@ -3,9 +3,9 @@
     <div>
       <b-button o="{ name: 'MorphicBar Editor', query: { barId: 'new' } }"
                 variant="success"
-              class="addNewLink"
+                class="addNewLink"
                 size="sm"
-      >Add a new bar</b-button>
+                v-t="'BarsList.new-bar_button'" />
     </div>
     <ul class="list-unstyled">
       <li v-for="(bar, index) in orderedBars" :key="bar.id"
@@ -15,7 +15,7 @@
                 :to="getBarEditRoute(bar)"
                 :ref="'bar' + index"
                 class="barLink"
-        >{{ bar.name === "Default" ? "Default Bar" : bar.name }}
+        >{{ bar.name === "Default" ? i18n.t('BarsList.default-bar') : bar.name }}
         </b-link>
       </li>
     </ul>

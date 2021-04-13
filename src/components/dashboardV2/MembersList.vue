@@ -1,3 +1,4 @@
+<!-- List of members on the side panel -->
 <template>
   <div id="MembersList" class="panelSection">
     <div class="">
@@ -5,23 +6,21 @@
                 variant="success"
                 class="addNewLink"
                 size="sm"
-      ><b-icon icon="person-plus-fill"/> Add a person</b-button>
+      ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
     </div>
 
     <!-- expand/collapse all buttons -->
     <div v-show="orderedMembers.length > 1" class="buttonRow">
       <b-button @click="$emit('expandClick', 'MembersList', true)"
                 variant="link"
-
                 class="expandAll"
                 expand-group="MembersList"
-      >Expand all</b-button>
+      >{{ $t('MembersList.expand-all') }}</b-button>
       <b-button @click="$emit('expandClick', 'MembersList', false)"
                 variant="link"
-
                 class="collapseAll"
                 expand-group="MembersList"
-      >Collapse all</b-button>
+      >{{ $t('MembersList.collapse-all') }}</b-button>
     </div>
 
     <!-- Expanding section for a member -->
@@ -57,14 +56,14 @@
 
         <!-- uninvited -->
         <div v-if="member.state === 'uninvited'">
-          Not yet invited. You can send them an invitation.
-          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">Invite Person</b-button>
+          {{ $t('MembersList.not-invited') }}
+          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
         </div>
 
         <!-- invited -->
         <div v-else-if="member.state === 'invited'">
-          Not accepted their invitation.
-          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">Re-invite Person</b-button>
+          {{ $t('MembersList.invitation-not-accepted') }}
+          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 
         <!-- Member's bars - currently, there's only 1 bar per person  -->
@@ -72,7 +71,7 @@
           <b-button variant="success" size="sm"
                     :disabled="!isCommunityBar(member.bar_id)"
                     @click="$emit('newbar', member)"
-          >Add a new bar</b-button>
+          >{{ $t('MembersList.add-bar_button') }}</b-button>
         </div>
 
         <ul class="list-unstyled">
@@ -113,8 +112,8 @@
 
     <TextInputDialog v-if="invitingMember"
                      id="inviteMemberDialog"
-                     :title="'Invite ' + invitingMember.fullName"
-                     :prompt="'Please enter the email address for ' + invitingMember.fullName"
+                     :title="$t('MembersList.invite-member_title', {name: invitingMember.fullName})"
+                     :prompt="$t('MembersList.email_prompt', {name: invitingMember.fullName})"
                      validation="email"
                      clear
                      @ok="$event.promise = sendInvite(invitingMember, $event.newValue)"
