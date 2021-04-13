@@ -2,7 +2,7 @@
   <div id="SidePanel" class="bar-people-controls fill-height bg-green">
     <h2>{{ community.name }}</h2>
     <div class="accountInfo">
-      <b-link :to="{ name: 'MyCommunity'}" v-t="'SidePanel.account-settings_link'" />
+      <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
     </div>
 
     <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
@@ -126,14 +126,15 @@
       }
     }
 
-    a.barLink {
-
-      padding: 0.1rem 0.4rem;
-      font-size: 1rem;
+    a {
       color: black;
-      display: block;
+      &.barLink {
+        padding: 0.1rem 0.4rem;
+        font-size: 1rem;
+        color: black;
+        display: block;
+      }
     }
-
     // Indentation
     $indent: 0.3em;
     padding-left: $indent;

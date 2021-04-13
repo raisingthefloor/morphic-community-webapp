@@ -113,6 +113,12 @@
     margin-left: auto !important;
     width: fit-content;
   }
+
+  // Link icons
+  a > .b-icon:not(.noSpace):first-child {
+    margin-right: 0.25em;
+  }
+
 </style>
 
 <script>
