@@ -179,6 +179,11 @@ export function getCommunityMembers(communityId) {
                     return `${this.first_name} ${this.last_name}`.trim();
                 }
             });
+            Object.defineProperty(member, "displayName", {
+                get() {
+                    return this.isCurrent ? `${this.fullName} (You)` : this.fullName;
+                }
+            });
         });
 
         return r;

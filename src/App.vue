@@ -28,6 +28,9 @@
     background-color: $secondary-color !important;
     border-color: $secondary-color !important;
   }
+  .btn-light {
+    border-color: #333 !important;
+  }
 
   .bg-silver {
     background: #eee;
@@ -54,6 +57,7 @@
   }
 
   .desktop {
+    //noinspection CssUnknownTarget
     background: url(/img/background-editor.png);
     position: relative;
     display: flex;

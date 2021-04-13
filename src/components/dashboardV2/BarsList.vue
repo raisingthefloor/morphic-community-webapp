@@ -1,17 +1,24 @@
 <template>
-  <div id="BarsList" class="itemList">
-    <b-link :to="{ name: 'MorphicBar Editor', query: { barId: 'new' } }"
-            class="addNewLink"
-    >Add a new bar</b-link>
-    <b-link v-for="(bar, index) in orderedBars" :key="bar.id"
-            :to="getBarEditRoute(bar)"
-            :ref="'bar' + index"
-            :class="{
-                  active: bar.id === activeBarId
-              }"
-    >
-      {{ bar.name === "Default" ? "Default Bar" : bar.name }}
-    </b-link>
+  <div id="BarsList" class="panelSection">
+    <div>
+      <b-button o="{ name: 'MorphicBar Editor', query: { barId: 'new' } }"
+                variant="success"
+              class="addNewLink"
+                size="sm"
+      >Add a new bar</b-button>
+    </div>
+    <ul class="list-unstyled">
+      <li v-for="(bar, index) in orderedBars" :key="bar.id"
+          :class="{ active: bar.id === activeBarId }"
+      >
+        <b-link
+                :to="getBarEditRoute(bar)"
+                :ref="'bar' + index"
+                class="barLink"
+        >{{ bar.name === "Default" ? "Default Bar" : bar.name }}
+        </b-link>
+      </li>
+    </ul>
   </div>
 </template>
 

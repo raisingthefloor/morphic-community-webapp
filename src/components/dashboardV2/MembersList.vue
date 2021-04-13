@@ -1,14 +1,94 @@
 <template>
-  <div id="MembersList">
-    <b-modal id="sendEmailInvitationFromMembersListModal" :ok-disabled="!invitationEmail.match('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')" @ok="sendInvite" title="Enter email address for invitation" footer-bg-variant="light" ok-title="Send Invitation">
-      <p class="my-4"></p>
-      <b-form-group :label="'Please enter email address for '+activeMember.first_name+' '+activeMember.last_name" label-for="email">
-        <b-form-input v-model="invitationEmail" id="email" placeholder="myemail@mail.com" class="mb-2"></b-form-input>
-      </b-form-group>
-    </b-modal>
+  <div id="MembersList" class="panelSection">
+    <div class="">
+      <b-button @click="$router.push({ name: 'Member Invite' })"
+                variant="success"
+                class="addNewLink"
+                size="sm"
+      ><b-icon icon="person-plus-fill"/> Add a person</b-button>
+    </div>
+
+    <!-- expand/collapse all buttons -->
+    <div v-show="orderedMembers.length > 1" class="buttonRow">
+      <b-button @click="$emit('expandClick', 'MembersList', true)"
+                variant="link"
+
+                class="expandAll"
+                expand-group="MembersList"
+      >Expand all</b-button>
+      <b-button @click="$emit('expandClick', 'MembersList', false)"
+                variant="link"
+
+                class="collapseAll"
+                expand-group="MembersList"
+      >Collapse all</b-button>
+    </div>
+
+    <!-- Expanding section for a member -->
+    <div v-for="(member) in orderedMembers"
+         :key="member.id"
+         class="panelBox"
+         :class="{
+            active: activeMemberId === member.id,
+          }"
+    >
+      <!-- member's name -->
+      <h4 :ref="member.id"
+          class="memberName"
+          expand-group="MembersList"
+          :class="{
+            expandable: activeMemberId !== member.id
+          }"
+          @click="$emit('expandClick', $refs[member.id][0])"
+      >
+          {{ member.fullName }}
+        <!-- the +/- expander button -->
+        <span class="expander">
+          <b-iconstack>
+            <b-icon icon="circle-fill" variant="success" scale="1.1" />
+            <b-icon icon="plus" variant="white" scale="1.4" class="expandIcon" />
+            <b-icon icon="dash" variant="white" scale="1.4" class="collapseIcon"/>
+          </b-iconstack>
+        </span>
+      </h4>
+
+      <!-- member details (expanding) -->
+      <div class="expandableContent">
+
+        <!-- uninvited -->
+        <div v-if="member.state === 'uninvited'">
+          Not yet invited. You can send them an invitation.
+          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">Invite Person</b-button>
+        </div>
+
+        <!-- invited -->
+        <div v-else-if="member.state === 'invited'">
+          Not accepted their invitation.
+          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">Re-invite Person</b-button>
+        </div>
+
+        <!-- Member's bars - currently, there's only 1 bar per person  -->
+        <div>
+          <b-button variant="success" size="sm"
+                    :disabled="!isCommunityBar(member.bar_id)"
+                    @click="$emit('newbar', member)"
+          >Add a new bar</b-button>
+        </div>
+
+        <ul class="list-unstyled">
+          <li :class="{ active: member.bar_id === activeBarId }">
+            <b-link v-if="!isCommunityBar(member.bar_id)"
+                    :to="getBarEditRoute(member)"
+                    class="barLink"
+            >{{ getMemberBarName(member) }}
+            </b-link>
+          </li>
+        </ul>
+      </div>
+    </div>
 
     <!-- The CM counts as a member of the Community, so by default there's always one member -->
-    <ul class="list-unstyled">
+    <ul v-if="false" class="list-unstyled">
       <li v-for="(member, index) in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
         <b-link :to="getBarEditRoute(member)" :ref="'member' + index" class="stretched-link">
           <b v-if="member.bar_id === activeBarId">{{ member.first_name || "No name" }} {{ member.last_name }}</b>
@@ -29,47 +109,45 @@
         </div>
       </li>
     </ul>
+
+
+    <TextInputDialog v-if="invitingMember"
+                     id="inviteMemberDialog"
+                     :title="'Invite ' + invitingMember.fullName"
+                     :prompt="'Please enter the email address for ' + invitingMember.fullName"
+                     validation="email"
+                     clear
+                     @ok="$event.promise = sendInvite(invitingMember, $event.newValue)"
+    />
+
   </div>
 </template>
 
 <style lang="scss">
-  #MembersList {
-    ul {
-      margin: 0 -1rem 1rem -1rem;
-      li {
-        position: relative;
-        padding: 0 1rem;
-        &.active {
-          padding: .25rem 1rem;
-          background: green;
-          color: white;
-          a {
-            color: white;
-          }
-        }
-        a {
-          display: inline;
-          padding: 0 0.75rem 0 0;
-        }
-      }
-    }
-  }
 </style>
 
 <script>
-import { inviteCommunityMember } from "@/services/communityService";
+import * as communityService from "@/services/communityService";
 import * as Bar from "@/utils/bar";
+import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
 
 export default {
     name: "MembersList",
+    components: {TextInputDialog},
     props: {
         members: Array,
         activeMemberId: String,
+        /** @type {Array<BarDetails>} */
         bars: Array,
         activeBarId: String,
+        /** @type {Community} */
         community: Object
     },
     computed: {
+        /**
+         * Gets the ordered list of members.
+         * @return {Array<CommunityMember>} The members.
+         */
         orderedMembers: function () {
             if (this.members.length) {
                 // first member is community manager
@@ -84,22 +162,22 @@ export default {
     },
     data() {
         return {
-            invitationEmail: "",
+            /** @type {CommunityMember} */
+            invitingMember: null,
             activeMember: {}
         };
     },
     methods: {
-        getEmailAndSendInvite() {
-            this.activeMember = this.members.find(x => x.id === this.activeMemberId);
-            this.invitationEmail = "";
-            this.$bvModal.show("sendEmailInvitationFromMembersListModal");
-        },
-        sendInvite() {
-            if (this.invitationEmail) {
-                const communityId = this.$store.getters.communityId;
-                inviteCommunityMember(communityId, this.activeMemberId, this.invitationEmail);
+        /**
+         * Invites a member to enjoy fruits of morphic.
+         * @param {CommunityMember} member The chosen member.
+         * @param {String} invitationEmail The email address.
+         * @return {Promise} Resolves when complete.
+         */
+        sendInvite(member, invitationEmail) {
+            return communityService.inviteCommunityMember(this.communityId, this.activeMemberId, invitationEmail).then(() => {
                 this.activeMember.state = "invited";
-            }
+            });
         },
         isCommunityBar: function (barId) {
             for (let i = 0; i < this.bars.length; i++) {
@@ -116,6 +194,17 @@ export default {
          */
         getBarEditRoute(member) {
             return Bar.getUserBarEditRoute(member, this.community.default_bar_id);
+        },
+
+        /**
+         * Get the name of the bar used by a member.
+         * @param {CommunityMember} member The member.
+         * @return {String} The bar name.
+         */
+        getMemberBarName(member) {
+            const barId = member.bar_id || this.community.default_bar_id;
+            const bar = this.bars.find(bar => bar.id === barId);
+            return bar && Bar.getBarName(bar);
         }
 
     }

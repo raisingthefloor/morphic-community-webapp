@@ -30,6 +30,21 @@ export function getBarName(bar) {
 }
 
 /**
+ * Creates a new bar.
+ * @param {Boolean} shared true if the bar is shared.
+ * @param {String} [name] Name of the bar.
+ * @return {BarDetails} The new, empty bar.
+ */
+export function newBar(shared, name) {
+    return {
+        name: name || "New Bar",
+        is_shared: shared,
+        items: []
+    };
+
+}
+
+/**
  * Gets the index of a bar item in a bar.
  * @param {BarItem} barItem The item to add (either from the catalog, or the service.
  * @param {BarDetails} [bar] The bar.

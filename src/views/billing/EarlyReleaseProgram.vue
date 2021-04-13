@@ -12,7 +12,7 @@
                      id="accountNameDialog"
                      :title="$t('EarlyReleaseProgram.create-dialog-title')"
                      :prompt="$t('EarlyReleaseProgram.create-dialog-prompt')"
-                     :lower-text="$t('EarlyReleaseProgram.create-dialog-text-hint')"
+                     :description="$t('EarlyReleaseProgram.create-dialog-text-hint')"
                      :ok-title="$t('EarlyReleaseProgram.create-dialog-ok_button')"
                      v-model="accountName"
                      centered
