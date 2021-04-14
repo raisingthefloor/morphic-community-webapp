@@ -6,6 +6,7 @@
                 @click="$emit('newbar', member)"
                 class="addNewLink"
                 size="sm"
+                v-if="showAddButton"
                 :disabled="orderedBars.length > 0"
                 v-t="'BarsList.new-bar_button'" />
     </div>
@@ -55,6 +56,9 @@ export default {
         /** @return {Array<BarDetails>} The bars to list */
         orderedBars() {
             return this.getBars();
+        },
+        showAddButton() {
+            return this.member && this.orderedBars.length === 0;
         }
     },
     data() {
