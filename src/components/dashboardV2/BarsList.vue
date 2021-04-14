@@ -1,10 +1,12 @@
+<!-- A list of bars, either for a single member or all shared bars -->
 <template>
-  <div id="BarsList" class="panelSection">
+  <div class="barsList">
     <div>
-      <b-button o="{ name: 'MorphicBar Editor', query: { barId: 'new' } }"
-                variant="success"
+      <b-button variant="success"
+                @click="$emit('newbar', member)"
                 class="addNewLink"
                 size="sm"
+                :disabled="orderedBars.length > 0"
                 v-t="'BarsList.new-bar_button'" />
     </div>
     <ul class="list-unstyled">
@@ -31,21 +33,33 @@ import * as Bar from "@/utils/bar";
 export default {
     name: "BarsList",
     props: {
+        /** @type {Array<BarDetails>} */
         bars: Array,
         activeBarId: String,
-        heading: String
+        /** @type {CommunityMember} */
+        member: Object
     },
     methods: {
-        getBarEditRoute: Bar.getBarEditRoute
+        getBarEditRoute: Bar.getBarEditRoute,
+        getBars: function () {
+            const filter = this.member
+                ? b => b.id === this.member.bar_id && !b.is_shared
+                : b => b.is_shared;
+
+            return this.bars.filter(filter).sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+        }
     },
     computed: {
-        orderedBars: function () {
-            const alphabetical = this.bars.filter(b => b.is_shared);
-            alphabetical.sort((a, b) => (a.name < b.name) ? 1 : ((a.name > b.name) ? -1 : 0));
-            alphabetical.reverse();
-            alphabetical.sort((a, b) => a.name === "Default" ? -1 : b.name === "Default" ? 1 : 0);
-            return alphabetical;
+        /** @return {Array<BarDetails>} The bars to list */
+        orderedBars() {
+            return this.getBars();
         }
+    },
+    data() {
+        return {
+        };
     }
 };
 </script>

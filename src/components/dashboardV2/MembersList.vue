@@ -28,7 +28,7 @@
          :key="member.id"
          class="panelBox"
          :class="{
-            active: activeMemberId === member.id,
+            active: activeMemberId === member.id || member.bar_id === activeBarId,
           }"
     >
       <!-- member's name -->
@@ -36,11 +36,11 @@
           class="memberName"
           expand-group="MembersList"
           :class="{
-            expandable: activeMemberId !== member.id
+            expandable: !(activeMemberId === member.id || member.bar_id === activeBarId)
           }"
           @click="$emit('expandClick', $refs[member.id][0])"
       >
-          {{ member.fullName }}
+          {{ member.displayName }}
         <!-- the +/- expander button -->
         <span class="expander">
           <b-iconstack>
@@ -67,6 +67,11 @@
         </div>
 
         <!-- Member's bars - currently, there's only 1 bar per person  -->
+        <BarsList :member="member"
+                  :active-bar-id="activeBarId"
+                  :bars="bars"
+        />
+        <!--
         <div>
           <b-button variant="success" size="sm"
                     :disabled="!isCommunityBar(member.bar_id)"
@@ -83,6 +88,7 @@
             </b-link>
           </li>
         </ul>
+        -->
       </div>
     </div>
 
@@ -129,11 +135,13 @@
 import * as communityService from "@/services/communityService";
 import * as Bar from "@/utils/bar";
 import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
+import BarsList from "@/components/dashboardV2/BarsList";
 
 export default {
     name: "MembersList",
-    components: {TextInputDialog},
+    components: {BarsList, TextInputDialog},
     props: {
+        /** @type {Array<CommunityMember>} */
         members: Array,
         activeMemberId: String,
         /** @type {Array<BarDetails>} */
@@ -148,22 +156,15 @@ export default {
          * @return {Array<CommunityMember>} The members.
          */
         orderedMembers: function () {
-            if (this.members.length) {
-                // first member is community manager
-                const alphabetical = this.members.slice(1);
-                alphabetical.sort((a, b) => (a.first_name < b.first_name) ? 1 : ((a.first_name > b.first_name) ? -1 : 0));
-                alphabetical.reverse();
-                return [this.members[0]].concat(alphabetical);
-            } else {
-                return [];
-            }
+            return this.members.filter(m => !m.isCurrent).sort((a, b) => {
+                return a.displayName.localeCompare(b.displayName);
+            });
         }
     },
     data() {
         return {
             /** @type {CommunityMember} */
-            invitingMember: null,
-            activeMember: {}
+            invitingMember: null
         };
     },
     methods: {
@@ -174,8 +175,9 @@ export default {
          * @return {Promise} Resolves when complete.
          */
         sendInvite(member, invitationEmail) {
-            return communityService.inviteCommunityMember(this.communityId, this.activeMemberId, invitationEmail).then(() => {
-                this.activeMember.state = "invited";
+            return communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail).then(() => {
+                member.state = "invited";
+                return true;
             });
         },
         isCommunityBar: function (barId) {

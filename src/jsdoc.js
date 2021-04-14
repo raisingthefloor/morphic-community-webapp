@@ -123,7 +123,7 @@
  * @property {String} first_name The member's first name.
  * @property {String} last_name The member's last name.
  * @property {String} fullName The member's full name (auto-generated).
- * @property {String} fullName The member's full name, for displaying (adds "(you)" for the current user).
+ * @property {String} displayName The member's full name, for displaying (adds "(you)" for the current user).
  * @property {String} role The member's role ("manager" or "member").
  * @property {String} state The member's state.
  * @property {String} bar_id The member's bar_id (null means use community default_bar_id).

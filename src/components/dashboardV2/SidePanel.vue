@@ -5,6 +5,7 @@
       <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
     </div>
 
+    <!-- member's bars -->
     <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
       {{ $t('SidePanel.own-bars_heading') }}
       <span class="expander">
@@ -14,8 +15,10 @@
     <BarsList ref="BarsList"
               :bars="bars"
               :activeBarId="activeBarId"
+              :member="currentMember"
     />
 
+    <!-- managed members -->
     <h3 ref="MembersMorphicBars" @click="expandClick($refs.MembersMorphicBars)" class="expandable expanded">{{ $t('SidePanel.other-bars_heading') }}
       <span class="expander">
         <b-icon class="expandIcon" icon="plus" />
@@ -32,6 +35,17 @@
 
     />
 
+    <!-- group bars -->
+    <h3 ref="GroupBars" @click="expandClick($refs.GroupBars)" class="expandable expanded">
+      Group Bars
+      <span class="expander">
+        <b-icon class="expandIcon" icon="plus" />
+      </span>
+    </h3>
+    <BarsList ref="BarsList"
+              :bars="bars"
+              :activeBarId="activeBarId"
+    />
   </div>
 </template>
 
@@ -138,15 +152,13 @@
     // Indentation
     $indent: 0.3em;
     padding-left: $indent;
-    .accountInfo, #BarsList {
+    .accountInfo {
       padding-left: $indent * 2;
     }
     .panelBox {
-      &, ul {
-        padding-left: $indent * 2;
-      }
+      padding-left: $indent * 2;
       button {
-        margin-left: $indent * 3;
+        margin-left: $indent * 2;
       }
     }
 
@@ -235,8 +247,14 @@ export default {
         BarsList
     },
     props: {
+        /** @type {Community} */
         community: Object,
+        /**
+         * All bars in the community
+         * @type {Array<BarDetails>}
+         */
         bars: Array,
+        /** @type {Array<CommunityMember>} */
         members: Array,
         activeBarId: String,
         activeMemberId: String
@@ -245,6 +263,25 @@ export default {
         this.$el.querySelectorAll("button.collapseAll").forEach(b => {
             b.disabled = true;
         });
+    },
+    data() {
+        return {
+        };
+    },
+    computed: {
+        /**
+         * Get the bars owned by the current user.
+         * @return {Array<BarDetails>} The bars owned by the member.
+         */
+        memberBars() {
+            return this.bars.filter(b => b.id === this.currentMember.bar_id && !b.is_shared);
+        },
+        /**
+         * @return {CommunityMember} The current member
+         */
+        currentMember() {
+            return this.members.find(m => m.isCurrent) || {};
+        }
     },
     methods: {
         /**

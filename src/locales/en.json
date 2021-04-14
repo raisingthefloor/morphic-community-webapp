@@ -7,6 +7,7 @@
     "missing_required": "A required field is missing.",
     "existing_email": "There is already an account associated with that email address.",
     "existing_username": "There is already an account which uses that user name.",
+    "limit_reached": "The maximum number of members for your subscription has been reached.",
     "http": {
       "404": "Unable to access to the server. Please try again later.",
       "500": "There is a problem with the server. Please try again later."
@@ -31,7 +32,7 @@
   "BlockLoginRegister": {
   },
   "SidePanel":  {
-    "account-settings_link": "Account Settings",
+    "account-settings_link": "Account settings",
     "other-bars_heading": "MorphicBars for Others",
     "own-bars_heading": "My MorphicBars"
   },
