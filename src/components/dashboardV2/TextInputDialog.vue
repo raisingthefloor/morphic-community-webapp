@@ -2,28 +2,40 @@
 <template>
   <b-modal :id="id" :title="title"
            @ok="onOK"
-           @cancel="onCancel"
-           @show="newValue = value, changed = false"
+           @show="onShow"
            :ok-title="okTitle"
            :cancel-title="cancelTitle"
            :centered="centered"
+           dialog-class="textInputDialog"
   >
-    <b-form-group :label="prompt">
-      <b-form-input v-model="newValue"
-                    ref="textInput"
-                    autofocus required
-                    :placeholder="placeholder"
-                    @keydown.native.enter="onEnter"
-                    @input="changed = true"
-                    :state="changed ? newValue !== '' : null"
+
+    <ValidatedInput
+            class="textInputDialogField"
+            ref="textInput"
+            @keydown.native.enter="onEnter"
+            @input="changed = true"
+            autofocus required
+            :label="prompt"
+            :placeholder="placeholder"
+            :description="description"
+            :validation="$v.newValue"
+            v-bind="$attrs"
       />
-      <small v-if="lowerText">{{lowerText}}</small>
-    </b-form-group>
+
+    <template #modal-footer="{ ok, cancel }" class="hello">
+      <b-alert :show="errorAlert" variant="danger" class="small p-2">{{ errorMessage }}</b-alert>
+      <b-button @click="cancel()" variant="secondary">{{ cancelTitle || "Cancel" }}</b-button>
+      <b-button @click="ok()" variant="primary">{{ okTitle || "OK" }}</b-button>
+    </template>
   </b-modal>
 
 </template>
 
 <script>
+
+import ValidatedInput from "@/components/ValidatedInput";
+import { validationMixin } from "vuelidate";
+import { required, email } from "vuelidate/lib/validators";
 
 /**
  * Event object for the `ok` event.
@@ -35,6 +47,8 @@
 
 export default {
     name: "TextInputDialog",
+    components: {ValidatedInput},
+    mixins: [validationMixin],
     props: {
         /** Dialog title */
         title: String,
@@ -47,18 +61,46 @@ export default {
         /** Modal ID */
         id: String,
         /** Small text under the field */
-        lowerText: String,
+        description: String,
         okTitle: String,
         cancelTitle: String,
-        centered: Boolean
+        centered: Boolean,
+        /** type of validation ("email") */
+        validation: String,
+        /** Clear the initial value when showing */
+        clear: Boolean
     },
     data: function () {
         return {
             newValue: null,
-            changed: false
+            changed: false,
+            errorAlert: false,
+            errorMessage: null
+        };
+    },
+    validations() {
+        const v = { required: required };
+        if (this.validation) {
+            const rules = this.validation.toLowerCase().split(/\s*,\s*|\s+/);
+            if (rules.includes("email")) {
+                v.email = email;
+            }
+        }
+
+        return {
+            newValue: v
         };
     },
     methods: {
+        onShow: function () {
+            this.newValue = (!this.clear && this.value) || "";
+            this.changed = false;
+
+            if (this.$v) {
+                this.$v.$reset();
+            }
+            this.$emit("show");
+        },
         onEnter: function (event) {
             this.onOK(event);
         },
@@ -70,11 +112,14 @@ export default {
         onOK: function (event) {
             event.preventDefault();
 
-            if (this.newValue === "") {
-                this.changed = true;
-                this.$refs.textInput.$el.focus();
-                return;
+            if (this.$v) {
+                this.$v.$touch();
+                if (this.$v.$anyError) {
+                    this.$refs.textInput.focus();
+                    return;
+                }
             }
+
 
             const okEvent = {
                 oldValue: this.value,
@@ -91,19 +136,33 @@ export default {
                     this.$emit("input", this.newValue);
                     this.hideDialog();
                 }
+            }).catch(err => {
+                // TODO: make it more sexy when MOR-450 is merged
+                this.errorMessage = err.message;
+                this.errorAlert = true;
             });
 
         },
         hideDialog: function () {
             this.$bvModal.hide(this.id);
-        },
-        onCancel: function () {
-
         }
     }
 };
 </script>
 
-<style scoped>
+<style lang="scss">
+.textInputDialog {
+  .textInputDialogField .requiredText {
+    display: none;
+  }
 
+  footer.modal-footer {
+    flex-wrap: nowrap;
+
+    .alert {
+      margin-right: auto;
+      width: fit-content;
+    }
+  }
+}
 </style>

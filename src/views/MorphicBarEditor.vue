@@ -34,7 +34,7 @@
     <!-- EDITOR v2 -->
     <b-row no-gutters id="EditorContainer">
       <b-col md="2">
-        <CommunityManager :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="activeMemberId ? null : barDetails.id" />
+        <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
       </b-col>
       <b-col md="8">
         <div id="barEditor" class="pt-2">
@@ -76,7 +76,7 @@
                         @click="saveBar"
                         :variant="isChanged ? 'success' : 'outline-dark'"
                         class="updateButton"
-                        size="sm"><b-icon-arrow-repeat/> Save this to Group Bar</b-button>
+                        size="sm"><b-icon-arrow-repeat/> Save this Bar</b-button>
             </div>
           </div>
 
@@ -885,7 +885,7 @@
 
 <script>
 
-import CommunityManager from "@/components/dashboardV2/CommunityManager";
+import SidePanel from "@/components/dashboardV2/SidePanel";
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import {
     createCommunityBar,
@@ -915,7 +915,7 @@ export default {
         TextInputDialog,
         BarItemLink,
         EditButtonDialog,
-        CommunityManager,
+        SidePanel,
         PreviewItem,
         Drag,
         Drop,

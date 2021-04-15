@@ -55,6 +55,7 @@
 import BarPreview from "@/components/dashboard/BarPreview";
 import { predefinedBars } from "@/utils/predefined";
 import { createCommunityBar } from "@/services/communityService";
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "MorphicBarPreconfigured",
@@ -79,11 +80,8 @@ export default {
                 return predefined.id === predefinedId;
             });
 
-            var barDetails = {
-                name: "New Bar",
-                is_shared: true,
-                items: bar.items
-            };
+            var barDetails = Bar.newBar();
+            barDetails.items = bar.items;
 
             createCommunityBar(this.communityId, barDetails)
                 .then((resp) => {

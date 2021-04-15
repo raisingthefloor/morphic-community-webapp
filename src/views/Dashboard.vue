@@ -2,12 +2,12 @@
   <div>
       <b-alert :show="billingInfo && billingInfo.trial_end_days > 0" variant="warning" dismissible style="margin: auto">You have {{ billingInfo && billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
       <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
-    <b-row>
+    <b-row no-gutters>
       <b-col md="2">
-        <CommunityManager :community="community" :bars="list" :members="members" ref="CommunityManager" />
+        <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
       </b-col>
       <b-col md="5" fluid>
-        <div v-if="members.length > 0" class="info-box pt-3 pb-3">
+        <div v-if="members.length > 0" class="info-box pt-3 pb-3 p-2">
           <h4><b>Welcome to Morphic</b></h4>
           <b-row style="min-height: 500px">
             <b-col md="5" class="flex-column">
@@ -49,7 +49,7 @@
           </div>
         </div>
       </b-col>
-      <b-col md="4">
+      <b-col md="3">
       </b-col>
       <b-col md="1">
         <div class="fill-height bg-silver"></div>
@@ -88,7 +88,7 @@
 <script>
 import * as ArrowLine from "arrow-line";
 import { createPopper } from "@popperjs/core";
-import CommunityManager from "@/components/dashboardV2/CommunityManager";
+import SidePanel from "@/components/dashboardV2/SidePanel";
 import {
     getCommunity,
     getCommunityBars,
@@ -100,7 +100,7 @@ import * as billingService from "@/services/billingService";
 export default {
     name: "Dashboard",
     components: {
-        CommunityManager
+        SidePanel
     },
     data() {
         return {
@@ -253,16 +253,16 @@ export default {
 
             var pairs = [
                 // hint, point to, [point from]
-                [this.$refs.BarsHint, "#CommunityManager #BarsList > ul > li:first-child > :first-child"],
-                [this.$refs.MembersHint, "#CommunityManager #AddNewMember"],
+                [this.$refs.BarsHint, "#SidePanel #BarsList > ul > li:first-child > :first-child"],
+                [this.$refs.MembersHint, "#SidePanel #AddNewMember"],
                 [
                     this.$refs.EditMemberHint,
-                    "#CommunityManager #MembersList ul > li:first-child > :first-child",
+                    "#SidePanel #MembersList ul > li:first-child > :first-child",
                     this.$refs.EditMemberHint && this.$refs.EditMemberHint.querySelector(":first-child")
                 ]
             ];
 
-            const communityManager = document.querySelector("#CommunityManager");
+            const sidePanel = document.querySelector("#SidePanel");
 
             // Resolve the selectors
             pairs = pairs.map(p => p.map(ref => (typeof(ref) === "string") ? document.querySelector(ref) : ref));
@@ -275,7 +275,7 @@ export default {
                 const virtualElement = {
                     getBoundingClientRect() {
                         const rect = target.getBoundingClientRect();
-                        rect.width = communityManager.getBoundingClientRect().right - rect.left + 30;
+                        rect.width = sidePanel.getBoundingClientRect().right - rect.left + 30;
                         return rect;
                     }
                 };

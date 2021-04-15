@@ -7,6 +7,7 @@
     "missing_required": "A required field is missing.",
     "existing_email": "There is already an account associated with that email address.",
     "existing_username": "There is already an account which uses that user name.",
+    "limit_reached": "The maximum number of members for your subscription has been reached.",
     "http": {
       "404": "Unable to access to the server. Please try again later.",
       "500": "There is a problem with the server. Please try again later."
@@ -23,12 +24,17 @@
   "BarPreview":  {
   },
   "BarsList": {
+    "default-bar": "Default Bar",
+    "new-bar_button": "Add a new bar"
   },
   "BillingDetails":  {
   },
   "BlockLoginRegister": {
   },
-  "CommunityManager":  {
+  "SidePanel":  {
+    "account-settings_link": "Account settings",
+    "other-bars_heading": "MorphicBars for Others",
+    "own-bars_heading": "My MorphicBar"
   },
   "Dashboard": {
   },
@@ -78,6 +84,16 @@
   "MemberInvite": {
   },
   "MembersList":  {
+    "add-bar_button": "Add a new bar",
+    "add-member_button": "Add a person",
+    "collapse-all": "Collapse all",
+    "email_prompt": "Please enter the email address for {name}",
+    "expand-all": "Expand all",
+    "invitation-not-accepted": "Not accepted their invitation.",
+    "invite-member_title": "Invite {name}",
+    "invite_button": "Invite Person",
+    "not-invited": "Not yet invited. You can send them an invitation.",
+    "re-invite_button": "Re-invite Person"
   },
   "MorphicBarEditor": {
   },

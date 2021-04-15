@@ -41,7 +41,7 @@ export const defaultApps = {
         configuration: {
             image_url: "globe",
             label: "Web Browser",
-            default: "browser",
+            default: "browser"
         }
     }
 };

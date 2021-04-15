@@ -171,6 +171,9 @@ export default {
                 this.validation.$touch();
             }
         },
+        focus() {
+            this.$refs.inputField.focus();
+        },
         /**
          * Toggles whether or not the password text should be visible.
          *

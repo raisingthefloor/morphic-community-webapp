@@ -24,9 +24,24 @@ export function getBarName(bar) {
     } else if (bar.is_shared) {
         name = bar.name;
     } else {
-        name = `Bar for ${bar.name}`;
+        name = bar.name;
     }
     return name;
+}
+
+/**
+ * Creates a new bar.
+ * @param {Boolean} shared true if the bar is shared.
+ * @param {String} [name] Name of the bar.
+ * @return {BarDetails} The new, empty bar.
+ */
+export function newBar(shared, name) {
+    return {
+        name: name || "New Bar",
+        is_shared: shared,
+        items: []
+    };
+
 }
 
 /**
