@@ -76,7 +76,7 @@
                         @click="saveBar"
                         :variant="isChanged ? 'success' : 'outline-dark'"
                         class="updateButton"
-                        size="sm"><b-icon-arrow-repeat/> Save this to Group Bar</b-button>
+                        size="sm"><b-icon-arrow-repeat/> Save this Bar</b-button>
             </div>
           </div>
 
