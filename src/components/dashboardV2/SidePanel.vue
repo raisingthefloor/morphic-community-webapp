@@ -5,24 +5,23 @@
       <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
     </div>
 
+
     <!-- member's own bars -->
-    <template v-if="!isManager">
-      <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
-        {{ $t('SidePanel.own-bars_heading') }}
-        <span class="expander">
-          <b-icon class="expandIcon" icon="plus" />
-        </span>
-      </h3>
-      <BarsList ref="BarsList"
-                :bars="bars"
-                :activeBarId="activeBarId"
-                :member="currentMember"
-                @newbar="newBar(currentMember)"
-      />
-    </template>
+    <h3 v-if="!hasOwnBar" ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
+      {{ $t('SidePanel.own-bars_heading') }}
+      <span class="expander">
+        <b-icon class="expandIcon" icon="plus" />
+      </span>
+    </h3>
+    <BarsList ref="BarsList"
+              :bars="bars"
+              :activeBarId="activeBarId"
+              :member="currentMember"
+              @newbar="newBar(currentMember)"
+    />
 
     <!-- managed members -->
-    <template v-else>
+    <template v-if="isManager">
       <h3 ref="MembersMorphicBars" @click="expandClick($refs.MembersMorphicBars)" class="expandable expanded">{{ $t('SidePanel.other-bars_heading') }}
         <span class="expander">
           <b-icon class="expandIcon" icon="plus" />
@@ -283,6 +282,9 @@ export default {
          */
         memberBars() {
             return this.bars.filter(b => b.id === this.currentMember.bar_id && !b.is_shared);
+        },
+        hasOwnBar() {
+            return this.memberBars.length > 0;
         },
         /**
          * @return {CommunityMember} The current member
