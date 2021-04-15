@@ -394,7 +394,7 @@ export default {
             const member = addResult.data.member;
 
             // Create a new bar for the member
-            const bar = await this.createBar(member, `Bar for ${member.fullName}`);
+            await this.createBar(member, `Bar for ${member.fullName}`);
 
             this.newestMemberId = member.id;
             this.reloadAll();
