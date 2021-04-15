@@ -7,7 +7,7 @@
 
 
     <!-- member's own bars -->
-    <h3 v-if="!hasOwnBar" ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
+    <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
       {{ $t('SidePanel.own-bars_heading') }}
       <span class="expander">
         <b-icon class="expandIcon" icon="plus" />
