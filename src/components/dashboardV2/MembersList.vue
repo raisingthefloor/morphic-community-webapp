@@ -2,7 +2,7 @@
 <template>
   <div id="MembersList" class="panelSection">
     <div class="">
-      <b-button @click="$router.push({ name: 'Member Invite' })"
+      <b-button v-b-modal="'addMemberDialog'"
                 variant="success"
                 class="addNewLink"
                 size="sm"
@@ -36,7 +36,8 @@
           class="memberName"
           expand-group="MembersList"
           :class="{
-            expandable: !(activeMemberId === member.id || member.bar_id === activeBarId)
+            expandable: !(activeMemberId === member.id || member.bar_id === activeBarId),
+            expanded: expandedMembers.includes(member.id)
           }"
           @click="$emit('expandClick', $refs[member.id][0])"
       >
@@ -70,25 +71,8 @@
         <BarsList :member="member"
                   :active-bar-id="activeBarId"
                   :bars="bars"
+                  @newbar="$emit('newbar', $event)"
         />
-        <!--
-        <div>
-          <b-button variant="success" size="sm"
-                    :disabled="!isCommunityBar(member.bar_id)"
-                    @click="$emit('newbar', member)"
-          >{{ $t('MembersList.add-bar_button') }}</b-button>
-        </div>
-
-        <ul class="list-unstyled">
-          <li :class="{ active: member.bar_id === activeBarId }">
-            <b-link v-if="!isCommunityBar(member.bar_id)"
-                    :to="getBarEditRoute(member)"
-                    class="barLink"
-            >{{ getMemberBarName(member) }}
-            </b-link>
-          </li>
-        </ul>
-        -->
       </div>
     </div>
 
@@ -124,6 +108,12 @@
                      clear
                      @ok="$event.promise = sendInvite(invitingMember, $event.newValue)"
     />
+    <TextInputDialog id="addMemberDialog"
+                     title="Add new member"
+                     prompt="Enter the name of the new member"
+                     clear
+                     @ok="$event.promise = addMember($event.newValue)"
+    />
 
   </div>
 </template>
@@ -144,6 +134,8 @@ export default {
         /** @type {Array<CommunityMember>} */
         members: Array,
         activeMemberId: String,
+        /** @type {Array<GUID>} The members to show expanded */
+        expandedMembers: String,
         /** @type {Array<BarDetails>} */
         bars: Array,
         activeBarId: String,
@@ -180,6 +172,25 @@ export default {
                 return true;
             });
         },
+
+        /**
+         * Adds a new member
+         * @param {String} name Name of the new member.
+         * @return {Promise} Resolves when complete.
+         */
+        addMember(name) {
+
+            const event = {
+                name: name,
+                promise: null
+            };
+
+            // let the parent component deal with it.
+            this.$emit("addMember", event);
+
+            return event.promise;
+        },
+
         isCommunityBar: function (barId) {
             for (let i = 0; i < this.bars.length; i++) {
                 if (this.bars[i].id === barId) {

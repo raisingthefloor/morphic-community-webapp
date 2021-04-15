@@ -24,7 +24,7 @@ export function getBarName(bar) {
     } else if (bar.is_shared) {
         name = bar.name;
     } else {
-        name = `Bar for ${bar.name}`;
+        name = bar.name;
     }
     return name;
 }

@@ -172,34 +172,23 @@ export function deleteCommunityBar(communityId, barId) {
 export function getCommunityMembers(communityId) {
     return HTTP.get(`/v1/communities/${communityId}/members`).then((r) => {
         var userId = localStorage.getItem("userId");
-
-        r.data.members.forEach(member => {
-            member.isCurrent = userId && member.userId === userId;
-            Object.defineProperty(member, "fullName", {
-                get() {
-                    return `${this.first_name} ${this.last_name}`.trim();
-                }
-            });
-            Object.defineProperty(member, "displayName", {
-                get() {
-                    return this.isCurrent ? `${this.fullName} (You)` : this.fullName;
-                }
-            });
-        });
-
+        r.data.members.forEach(member => makeMember(member, userId));
         return r;
     }, {action: "get members"});
 }
 
 /**
  * Add a new community member.
- * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#endpoint-community-member
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1communitiesidmembers
  * @param {GUID} communityId The community ID.
- * @param {CommunityMember} member The new member.
+ * @param {CommunityMember} member The new member (only first_name and last_name is used).
  * @return {Promise<AxiosResponse<CommunityMember>>} Result
  */
 export function addCommunityMember(communityId, member) {
-    return HTTP.post(`/v1/communities/${communityId}/members`, member, {action: "add member"});
+    return HTTP.post(`/v1/communities/${communityId}/members`, member, {action: "add member"}).then(r => {
+        makeMember(r.data.member);
+        return r;
+    });
 }
 
 /**
@@ -210,7 +199,10 @@ export function addCommunityMember(communityId, member) {
  * @return {Promise<AxiosResponse<CommunityMember>>} Response.
  */
 export function getCommunityMember(communityId, memberId) {
-    return HTTP.get(`/v1/communities/${communityId}/members/${memberId}`, {action: "get member"});
+    return HTTP.get(`/v1/communities/${communityId}/members/${memberId}`, {action: "get member"}).then(r => {
+        makeMember(r.data);
+        return r;
+    });
 }
 
 /**
@@ -278,4 +270,27 @@ function storeBar(bar) {
     });
 
     return togo;
+}
+
+/**
+ * Adds some intelligence to a member object returned from the API server.
+ * @param {CommunityMember} member The member object.
+ * @param {GUID} [currentUserId] The current user id
+ */
+function makeMember(member, currentUserId) {
+    var userId = currentUserId || localStorage.getItem("userId");
+    const noName = "(no name)";
+    member.isCurrent = userId && member.userId === userId;
+    Object.defineProperty(member, "fullName", {
+        get() {
+            return !this.first_name && !this.last_name
+                ? noName
+                : `${this.first_name || ""} ${this.last_name || ""}`.trim();
+        }
+    });
+    Object.defineProperty(member, "displayName", {
+        get() {
+            return this.isCurrent ? `${this.fullName} (You)` : this.fullName;
+        }
+    });
 }

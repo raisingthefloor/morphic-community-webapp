@@ -34,7 +34,7 @@
     <!-- EDITOR v2 -->
     <b-row no-gutters id="EditorContainer">
       <b-col md="2">
-        <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" />
+        <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
       </b-col>
       <b-col md="8">
         <div id="barEditor" class="pt-2">

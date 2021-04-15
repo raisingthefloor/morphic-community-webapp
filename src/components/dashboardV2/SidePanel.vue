@@ -5,36 +5,41 @@
       <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
     </div>
 
-    <!-- member's bars -->
-    <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
-      {{ $t('SidePanel.own-bars_heading') }}
-      <span class="expander">
-        <b-icon class="expandIcon" icon="plus" />
-      </span>
-    </h3>
-    <BarsList ref="BarsList"
-              :bars="bars"
-              :activeBarId="activeBarId"
-              :member="currentMember"
-    />
+    <!-- member's own bars -->
+    <template v-if="!isManager">
+      <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
+        {{ $t('SidePanel.own-bars_heading') }}
+        <span class="expander">
+          <b-icon class="expandIcon" icon="plus" />
+        </span>
+      </h3>
+      <BarsList ref="BarsList"
+                :bars="bars"
+                :activeBarId="activeBarId"
+                :member="currentMember"
+                @newbar="newBar(currentMember)"
+      />
+    </template>
 
     <!-- managed members -->
-    <h3 ref="MembersMorphicBars" @click="expandClick($refs.MembersMorphicBars)" class="expandable expanded">{{ $t('SidePanel.other-bars_heading') }}
-      <span class="expander">
-        <b-icon class="expandIcon" icon="plus" />
-      </span>
-    </h3>
-    <MembersList ref="MembersList"
-                 :members="members"
-                 :community="community"
-                 :activeBarId="activeBarId"
-                 :bars="bars"
-                 :activeMemberId="activeMemberId"
-                 @expandClick="expandClick"
-                 @newbar="newBar"
-
-    />
-
+    <template v-else>
+      <h3 ref="MembersMorphicBars" @click="expandClick($refs.MembersMorphicBars)" class="expandable expanded">{{ $t('SidePanel.other-bars_heading') }}
+        <span class="expander">
+          <b-icon class="expandIcon" icon="plus" />
+        </span>
+      </h3>
+      <MembersList ref="MembersList"
+                   :members="members"
+                   :community="community"
+                   :activeBarId="activeBarId"
+                   :bars="bars"
+                   :activeMemberId="activeMemberId"
+                   :expandedMembers="expandedMembers"
+                   @expandClick="expandClick"
+                   @newbar="newBar($event)"
+                   @addMember="$event.promise = addMember($event.name)"
+      />
+    </template>
     <!-- group bars -->
     <h3 ref="GroupBars" @click="expandClick($refs.GroupBars)" class="expandable expanded">
       Group Bars
@@ -45,6 +50,7 @@
     <BarsList ref="BarsList"
               :bars="bars"
               :activeBarId="activeBarId"
+              @newBar="newBar()"
     />
   </div>
 </template>
@@ -65,7 +71,7 @@
       margin: 1rem 0 0.5rem 0;
     }
     h2 {
-      font-size: 2rem;
+      font-size: 1.5rem;
     }
     h4, h5 {
       margin: 4px 2px;
@@ -266,6 +272,8 @@ export default {
     },
     data() {
         return {
+            /** @type {GUID} The member that was just added */
+            newestMemberId: null
         };
     },
     computed: {
@@ -281,9 +289,18 @@ export default {
          */
         currentMember() {
             return this.members.find(m => m.isCurrent) || {};
+        },
+        isManager() {
+            return this.currentMember.role === "manager";
+        },
+        expandedMembers() {
+            return [this.newestMemberId];
         }
     },
     methods: {
+        reloadAll() {
+            this.$emit("reload");
+        },
         /**
          * Toggles a collapsable element (or all collapsable child elements).
          * @param {Element|String} el The element, or the expand-group to toggle all.
@@ -315,12 +332,27 @@ export default {
         },
 
         /**
-         * Creates a new bar.
+         * Called when a component fires the newbar event.
          * @param {CommunityMember} [member] The member this bar belongs to (omit for a shared bar).
+         * @param {String} [name] The name of the bar.
          * @return {Promise<BarDetails>} Resolves when the new bar has been created.
          */
-        async newBar(member) {
-            const barName = member ? member.fullName : undefined;
+        newBar(member, name) {
+            return this.createBar(member, name).then(bar => {
+                this.showMessage("New bar created");
+                this.reloadAll();
+                return bar;
+            });
+        },
+
+        /**
+         * Creates a new bar
+         * @param {CommunityMember} [member] The member this bar belongs to (omit for a shared bar).
+         * @param {String} [name] The name of the bar.
+         * @return {Promise<BarDetails>} Resolves when the new bar has been created.
+         */
+        async createBar(member, name) {
+            const barName = name || (member ? member.fullName : undefined);
             const bar = Bar.newBar(!member, barName);
 
             const createResponse = await communityService.createCommunityBar(this.communityId, bar);
@@ -330,11 +362,45 @@ export default {
                 member.bar_id = createResponse.data.bar.id;
             }
 
-            // Go to the bar editor
+            return bar;
+        },
+
+        /**
+         * Opens the bar editor with the given bar.
+         * @param {BarDetails} bar The bar to edit
+         */
+        selectBar(bar) {
+            const member = bar.userId ? bar : bar._member;
             const goto = member
                 ? Bar.getUserBarEditRoute(member, undefined, this.focusMode)
                 : Bar.getBarEditRoute(bar, this.focusMode);
+
             this.$router.push(goto);
+        },
+
+        /**
+         * Adds a new member, and creates a new bar for them.
+         * @param {String} name The new member's name.
+         * @return {Promise<CommunityMember>} Resolves with the community member.
+         */
+        async addMember(name) {
+            // create the new member
+            const addResult = await communityService.addCommunityMember(this.communityId, {
+                first_name: name,
+                last_name: ""
+            });
+
+            /** @type {CommunityMember} */
+            const member = addResult.data.member;
+
+            // Create a new bar for the member
+            const bar = await this.createBar(member, `Bar for ${member.fullName}`);
+
+            this.newestMemberId = member.id;
+            this.reloadAll();
+            this.showMessage("New member added");
+
+            return member;
         }
     }
 };

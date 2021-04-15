@@ -4,7 +4,7 @@
       <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
     <b-row no-gutters>
       <b-col md="2">
-        <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" />
+        <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
       </b-col>
       <b-col md="5" fluid>
         <div v-if="members.length > 0" class="info-box pt-3 pb-3 p-2">
