@@ -55,7 +55,7 @@ export default {
     computed: {
         /** @return {Array<BarDetails>} The bars to list */
         orderedBars() {
-            if (this.member.isCurrent) {
+            if (this.member?.isCurrent) {
                 const bars = this.getBars();
                 if (bars.length === 1) {
                     bars[0].name = "My MorphicBar";

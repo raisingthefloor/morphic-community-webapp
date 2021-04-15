@@ -39,18 +39,22 @@
                    @addMember="$event.promise = addMember($event.name)"
       />
     </template>
-    <!-- group bars -->
-    <h3 ref="GroupBars" @click="expandClick($refs.GroupBars)" class="expandable expanded">
-      Group Bars
-      <span class="expander">
-        <b-icon class="expandIcon" icon="plus" />
-      </span>
-    </h3>
-    <BarsList ref="BarsList"
-              :bars="bars"
-              :activeBarId="activeBarId"
-              @newBar="newBar()"
-    />
+
+    <!-- hiding group bars for now -->
+    <template v-if="false">
+      <!-- group bars -->
+      <h3 ref="GroupBars" @click="expandClick($refs.GroupBars)" class="expandable expanded">
+        Group Bars
+        <span class="expander">
+          <b-icon class="expandIcon" icon="plus" />
+        </span>
+      </h3>
+      <BarsList ref="BarsList"
+                :bars="bars"
+                :activeBarId="activeBarId"
+                @newBar="newBar()"
+      />
+    </template>
   </div>
 </template>
 
