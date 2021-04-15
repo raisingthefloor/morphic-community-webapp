@@ -219,6 +219,11 @@
       margin-right: $indent;
       background-color: $panelBox-color;
 
+      &:last-of-type {
+        margin-bottom: 0.5em;
+        background-color: red !important;
+      }
+
       &.active {
         background-color: lighten($panelBox-color, 7%);
       }
@@ -228,7 +233,10 @@
       }
 
     }
+  }
 
+  #MembersList > div:last-child {
+    margin-top: 0.5em;
   }
 
   .bar-people-controls {
