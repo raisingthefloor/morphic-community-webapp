@@ -76,6 +76,9 @@
     h2 {
       font-size: 1.5rem;
     }
+    h3 {
+      margin-top: 4em;
+    }
     h4, h5 {
       margin: 4px 2px;
     }
