@@ -1,13 +1,6 @@
 <!-- List of members on the side panel -->
 <template>
   <div id="MembersList" class="panelSection">
-    <div class="">
-      <b-button v-b-modal="'addMemberDialog'"
-                variant="success"
-                class="addNewLink"
-                size="sm"
-      ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
-    </div>
 
     <!-- expand/collapse all buttons -->
     <div v-show="orderedMembers.length > 1" class="buttonRow">
@@ -57,13 +50,13 @@
 
         <!-- uninvited -->
         <div v-if="member.state === 'uninvited'">
-          {{ $t('MembersList.not-invited') }}
+          {{ $t('MembersList.not-invited') }}<br/>
           <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
         </div>
 
         <!-- invited -->
         <div v-else-if="member.state === 'invited'">
-          {{ $t('MembersList.invitation-not-accepted') }}
+          {{ $t('MembersList.invitation-not-accepted') }}<br/>
           <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 
@@ -76,28 +69,13 @@
       </div>
     </div>
 
-    <!-- The CM counts as a member of the Community, so by default there's always one member -->
-    <ul v-if="false" class="list-unstyled">
-      <li v-for="(member, index) in orderedMembers" :key="member.id" :class="{ active: member.id === activeMemberId }">
-        <b-link :to="getBarEditRoute(member)" :ref="'member' + index" class="stretched-link">
-          <b v-if="member.bar_id === activeBarId">{{ member.first_name || "No name" }} {{ member.last_name }}</b>
-          <span v-else>{{ member.first_name || "No name" }} {{ member.last_name }}</span>
-          <span v-if="isCommunityBar(member.bar_id)" v-b-tooltip.hover title="Using a group bar">*&nbsp;</span>
-          <b-icon v-if="member.role === 'manager'" icon="people-fill" variant="dark" v-b-tooltip.hover title="Member is a group manager"></b-icon>
-          <b-icon v-if="member.state === 'uninvited'" icon="exclamation-circle-fill" variant="dark" v-b-tooltip.hover title="Has not accepted invitation"></b-icon>
-        </b-link>
-        <div v-if="member.id === activeMemberId">
-          <div v-if="member.state === 'uninvited'" class="small pb-2">
-            Uninvited, you can send them an invitation<br>
-            <b-button size="sm" variant="light" class="btn-block" @click="getEmailAndSendInvite(member)">Send Invitation</b-button>
-          </div>
-          <div v-else-if="member.state === 'invited'" class="small pb-2">
-            Invited, but has not accepted the invitation yet<br>
-            <b-button size="sm" variant="light" class="btn-block" @click="getEmailAndSendInvite(member)">Resend Invitation</b-button>
-          </div>
-        </div>
-      </li>
-    </ul>
+    <div class="">
+      <b-button v-b-modal="'addMemberDialog'"
+                variant="success"
+                class="addNewLink"
+                size="sm"
+      ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
+    </div>
 
 
     <TextInputDialog v-if="invitingMember"

@@ -1,15 +1,6 @@
 <!-- A list of bars, either for a single member or all shared bars -->
 <template>
   <div class="barsList">
-    <div>
-      <b-button variant="success"
-                @click="$emit('newbar', member)"
-                class="addNewLink"
-                size="sm"
-                v-if="showAddButton"
-                :disabled="orderedBars.length > 0"
-                v-t="'BarsList.new-bar_button'" />
-    </div>
     <ul class="list-unstyled">
       <li v-for="(bar, index) in orderedBars" :key="bar.id"
           :class="{ active: bar.id === activeBarId }"
@@ -22,6 +13,15 @@
         </b-link>
       </li>
     </ul>
+    <div>
+      <b-button variant="success"
+                @click="$emit('newbar', member)"
+                class="addNewLink"
+                size="sm"
+                v-if="showAddButton"
+                :disabled="orderedBars.length > 0"
+                v-t="'BarsList.new-bar_button'" />
+    </div>
   </div>
 </template>
 

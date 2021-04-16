@@ -76,6 +76,9 @@
     h2 {
       font-size: 1.5rem;
     }
+    h3 {
+      margin-top: 4em;
+    }
     h4, h5 {
       margin: 4px 2px;
     }
@@ -138,7 +141,7 @@
 
     button:not(.btn-link) {
       margin: 1px;
-      min-width: 70%;
+      min-width: 50%;
     }
     .buttonRow {
       button:first-child {
@@ -216,6 +219,11 @@
       margin-right: $indent;
       background-color: $panelBox-color;
 
+      &:last-of-type {
+        margin-bottom: 0.5em;
+        background-color: red !important;
+      }
+
       &.active {
         background-color: lighten($panelBox-color, 7%);
       }
@@ -225,7 +233,10 @@
       }
 
     }
+  }
 
+  #MembersList > div:last-child {
+    margin-top: 0.5em;
   }
 
   .bar-people-controls {
