@@ -343,6 +343,17 @@ export const allButtons = {
             description: "Opens the Facebook home page for users if they are signed in."
         }
     },
+    firefox_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Firefox",
+            exe: "firefox",
+            color: "blue",
+            image_url: "firefox"
+        }
+    },
     forbes: {
         kind: "link",
         is_primary: false,
@@ -389,6 +400,17 @@ export const allButtons = {
             image_url: "googlecalendar",
             url: "https://calendar.google.com/calendar/r",
             description: "Opens the Google Calendar for the user if they are signed in."
+        }
+    },
+    google_chrome_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Google Chrome",
+            exe: "googleChrome",
+            color: "blue",
+            image_url: "chrome"
         }
     },
     google_drive: {
@@ -807,6 +829,17 @@ export const allButtons = {
             image_url: "outlook",
             url: "https://outlook.live.com/mail/0/inbox",
             description: "Opens the Outlook.com inbox in a browser."
+        }
+    },
+    opera_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Opera",
+            exe: "opera",
+            color: "blue",
+            image_url: "opera"
         }
     },
     pandora: {
