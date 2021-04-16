@@ -50,13 +50,13 @@
 
         <!-- uninvited -->
         <div v-if="member.state === 'uninvited'">
-          {{ $t('MembersList.not-invited') }}
+          {{ $t('MembersList.not-invited') }}<br/>
           <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
         </div>
 
         <!-- invited -->
         <div v-else-if="member.state === 'invited'">
-          {{ $t('MembersList.invitation-not-accepted') }}
+          {{ $t('MembersList.invitation-not-accepted') }}<br/>
           <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 

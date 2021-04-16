@@ -141,7 +141,7 @@
 
     button:not(.btn-link) {
       margin: 1px;
-      min-width: 70%;
+      min-width: 50%;
     }
     .buttonRow {
       button:first-child {
