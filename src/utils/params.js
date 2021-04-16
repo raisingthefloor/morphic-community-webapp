@@ -535,8 +535,6 @@ export function checkForProblems(button, paramKey, live) {
 export async function checkUrl(url = "", timeout = 10000) {
     let togo;
 
-    console.log("Checking url", url);
-
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
         // Try https
         const httpsUrl = "https://" + url;
@@ -610,6 +608,7 @@ export async function checkUrl(url = "", timeout = 10000) {
             togo = client.head(requestUrl, req).then(value => {
                 return {};
             }).catch(reason => {
+                reason.handled = true;
                 return {
                     isProblem: true,
                     warn: !!reason.response,
