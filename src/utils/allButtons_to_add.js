@@ -145,30 +145,6 @@ export const allButtons = {
             os: "mac"
         }
     },
-    firefox_app: {
-        kind: "application",
-        is_primary: null,
-        configuration: {
-            subkind: "app",
-            label: "Firefox",
-            exe: "open -a Firefox",
-            exe$win: "firefox",
-            color: "blue",
-            image_url: "firefox"
-        }
-    },
-    google_chrome_app: {
-        kind: "application",
-        is_primary: null,
-        configuration: {
-            subkind: "app",
-            label: "Google Chrome",
-            exe: "open -a Google\\ Chrome",
-            exe$win: "chrome",
-            color: "blue",
-            image_url: "chrome"
-        }
-    },
     groove_music_app: {
         kind: "application",
         is_primary: null,
@@ -492,18 +468,6 @@ export const allButtons = {
             exe: "open -a Numbers",
             color: "blue",
             os: "mac"
-        }
-    },
-    opera_app: {
-        kind: "application",
-        is_primary: null,
-        configuration: {
-            subkind: "app",
-            label: "Opera",
-            exe: "open -a Opera",
-            exe$win: "opera",
-            color: "blue",
-            image_url: "opera"
         }
     },
     pages_app: {
