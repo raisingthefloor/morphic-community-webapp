@@ -325,18 +325,6 @@ export const allButtons = {
             image_url: "msaccess"
         }
     },
-    microsoft_edge_app: {
-        kind: "application",
-        is_primary: null,
-        configuration: {
-            subkind: "app",
-            label: "Microsoft Edge",
-            exe: "open -a Microsoft\\ Edge",
-            exe$win: "msedge",
-            color: "blue",
-            image_url: "msedge"
-        }
-    },
     microsoft_excel_app: {
         kind: "application",
         is_primary: null,

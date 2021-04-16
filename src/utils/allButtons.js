@@ -628,6 +628,28 @@ export const allButtons = {
             description: "Opens the Mail Online (Daily Mail) home page."
         }
     },
+    microsoft_edge_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Edge",
+            exe: "microsoftEdge",
+            color: "blue",
+            image_url: "msedge"
+        }
+    },
+    microsoft_skype_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Skype",
+            exe: "microsoftSkype",
+            color: "blue",
+            image_url: "skype"
+        }
+    },
     national_weather_service: {
         kind: "link",
         is_primary: true,
@@ -868,15 +890,12 @@ export const allButtons = {
     skype_app: {
         kind: "link",
         is_primary: null,
-        kind$win: "application",
         configuration: {
             subkind: "call",
             label: "Skype",
-            exe: "skype:$skypeId?$skypeAction",
             color: "blue",
             image_url: "skype",
-            url: "skype:$skypeId?$skypeAction",
-            shell: true
+            url: "skype:$skypeId?$skypeAction"
         }
     },
     soundcloud: {
