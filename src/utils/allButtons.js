@@ -661,6 +661,18 @@ export const allButtons = {
             image_url: "msedge"
         }
     },
+    microsoft_quick_assist_action: {
+        kind: "application",
+        is_primary: true,
+        configuration: {
+            subkind: "action",
+            label: "Quick Assist (PC)",
+            exe: "microsoftQuickAssist",
+            color: "blue",
+            image_url: "msquickassist",
+            description: "Opens Quick Assist to get remote help (MS Windows only)."
+        }
+    },
     microsoft_quick_assist_app: {
         kind: "application",
         is_primary: null,
