@@ -795,7 +795,6 @@ export const allButtons = {
             catalog: "make",
             catalogLabel: "To open an Application"
         },
-        production: false,
         configuration: {
             subkind: "app",
             label: "Open App",
