@@ -75,6 +75,7 @@ export const allIcons = {
     msonenote: "logo_msonenote.svg",
     msoutlook: "logo_msoutlook.svg",
     mspowerpoint: "logo_mspowerpoint.svg",
+    msquickassist: "logo_msquickassist.png",
     msstore: "logo_msstore.svg",
     msteams: "logo_msteams.svg",
     mstodo: "logo_mstodo.png",
