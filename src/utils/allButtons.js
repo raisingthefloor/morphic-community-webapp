@@ -661,18 +661,6 @@ export const allButtons = {
             image_url: "msedge"
         }
     },
-    microsoft_quick_assist_action: {
-        kind: "application",
-        is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Quick Assist (PC)",
-            exe: "microsoftQuickAssist",
-            color: "blue",
-            image_url: "msquickassist",
-            description: "Opens Quick Assist to get remote help (MS Windows only)."
-        }
-    },
     microsoft_quick_assist_app: {
         kind: "application",
         is_primary: null,
@@ -886,6 +874,17 @@ export const allButtons = {
             image_url: "pinterest",
             url: "https://www.pinterest.com/",
             description: "Opens the Pinterest home page for users if they are signed in."
+        }
+    },
+    quick_assist: {
+        kind: "application",
+        is_primary: true,
+        configuration: {
+            subkind: "action",
+            label: "Quick Assist",
+            exe: "microsoftQuickAssist",
+            color: "blue",
+            description: "Opens Quick Assist to get remote help (MS Windows only)."
         }
     },
     read_aloud: {
