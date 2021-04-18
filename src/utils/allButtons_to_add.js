@@ -551,17 +551,6 @@ export const allButtons = {
             os: "mac"
         }
     },
-    quick_assist_app: {
-        kind: "application",
-        is_primary: true,
-        configuration: {
-            subkind: "action",
-            label: "Quick Assist",
-            description: "Opens Quick Assist to get remote help (MS Windows only).",
-            default: "quick-assist",
-            color: "blue"
-        }
-    },
     reminders_app: {
         kind: "application",
         is_primary: null,
