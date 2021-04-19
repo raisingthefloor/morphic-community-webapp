@@ -114,6 +114,9 @@ export const allParameters = {
             required: "Zoom meeting link has not been provided.",
             url: "Zoom meeting link is not valid url.",
             zoomUrl: "This url does not look like a zoom meeting link."
+        },
+        checks: {
+            urlWorking: {}
         }
     }
 };
@@ -175,9 +178,14 @@ const validators = {
         let result;
         try {
             const url = new URL(value);
-            result = url.hostname.match(/\bzoom\.us$/i);
+            result = url.hostname.match(/(^|\.)zoom\.us$/i);
         } catch {
-            result = false;
+            // re-try with the protocol, if it's not there
+            if (value.startsWith("https://") || value.startsWith("http://")) {
+                result = false;
+            } else {
+                result = validators.zoomUrl(`https://${value}`);
+            }
         }
 
         return result;
