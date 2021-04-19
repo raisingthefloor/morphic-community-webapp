@@ -175,7 +175,7 @@ const validators = {
         let result;
         try {
             const url = new URL(value);
-            result = url.hostname.includes("zoom.us");
+            result = url.hostname.toLowerCase().endsWith("zoom.us");
         } catch {
             result = false;
         }
