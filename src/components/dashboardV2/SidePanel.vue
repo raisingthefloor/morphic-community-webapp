@@ -157,6 +157,7 @@
 
     a {
       color: black;
+      text-decoration: underline;
       &.barLink {
         padding: 0.1rem 0.4rem;
         font-size: 1rem;
