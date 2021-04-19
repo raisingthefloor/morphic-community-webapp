@@ -14,6 +14,7 @@
       </span>
     </h3>
     <BarsList ref="BarsList"
+              id="MyMorphicBars"
               :bars="bars"
               :activeBarId="activeBarId"
               :member="currentMember"
@@ -28,6 +29,7 @@
         </span>
       </h3>
       <MembersList ref="MembersList"
+                   id="MembersList"
                    :members="members"
                    :community="community"
                    :activeBarId="activeBarId"
@@ -68,6 +70,7 @@
   }
 
   #SidePanel {
+    min-height: 680px;
     h2, h3, h4, h5 {
       font-weight: bold;
       font-size: 1rem;
@@ -77,7 +80,7 @@
       font-size: 1.5rem;
     }
     h3 {
-      margin-top: 4em;
+      margin-top: 3em;
     }
     h4, h5 {
       margin: 4px 2px;
@@ -369,7 +372,10 @@ export default {
          * @return {Promise<BarDetails>} Resolves when the new bar has been created.
          */
         async createBar(member, name) {
-            const barName = name || (member ? member.fullName : undefined);
+            let barName = name || (member ? member.fullName : undefined);
+            if (barName === "(no name)") {
+                barName = "My MorphicBar";
+            }
             const bar = Bar.newBar(!member, barName);
 
             const createResponse = await communityService.createCommunityBar(this.communityId, bar);

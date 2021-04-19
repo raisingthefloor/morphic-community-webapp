@@ -72,9 +72,12 @@
     <div class="">
       <b-button v-b-modal="'addMemberDialog'"
                 variant="success"
-                class="addNewLink"
+                class="addNew"
                 size="sm"
       ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
+    </div>
+    <div v-if="!anyMembers">
+      <em>{{ $t('MembersList.no-members', {subscription: "+5", maxMembers: 5}) }}</em>
     </div>
 
 
@@ -113,7 +116,7 @@ export default {
         members: Array,
         activeMemberId: String,
         /** @type {Array<GUID>} The members to show expanded */
-        expandedMembers: String,
+        expandedMembers: Array,
         /** @type {Array<BarDetails>} */
         bars: Array,
         activeBarId: String,
@@ -129,6 +132,9 @@ export default {
             return this.members.filter(m => !m.isCurrent).sort((a, b) => {
                 return a.displayName.localeCompare(b.displayName);
             });
+        },
+        anyMembers: function () {
+            return this.orderedMembers.length > 0;
         }
     },
     data() {
