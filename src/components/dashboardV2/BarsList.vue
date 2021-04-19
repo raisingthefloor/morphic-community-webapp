@@ -21,7 +21,7 @@
                 v-if="showAddButton"
                 :disabled="orderedBars.length > 0"
                 v-t="'BarsList.new-bar_button'" />
-      <em class="d-block">You have no MorphicBars of your own yet.</em>
+      <em v-if="!anyBars" class="d-block">You have no MorphicBars of your own yet.</em>
     </div>
   </div>
 </template>
@@ -56,17 +56,13 @@ export default {
     computed: {
         /** @return {Array<BarDetails>} The bars to list */
         orderedBars() {
-            if (this.member?.isCurrent) {
-                const bars = this.getBars();
-                if (bars.length === 1) {
-                    bars[0].name = "My MorphicBar";
-                }
-                return bars;
-            }
             return this.getBars();
         },
         showAddButton() {
             return this.member && this.orderedBars.length === 0;
+        },
+        anyBars: function () {
+            return this.getBars().length > 0;
         }
     },
     data() {

@@ -15,7 +15,7 @@
     </h3>
     <BarsList ref="BarsList"
               id="MyMorphicBars"
-              :bars="[]"
+              :bars="bars"
               :activeBarId="activeBarId"
               :member="currentMember"
               @newbar="newBar(currentMember)"
@@ -372,7 +372,10 @@ export default {
          * @return {Promise<BarDetails>} Resolves when the new bar has been created.
          */
         async createBar(member, name) {
-            const barName = name || (member ? member.fullName : undefined);
+            let barName = name || (member ? member.fullName : undefined);
+            if (barName === "(no name)") {
+                barName = "My MorphicBar";
+            }
             const bar = Bar.newBar(!member, barName);
 
             const createResponse = await communityService.createCommunityBar(this.communityId, bar);
