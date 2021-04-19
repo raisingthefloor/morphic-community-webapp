@@ -15,6 +15,7 @@
               (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
             </p>
           </div>
+          <br/>
           <div>
             <b-link :href="externalLinks.gettingStarted" class="gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
           </div>
@@ -74,7 +75,8 @@
 
   .gettingStarted {
     position: relative;
-    color: black;
+    text-decoration: underline;
+    font-size: 1.1em;
     .b-icon {
       position: absolute;
       right: 100%;
