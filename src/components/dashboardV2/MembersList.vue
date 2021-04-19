@@ -76,6 +76,9 @@
                 size="sm"
       ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
     </div>
+    <div v-if="!anyMembers">
+      <em>{{ $t('MembersList.no-members', {subscription: "+5", maxMembers: 5}) }}</em>
+    </div>
 
 
     <TextInputDialog v-if="invitingMember"
@@ -129,6 +132,9 @@ export default {
             return this.members.filter(m => !m.isCurrent).sort((a, b) => {
                 return a.displayName.localeCompare(b.displayName);
             });
+        },
+        anyMembers: function () {
+            return this.orderedMembers.length > 0;
         }
     },
     data() {
