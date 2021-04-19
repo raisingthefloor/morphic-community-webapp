@@ -7,36 +7,33 @@
         <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
       </b-col>
       <b-col md="5" fluid>
-        <div v-if="members.length > 0" class="info-box pt-3 pb-3 p-2">
-          <h4><b>Welcome to Morphic</b></h4>
-          <b-row style="min-height: 500px">
-            <b-col md="5" class="flex-column">
-              <!-- hints -->
-              <div v-if="members.length > 1">
-                <p class="text-left small">
-                  (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
-                </p>
-              </div>
-              <div id="hints" v-if="showHints">
-                <div pointTo="#MyMorphicBars .addNew">
-                  Want to make a MorphicBar for yourself? Start with "Add a new bar"
-                </div>
-                <div pointTo="#MembersList .addNew">
-                  Do you want to make and manage MorphicBars for other people?
-                  <p class="mt-2">
-                    Start by adding a person.<br/>
-                    Next you can create bars.<br/>
-                    Finally, you can invite the person to download and use Morphic.
-                  </p>
-                </div>
-              </div>
-              <div v-else>
-                <p class="text-left small">Get started by clicking an item in the green menu to the left</p>
-              </div>
-            </b-col>
-            <b-col md="7">
-            </b-col>
-          </b-row>
+        <div v-if="members.length > 0" class="info-box pt-3 pb-3 pl-5">
+          <h1 class="h3">Welcome to Morphic</h1>
+          <!-- hints -->
+          <div>
+            <p class="text-left small">
+              (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
+            </p>
+          </div>
+          <div>
+            <b-link :href="externalLinks.gettingStarted" class="gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
+          </div>
+          <div id="hints" v-if="showHints">
+            <div pointTo="#MyMorphicBars .addNew">
+              Want to make a MorphicBar for yourself? Start with "Add a new bar"
+            </div>
+            <div pointTo="#MembersList .addNew">
+              Do you want to make and manage MorphicBars for other people?
+              <p class="mt-2">
+                Start by adding a person.<br/>
+                Next you can create bars.<br/>
+                Finally, you can invite the person to download and use Morphic.
+              </p>
+            </div>
+          </div>
+          <div v-else>
+            <p class="text-left small">Get started by clicking an item in the green menu to the left</p>
+          </div>
         </div>
         <div v-else id="welcome">
           <div class="text-center pt-5 pb-5 bg-silver rounded">
@@ -58,6 +55,9 @@
   $primary-color: #002957;
   $secondary-color: #84c661;
 
+  h1 {
+    font-weight: bold !important;
+  }
   .desktopDashboard {
     .barPreview {
       min-height: 500px;
@@ -72,9 +72,25 @@
     }
   }
 
+  .gettingStarted {
+    position: relative;
+    color: black;
+    .b-icon {
+      position: absolute;
+      right: 100%;
+      height: 100%;
+    }
+  }
+
   #hints {
+    position: relative;
     font-family: 'Coming Soon', sans-serif;
     font-weight: 600;
+    width: 20em;
+
+    & > * {
+      padding-left: 0.3em;
+    }
   }
 </style>
 
@@ -269,7 +285,7 @@ export default {
                     const virtualElement = {
                         getBoundingClientRect: () => {
                             const rect = target.getBoundingClientRect();
-                            rect.width = this.sidePanel.getBoundingClientRect().right - rect.left + 30;
+                            rect.width = this.sidePanel.getBoundingClientRect().right - rect.left + 40;
                             return rect;
                         }
                     };
@@ -290,7 +306,7 @@ export default {
                                 y: sourceRect.y + 10// sourceRect.height / 2
                             };
                             const targetPoint = {
-                                x: targetRect.x + targetRect.width,
+                                x: targetRect.x + targetRect.width + 5,
                                 y: targetRect.y + targetRect.height / 2 + 2
                             };
 
