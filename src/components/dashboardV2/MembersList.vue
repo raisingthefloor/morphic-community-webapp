@@ -72,7 +72,7 @@
     <div class="">
       <b-button v-b-modal="'addMemberDialog'"
                 variant="success"
-                class="addNewLink"
+                class="addNew"
                 size="sm"
       ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
     </div>
@@ -113,7 +113,7 @@ export default {
         members: Array,
         activeMemberId: String,
         /** @type {Array<GUID>} The members to show expanded */
-        expandedMembers: String,
+        expandedMembers: Array,
         /** @type {Array<BarDetails>} */
         bars: Array,
         activeBarId: String,

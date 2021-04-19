@@ -16,11 +16,12 @@
     <div>
       <b-button variant="success"
                 @click="$emit('newbar', member)"
-                class="addNewLink"
+                class="addNew"
                 size="sm"
                 v-if="showAddButton"
                 :disabled="orderedBars.length > 0"
                 v-t="'BarsList.new-bar_button'" />
+      <em class="d-block">You have no MorphicBars of your own yet.</em>
     </div>
   </div>
 </template>

@@ -14,7 +14,8 @@
       </span>
     </h3>
     <BarsList ref="BarsList"
-              :bars="bars"
+              id="MyMorphicBars"
+              :bars="[]"
               :activeBarId="activeBarId"
               :member="currentMember"
               @newbar="newBar(currentMember)"
@@ -28,6 +29,7 @@
         </span>
       </h3>
       <MembersList ref="MembersList"
+                   id="MembersList"
                    :members="members"
                    :community="community"
                    :activeBarId="activeBarId"
@@ -68,6 +70,7 @@
   }
 
   #SidePanel {
+    min-height: 680px;
     h2, h3, h4, h5 {
       font-weight: bold;
       font-size: 1rem;

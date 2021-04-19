@@ -18,20 +18,16 @@
                 </p>
               </div>
               <div id="hints" v-if="showHints">
-                <div id="BarsHint" ref="BarsHint">
-                  View or make changes to a bar by clicking on its name
+                <div pointTo="#MyMorphicBars .addNew">
+                  Want to make a MorphicBar for yourself? Start with "Add a new bar"
                 </div>
-                <div id="MembersHint" ref="MembersHint">
-                  <div v-if="members.length > 1">
-                    Add a new member
-                  </div>
-                  <div v-else>
-                    Add a new member to your group by clicking the Plus button
-                  </div>
-                </div>
-                <div v-if="members.length > 1" ref="EditMemberHint">
-                  <p>See a member's bar and other detail by clicking them</p>
-                  <p>If you see an exclamation <b-icon icon="exclamation-circle-fill" variant="dark"></b-icon> the member has not yet accepted your invitation</p>
+                <div pointTo="#MembersList .addNew">
+                  Do you want to make and manage MorphicBars for other people?
+                  <p class="mt-2">
+                    Start by adding a person.<br/>
+                    Next you can create bars.<br/>
+                    Finally, you can invite the person to download and use Morphic.
+                  </p>
                 </div>
               </div>
               <div v-else>
@@ -79,9 +75,6 @@
   #hints {
     font-family: 'Coming Soon', sans-serif;
     font-weight: 600;
-    & > div:last-child {
-      padding-top: 20px;
-    }
   }
 </style>
 
@@ -113,7 +106,9 @@ export default {
             showHideHintsText: "Hide hints",
             arrows: [],
             barsHintCss: {},
-            billingInfo: null
+            billingInfo: null,
+            sidePanel: null,
+            hintTimer: null
         };
     },
     computed: {
@@ -151,7 +146,7 @@ export default {
     updated() {
         this.cleanUpArrows();
         // TODO: Find a better way to detect whether the hints are displayed
-        if (this.$refs.BarsHint && this.showHints) {
+        if (this.showHints) {
             this.createArrows();
         }
     },
@@ -250,42 +245,41 @@ export default {
             this.showHideHintsText = this.showHints ? "Hide hints" : "Show hints";
         },
         createArrows: function () {
+            this.sidePanel = document.querySelector("#SidePanel");
 
-            var pairs = [
-                // hint, point to, [point from]
-                [this.$refs.BarsHint, "#SidePanel #BarsList > ul > li:first-child > :first-child"],
-                [this.$refs.MembersHint, "#SidePanel #AddNewMember"],
-                [
-                    this.$refs.EditMemberHint,
-                    "#SidePanel #MembersList ul > li:first-child > :first-child",
-                    this.$refs.EditMemberHint && this.$refs.EditMemberHint.querySelector(":first-child")
-                ]
-            ];
+            const hintElems = this.$el.querySelectorAll("#hints > *");
 
-            const sidePanel = document.querySelector("#SidePanel");
-
-            // Resolve the selectors
-            pairs = pairs.map(p => p.map(ref => (typeof(ref) === "string") ? document.querySelector(ref) : ref));
+            const pairs = [];
+            hintElems.forEach(e => {
+                const pointTo = document.querySelector(e.getAttribute("pointTo"));
+                pairs.push([e, pointTo]);
+            });
 
             pairs.forEach(pair => {
                 const hint = pair[0];
                 const target = pair[1];
                 const arrowFrom = pair[2] || hint;
 
-                const virtualElement = {
-                    getBoundingClientRect() {
-                        const rect = target.getBoundingClientRect();
-                        rect.width = sidePanel.getBoundingClientRect().right - rect.left + 30;
-                        return rect;
-                    }
-                };
-
                 if (!hint || !target) {
                     if (hint) {
                         hint.style.display = "none";
                     }
                 } else {
-                    createPopper(virtualElement, hint, {
+                    hint.style.visibility = "visible";
+                    const virtualElement = {
+                        getBoundingClientRect: () => {
+                            const rect = target.getBoundingClientRect();
+                            rect.width = this.sidePanel.getBoundingClientRect().right - rect.left + 30;
+                            return rect;
+                        }
+                    };
+
+                    const arrow = {
+                        target: virtualElement,
+                        hint: hint
+                    };
+
+                    arrow.popper = createPopper(virtualElement, hint, {
                         placement: "right-start",
                         onFirstUpdate: (state) => {
                             const targetRect = target.getBoundingClientRect();
@@ -293,27 +287,53 @@ export default {
 
                             const sourcePoint = {
                                 x: sourceRect.x - 1,
-                                y: sourceRect.y + sourceRect.height / 2
+                                y: sourceRect.y + 10// sourceRect.height / 2
                             };
                             const targetPoint = {
                                 x: targetRect.x + targetRect.width,
                                 y: targetRect.y + targetRect.height / 2 + 2
                             };
 
-                            const arrow = new ArrowLine(sourcePoint, targetPoint, {
+                            sourcePoint.y += window.scrollY;
+                            targetPoint.y += window.scrollY;
+
+                            arrow.arrowLine = new ArrowLine(sourcePoint, targetPoint, {
                                 curvature: 0.5,
                                 forceDirection: "horizontal"
                             });
+
+                            arrow.target = target;
+                            arrow.targetRect = targetRect;
+
                             this.arrows.push(arrow);
                         }
                     });
                 }
-
             });
+            this.hintTimer = setInterval(this.checkHints, 500);
+        },
+        checkHints: function () {
+            const changed = this.arrows.some(arrow => {
+                const newRect = arrow.target.getBoundingClientRect();
+                return newRect.y !== arrow.targetRect.y;
+            });
+
+            if (changed) {
+                this.cleanUpArrows();
+                this.createArrows();
+            }
         },
         cleanUpArrows: function () {
-            this.arrows.forEach(arrow => arrow.remove());
+            this.arrows.forEach(arrow => {
+                arrow.hint.style.visibility = "hidden";
+                arrow.arrowLine.remove();
+                arrow.popper.destroy();
+            });
             this.arrows = [];
+            if (this.hintTimer) {
+                clearTimeout(this.hintTimer);
+                this.hintTimer = null;
+            }
         },
         loadBilling: function () {
             return billingService.getBillingInfo(this.communityId).then((info) => {
