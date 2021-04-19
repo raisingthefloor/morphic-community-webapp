@@ -178,7 +178,7 @@ const validators = {
         let result;
         try {
             const url = new URL(value);
-            result = url.hostname.match(/(^|\.)zoom\.us$/i);
+            result = url.hostname.match(/(^|[^.]\.)zoom\.us$/i);
         } catch {
             // re-try with the protocol, if it's not there
             if (value.startsWith("https://") || value.startsWith("http://")) {
