@@ -1285,7 +1285,7 @@ export const allButtons = {
             subkind: "meeting",
             label: "Zoom-Web",
             color: "blue",
-            url: "https://zoom.us/",
+            url: "$zoomUrl",
             description: "Join a Zoom meeting with Web Browser"
         }
     }

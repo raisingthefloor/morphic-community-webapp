@@ -107,6 +107,14 @@ export const allParameters = {
         validation: {
             required: "The executable file is required."
         }
+    },
+    zoomUrl: {
+        label: "Meeting link",
+        validation: {
+            required: "Zoom meeting link has not been provided.",
+            url: "Zoom meeting link is not valid url.",
+            zoomUrl: "This url does not look like a zoom meeting link."
+        }
     }
 };
 
@@ -135,7 +143,7 @@ const validators = {
 
     /**
      * Checks if the value is a URL, with or without the protocol prefix.
-     * @param {String} value The defaultApp field value to check.
+     * @param {String} value The field value to check.
      * @return {Boolean} true if the value is a valid url.
      */
     url(value) {
@@ -154,6 +162,26 @@ const validators = {
         }
 
         return result;
+    },
+    /**
+     * Checks if the value looks like a zoom meeting url.
+     *
+     * This just makes sure it's a valid url, and it the hostname ends with zoom.us
+     *
+     * @param {String} value The value.
+     * @return {Boolean} true if the value looks like a zoom meeting link.
+     */
+    zoomUrl(value) {
+        let result;
+        try {
+            const url = new URL(value);
+            result = url.hostname.includes("zoom.us");
+        } catch {
+            result = false;
+        }
+
+        return result;
+
     }
 };
 
