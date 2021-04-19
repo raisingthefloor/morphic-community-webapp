@@ -175,7 +175,7 @@ const validators = {
         let result;
         try {
             const url = new URL(value);
-            result = url.hostname.includes("zoom.us");
+            result = url.hostname.match(/\bzoom\.us$/i);
         } catch {
             result = false;
         }
