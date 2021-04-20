@@ -17,10 +17,10 @@
       <b-form>
         <b-row>
           <b-col md="6">
-            <b-tabs v-model="activeTab" small>
+            <b-tabs v-model="activeTab" small nav-wrapper-class="d-none">
 
               <b-tab v-if="showRelatedTab" :title="groupTabTitle">
-                <br/>
+
                 <ul class="relatedButtons">
                   <li v-for="(item, buttonKey) in relatedButtons"
                       :key="buttonKey"
@@ -42,22 +42,42 @@
               </b-tab>
 
               <b-tab title="Button" :disabled="button.data.isPlaceholder">
-                <br/>
 
                 <!-- The item field, linking to the first tab -->
-                <b-form-group v-if="relatedButtons[button.data.buttonKey]"
+                <b-form-group v-if="showRelated"
                               :label="buttonGroup.editItemField"
                               label-for="barItem_selectOther"
                               >
-                <div class="relatedLink">
-                  <b-button variant="link" @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
-                    <div class="imageWrapper">
-                      <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
-                    </div>{{
-                      relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
-                    }}
-                  </b-button>
-                </div>
+
+                  <div class="relatedSelection">
+                    <b-dropdown variant="light"
+                                id="relatedDropdown"
+                                menu-class=""
+                                boundary="viewport"
+                                @show="relatedDropdown(true)"
+                                @hidden="relatedDropdown(false)"
+                    >
+                      <template #button-content>
+                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
+                        {{
+                          relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
+                        }}
+                      </template>
+
+                      <template v-for="(item, buttonKey) in relatedButtons"
+                                :class="buttonKey === button.data.buttonKey && 'selected'">
+
+                        <b-dropdown-item-button v-if="!item.data.isPlaceholder"
+                                                :key="buttonKey"
+                                                @click="setButton(item)"
+                        >
+                        <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)"
+                               alt="" />{{ item.data.catalogLabel || item.configuration.label }}
+                        </b-dropdown-item-button>
+                    </template>
+
+                    </b-dropdown>
+                  </div>
 
                 </b-form-group>
 
@@ -145,6 +165,19 @@
 </template>
 
 <style lang="scss">
+
+.relatedSelection {
+  .dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
+    position: fixed !important;
+  }
+  button img {
+    margin-right: 0.5em;
+    width: 32px;
+    height: 32px;
+  }
+}
 
 .relatedLink, ul.relatedButtons > li {
   position: relative;
@@ -256,12 +289,17 @@ export default {
             knownFavicons: {},
             // true to select the "Button" tab after a button is selected on the first tab.
             returnToButtonTab: false,
-            fieldChanged: 0
+            fieldChanged: 0,
+
+            relatedDropdownStyle: null
 
         };
     },
 
     computed: {
+        document: function () {
+            return document;
+        },
         /**
          * Gets the icons to be shown in the list.
          * @return {Object<String,String>} The icons to list.
@@ -315,6 +353,11 @@ export default {
          */
         relatedButtons: function () {
             return this.buttonCatalog[this.button.configuration.subkind].items;
+        },
+
+        showRelated: function () {
+            return this.relatedButtons[this.button.data.buttonKey] &&
+                Object.values(this.relatedButtons).filter(item => !item.data.isPlaceholder).length > 1;
         },
 
         nextButton: function () {
@@ -396,6 +439,24 @@ export default {
                     this.dialogClosed(applyChanges);
                 }
             });
+        },
+
+        relatedDropdown: function (shown) {
+
+            if (this.relatedDropdownStyle) {
+                this.relatedDropdownStyle.remove();
+                this.relatedDropdownStyle = null;
+            }
+
+            if (shown) {
+                this.relatedDropdownStyle = document.createElement("style");
+                document.head.appendChild(this.relatedDropdownStyle);
+
+                const button = document.querySelector("#relatedDropdown > .btn");
+                const rect = button.getBoundingClientRect();
+                const styleSheet = this.relatedDropdownStyle.sheet;
+                styleSheet.insertRule(`#relatedDropdown .dropdown-menu { left: ${rect.left}px !important; top: ${rect.bottom}px !important; transform: unset !important }`);
+            }
         },
 
         /**

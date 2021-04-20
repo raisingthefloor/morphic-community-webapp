@@ -162,6 +162,7 @@ export const buttonCatalog = {
     socialMedia: {
         title: "Social Media Sites",
         editTitle: "Social Media Site",
+        editItemField: "Site",
         defaultIcon: undefined,
         more: {
             description: "Create a button to open a social media site"
