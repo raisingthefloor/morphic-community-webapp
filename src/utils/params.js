@@ -494,7 +494,7 @@ export function checkForProblems(button, paramKey, live) {
         const value = button.data.parameters[paramKey];
         if (paramInfo.checks) {
             work = Object.keys(paramInfo.checks).map(key => {
-                const problemKey = `${paramKey}.${key}`;
+                const problemKey = `${paramKey}_${key}`;
 
                 let checkPromise;
                 const lastCheck = button.data.problems[problemKey];
