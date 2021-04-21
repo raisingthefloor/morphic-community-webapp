@@ -144,7 +144,8 @@ export const buttonCatalog = {
     action: {
         title: "Action Buttons",
         editTitle: "Action Button",
-        defaultIcon: undefined
+        defaultIcon: undefined,
+        related: false
     },
     "local-calendar": {
         title: "Calendar - App on Computer",
