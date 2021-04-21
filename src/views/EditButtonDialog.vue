@@ -227,7 +227,10 @@ import { CONFIG } from "@/config/config";
 
 export default {
     name: "EditButtonDialog",
-    props: [],
+    props: {
+        /** @type {BarDetails} */
+        bar: Object
+    },
 
     components: {
         BarItemFields,
@@ -479,7 +482,7 @@ export default {
         removeButton: function () {
             this.showConfirm("Do you want to remove this item from the bar?").then(result => {
                 if (result) {
-                    Bar.removeItem(this.button);
+                    Bar.removeItem(this.selectedItem, this.bar);
                     this.closeDialog(false);
                     this.showMessage("Button removed");
                 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- MODALs: BEGIN -->
-    <EditButtonDialog ref="editDialog" />
+    <EditButtonDialog ref="editDialog" :bar="barDetails" />
 
     <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
