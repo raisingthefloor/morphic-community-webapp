@@ -91,6 +91,7 @@
             <iframe v-if="playingVideo"
                     id="ytplayer" class="player" type="text/html"
                     :src="`https://www.youtube.com/embed/${playingVideo.id}?modestbranding=1&autoplay=1`"
+                    allowfullscreen
                     frameborder="0"></iframe>
           </b-aspect>
           </div>
