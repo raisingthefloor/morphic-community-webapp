@@ -110,17 +110,28 @@
   $secondary-color: #84c661;
 
   .videos {
-    padding-top: 3em;
+    padding-top: 6em;
 
     .videoLink {
-      margin: 5em;
-      font-size: 0.9rem;
+      margin-left: 2em;
+      width: 50%;
       position: relative;
       cursor: pointer;
 
-      .videoPreview img {
-        width: 100%;
-        position: absolute;
+      .videoPreview {
+        position: relative;
+        img {
+          width: 100%;
+          position: absolute;
+          border: 9px solid #999;
+          padding: 3px;
+        }
+      }
+
+      .videoCaption {
+        margin-top: 10px;
+        font-size: 0.8em;
+        color: black;
       }
 
       .playOverlay {
