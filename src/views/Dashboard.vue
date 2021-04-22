@@ -47,16 +47,55 @@
 
         <div v-for="(video) in [{id:'7bhdSFOiJjk',caption:'Making a custom MorphicBar - Basics',length:'4:24'}]"
              :key="video.id"
-              class="videoContainer">
-          <b-aspect aspect="854:480" class="video">
-            <iframe id="ytplayer" type="text/html"
-                    :src="`https://www.youtube.com/embed/${video.id}?modestbranding=1`"
+             @click="playVideo(video)"
+             class="videoLink">
+
+          <b-aspect aspect="854:480" class="videoPreview">
+            <img :src="`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
+                 class=""
+                 alt=""
+            />
+
+            <b-iconstack class="playOverlay">
+              <b-icon icon="circle-fill" class="playOutline mouseOver" scale="1.1" />
+              <b-icon icon="play-circle-fill" class="mouseOut"/>
+              <b-icon icon="play-circle-fill" class="mouseOver"/>
+
+            </b-iconstack>
+          </b-aspect>
+
+          <b-button :id="`PlayVideo-${video.id}`"
+                    class="videoCaption"
+                    variant="link"
+                    v-b-modal="`PlayerDialog-${video.id}`"
+          >
+            {{ video.caption }} ({{video.length}})
+          </b-button>
+
+        </div>
+
+        <b-modal :id="'VideoDialog'"
+                 dialog-class="videoDialog"
+                 :title="playingVideo && playingVideo.caption"
+                 ok-only
+                 button-size="sm"
+                 ok-title="Close"
+        >
+
+          <div style="min-width: 854px !important;">
+          <b-aspect type="iframe"
+
+                   aspect="854:480"
+                    class="videoWrapper"
+          >
+            <iframe v-if="playingVideo"
+                    id="ytplayer" class="player" type="text/html"
+                    :src="`https://www.youtube.com/embed/${playingVideo.id}?modestbranding=1&autoplay=1`"
                     frameborder="0"></iframe>
           </b-aspect>
-          <div class="videoCaption">
-            {{ video.caption }} ({{video.length}})
           </div>
-        </div>
+        </b-modal>
+
 
       </b-col>
       <b-col md="1">
@@ -73,15 +112,63 @@
   .videos {
     padding-top: 3em;
 
-    .videoContainer {
+    .videoLink {
       margin: 5em;
       font-size: 0.9rem;
+      position: relative;
+      cursor: pointer;
+
+      .videoPreview img {
+        width: 100%;
+        position: absolute;
+      }
+
+      .playOverlay {
+        position: absolute;
+
+        height: 40%;
+        width: 40%;
+
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+      }
+
+      .mouseOver, &:hover .mouseOut {
+        display: none;
+      }
+
+      &:hover {
+        .btn-link {
+          text-decoration: underline;
+        }
+        .mouseOver {
+          display: unset;
+        }
+
+        .playOverlay {
+          color: midnightblue;
+        }
+      }
+
+      .playOverlay {
+        color: #666;
+        .playOutline {
+          color: white;
+        }
+      }
     }
+  }
 
-    iframe {
-
-      width:100%;
-      height: 100%;
+  .videoDialog {
+    max-width: unset !important;
+    width: max-content !important;
+    .videoWrapper {
+      .player {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 
@@ -155,7 +242,9 @@ export default {
             barsHintCss: {},
             billingInfo: null,
             sidePanel: null,
-            hintTimer: null
+            hintTimer: null,
+
+            playingVideo: null
         };
     },
     computed: {
@@ -386,6 +475,11 @@ export default {
             return billingService.getBillingInfo(this.communityId).then((info) => {
                 this.billingInfo = info.data;
             });
+        },
+        playVideo: function (video) {
+            this.playingVideo = video;
+            this.$bvModal.show("VideoDialog");
+
         }
     }
 };
