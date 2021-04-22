@@ -6,7 +6,7 @@
       <b-col md="2">
         <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
       </b-col>
-      <b-col md="5" fluid>
+      <b-col md="4" fluid>
         <div v-if="members.length > 0" class="info-box pt-3 pb-3 pl-5">
           <h1 class="h3">Welcome to Morphic</h1>
           <!-- hints -->
@@ -43,7 +43,61 @@
           </div>
         </div>
       </b-col>
-      <b-col md="3">
+      <b-col md="5" class="videos">
+
+        <div v-for="(video) in [{id:'7bhdSFOiJjk',caption:'Making a custom MorphicBar - Basics',length:'4:24'}]"
+             :key="video.id"
+             @click="playVideo(video)"
+             class="videoLink">
+
+          <b-aspect aspect="854:480" class="videoPreview">
+            <img :src="`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
+                 class=""
+                 alt=""
+            />
+
+            <b-iconstack class="playOverlay">
+              <b-icon icon="circle-fill" class="playOutline mouseOver" scale="1.1" />
+              <b-icon icon="play-circle-fill" class="mouseOut"/>
+              <b-icon icon="play-circle-fill" class="mouseOver"/>
+
+            </b-iconstack>
+          </b-aspect>
+
+          <b-button :id="`PlayVideo-${video.id}`"
+                    class="videoCaption"
+                    variant="link"
+                    v-b-modal="`PlayerDialog-${video.id}`"
+          >
+            {{ video.caption }} ({{video.length}})
+          </b-button>
+
+        </div>
+
+        <b-modal :id="'VideoDialog'"
+                 dialog-class="videoDialog"
+                 :title="playingVideo && playingVideo.caption"
+                 ok-only
+                 button-size="sm"
+                 ok-title="Close"
+        >
+
+          <div style="min-width: 854px !important;">
+          <b-aspect type="iframe"
+
+                   aspect="854:480"
+                    class="videoWrapper"
+          >
+            <iframe v-if="playingVideo"
+                    id="ytplayer" class="player" type="text/html"
+                    :src="`https://www.youtube.com/embed/${playingVideo.id}?modestbranding=1&autoplay=1`"
+                    allowfullscreen
+                    frameborder="0"></iframe>
+          </b-aspect>
+          </div>
+        </b-modal>
+
+
       </b-col>
       <b-col md="1">
         <div class="fill-height bg-silver"></div>
@@ -55,6 +109,80 @@
 <style lang="scss">
   $primary-color: #002957;
   $secondary-color: #84c661;
+
+  .videos {
+    padding-top: 6em;
+
+    .videoLink {
+      margin-left: 2em;
+      width: 50%;
+      position: relative;
+      cursor: pointer;
+
+      .videoPreview {
+        position: relative;
+        img {
+          width: 100%;
+          position: absolute;
+          border: 9px solid #999;
+          padding: 3px;
+        }
+      }
+
+      .videoCaption {
+        margin-top: 10px;
+        font-size: 0.8em;
+        color: black;
+      }
+
+      .playOverlay {
+        position: absolute;
+
+        height: 40%;
+        width: 40%;
+
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+      }
+
+      .mouseOver, &:hover .mouseOut {
+        display: none;
+      }
+
+      &:hover {
+        .btn-link {
+          text-decoration: underline;
+        }
+        .mouseOver {
+          display: unset;
+        }
+
+        .playOverlay {
+          color: midnightblue;
+        }
+      }
+
+      .playOverlay {
+        color: #666;
+        .playOutline {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .videoDialog {
+    max-width: unset !important;
+    width: max-content !important;
+    .videoWrapper {
+      .player {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
 
   h1 {
     font-weight: bold !important;
@@ -126,7 +254,9 @@ export default {
             barsHintCss: {},
             billingInfo: null,
             sidePanel: null,
-            hintTimer: null
+            hintTimer: null,
+
+            playingVideo: null
         };
     },
     computed: {
@@ -357,6 +487,11 @@ export default {
             return billingService.getBillingInfo(this.communityId).then((info) => {
                 this.billingInfo = info.data;
             });
+        },
+        playVideo: function (video) {
+            this.playingVideo = video;
+            this.$bvModal.show("VideoDialog");
+
         }
     }
 };
