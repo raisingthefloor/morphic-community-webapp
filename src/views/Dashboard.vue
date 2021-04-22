@@ -80,20 +80,19 @@
                  ok-only
                  button-size="sm"
                  ok-title="Close"
+                 centered
         >
 
-          <div style="min-width: 854px !important;">
-          <b-aspect type="iframe"
-
-                   aspect="854:480"
-                    class="videoWrapper"
-          >
-            <iframe v-if="playingVideo"
-                    id="ytplayer" class="player" type="text/html"
-                    :src="`https://www.youtube.com/embed/${playingVideo.id}?modestbranding=1&autoplay=1`"
-                    allowfullscreen
-                    frameborder="0"></iframe>
-          </b-aspect>
+          <div style="min-width: 1050px !important;">
+            <b-aspect aspect="854:480"
+                      class="videoWrapper"
+            >
+              <iframe v-if="playingVideo"
+                      id="ytplayer" class="player" type="text/html"
+                      :src="`https://www.youtube.com/embed/${playingVideo.id}?modestbranding=1&autoplay=1`"
+                      allowfullscreen
+                      frameborder="0"></iframe>
+            </b-aspect>
           </div>
         </b-modal>
 
@@ -174,6 +173,7 @@
   }
 
   .videoDialog {
+    margin: 0.5rem auto !important;
     max-width: unset !important;
     width: max-content !important;
     .videoWrapper {
@@ -181,6 +181,14 @@
         width: 100%;
         height: 100%;
       }
+    }
+
+
+    .modal-header {
+      padding: 0.2rem 1rem;
+    }
+    .modal-body, .modal-footer {
+      padding: 5px;
     }
   }
 
