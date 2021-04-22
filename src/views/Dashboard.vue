@@ -6,7 +6,7 @@
       <b-col md="2">
         <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
       </b-col>
-      <b-col md="5" fluid>
+      <b-col md="4" fluid>
         <div v-if="members.length > 0" class="info-box pt-3 pb-3 pl-5">
           <h1 class="h3">Welcome to Morphic</h1>
           <!-- hints -->
@@ -43,7 +43,21 @@
           </div>
         </div>
       </b-col>
-      <b-col md="3">
+      <b-col md="5" class="videos">
+
+        <div v-for="(video) in [{id:'7bhdSFOiJjk',caption:'Making a custom MorphicBar - Basics',length:'4:24'}]"
+             :key="video.id"
+              class="videoContainer">
+          <b-aspect aspect="854:480" class="video">
+            <iframe id="ytplayer" type="text/html"
+                    :src="`https://www.youtube.com/embed/${video.id}?modestbranding=1`"
+                    frameborder="0"></iframe>
+          </b-aspect>
+          <div class="videoCaption">
+            {{ video.caption }} ({{video.length}})
+          </div>
+        </div>
+
       </b-col>
       <b-col md="1">
         <div class="fill-height bg-silver"></div>
@@ -55,6 +69,21 @@
 <style lang="scss">
   $primary-color: #002957;
   $secondary-color: #84c661;
+
+  .videos {
+    padding-top: 3em;
+
+    .videoContainer {
+      margin: 5em;
+      font-size: 0.9rem;
+    }
+
+    iframe {
+
+      width:100%;
+      height: 100%;
+    }
+  }
 
   h1 {
     font-weight: bold !important;
