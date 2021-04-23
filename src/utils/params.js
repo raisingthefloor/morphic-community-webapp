@@ -51,6 +51,7 @@ These are then used to create input fields in the editor dialog.
 
 import axios from "axios";
 import { HTTP } from "@/services";
+import * as constants from "@/utils/constants";
 
 /**
  *
@@ -120,6 +121,15 @@ export const allParameters = {
         }
     }
 };
+
+// Add the default apps to the default app drop-down
+for (const [key, app] of Object.entries(constants.defaultApps)) {
+    allParameters.defaultApp.selectOptions.push({
+        value: key,
+        text: app.title
+    });
+};
+
 
 /**
  * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
@@ -660,3 +670,6 @@ export async function checkUrl(url = "", timeout = 10000) {
 
     return togo;
 }
+
+// Set up the parameters for the buttons
+Object.keys(constants.allButtons).forEach(prepareBarItem);

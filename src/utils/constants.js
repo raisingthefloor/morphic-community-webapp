@@ -1,7 +1,6 @@
 import { CONFIG } from "@/config/config";
 import { allButtons as allButtonsSrc } from "./allButtons.js";
 import { allIcons as allIconsSrc } from "./allIcons.js";
-import * as params from "./params.js";
 import * as Bar from "./bar.js";
 
 export const API_URL = CONFIG.API_URL;
@@ -44,13 +43,6 @@ export const defaultApps = {
             default: "browser"
         }
     }
-};
-
-for (const [key, app] of Object.entries(defaultApps)) {
-    params.allParameters.defaultApp.selectOptions.push({
-        value: key,
-        text: app.title
-    });
 };
 
 /**
@@ -303,7 +295,6 @@ Object.keys(allButtons).forEach((buttonKey) => {
     }
 
     defaultIcons[buttonKey] = button.configuration.image_url;
-    params.prepareBarItem(button);
 });
 
 
