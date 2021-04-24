@@ -42,7 +42,11 @@ export default {
         member: Object
     },
     methods: {
-        getBarEditRoute: Bar.getBarEditRoute,
+        getBarEditRoute: function (bar) {
+            return this.member
+                ? Bar.getUserBarEditRoute(this.member, bar.id, this.focusMode)
+                : Bar.getBarEditRoute(bar, this.focusMode);
+        },
         getBars: function () {
             const filter = this.member
                 ? b => b.id === this.member.bar_id && !b.is_shared

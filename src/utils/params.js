@@ -51,6 +51,8 @@ These are then used to create input fields in the editor dialog.
 
 import axios from "axios";
 import { HTTP } from "@/services";
+import * as constants from "@/utils/constants";
+import i18n from "@/i18n/i18n";
 
 /**
  *
@@ -120,6 +122,15 @@ export const allParameters = {
         }
     }
 };
+
+// Add the default apps to the default app drop-down
+for (const [key, app] of Object.entries(constants.defaultApps)) {
+    allParameters.defaultApp.selectOptions.push({
+        value: key,
+        text: app.title
+    });
+};
+
 
 /**
  * Validation routines, referred to by the keys of a parameters `validation` object in `allParameters`.
@@ -370,7 +381,23 @@ export function getValidationError(button, paramKey) {
     let errorMessage;
 
     if (button.data.isPlaceholder) {
-        errorMessage = "An action for this item has not been set.";
+        // If the button is still a place-holder, such as the site not being selected for a social-media button)
+        const catalog = constants.buttonCatalog[button.configuration.subkind];
+        errorMessage = catalog.selectionError;
+
+        if (!errorMessage) {
+            switch (button.kind || catalog.kind) {
+            case "link":
+                errorMessage = i18n.t("Errors.validation.link-missing");
+                break;
+            case "application":
+                errorMessage = i18n.t("Errors.validation.app-missing");
+                break;
+            default:
+                errorMessage = i18n.t("Errors.validation.field-missing", {name: catalog.editItemField});
+                break;
+            }
+        }
     } else if (paramKey === undefined) {
         Object.keys(button.data.parameters).every((paramKey) => {
             errorMessage = getValidationError(button, paramKey);
@@ -660,3 +687,6 @@ export async function checkUrl(url = "", timeout = 10000) {
 
     return togo;
 }
+
+// Set up the parameters for the buttons
+Object.values(constants.allButtons).forEach(prepareBarItem);

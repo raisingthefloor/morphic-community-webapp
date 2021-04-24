@@ -11,119 +11,122 @@
         <b-button @click="ok()"
                   variant="primary"
                   :disabled="button && button.data.isPlaceholder"
-        >{{nextButton ? 'Next' : 'Save'}}</b-button>
+        >Save</b-button>
     </template>
     <div v-if="button">
       <b-form>
         <b-row>
           <b-col md="6">
-            <b-tabs v-model="activeTab" small>
+            <!-- The button fields -->
+            <div>
+              <b-form-group v-if="showRelated"
+                            :label="buttonGroup.editItemField"
+                            label-for="barItem_selectOther"
+                            >
 
-              <b-tab v-if="showRelatedTab" :title="groupTabTitle">
-                <br/>
-                <ul class="relatedButtons">
-                  <li v-for="(item, buttonKey) in relatedButtons"
-                      :key="buttonKey"
-                      :class="buttonKey === button.data.buttonKey && 'selected'"
+                <div class="relatedSelection">
+                  <b-dropdown variant="light"
+                              ref="RelatedDropdown"
+                              id="relatedDropdown"
+                              menu-class=""
+                              boundary="viewport"
+                              @show="relatedDropdown(true)"
+                              @hidden="relatedDropdown(false)"
+                  >
+                    <template #button-content>
+                      <template v-if="!button.data.isPlaceholder">
+                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
+                        {{
+                          relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
+                        }}
+                      </template>
+                      <template v-else>
+                        {{selectionText}}
+                      </template>
+                    </template>
+
+
+                    <template v-for="(item, buttonKey) in relatedButtons"
+                              :class="buttonKey === button.data.buttonKey && 'selected'">
+
+                      <b-dropdown-item-button v-if="!item.data.isPlaceholder"
+                                              :key="buttonKey"
+                                              @click="setButton(item)"
                       >
-                    <b-link v-if="!item.data.isPlaceholder"
-                            :style="{
-                              color: (buttonKey === button.data.buttonKey) ? 'white' : (item.configuration.color || colors.blue),
-                              'background-color': (buttonKey === button.data.buttonKey) ? (item.configuration.color || colors.blue) : ''
-                            }"
-                            class="buttonCatalogEntry editRelatedItem"
-                            @click="setButton(item)">
-                      <div class="imageWrapper">
-                        <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)" :alt="item.configuration.label + ' logo'" />
-                      </div>{{ item.data.catalogLabel || item.configuration.label }}
-                    </b-link>
-                  </li>
-                </ul>
-              </b-tab>
+                      <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)"
+                             alt="" />{{ item.data.catalogLabel || item.configuration.label }}
+                      </b-dropdown-item-button>
+                  </template>
 
-              <b-tab title="Button" :disabled="button.data.isPlaceholder">
-                <br/>
-
-                <!-- The item field, linking to the first tab -->
-                <b-form-group v-if="relatedButtons[button.data.buttonKey]"
-                              :label="buttonGroup.editItemField"
-                              label-for="barItem_selectOther"
-                              >
-                <div class="relatedLink">
-                  <b-button variant="link" @click="returnToButtonTab = true; activeTab = 0" class="editRelatedItem">
-                    <div class="imageWrapper">
-                      <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
-                    </div>{{
-                      relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
-                    }}
-                  </b-button>
+                  </b-dropdown>
                 </div>
 
-                </b-form-group>
+              </b-form-group>
 
-                <BarItemFields v-if="!!button" :bar-item="button"/>
+              <BarItemFields v-if="!!button"
+                             :bar-item="button"
+                             :autofocus="!showRelated && !button.data.isPlaceholder"/>
 
-                <div class="bg-silver rounded p-3">
-                  <p v-if="showExtra" class="text-right small mb-0">
-                    (<b-link @click="showExtra = false">Hide</b-link>)
-                  </p>
-                  <p v-else class="small">
-                    Optional: <b-link @click="showExtra = true">Customize the button (color &amp; picture)</b-link>
-                  </p>
-                  <div v-if="showExtra">
-                    <h6><b>Color for button</b></h6>
-                    <div class="bg-white rounded p-3 mb-4">
+              <div class="bg-silver rounded p-3">
+                <p v-if="showExtra" class="text-right small mb-0">
+                  (<b-link @click="showExtra = false">Hide</b-link>)
+                </p>
+                <p v-else class="small">
+                  Optional: <b-link @click="showExtra = true">Customize the button (color &amp; picture)</b-link>
+                </p>
+                <div v-if="showExtra">
+                  <h6><b>Color for button</b></h6>
+                  <div class="bg-white rounded p-3 mb-4">
+                    <div
+                            v-for="(hex, name) in colors"
+                            :key="name"
+                            @click="changeColor(hex)"
+                            :title="name"
+                            :class="{ active: (button.configuration.color || colors.blue) === hex }"
+                            class="colorBoxHolder"
+                    >
+                      <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
+                    </div>
+                  </div>
+
+                  <h6><b>Picture for button</b></h6>
+                  <div class="bg-white rounded p-3 compactIconHolder">
+                    <!-- no image -->
+                    <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
                       <div
-                              v-for="(hex, name) in colors"
-                              :key="name"
-                              @click="changeColor(hex)"
-                              :title="name"
-                              :class="{ active: (button.configuration.color || colors.blue) === hex }"
-                              class="colorBoxHolder"
+                              @click="changeIcon('')"
+                              :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
+                              class="iconBox"
                       >
-                        <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
+                        <p>No image</p>
                       </div>
                     </div>
 
-                    <h6><b>Picture for button</b></h6>
-                    <div class="bg-white rounded p-3 compactIconHolder">
-                      <!-- no image -->
-                      <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
-                        <div
-                                @click="changeIcon('')"
-                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
-                                class="iconBox"
-                        >
-                          <p>No image</p>
-                        </div>
-                      </div>
-
-                      <!-- favicon -->
-                      <div v-if="buttonFavicon" class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
-                        <div
-                                @click="changeIcon('$favicon')"
-                                :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
-                                class="iconBox"
-                        >
-                          <b-img :src="buttonFavicon" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
-                        </div>
-                      </div>
-
-                      <div v-for="(filename, icon) in listedIcons"
-                           :key="icon"
-                           @click="changeIcon(icon)"
-                           :class="{ active: button.configuration.image_url === icon }"
-                           class="iconBoxHolder"
+                    <!-- favicon -->
+                    <div v-if="buttonFavicon" class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
+                      <div
+                              @click="changeIcon('$favicon')"
+                              :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
+                              class="iconBox"
                       >
-                        <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
-                          <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
-                        </div>
+                        <b-img :src="buttonFavicon" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
+                      </div>
+                    </div>
+
+                    <div v-for="(filename, icon) in listedIcons"
+                         :key="icon"
+                         @click="changeIcon(icon)"
+                         :class="{ active: button.configuration.image_url === icon }"
+                         class="iconBoxHolder"
+                    >
+                      <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
+                        <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
                       </div>
                     </div>
                   </div>
                 </div>
-              </b-tab>
-            </b-tabs>
+              </div>
+            </div>
           </b-col>
 
           <b-col md="6">
@@ -145,6 +148,19 @@
 </template>
 
 <style lang="scss">
+
+.relatedSelection {
+  .dropdown-menu {
+    max-height: 400px;
+    overflow-y: auto;
+    position: fixed !important;
+  }
+  button img {
+    margin-right: 0.5em;
+    width: 32px;
+    height: 32px;
+  }
+}
 
 .relatedLink, ul.relatedButtons > li {
   position: relative;
@@ -211,7 +227,10 @@ import { CONFIG } from "@/config/config";
 
 export default {
     name: "EditButtonDialog",
-    props: [],
+    props: {
+        /** @type {BarDetails} */
+        bar: Object
+    },
 
     components: {
         BarItemFields,
@@ -242,11 +261,7 @@ export default {
             buttonGroup: undefined,
 
             dialogTitle: "Edit button",
-            groupTabTitle: "Others",
-            showGroupTab: false,
 
-            // Index of the active tab
-            activeTab: 1,
             // url for the favicon, if available
             buttonFavicon: null,
             /**
@@ -254,14 +269,18 @@ export default {
              * @type {Object<String,Bool>}
              */
             knownFavicons: {},
-            // true to select the "Button" tab after a button is selected on the first tab.
-            returnToButtonTab: false,
-            fieldChanged: 0
+
+            fieldChanged: 0,
+
+            relatedDropdownStyle: null
 
         };
     },
 
     computed: {
+        document: function () {
+            return document;
+        },
         /**
          * Gets the icons to be shown in the list.
          * @return {Object<String,String>} The icons to list.
@@ -317,11 +336,33 @@ export default {
             return this.buttonCatalog[this.button.configuration.subkind].items;
         },
 
-        nextButton: function () {
-            return this.activeTab === 0 && this.showRelatedTab;
+        showRelated: function () {
+            return this.buttonGroup.related &&
+                Object.values(this.relatedButtons).filter(item => !item.data.isPlaceholder).length > 1;
         },
-        showRelatedTab: function () {
-            return this.buttonGroup && this.buttonGroup.related;
+
+        /**
+         * Get the text for the site/app drop-down if nothing is selected
+         * @return {String} The text to display on the drop-down.
+         */
+        selectionText: function () {
+            let text;
+            if (this.buttonGroup.selectionText) {
+                text = this.buttonGroup.selectionText;
+            } else {
+                switch (this.button.kind || this.buttonGroup.kind) {
+                case "link":
+                    text = "Choose a site";
+                    break;
+                case "application":
+                    text = "Choose an application";
+                    break;
+                default:
+                    text = "Choose an action";
+                    break;
+                }
+            }
+            return text;
         }
     },
 
@@ -342,16 +383,12 @@ export default {
         },
 
         /**
-         * Called when the OK button is clicked, to activate the button tab, or apply the changes.
+         * Called when the OK button is clicked, to apply the changes.
          * @param {Event} e The event object.
          */
         okClicked: function (e) {
             e.preventDefault();
-            if (this.siteTabActive || this.nextButton) {
-                this.activeTab = 1;
-            } else {
-                this.closeDialog(true);
-            }
+            this.closeDialog(true);
         },
 
         /**
@@ -398,6 +435,24 @@ export default {
             });
         },
 
+        relatedDropdown: function (shown) {
+
+            if (this.relatedDropdownStyle) {
+                this.relatedDropdownStyle.remove();
+                this.relatedDropdownStyle = null;
+            }
+
+            if (shown) {
+                this.relatedDropdownStyle = document.createElement("style");
+                document.head.appendChild(this.relatedDropdownStyle);
+
+                const button = document.querySelector("#relatedDropdown > .btn");
+                const rect = button.getBoundingClientRect();
+                const styleSheet = this.relatedDropdownStyle.sheet;
+                styleSheet.insertRule(`#relatedDropdown .dropdown-menu { left: ${rect.left}px !important; top: ${rect.bottom}px !important; transform: unset !important }`);
+            }
+        },
+
         /**
          * Shows a message of problems.
          * @return {Promise<Boolean>} true to continue with saving.
@@ -416,18 +471,25 @@ export default {
 
             this.buttonGroup = buttonCatalog[this.button.configuration.subkind];
             this.dialogTitle = this.buttonGroup.editTitle;
-            this.groupTabTitle = this.buttonGroup.editGroupTab;
 
-            this.activeTab = this.button.data.isPlaceholder ? 0 : 1;
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
+
+
+            setTimeout(() => {
+                // The drop-down doesn't support autofocus.
+                if (this.showRelated && this.button.data.isPlaceholder) {
+                    document.querySelector("#relatedDropdown button").focus();
+                }
+            }, 10);
+
             return new Promise((resolve) => {
                 this.dialogClosed = resolve;
             });
         },
 
         /**
-         * When a button in the site tab is clicked, apply its content to the button being edited.
+         * When a button in the related items drop-down tab is clicked, apply its content to the button being edited.
          * @param {BarItem} button The button in the catalog.
          */
         setButton: function (button) {
@@ -437,10 +499,6 @@ export default {
             delete this.button.data.catalogLabel;
             delete this.button.is_primary;
             params.setInitial(this.button);
-            if (this.returnToButtonTab) {
-                this.returnToButtonTab = false;
-                this.activeTab = 1;
-            }
         },
 
         /**
@@ -449,7 +507,7 @@ export default {
         removeButton: function () {
             this.showConfirm("Do you want to remove this item from the bar?").then(result => {
                 if (result) {
-                    Bar.removeItem(this.button);
+                    Bar.removeItem(this.selectedItem, this.bar);
                     this.closeDialog(false);
                     this.showMessage("Button removed");
                 }
