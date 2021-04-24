@@ -123,7 +123,7 @@ export const buttonCatalog = {
     call: {
         title: "Call a Person",
         editTitle: undefined,
-        editGroupTab: "Call Apps",
+        selectionText: "Choose an Application",
         editItemField: "Call via",
         defaultIcon: undefined,
         items: ["skype_app"]
@@ -131,6 +131,8 @@ export const buttonCatalog = {
     meeting: {
         title: "Meeting Room",
         editTitle: "Meeting App",
+        selectionText: "Choose an Application",
+        selectionError: "The meeting application to open has not been chosen.",
         defaultIcon: "comments"
     },
     action: {
@@ -148,6 +150,7 @@ export const buttonCatalog = {
         title: "Calendar - Website",
         editTitle: "Calendar Website",
         defaultIcon: "calendar$calendar",
+        selectionText: "Choose an Application",
         more: {
             description: "Create a button to open a calendar site"
         }
@@ -218,8 +221,7 @@ export const buttonCatalog = {
         title: "Local Apps",
         hidden: true,
         editTitle: "Start an Application",
-        editItemField: "App",
-        editGroupTab: "Apps"
+        editItemField: "App"
     }
 };
 
@@ -363,8 +365,8 @@ Object.keys(buttonCatalog).forEach(key => {
     if (!group.editItemField) {
         group.editItemField = group.editTitle;
     }
-    if (!group.editGroupTab) {
-        group.editGroupTab = (group.editItemField || group.editTitle) + "s";
+    if (!group.selectionText) {
+        group.selectionText = "Choose a site";
     }
 
     if (expander) {

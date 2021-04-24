@@ -34,14 +34,14 @@
                               @hidden="relatedDropdown(false)"
                   >
                     <template #button-content>
-                      <template v-if="relatedButtons[button.data.buttonKey]">
+                      <template v-if="!button.data.isPlaceholder">
                         <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
                         {{
                           relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
                         }}
                       </template>
                       <template v-else>
-                        Select an item from the list.
+                        {{buttonGroup.selectionText}}
                       </template>
                     </template>
 
@@ -65,7 +65,7 @@
 
               <BarItemFields v-if="!!button"
                              :bar-item="button"
-                             :autofocus="!!relatedButtons[button.data.buttonKey]"/>
+                             :autofocus="!showRelated && !button.data.isPlaceholder"/>
 
               <div class="bg-silver rounded p-3">
                 <p v-if="showExtra" class="text-right small mb-0">
@@ -453,7 +453,8 @@ export default {
 
 
             setTimeout(() => {
-                if (!this.relatedButtons[this.button.data.buttonKey]) {
+                // The drop-down doesn't support autofocus.
+                if (this.showRelated && this.button.data.isPlaceholder) {
                     document.querySelector("#relatedDropdown button").focus();
                 }
             }, 10);
