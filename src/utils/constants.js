@@ -365,9 +365,6 @@ Object.keys(buttonCatalog).forEach(key => {
     if (!group.editItemField) {
         group.editItemField = group.editTitle;
     }
-    if (!group.selectionText) {
-        group.selectionText = "Choose a site";
-    }
 
     if (expander) {
         expander.data.catalogLabel = group.expanderTitle || `Other ${group.editTitle}s...`;

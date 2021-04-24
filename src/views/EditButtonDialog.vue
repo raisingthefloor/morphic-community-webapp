@@ -41,7 +41,7 @@
                         }}
                       </template>
                       <template v-else>
-                        {{buttonGroup.selectionText}}
+                        {{selectionText}}
                       </template>
                     </template>
 
@@ -339,6 +339,30 @@ export default {
         showRelated: function () {
             return this.buttonGroup.related &&
                 Object.values(this.relatedButtons).filter(item => !item.data.isPlaceholder).length > 1;
+        },
+
+        /**
+         * Get the text for the site/app drop-down if nothing is selected
+         * @return {String} The text to display on the drop-down.
+         */
+        selectionText: function () {
+            let text;
+            if (this.buttonGroup.selectionText) {
+                text = this.buttonGroup.selectionText;
+            } else {
+                switch (this.button.kind || this.buttonGroup.kind) {
+                case "link":
+                    text = "Choose a site";
+                    break;
+                case "application":
+                    text = "Choose an application";
+                    break;
+                default:
+                    text = "Choose an action";
+                    break;
+                }
+            }
+            return text;
         }
     },
 
