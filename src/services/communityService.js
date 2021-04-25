@@ -1,5 +1,6 @@
 import { HTTP } from "@/services/index";
 import * as Bar from "@/utils/bar";
+import i18n from "@/i18n/i18n";
 
 /**
  * @typedef {String} GUID
@@ -281,6 +282,7 @@ function makeMember(member, currentUserId) {
     var userId = currentUserId || localStorage.getItem("userId");
     const noName = "(no name)";
     member.isCurrent = userId && member.userId === userId;
+
     Object.defineProperty(member, "fullName", {
         get() {
             return !this.first_name && !this.last_name
@@ -288,9 +290,25 @@ function makeMember(member, currentUserId) {
                 : `${this.first_name || ""} ${this.last_name || ""}`.trim();
         }
     });
+
     Object.defineProperty(member, "displayName", {
         get() {
-            return this.isCurrent ? `${this.fullName} (You)` : this.fullName;
+            let togo;
+            if (this.isCurrent) {
+                togo = this.fullName === noName
+                    ? "You"
+                    : `${this.fullName} (You)`;
+            } else {
+                togo = this.fullName;
+            }
+            return togo;
+        }
+    });
+
+    Object.defineProperty(member, "stateText", {
+        get() {
+            const key = `General.member-state.${this.state}`;
+            return i18n.t(key);
         }
     });
 }

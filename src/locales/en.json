@@ -1,4 +1,11 @@
 {
+  "General": {
+    "member-state": {
+      "active": "Active",
+      "invited": "Invited",
+      "uninvited": "Uninvited"
+    }
+  },
   "Errors": {
     "generic-server-error": "Server error: {message}",
     "generic-title": "Unable to {action}",
