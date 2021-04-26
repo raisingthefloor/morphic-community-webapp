@@ -117,6 +117,7 @@ export const buttonCatalog = {
     make: {
         title: "Make a button",
         editTitle: "Custom Button",
+        allowReselection: true,
         defaultIcon: undefined,
         related: false
     },
@@ -221,7 +222,8 @@ export const buttonCatalog = {
         title: "Local Apps",
         hidden: true,
         editTitle: "Start an Application",
-        editItemField: "App"
+        editItemField: "App",
+        allowReselection: true
     }
 };
 

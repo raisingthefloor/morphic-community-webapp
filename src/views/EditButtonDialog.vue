@@ -25,7 +25,9 @@
                             >
 
                 <div class="relatedSelection">
-                  <b-dropdown variant="light"
+
+                  <b-dropdown v-if="buttonGroup.allowReselection || wasPlaceholder"
+                              variant="light"
                               ref="RelatedDropdown"
                               id="relatedDropdown"
                               menu-class=""
@@ -59,6 +61,12 @@
                   </template>
 
                   </b-dropdown>
+                  <template v-else>
+                    <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
+                    {{
+                      relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
+                    }}
+                  </template>
                 </div>
 
               </b-form-group>
@@ -155,7 +163,7 @@
     overflow-y: auto;
     position: fixed !important;
   }
-  button img {
+  img {
     margin-right: 0.5em;
     width: 32px;
     height: 32px;
@@ -272,7 +280,10 @@ export default {
 
             fieldChanged: 0,
 
-            relatedDropdownStyle: null
+            relatedDropdownStyle: null,
+
+            /** @type {Boolean} true if the bar item was a placeholder when it was opened */
+            wasPlaceholder: false
 
         };
     },
@@ -468,6 +479,7 @@ export default {
         showDialog: function (selectedItem) {
             this.selectedItem = selectedItem;
             this.button = JSON.parse(JSON.stringify(this.selectedItem));
+            this.wasPlaceholder = this.button.data.isPlaceholder;
 
             this.buttonGroup = buttonCatalog[this.button.configuration.subkind];
             this.dialogTitle = this.buttonGroup.editTitle;
