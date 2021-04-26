@@ -591,12 +591,13 @@ export function checkForProblems(button, paramKey, live) {
 
 /**
  * Checks if a url is working.
- * @param {String} url The url
+ * @param {String} urlToCheck The url
  * @param {Number} [timeout] milliseconds to wait [default: 10000].
  * @return {Promise<CheckResult>} Resolves when done.
  */
-export async function checkUrl(url = "", timeout = 10000) {
+export async function checkUrl(urlToCheck = "", timeout = 10000) {
     let togo;
+    const url = urlToCheck.trim();
 
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
         // Try https
@@ -669,7 +670,9 @@ export async function checkUrl(url = "", timeout = 10000) {
             };
 
             togo = client.head(requestUrl, req).then(value => {
-                return {};
+                return {
+                    newValue: url !== urlToCheck ? url : undefined
+                };
             }).catch(reason => {
                 reason.handled = true;
                 return {
