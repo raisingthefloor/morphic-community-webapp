@@ -16,6 +16,7 @@
  * @property {String} editItemField The field of the item, in the edit dialog.
  * @property {String} selectionText Text for the drop-down field when no item is selected
  * @property {String} selectionError Error message if an item has not been selected.
+ * @property {Boolean} allowReselection true to allow the app/link to be changed after it was created.
  * @property {String} kind The kind of all items (undefined if any differ)
  * @property {Boolean} related True if the items are related (shows the group tab in the edit dialog)
  * @property {Boolean} hasSecondary True there are secondary items in the group (item.is_primary is false)
