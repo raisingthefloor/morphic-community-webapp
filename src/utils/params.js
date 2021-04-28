@@ -625,11 +625,28 @@ export async function checkUrl(urlToCheck = "", timeout = 10000) {
     } else {
         let urlParsed;
         let error;
+        let isKnown;
+
         try {
             urlParsed = new URL(url);
             if (!urlParsed || (urlParsed.protocol !== "https:" && urlParsed.protocol !== "http:")) {
                 error = "Link is not a website address";
             }
+
+            // See if the link is already in the button catalog - assume these to be always working.
+            isKnown = Object.values(constants.allButtons).some((b) => {
+                let result;
+                if (b.configuration.url?.includes(urlParsed.hostname)) {
+                    const u = new URL(b.configuration.url);
+                    result = (u.hostname === urlParsed.hostname || u.hostname === `www.${urlParsed.hostname}`) && u.pathname === urlParsed.pathname;
+                }
+                return result;
+            });
+
+            if (isKnown) {
+                togo = {};
+            }
+
         } catch {
             error = "Link does not look valid";
         }
@@ -640,7 +657,7 @@ export async function checkUrl(urlToCheck = "", timeout = 10000) {
                 alert: "Broken link",
                 message: error
             });
-        } else {
+        } else if (!isKnown) {
             const cancelSource = axios.CancelToken.source();
 
             let requestUrl;
