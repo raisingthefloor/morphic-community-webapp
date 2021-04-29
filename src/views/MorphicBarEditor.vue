@@ -2,6 +2,7 @@
   <div>
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" />
+    <InviteMemberDialog id="inviteMemberDialog" :member="memberDetails"/>
 
     <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
@@ -11,12 +12,6 @@
     </b-modal>
     <b-modal id="barDeleteConfirm" @ok="deleteBar" title="Delete Bar" footer-bg-variant="light" ok-title="Delete">
       <p class="my-4">Please confirm the deletion of this bar?</p>
-    </b-modal>
-    <b-modal id="sendEmailInvitationModal" :ok-disabled="!invitationEmail.match('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')" @ok="sendInvite" title="Enter email address for invitation" footer-bg-variant="light" ok-title="Send Invitation">
-      <p class="my-4"></p>
-      <b-form-group :label="'Please enter email address for '+this.memberDetails.first_name+' '+this.memberDetails.last_name" label-for="email">
-        <b-form-input v-model="invitationEmail" id="email" placeholder="myemail@mail.com" class="mb-2"></b-form-input>
-      </b-form-group>
     </b-modal>
 
     <b-modal id="unsavedChanges" title="Unsaved Changes">
@@ -104,11 +99,11 @@
 
                       <!-- member's own bar -->
                       <ul v-if="activeMemberId" class="list-unstyled">
-                        <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Group Manager</b-link></li>
-                        <li v-else><b-link v-b-modal.roleChangeConfirm>Remove group manager role from member</b-link></li>
-                        <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
-                        <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
-                        <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
+                        <li v-if="memberDetails.role === 'member'"><b-button variant="link" v-b-modal.roleChangeConfirm>Make member a Group Manager</b-button></li>
+                        <li v-else><b-button variant="link" v-b-modal.roleChangeConfirm>Remove group manager role from member</b-button></li>
+                        <li><b-button variant="link" v-b-modal.deleteConfirm class="text-danger">Delete member</b-button></li>
+
+                        <li v-if="!memberDetails.isCurrent"><b-button variant="link" v-b-modal="'inviteMemberDialog'">{{ memberDetails.state === 'uninvited' ? "Send Invitation" : "Re-invite member" }}</b-button></li>
                       </ul>
 
                       <!-- community bar -->
@@ -153,7 +148,7 @@
 
             <div id="EditorActions">
               <b-button variant="outline-dark"
-                        @click="copyBar"
+                        v-b-modal="copyBarDialog"
                 >Copy bar from...</b-button>
 
               <b-button variant="outline-dark"
@@ -905,10 +900,12 @@ import * as search from "@/utils/search";
 import EditButtonDialog from "@/views/EditButtonDialog";
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
 import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
+import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        InviteMemberDialog,
         TextInputDialog,
         BarItemLink,
         EditButtonDialog,
@@ -1033,18 +1030,6 @@ export default {
             const index = itemList.findIndex(x => compareObjects(x, item));
             itemList.splice(index, 1);
             this.onBarChanged();
-        },
-
-        getEmailAndSendInvite() {
-            this.invitationEmail = "";
-            this.$bvModal.show("sendEmailInvitationModal");
-        },
-        sendInvite() {
-            if (this.invitationEmail) {
-                const communityId = this.$store.getters.communityId;
-                inviteCommunityMember(communityId, this.memberDetails.id, this.invitationEmail);
-                this.memberDetails.state = "invited";
-            }
         },
 
         loadAllData: function () {

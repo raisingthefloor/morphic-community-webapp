@@ -86,6 +86,10 @@
   },
   "Home": {
   },
+  "InviteMemberDialog": {
+    "email_prompt": "Please enter the email address for {name}",
+    "invite-member_title": "Invite {name}"
+  },
   "MemberEditor":  {
   },
   "MemberInvite": {
@@ -94,10 +98,8 @@
     "add-bar_button": "Add a new bar",
     "add-member_button": "Add a person",
     "collapse-all": "Collapse all",
-    "email_prompt": "Please enter the email address for {name}",
     "expand-all": "Expand all",
     "invitation-not-accepted": "Not accepted their invitation.",
-    "invite-member_title": "Invite {name}",
     "invite_button": "Invite Person",
     "no-members": "Create and manage MorphicBars for others! Your {subscription} Morphic subscription allows you to invite {maxMembers} people to your account.",
     "not-invited": "Not yet invited. You can send them an invitation.",
