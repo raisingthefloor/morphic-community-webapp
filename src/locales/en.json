@@ -18,6 +18,11 @@
     "http": {
       "404": "Unable to access to the server. Please try again later.",
       "500": "There is a problem with the server. Please try again later."
+    },
+    "validation": {
+      "app-missing": "The application to open has not been chosen.",
+      "field-missing": "A required field is missing: {name}.",
+      "link-missing": "The site to open has not been chosen."
     }
   },
   "App": {

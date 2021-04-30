@@ -19,7 +19,7 @@
                      v-model="barItem.data.parameters[paramKey]"
                      :options="allParameters[paramKey].selectOptions"
                      :state="validationStates[paramKey]"
-                     :autofocus="!index"
+                     :autofocus="autofocus && !index"
                      :disabled="!allParameters[paramKey].isEnabled(barItem)"
                      v-bind="allParameters[paramKey].attrs"
                      @blur="validate(paramKey)"
@@ -69,7 +69,9 @@ export default {
     components: {},
     props: {
         /** @type {BarItem} */
-        barItem: Object
+        barItem: Object,
+        // Focus the first field
+        autofocus: Boolean
     },
     data() {
         const states = {};

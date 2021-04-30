@@ -1,7 +1,6 @@
 import { CONFIG } from "@/config/config";
 import { allButtons as allButtonsSrc } from "./allButtons.js";
 import { allIcons as allIconsSrc } from "./allIcons.js";
-import * as params from "./params.js";
 import * as Bar from "./bar.js";
 
 export const API_URL = CONFIG.API_URL;
@@ -44,13 +43,6 @@ export const defaultApps = {
             default: "browser"
         }
     }
-};
-
-for (const [key, app] of Object.entries(defaultApps)) {
-    params.allParameters.defaultApp.selectOptions.push({
-        value: key,
-        text: app.title
-    });
 };
 
 /**
@@ -125,13 +117,14 @@ export const buttonCatalog = {
     make: {
         title: "Make a button",
         editTitle: "Custom Button",
+        allowReselection: true,
         defaultIcon: undefined,
         related: false
     },
     call: {
         title: "Call a Person",
         editTitle: undefined,
-        editGroupTab: "Call Apps",
+        selectionText: "Choose an Application",
         editItemField: "Call via",
         defaultIcon: undefined,
         items: ["skype_app"]
@@ -139,12 +132,15 @@ export const buttonCatalog = {
     meeting: {
         title: "Meeting Room",
         editTitle: "Meeting App",
+        selectionText: "Choose an Application",
+        selectionError: "The meeting application to open has not been chosen.",
         defaultIcon: "comments"
     },
     action: {
         title: "Action Buttons",
         editTitle: "Action Button",
-        defaultIcon: undefined
+        defaultIcon: undefined,
+        related: false
     },
     "local-calendar": {
         title: "Calendar - App on Computer",
@@ -155,6 +151,7 @@ export const buttonCatalog = {
         title: "Calendar - Website",
         editTitle: "Calendar Website",
         defaultIcon: "calendar$calendar",
+        selectionText: "Choose an Application",
         more: {
             description: "Create a button to open a calendar site"
         }
@@ -162,6 +159,7 @@ export const buttonCatalog = {
     socialMedia: {
         title: "Social Media Sites",
         editTitle: "Social Media Site",
+        editItemField: "Site",
         defaultIcon: undefined,
         more: {
             description: "Create a button to open a social media site"
@@ -225,7 +223,7 @@ export const buttonCatalog = {
         hidden: true,
         editTitle: "Start an Application",
         editItemField: "App",
-        editGroupTab: "Apps"
+        allowReselection: true
     }
 };
 
@@ -301,7 +299,6 @@ Object.keys(allButtons).forEach((buttonKey) => {
     }
 
     defaultIcons[buttonKey] = button.configuration.image_url;
-    params.prepareBarItem(button);
 });
 
 
@@ -369,9 +366,6 @@ Object.keys(buttonCatalog).forEach(key => {
     }
     if (!group.editItemField) {
         group.editItemField = group.editTitle;
-    }
-    if (!group.editGroupTab) {
-        group.editGroupTab = (group.editItemField || group.editTitle) + "s";
     }
 
     if (expander) {
