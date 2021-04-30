@@ -633,16 +633,6 @@ export async function checkUrl(urlToCheck = "", timeout = 10000) {
                 error = "Link is not a website address";
             }
 
-            // See if the link is already in the button catalog - assume these to be always working.
-            isKnown = Object.values(constants.allButtons).some((b) => {
-                let result;
-                if (b.configuration.url?.includes(urlParsed.hostname)) {
-                    const u = new URL(b.configuration.url);
-                    result = (u.hostname === urlParsed.hostname || u.hostname === `www.${urlParsed.hostname}`) && u.pathname === urlParsed.pathname;
-                }
-                return result;
-            });
-
             if (isKnown) {
                 togo = {};
             }
