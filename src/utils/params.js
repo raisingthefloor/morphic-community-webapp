@@ -625,18 +625,12 @@ export async function checkUrl(urlToCheck = "", timeout = 10000) {
     } else {
         let urlParsed;
         let error;
-        let isKnown;
 
         try {
             urlParsed = new URL(url);
             if (!urlParsed || (urlParsed.protocol !== "https:" && urlParsed.protocol !== "http:")) {
                 error = "Link is not a website address";
             }
-
-            if (isKnown) {
-                togo = {};
-            }
-
         } catch {
             error = "Link does not look valid";
         }
@@ -647,7 +641,7 @@ export async function checkUrl(urlToCheck = "", timeout = 10000) {
                 alert: "Broken link",
                 message: error
             });
-        } else if (!isKnown) {
+        } else {
             const cancelSource = axios.CancelToken.source();
 
             let requestUrl;
