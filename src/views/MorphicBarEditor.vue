@@ -519,7 +519,12 @@
   #preview-holder.desktop {
     width: 100%;
     height: 600px;
+    position: relative;
     display: flex;
+
+    //noinspection CssUnknownTarget
+    background: url(/img/background-editor.png);
+
     margin-top: 0 !important;
 
     .desktop-portion {
@@ -552,6 +557,10 @@
         }
 
       }
+    }
+
+    .preview-bar {
+      padding-bottom: 5rem;
     }
 
     #preview-bar {
@@ -623,16 +632,33 @@
         text-align: center;
         width: 120px;
         padding: 15px 0 15px 0;
+        img {
+          width: 3rem;
+          height: 3rem;
+        }
       }
 
-      .openDrawerIconHolder > span {
+      .openDrawerIconHolder {
         cursor: pointer;
+        & > span {
+          cursor: pointer;
+        }
+        .b-icon {
+          // margin-left: -19px;
+          right: 104px;
+          font-size: 2em;
+          position: absolute;
+          bottom: 25px;
+          background: black;
+          color: white;
+          border-radius: 100%;
+          border: 1px solid black;
+        }
       }
     }
   }
 
   #buttonsPanel {
-
     padding: 0.5rem;
 
     .catalogSearch {

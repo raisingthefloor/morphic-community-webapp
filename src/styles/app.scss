@@ -1,0 +1,43 @@
+@import "variables";
+
+// Bootstrap customisations
+$theme-colors: (
+  morphic-blue: $morphic-blue-color,
+  morphic-green: $morphic-green-color
+);
+
+// Bootstrap
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~bootstrap-vue/src/index.scss";
+
+
+.bg-silver {
+  background: $gray-200;
+}
+
+.rounded {
+  border-radius: 1rem;
+}
+
+button.btn.btn-link, a.btn.btn-link {
+  padding: 0;
+  vertical-align: baseline;
+  text-align: left;
+}
+
+// hide things that are not production-ready, or vice-versa
+body.production .notProduction, body:not(.production) .onlyProduction {
+  display: none;
+}
+
+.alignRight {
+  display: block !important;
+  margin-left: auto !important;
+  width: fit-content;
+}
+
+// Link icons
+a > .b-icon:not(.noSpace):first-child {
+  margin-right: 0.25em;
+}
+

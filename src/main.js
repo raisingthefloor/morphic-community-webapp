@@ -13,8 +13,8 @@ import { CONFIG } from "@/config/config";
 import externalLinks from "@/config/externalLinks";
 import { getErrorMessage } from "@/utils/errorHandler";
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+import "./styles/app.scss";
+
 import i18n from "./i18n/i18n";
 
 const token = localStorage.getItem("token");

@@ -59,11 +59,6 @@
 </template>
 
 <style lang="scss">
-.focusBarEditor {
-    a {
-        color: #005BDF;
-    }
-}
 .barList {
   li {
     vertical-align: middle;
