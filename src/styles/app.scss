@@ -10,6 +10,13 @@ $theme-colors: (
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~bootstrap-vue/src/index.scss";
 
+// Generate some invert-X button variants, where the text is the colour.
+@each $color, $value in $theme-colors {
+  .btn-invert-#{$color} {
+    @include button-variant(color-yiq($value), $value);
+    color: $value;
+  }
+}
 
 .bg-silver {
   background: $gray-200;
@@ -27,7 +34,12 @@ button.btn.btn-link, a.btn.btn-link {
 
 // hide things that are not production-ready, or vice-versa
 body.production .notProduction, body:not(.production) .onlyProduction {
-  display: none;
+  display: none !important;
+}
+
+// mobile
+body.isMobile .notMobile, body:not(.isMobile) .onlyMobile {
+  display: none !important;
 }
 
 .alignRight {
@@ -41,3 +53,13 @@ a > .b-icon:not(.noSpace):first-child {
   margin-right: 0.25em;
 }
 
+.text-link {
+  color: $link-color;
+}
+
+.isMobile a, .isMobile .btn-link, .isMobile .text-link {
+  text-decoration: underline;
+  color: $link-color-darker;
+}
+
+@import "./expander";

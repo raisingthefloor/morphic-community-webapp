@@ -14,10 +14,9 @@
       </li>
     </ul>
     <div>
-      <b-button variant="success"
+      <b-button v-bind="buttonAttrs"
                 @click="$emit('newbar', member)"
                 class="addNew"
-                size="sm"
                 v-if="showAddButton"
                 :disabled="orderedBars.length > 0"
                 v-t="'BarsList.new-bar_button'" />
@@ -39,7 +38,9 @@ export default {
         bars: Array,
         activeBarId: String,
         /** @type {CommunityMember} */
-        member: Object
+        member: Object,
+        // variant attribute for buttons
+        buttonAttrs: Object
     },
     methods: {
         getBarEditRoute: function (bar) {

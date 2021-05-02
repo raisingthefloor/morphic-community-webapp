@@ -37,8 +37,8 @@
           {{ member.displayName }}
         <!-- the +/- expander button -->
         <span class="expander">
-          <b-iconstack>
-            <b-icon icon="circle-fill" variant="success" scale="1.1" />
+          <b-iconstack scale="1.2">
+            <b-icon icon="circle-fill" variant="link" scale="1.1" />
             <b-icon icon="plus" variant="white" scale="1.4" class="expandIcon" />
             <b-icon icon="dash" variant="white" scale="1.4" class="collapseIcon"/>
           </b-iconstack>
@@ -51,19 +51,20 @@
         <!-- uninvited -->
         <div v-if="member.state === 'uninvited'">
           {{ $t('MembersList.not-invited') }}<br/>
-          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
+          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
         </div>
 
         <!-- invited -->
         <div v-else-if="member.state === 'invited'">
           {{ $t('MembersList.invitation-not-accepted') }}<br/>
-          <b-button variant="light" size="sm" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
+          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 
         <!-- Member's bars - currently, there's only 1 bar per person  -->
         <BarsList :member="member"
                   :active-bar-id="activeBarId"
                   :bars="bars"
+                  :button-attrs="buttonAttrs"
                   @newbar="$emit('newbar', $event)"
         />
       </div>
@@ -71,9 +72,8 @@
 
     <div class="">
       <b-button v-b-modal="'addMemberDialog'"
-                variant="success"
+                v-bind="buttonAttrs"
                 class="addNew"
-                size="sm"
       ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
     </div>
     <div v-if="!anyMembers">
@@ -121,7 +121,9 @@ export default {
         bars: Array,
         activeBarId: String,
         /** @type {Community} */
-        community: Object
+        community: Object,
+        // variant attribute for buttons
+        buttonAttrs: Object
     },
     computed: {
         /**

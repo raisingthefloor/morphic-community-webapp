@@ -1,5 +1,10 @@
 <template>
-  <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
+  <b-container v-if="loaded" fluid id="PageContainer"
+               :class="{
+                    focusMode,
+                    dashboardMode: !focusMode,
+                    isMobile
+                }">
     <Header />
     <router-view role="main" />
     <Footer />

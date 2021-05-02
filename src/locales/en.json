@@ -38,6 +38,7 @@
   },
   "SidePanel":  {
     "account-settings_link": "Account settings",
+    "group-bars_heading": "Group Bars",
     "other-bars_heading": "MorphicBars for Others",
     "own-bars_heading": "My MorphicBar"
   },

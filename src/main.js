@@ -223,7 +223,7 @@ Vue.mixin({
          * @return {Boolean} true if in focus mode.
          */
         focusMode: function () {
-            return this.$route.path.includes("/focused/");
+            return this.isMobile || this.$route.path.includes("/focused/");
         },
         isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
         hasAccount: function () { return this.$store.getters.hasAccount; },
