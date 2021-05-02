@@ -2,7 +2,8 @@
   <div>
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" :bar="barDetails" />
-    <InviteMemberDialog id="inviteMemberDialog" :member="memberDetails"/>
+    <InviteMemberDialog id="inviteMemberDialog" :member="memberDetails" />
+    <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
 
     <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
@@ -148,7 +149,7 @@
 
             <div id="EditorActions">
               <b-button variant="outline-dark"
-                        v-b-modal="copyBarDialog"
+                        v-b-modal="'copyBarDialog'"
                 >Copy bar from...</b-button>
 
               <b-button variant="outline-dark"
@@ -888,7 +889,6 @@ import {
     getCommunityBar,
     getCommunityBars,
     getCommunityMembers,
-    inviteCommunityMember,
     updateCommunityBar,
     updateCommunityMember
 } from "@/services/communityService";
@@ -901,10 +901,12 @@ import EditButtonDialog from "@/views/EditButtonDialog";
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
 import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
+import CopyBarDialog from "@/components/dialogs/CopyBarDialog";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        CopyBarDialog,
         InviteMemberDialog,
         TextInputDialog,
         BarItemLink,

@@ -1,5 +1,17 @@
 {
-  "General": {
+    "CopyBarDialog": {
+      "confirm-dialog": {
+        "no_button": "No",
+        "question": "Do you wish to continue?",
+        "summary": "This will copy the contents of the bar {barToCopy}, replacing all items of the current bar, {currentBar}.",
+        "title": "Confirm Bar Copy",
+        "yes_button": "Yes"
+      },
+      "intro": "You can copy any of the MorphicBars below into the MorphicBar you are editing. (Replacing the ALL of current contents of the MorphicBar you are editing)",
+      "no-bars": "There are no other bars to copy items from.",
+      "select-instruction": "Select a bar to copy from:"
+    },
+    "General": {
     "member-state": {
       "active": "Active",
       "invited": "Invited",
