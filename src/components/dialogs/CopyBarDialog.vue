@@ -7,6 +7,7 @@
           size="lg"
           ok-only
           scrollable
+          :title="$t('CopyBarDialog.title')"
           ok-title="Cancel"
   >
     <p v-t="'CopyBarDialog.intro'"/>

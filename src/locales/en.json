@@ -9,7 +9,8 @@
       },
       "intro": "You can copy any of the MorphicBars below into the MorphicBar you are editing. (Replacing the ALL of current contents of the MorphicBar you are editing)",
       "no-bars": "There are no other bars to copy items from.",
-      "select-instruction": "Select a bar to copy from:"
+      "select-instruction": "Select a bar to copy from:",
+      "title": "Copy bar"
     },
     "General": {
     "member-state": {
