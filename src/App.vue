@@ -136,7 +136,9 @@ export default {
     },
     data() {
         return {
-            loaded: false
+            loaded: false,
+            /** @type {MediaQueryList} */
+            mobileMatchMedia: null
         };
     },
     mounted() {
@@ -149,6 +151,8 @@ export default {
         });
 
         errorHandler.useErrorHandler(this.showError);
+
+        this.detectMobile();
     },
     methods: {
         /**
@@ -160,6 +164,23 @@ export default {
             return loadLocaleMessagesAsync(locale).catch(() => {
                 // Let the page load anyway.
             });
+        },
+
+        /**
+         * Detects if the device could be a mobile device, and monitors the state.
+         * $store.isMobile will be updated to match the current state.
+         */
+        detectMobile() {
+            if (!this.mobileMatchMedia) {
+                this.mobileMatchMedia = window.matchMedia("only screen and (max-width: 640px)");
+                if (this.mobileMatchMedia.addEventListener) {
+                    this.mobileMatchMedia.addEventListener("change", this.detectMobile);
+                } else {
+                    this.mobileMatchMedia.addListener(this.detectMobile);
+                }
+            }
+
+            this.$store.commit("isMobile", this.mobileMatchMedia.matches);
         }
     }
 };

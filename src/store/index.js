@@ -21,7 +21,8 @@ export default new Vuex.Store({
         // The url the visitor used, before authenticating - redirect to this after login completes.
         beforeLoginPage: undefined,
         // The page which "/" redirects authenticated users to (when not the default)
-        homePage: undefined
+        homePage: undefined,
+        isMobile: false
     },
     mutations: {
         auth_request(state) {
@@ -73,6 +74,9 @@ export default new Vuex.Store({
         },
         homePage(state, url) {
             state.homePage = url;
+        },
+        isMobile(state, flag) {
+            state.isMobile = flag;
         }
     },
     actions: {
@@ -204,6 +208,7 @@ export default new Vuex.Store({
         unsavedBar: state => state.unsavedBar,
         resetPasswordEmail: state => state.resetPasswordEmail,
         beforeLoginPage: state => state.beforeLoginPage,
-        homePage: state => state.homePage
+        homePage: state => state.homePage,
+        isMobile: state => state.isMobile
     }
 });

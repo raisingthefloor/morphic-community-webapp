@@ -229,6 +229,7 @@ Vue.mixin({
         hasAccount: function () { return this.$store.getters.hasAccount; },
         communityId: function () { return this.$store.getters.communityId; },
         userId: function () { return this.$store.getters.userId; },
+        isMobile: function () { return this.$store.getters.isMobile; },
         console: () => console,
         CONFIG: () => CONFIG,
         externalLinks: () => externalLinks
