@@ -77,11 +77,12 @@
     "copyright": "Copyright © {year} Raising the Floor - US Inc. All rights Reserved."
   },
   "Header":  {
-    "dashboard_link": "Dashboard Mode",
-    "focus-mode_link": "Focus/Mobile Mode",
-    "logout_link": "Logout",
-    "login_link": "Login",
-    "navbar-branding": "Morphic"
+    "focus-mode_button": "Focus / Mobile Mode",
+    "home_button": "Home (to select other person or bar)",
+    "logout_button": "Logout",
+    "login_button": "Login",
+    "product-name": "MorphicBar Customization Tool",
+    "standard-mode_button": "Standard Mode"
   },
   "Home": {
   },

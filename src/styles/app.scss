@@ -53,13 +53,16 @@ a > .b-icon:not(.noSpace):first-child {
   margin-right: 0.25em;
 }
 
-.text-link {
+.main .text-link {
   color: $link-color;
 }
 
-.isMobile a, .isMobile .btn-link, .isMobile .text-link {
-  text-decoration: underline;
-  color: $link-color-darker;
+body.isMobile .main {
+  a, .btn-link, .text-link {
+    text-decoration: underline;
+    color: $link-color-darker;
+  }
 }
 
 @import "./expander";
+

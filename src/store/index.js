@@ -22,7 +22,8 @@ export default new Vuex.Store({
         beforeLoginPage: undefined,
         // The page which "/" redirects authenticated users to (when not the default)
         homePage: undefined,
-        isMobile: false
+        isMobile: false,
+        forceFocusMode: false
     },
     mutations: {
         auth_request(state) {
@@ -77,6 +78,9 @@ export default new Vuex.Store({
         },
         isMobile(state, flag) {
             state.isMobile = flag;
+        },
+        forceFocusMode(state, flag) {
+            state.forceFocusMode = flag;
         }
     },
     actions: {
@@ -209,6 +213,7 @@ export default new Vuex.Store({
         resetPasswordEmail: state => state.resetPasswordEmail,
         beforeLoginPage: state => state.beforeLoginPage,
         homePage: state => state.homePage,
-        isMobile: state => state.isMobile
+        isMobile: state => state.isMobile,
+        forceFocusMode: state => state.forceFocusMode
     }
 });

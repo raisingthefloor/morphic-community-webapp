@@ -1,11 +1,45 @@
 <template>
-  <b-navbar class="pb-3 pt-3" toggleable="lg" type="light" variant="light" id="top" ref="nav" tag="div" role="">
-    <b-navbar-brand to="/" role="banner">
-      <img src="/img/logo-color.svg" alt="">
-      <span v-t="'Header.navbar-branding'" class="ml-2" />
+  <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="">
+    <b-navbar-brand role="banner">
+      <b-link to="/">
+        <img src="/img/logo-wordmark.svg" alt="" />
+      </b-link>
+      <span class="headerTitle d-none d-xl-inline" v-t="'Header.product-name'" />
     </b-navbar-brand>
 
-    <b-navbar-nav v-if="$route.name !== 'Login'" role="navigation">
+
+    <template v-if="isLoggedIn">
+      <b-navbar-toggle target="nav-actions"></b-navbar-toggle>
+      <b-collapse id="nav-actions" is-nav>
+        <b-navbar-nav v-if="isLoggedIn" class="ml-auto loggedInNav">
+          <b-nav-text>
+            <b-button v-if="focusMode"
+                      variant="invert-dark"
+                      @click="setFocusMode(false)" v-t="'Header.standard-mode_button'" />
+            <b-button v-else
+                      variant="invert-dark"
+                      @click="setFocusMode(true)" v-t="'Header.focus-mode_button'" />
+          </b-nav-text>
+
+          <b-nav-text v-if="focusMode">
+            <b-button variant="invert-dark" v-t="'Header.home_button'" />
+          </b-nav-text>
+
+          <b-nav-text>
+            <b-button variant="invert-dark" @click="logout"><b-icon icon="box-arrow-right"/> {{ $t('Header.logout_button') }}</b-button>
+          </b-nav-text>
+        </b-navbar-nav>
+      </b-collapse>
+    </template>
+
+    <b-navbar-nav v-else-if="$route.name !== 'Login'" class="ml-auto loggedOutNav">
+      <b-nav-text>
+        <b-button variant="invert-dark" :to="{name: 'Login'}"><b-icon icon="box-arrow-left"/> {{ $t('Header.login_button') }}</b-button>
+      </b-nav-text>
+    </b-navbar-nav>
+
+
+    <b-navbar-nav v-if="false && $route.name !== 'Login'" role="navigation">
       <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
       <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.focus-mode_link'" /></b-nav-item>
 
@@ -22,16 +56,8 @@
 </template>
 
 <style lang="scss">
+  @import "~@/styles/variables";
   #top {
-    display: flex;
-
-    .navbar-nav {
-      flex-grow: 1;
-      & > :last-child {
-        margin-left: auto;
-      }
-    }
-
     a.nav-link:focus {
       outline: 0;
     }
@@ -42,20 +68,66 @@
       border-bottom: 3px solid #84c661;
     }
 
-    .logout-nav-item {
-      a.nav-link {
-        color: black;
+    padding-left: 0;
+    padding-right: 0;
+
+    & > :first-child {
+      margin-left: 1rem;
+    }
+
+    max-width: 100%;
+    overflow: hidden;
+
+    .navbar-toggler, .navbar-collapse,  {
+      margin-right: 1rem;
+    }
+
+    .navbar-brand {
+      flex-grow: 0;
+      margin-right: 0.5em;
+      .headerTitle {
+        margin-left: 2em;
+        font-weight: bold;
+      }
+      img {
+        height: 2.4rem;
       }
     }
 
-    .navbar-brand img {
-      height: 2rem;
+    .loggedOutNav {
+      margin-right: 1em;
     }
 
-    .mr-auto .nav-link {
-      color: rgba(0, 0, 0, 0.65);
-    }
+    #nav-actions {
+      flex-grow: 1;
 
+      .navbar-nav {
+        button {
+          margin-left: 1em;
+          overflow: hidden;
+        }
+      }
+
+      // When the buttons are collapsed, make them look like a menu
+      &.navbar-collapse.show, &.navbar-collapse.collapsing {
+        margin-right: 0;
+        .navbar-text {
+          margin: 0;
+          padding: 0;
+        }
+        background-color: #000;
+        button {
+          text-align: left;
+          margin: 0 0 -1px;
+
+          width: 100%;
+          border-radius: 0;
+
+          font-size: 1.3em;
+          padding: 0.5em 0.5em;
+        }
+      }
+    }
   }
 </style>
 
@@ -92,6 +164,13 @@ export default {
                 const name = focused ? "Home: Bar and Member Page" : "Dashboard";
                 return this.$router.resolve({name: name});
             }
+        },
+        /**
+         * Sets focus mode.
+         * @param {Boolean} flag true to enable.
+         */
+        setFocusMode: function (flag) {
+            this.$store.commit("forceFocusMode", !!flag);
         }
     }
 };

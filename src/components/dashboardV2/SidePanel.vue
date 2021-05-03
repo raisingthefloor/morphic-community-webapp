@@ -1,5 +1,5 @@
 <template>
-  <div id="SidePanel" class="fill-height">
+  <div id="SidePanel">
     <h2 class="accountName">{{ community.name }}</h2>
     <div class="accountInfo">
       <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
@@ -53,6 +53,7 @@
 
   #SidePanel {
     font-size: 1rem;
+    padding-top: 0.5em;
 
     h2, h3, h4, h5 {
       font-weight: bold;
@@ -61,6 +62,7 @@
     }
 
     h2 {
+      margin-top: 0;
       font-size: 1.5em;
     }
 
@@ -77,10 +79,11 @@
   $indent: 0.3em;
 
   // non-mobile
-  #PageContainer:not(.isMobile) #SidePanel {
+  body:not(.focusMode) #SidePanel {
     //noinspection CssUnknownTarget
     background: #a5d58a url(/img/bg-green.png) repeat-x bottom;
-    min-height: 680px;
+    min-height: 600px;
+    height: 100%;
 
     .btn-link, a {
       color: black;
@@ -199,7 +202,7 @@
   }
 
   // Mobile overrides
-  .isMobile #SidePanel {
+  body.focusMode #SidePanel {
     font-size: 1.2rem;
     padding: 1em;
     //noinspection CssUnknownTarget

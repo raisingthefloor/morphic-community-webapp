@@ -1,12 +1,7 @@
 <template>
-  <b-container v-if="loaded" fluid id="PageContainer"
-               :class="{
-                    focusMode,
-                    dashboardMode: !focusMode,
-                    isMobile
-                }">
+  <b-container v-if="loaded" fluid id="PageContainer">
     <Header />
-    <router-view role="main" />
+    <router-view role="main" class="main" />
     <Footer />
   </b-container>
 </template>
@@ -18,14 +13,26 @@
     font-family: 'Open Sans', sans-serif !important;
   }
 
-  #PageContainer {
-    padding: 0;
-  }
-
   // this is shown when the recaptcha token is used by getRecaptchaToken()
   body:not(.show-recaptcha) .grecaptcha-badge {
     visibility: hidden;
   }
+
+  // Put the footer at the bottom of the viewport, if the page is too short
+  body {
+    height: 100vh;
+  }
+  #PageContainer {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+
+    .main {
+      flex-grow: 1;
+    }
+  }
+
 
 </style>
 
@@ -62,6 +69,36 @@ export default {
 
         this.detectMobile();
     },
+    computed: {
+        /**
+         * Gets the classes for the body element.
+         * @return {Object} The classes.
+         */
+        bodyClasses: function () {
+            return {
+                focusMode: this.focusMode,
+                dashboardMode: !this.focusMode,
+                isMobile: this.isMobile
+            };
+        }
+    },
+    watch: {
+        bodyClasses: {
+            deep: true,
+            /**
+             * Sets the classes of the body element, based on `this.bodyClasses`.
+             */
+            handler: function () {
+                const add = [];
+                const remove = [];
+                for (const [key, value] of Object.entries(this.bodyClasses)) {
+                    (value ? add : remove).push(key);
+                }
+                document.body.classList.remove(...remove);
+                document.body.classList.add(...add);
+            }
+        }
+    },
     methods: {
         /**
          * Set the local of the page.
@@ -80,7 +117,7 @@ export default {
          */
         detectMobile() {
             if (!this.mobileMatchMedia) {
-                this.mobileMatchMedia = window.matchMedia("only screen and (max-width: 640px)");
+                this.mobileMatchMedia = window.matchMedia("only screen and (max-width: 767.98px)");
                 if (this.mobileMatchMedia.addEventListener) {
                     this.mobileMatchMedia.addEventListener("change", this.detectMobile);
                 } else {
