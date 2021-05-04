@@ -160,15 +160,15 @@ Vue.mixin({
             return togo;
         },
         /**
-         * Generates an ID for a button.
-         * @param {BarItem} item The button.
+         * Generates an ID.
+         * @param {String|BarItem} prefix The prefix.
          * @return {String} The ID.
          */
-        generateId(item) {
-            if (typeof(item) === "string") {
-                return item + Math.floor(Math.random() * 10e10);
+        generateId(prefix) {
+            if (typeof(prefix) === "string") {
+                return prefix + Math.floor(Math.random() * 10e10);
             } else {
-                return Bar.generateId(item);
+                return Bar.generateId(prefix);
             }
         },
 
@@ -208,6 +208,11 @@ Vue.mixin({
             }
 
             return valid;
+        },
+        asyncTimer(ms, result) {
+            return new Promise(resolve => {
+                setTimeout(() => resolve(result), ms);
+            });
         }
     },
     mounted() {

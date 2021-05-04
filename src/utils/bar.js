@@ -279,3 +279,13 @@ export function getUserBarEditRoute(member, defaultBarId, focused) {
         }
     };
 }
+
+/**
+ * Gets the bars belonging to a member.
+ * @param {Array<BarDetails>} allBars All bars.
+ * @param {CommunityMember} member The member.
+ * @return {Array<BarDetails>} The member's bars.
+ */
+export function getMemberBars(allBars, member) {
+    return allBars.filter(bar => bar.id === member.bar_id);
+}
