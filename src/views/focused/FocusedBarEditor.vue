@@ -79,7 +79,7 @@
 
 <script>
 
-import BarItemLink from "@/components/dashboardV2/BarItemLink";
+import BarItemLink from "@/components/editor/BarItemLink";
 import { getCommunityBars, deleteCommunityBar, getCommunity, getCommunityBar, updateCommunityBar, createCommunityBar, getCommunityMembers, getCommunityMember, updateCommunityMember } from "@/services/communityService";
 import { colors, icons, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";

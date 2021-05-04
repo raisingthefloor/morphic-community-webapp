@@ -39,7 +39,7 @@
 import { getCommunityBar, saveCommunityBar, getCommunityMember, createCommunityBar, updateCommunityMember } from "@/services/communityService";
 import { colors } from "@/utils/constants";
 import * as params from "@/utils/params";
-import BarItemFields from "@/components/dashboardV2/BarItemFields";
+import BarItemFields from "@/components/editor/BarItemFields";
 
 export default {
     name: "MemberInvite",

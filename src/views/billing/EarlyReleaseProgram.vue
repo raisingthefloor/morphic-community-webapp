@@ -35,7 +35,7 @@
 <script>
 
 
-import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
+import TextInputDialog from "@/components/dialogs/TextInputDialog";
 export default {
     name: "EarlyReleaseProgram",
     components: {TextInputDialog},

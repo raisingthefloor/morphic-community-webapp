@@ -632,7 +632,7 @@
 
 <script>
 
-import SidePanel from "@/components/dashboardV2/SidePanel";
+import SidePanel from "@/components/side-panel/SidePanel";
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import {
     createCommunityBar,
@@ -649,10 +649,10 @@ import { buttonCatalog, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
 import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as Bar from "@/utils/bar";
-import EditButtonDialog from "@/views/EditButtonDialog";
-import BarItemLink from "@/components/dashboardV2/BarItemLink";
-import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
-import ButtonCatalog from "@/views/ButtonCatalog";
+import EditButtonDialog from "@/components/editor/EditButtonDialog";
+import BarItemLink from "@/components/editor/BarItemLink";
+import TextInputDialog from "@/components/dialogs/TextInputDialog";
+import ButtonCatalog from "@/components/editor/ButtonCatalog";
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 import CopyBarDialog from "@/components/dialogs/CopyBarDialog";
 

@@ -252,8 +252,8 @@
 
 <script>
 
-import MembersList from "@/components/dashboardV2/MembersList";
-import BarsList from "@/components/dashboardV2/BarsList";
+import MembersList from "@/components/side-panel/MembersList";
+import BarsList from "@/components/side-panel/BarsList";
 import * as Bar from "@/utils/bar";
 import * as communityService from "@/services/communityService";
 

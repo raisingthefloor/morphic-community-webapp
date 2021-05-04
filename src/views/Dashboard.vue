@@ -237,7 +237,7 @@
 <script>
 import * as ArrowLine from "arrow-line";
 import { createPopper } from "@popperjs/core";
-import SidePanel from "@/components/dashboardV2/SidePanel";
+import SidePanel from "@/components/side-panel/SidePanel";
 import {
     getCommunity,
     getCommunityBars,

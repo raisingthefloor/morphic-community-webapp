@@ -51,13 +51,13 @@
         <!-- uninvited -->
         <div v-if="member.state === 'uninvited'">
           {{ $t('MembersList.not-invited') }}<br/>
-          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
+          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
         </div>
 
         <!-- invited -->
         <div v-else-if="member.state === 'invited'">
           {{ $t('MembersList.invitation-not-accepted') }}<br/>
-          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
+          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 
         <!-- Member's bars - currently, there's only 1 bar per person  -->
@@ -81,7 +81,7 @@
     </div>
 
 
-    <InviteMemberDialog id="inviteMemberDialog"
+    <InviteMemberDialog id="membersList-inviteMemberDialog"
                         :member="invitingMember" />
 
     <TextInputDialog id="addMemberDialog"
@@ -99,8 +99,8 @@
 
 <script>
 import * as Bar from "@/utils/bar";
-import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
-import BarsList from "@/components/dashboardV2/BarsList";
+import TextInputDialog from "@/components/dialogs/TextInputDialog";
+import BarsList from "@/components/side-panel/BarsList";
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 
 export default {

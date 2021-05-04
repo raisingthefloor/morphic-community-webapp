@@ -230,7 +230,7 @@ import PreviewItem from "@/components/dashboard/PreviewItem";
 import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons, allButtons } from "@/utils/constants";
 import * as params from "@/utils/params";
 import * as Bar from "@/utils/bar";
-import BarItemFields from "@/components/dashboardV2/BarItemFields";
+import BarItemFields from "@/components/editor/BarItemFields";
 import { CONFIG } from "@/config/config";
 
 export default {

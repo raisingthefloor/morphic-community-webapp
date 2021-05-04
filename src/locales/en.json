@@ -40,8 +40,6 @@
   },
   "App": {
   },
-  "BarExplainer": {
-  },
   "BarItemFields":  {
   },
   "BarItemLink": {
@@ -63,8 +61,6 @@
     "own-bars_heading": "My MorphicBar"
   },
   "Dashboard": {
-  },
-  "DrawerPreview":  {
   },
   "EarlyReleaseProgram": {
     "account-created": "Your account has been created.",
