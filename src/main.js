@@ -213,6 +213,23 @@ Vue.mixin({
             return new Promise(resolve => {
                 setTimeout(() => resolve(result), ms);
             });
+        },
+
+        /**
+         * Waits for an API request to complete, resolving to true if it succeeded, or false on failure.
+         *
+         * @param {Promise<AxiosResponse<Any>>} responsePromise The response.
+         * @param {String} [successMessage] A message to display if it was successful.
+         * @return {Promise<Boolean>} Resolves to true if the request was a success.
+         */
+        requestToBool: function (responsePromise, successMessage) {
+            return responsePromise.then((r) => {
+                const success = (r.status === 200);
+                if (success && successMessage) {
+                    this.showMessage(successMessage);
+                }
+                return success;
+            }).catch(() => false);
         }
     },
     mounted() {

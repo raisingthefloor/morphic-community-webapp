@@ -36,7 +36,7 @@
           </div>
         </div>
 
-        <div id="EditorTabs">
+        <div v-if="!focusMode" id="EditorTabs">
           <b-tabs class="editorTabs"
                   v-model="editorTabIndex"
                   small
@@ -55,46 +55,7 @@
               </template>
               <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
 
-              <b-card>
-                <b-card-title>
-                  <span v-if="memberDetails"><b-icon-person-circle/> {{ memberDetails.first_name }}</span>
-                  <span v-else-if="memberCount === 1"><b-icon-person-circle/> This Morphic Bar is used by 1 member</span>
-                  <span v-else-if="memberCount > 0"><b-icon-people-fill/> This Morphic Bar is used by {{memberCount}} members</span>
-                  <span v-else>This Morphic Bar is NOT used</span>
-                </b-card-title>
-
-                <!-- member's own bar -->
-                <ul v-if="memberDetails" class="list-unstyled">
-                  <li v-if="memberDetails.role === 'member'">
-                    <b-button variant="link" v-b-modal.roleChangeConfirm>Make member a Group Manager</b-button>
-                  </li>
-                  <li v-else>
-                    <b-button variant="link" v-b-modal.roleChangeConfirm>Remove group manager role from member</b-button>
-                  </li>
-                  <li>
-                    <b-button variant="link" v-b-modal.deleteConfirm class="text-danger">Delete member</b-button>
-                  </li>
-
-                  <li v-if="!memberDetails.isCurrent">
-                    <b-button variant="link" v-b-modal="'inviteMemberDialog'">{{ memberDetails.state === 'uninvited' ?
-                      "Send Invitation" : "Re-invite member" }}
-                    </b-button>
-                  </li>
-                </ul>
-
-                <!-- community bar -->
-                <ul v-else-if="memberCount > 0">
-                  <li v-for="member in members" v-bind:key="member.id">
-                    {{ member.first_name }} {{ member.last_name }}
-                  </li>
-                </ul>
-
-                <!-- unused community bar -->
-                <b-card-sub-title v-else>You can go back to the
-                  <b-link to="/dashboard">Dashboard</b-link>
-                  and invite members to use it.
-                </b-card-sub-title>
-              </b-card>
+              <MemberDetails v-if="memberDetails" :member-details="memberDetails" :members="members" />
 
             </b-tab>
 
@@ -164,10 +125,11 @@
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import * as Bar from "@/utils/bar";
 import { getCommunityBar, updateCommunityBar } from "@/services/communityService";
+import MemberDetails from "@/components/editor/MemberDetails";
 
 export default {
     name: "EditorDetails",
-    components: {TextInputDialog},
+    components: {MemberDetails, TextInputDialog},
     props: {
         /** @type {BarDetails} */
         barDetails: Object,

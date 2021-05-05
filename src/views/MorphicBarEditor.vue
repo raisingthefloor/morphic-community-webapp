@@ -2,18 +2,7 @@
   <div>
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" :bar="barDetails" />
-    <InviteMemberDialog id="inviteMemberDialog" :member="memberDetails" />
     <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
-
-    <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
-      <p class="my-4">Please confirm this role change?</p>
-    </b-modal>
-        <b-modal id="deleteConfirm" @ok="deleteMember" title="Delete Member" footer-bg-variant="light" ok-title="Delete">
-      <p class="my-4">Please confirm the deletion of this member?</p>
-    </b-modal>
-    <b-modal id="barDeleteConfirm" @ok="deleteBar" title="Delete Bar" footer-bg-variant="light" ok-title="Delete">
-      <p class="my-4">Please confirm the deletion of this bar?</p>
-    </b-modal>
 
     <b-modal id="unsavedChanges" title="Unsaved Changes">
       <p>You have made some changes to this bar, but they are not saved yet.</p>
@@ -29,7 +18,7 @@
 
     <!-- EDITOR v2 -->
     <b-row no-gutters id="EditorContainer">
-      <b-col md="2">
+      <b-col v-if="!focusMode" md="2">
         <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
       </b-col>
       <b-col fluid>
@@ -58,7 +47,7 @@
       </b-col>
 
       <!-- Button Catalogue -->
-      <b-col md="3" lg="2">
+      <b-col v-if="!focusMode" md="3" lg="2">
         <ButtonCatalog ref="ButtonCatalog"
                        :button-catalog="buttonCatalog"
                        @item-selected="addBarItem($event.item, $event.noImage)"
@@ -260,34 +249,6 @@ export default {
             if (myref) {
                 myref.classList.toggle("minWidth1px");
             }
-        },
-        deleteMember: function () {
-            deleteCommunityMember(this.communityId, this.memberDetails.id)
-                .then((resp) => {
-                    if (resp.status === 200) {
-                        this.showMessage(MESSAGES.successfulMemberDelete);
-                        this.$router.push("/dashboard");
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        },
-        changeMemberRole: function () {
-            if (this.memberDetails.role === "member") {
-                this.memberDetails.role = "manager";
-            } else {
-                this.memberDetails.role = "member";
-            }
-            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-                .then((resp) => {
-                    if (resp.status === 200) {
-                        this.showMessage(MESSAGES.successfulRoleChange);
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                });
         },
         updateOriginalBarDetails: function () {
             this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
