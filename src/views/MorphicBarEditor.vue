@@ -44,106 +44,16 @@
                          :member-details="memberDetails"
                          :new-bar="newBar"
                          @save-bar="saveBar()" @revert-bar="revertBar()"
-                         />
+          />
 
           <!-- the desktop -->
-          <div id="preview-holder" class="desktop mt-3" @click="$refs.EditorDetails.closeTab()">
-            <drop mode="cut" class="dragToDelete desktop-portion">
-              <template v-slot:drag-image="">
-                <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px"/>
-              </template>
-
-              <!-- Bar item problems -->
-              <div class="desktop-alerts" >
-                <b-alert v-for="(error) in barDetails.errors"
-                         :key="error.key"
-                         show
-                         variant="warning"
-                >
-                  <div @mouseenter="highlight(true, error.item, error.duplicates)"
-                       @mouseleave="highlight(false, error.item, error.duplicates)"
-                       @click="showEditDialog(error.item)"
-                       :title="error.details"
-                        >
-
-                    <b-icon-exclamation-triangle-fill v-if="!error.level || error.level === 'error'" variant="danger"/>
-                    <b-icon-info-circle-fill v-if="error.level === 'warn'" variant="info"/>
-                    &nbsp;
-
-                    <!-- Duplicated labels -->
-                    <template v-if="error.type === 'duplicate' && error.item.configuration.label === error.duplicates[0].configuration.label">
-                      <BarItemLink :bar-item="error.item"
-                                   @click="showEditDialog(error.item)"
-                                   @mouseover="highlight(false, error.item)"
-                                   @mouseleave="highlight(true, error.item)"
-                      /> is duplicated.
-                    </template>
-
-                    <!-- Duplicated actions -->
-                    <template v-else-if="error.type === 'duplicate'">
-                      <BarItemLink :bar-item="error.item"
-                              @click="showEditDialog(error.item)"
-                              @mouseover="highlight(false, error.item)"
-                              @mouseleave="highlight(true, error.item)"
-                      />
-
-                      performs the same action as
-                      <BarItemLink :bar-item="error.duplicates[0]"
-                              @click="showEditDialog(error.duplicates[0])"
-                              @mouseenter="highlight(false, error.duplicates)"
-                              @mouseleave="highlight(true, error.duplicates)"
-                      />
-                    </template>
-
-                    <!-- Generic problem -->
-                    <template v-else>
-                      <BarItemLink :bar-item="error.item"
-                              @click="showEditDialog(error.item)"
-                        />:
-                      {{ error.message }}
-                    </template>
-
-                  </div>
-                </b-alert>
-              </div>
-
-            </drop>
-
-            <!-- Buttons Bar -->
-            <div id="preview-bar">
-              <div class="barPreviewEditor" ref="myref">
-                <drop-list :items="barDetails.items"
-                           :class="openDrawer && 'showDrawer'"
-                           class="buttonsList draggable-area"
-                           @insert="dropToBar"
-                           @reorder="dragReorder">
-                  <template v-slot:item="{item}">
-                    <drag :key="item.id"
-                      @dragstart="setDragInProgress(true)"
-                      @dragend="setDragInProgress(false)"
-                      @click="showEditDialog(item, $event)"
-                      @cut="removeButton(item, barDetails.items)"
-                      class="buttonDragger">
-                      <div :key="item.id" class="previewHolder" :ref="buttonRef(item)">
-                        <PreviewItem :item="item" />
-                      </div>
-                    </drag>o
-                  </template>
-                  <template v-slot:feedback="{data}">
-                    <div class="item feedback button-feedback" :key="data.id"></div>
-                  </template>
-                </drop-list>
-              </div>
-              <div class="logoHolder">
-                <b-img src="/img/logo-color.svg" alt="Morphic Logo" />
-              </div>
-              <div class="openDrawerIconHolder">
-                <span @click="openDrawer = !openDrawer" class="">
-                  <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
-                </span>
-              </div>
-            </div>
-          </div>
+          <DesktopBarEditor ref="DesktopBarEditor"
+                            :bar-details="barDetails"
+                            @edit-item="showEditDialog($event)"
+                            @bar-changed="onBarChanged"
+                            @click="$refs.EditorDetails.closeTab()"
+                            @item-dropped="addBarItem($event.item, $event.noImage, $event.index)"
+          />
         </div>
       </b-col>
 
@@ -151,265 +61,17 @@
       <b-col md="2">
         <ButtonCatalog ref="ButtonCatalog"
                        :button-catalog="buttonCatalog"
-                       @drop-to-bar="dropToBar($event)" />
+                       @item-selected="addBarItem($event.item, $event.noImage)"
+        />
       </b-col>
     </b-row>
   </div>
 </template>
 
 <style lang="scss">
-  $primary-color: #002957;
-  $secondary-color: #84c661;
-
-  #EditorContainer {
-
-  }
-
   #barEditor {
     padding-left: 15px;
     padding-right: 15px;
-  }
-
-  #preview-holder.desktop {
-    width: 100%;
-    height: 600px;
-    position: relative;
-    display: flex;
-
-    //noinspection CssUnknownTarget
-    background: url(/img/background-editor.png);
-
-    margin-top: 0 !important;
-
-    .desktop-portion {
-      display: inline-block;
-      flex-grow: 1;
-    }
-
-    .desktop-alerts {
-      height: 100%;
-      display: flex;
-      justify-content: flex-end;
-      flex-direction: column;
-      .alert {
-        width: fit-content;
-        padding: 0;
-        & > div {
-          padding: 5px;
-        }
-        margin: 0 5px 10px 5px;
-
-        transition: box-shadow 0.2s ease;
-        cursor: pointer;
-
-        &:hover {
-          box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.4);
-        }
-
-        svg {
-          margin: 0 0.2em;
-        }
-
-      }
-    }
-
-    .preview-bar {
-      padding-bottom: 5rem;
-    }
-
-    #preview-bar {
-      border: 1px solid #002957;
-      background: white;
-      // vertical line separating bar from drawer
-      background-image: linear-gradient(#000, #000);
-      background-size: 1px 100%;
-      background-repeat: no-repeat;
-      background-position: right 122px bottom 0px;
-
-      display: flex;
-      justify-content: center;
-      align-content: center;
-
-      // flex columns don't expand the container, so rotate the text flow here, and make the buttonList flex-direction to row
-      writing-mode: vertical-rl;
-
-      .barPreviewEditor {
-        min-width: 120px;
-        flex-grow: 1;
-
-        .buttonsList {
-          height: 100%;
-
-          display: inline-flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: flex-start;
-          align-content: flex-start;
-
-          max-width: 400px;
-          // Hide the drawer by limiting the width
-          &:not(.showDrawer) {
-            width: 120px !important;
-            overflow: hidden;
-          }
-
-          & > div {
-            min-width: 50px;
-          }
-
-          // Place-holder for dropping a new button.
-          .button-feedback, .feedback {
-            display: block;
-            background-color: #e5f4ed;
-            border: 2px dashed rgb(16 141 74);
-            height: 50px;
-            min-width: 95px;
-            margin-left: 10px;
-            margin-right: 10px;
-            border-radius: 10px;
-            margin-top: 10px;
-
-            &.clickDropSpot {
-              margin-top: 0px;
-            }
-          }
-        }
-
-        .buttonDragger {
-          writing-mode: horizontal-tb;
-          margin: 10px 10px 0 10px;
-        }
-      }
-
-      .logoHolder {
-        writing-mode: initial;
-        text-align: center;
-        width: 120px;
-        padding: 15px 0 15px 0;
-        img {
-          width: 3rem;
-          height: 3rem;
-        }
-      }
-
-      .openDrawerIconHolder {
-        cursor: pointer;
-        & > span {
-          cursor: pointer;
-        }
-        .b-icon {
-          // margin-left: -19px;
-          right: 104px;
-          font-size: 2em;
-          position: absolute;
-          bottom: 25px;
-          background: black;
-          color: white;
-          border-radius: 100%;
-          border: 1px solid black;
-        }
-      }
-    }
-  }
-
-  .max-height {
-    height: 100%;
-  }
-  #removeBar .nav-link {
-    color: #dc3545 !important;
-  }
-
-  .compactIconHolder {
-    height: 22rem;
-    overflow-y: auto;
-    .iconBoxHolder {
-      margin-left: .5rem !important;
-    }
-  }
-
-  .colorBoxHolder {
-    display: inline-block;
-    cursor: pointer;
-    margin: 0 .25rem;
-    width: 2.6rem;
-    height: 2.6rem;
-    .colorBox {
-      width: 2rem;
-      height: 2rem;
-    }
-  }
-
-  .iconBoxHolder {
-    display: inline-block;
-    cursor: pointer;
-    width: 5.25rem;
-    height: 5.25rem;
-    margin: .75rem 0 .75rem .75rem;
-    .iconBox {
-      background: white;
-      border: 1px solid black;
-      border-radius: 100%;
-      padding: .75rem;
-      width: 4.5rem;
-      height: 4.5rem;
-      text-align: center;
-      img {
-        width: 3rem;
-        height: 3rem;
-      }
-      p {
-        width: 3rem;
-        height: 3rem;
-        line-height: 100%;
-        margin: 0;
-      }
-    }
-  }
-
-  .colorBoxHolder, .iconBoxHolder {
-    padding: .3rem;
-    &.active {
-      padding: .1rem;
-      border: .2rem solid green;
-    }
-  }
-
-  #modalEditGeneric {
-    padding: .5rem 1rem 0 0;
-    border-bottom: none;
-  }
-
-  .text-disabled {
-    color: gray;
-    &:active, &:focus, &:hover {
-      cursor: not-allowed;
-      color: gray !important;
-      text-decoration: none !important;
-    }
-  }
-
-  #preview-bar, #preview-drawer {
-    .buttonCatalogEntry {
-      .active {
-        background-color: transparent;
-        border: 0;
-        width: initial;
-
-        .buttons {
-          button.withImage {
-            display: none;
-          }
-
-          display: flex;
-          justify-content: space-around;
-          align-items: flex-end;
-        }
-
-        h3, div.description, div.help {
-          display: none;
-        }
-      }
-    }
   }
 
 </style>
@@ -417,7 +79,6 @@
 <script>
 
 import SidePanel from "@/components/side-panel/SidePanel";
-import PreviewItem from "@/components/dashboard/PreviewItem";
 import {
     createCommunityBar,
     deleteCommunityBar,
@@ -431,50 +92,34 @@ import {
 } from "@/services/communityService";
 import { buttonCatalog, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
-import { Drag, Drop, DropList } from "vue-easy-dnd";
 import * as Bar from "@/utils/bar";
 import EditButtonDialog from "@/components/editor/EditButtonDialog";
-import BarItemLink from "@/components/editor/BarItemLink";
 import ButtonCatalog from "@/components/editor/ButtonCatalog";
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 import CopyBarDialog from "@/components/dialogs/CopyBarDialog";
 import EditorDetails from "@/components/editor/EditorDetails";
+import DesktopBarEditor from "@/views/DesktopBarEditor";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        DesktopBarEditor,
         EditorDetails,
         ButtonCatalog,
         CopyBarDialog,
         InviteMemberDialog,
-        BarItemLink,
         EditButtonDialog,
-        SidePanel,
-        PreviewItem,
-        Drag,
-        Drop,
-        DropList
+        SidePanel
     },
     methods: {
-        buttonRef: function (button) {
-            return "button_" + button.id;
-        },
-        dropToBar: function (event, noImage) {
-            this.addBarItem(event.data, event.index, noImage || event.type === "catalogButtonNoImage");
-            return true;
-        },
-        dragReorder: function (event) {
-            event.apply(this.barDetails.items);
-            this.onBarChanged();
-        },
 
         /**
          * Add an item to the bar.
          * @param {BarItem} catalogButton The new button, from the catalog.
-         * @param {Number} [insertAt] The index of the new button.
          * @param {Boolean} [noImage] True if the button shall have no image.
+         * @param {Number} [insertAt] The index of the new button.
          */
-        addBarItem: function (catalogButton, insertAt, noImage) {
+        addBarItem: function (catalogButton, noImage, insertAt) {
             /** @type {BarItem} */
             const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt);
             if (noImage) {
@@ -498,7 +143,6 @@ export default {
                 this.showEditDialog(barItem);
             }
         },
-
         /**
          * Called when the bar changes, after it is loaded.
          */
@@ -520,9 +164,6 @@ export default {
                 this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
                 this.barSelectedInDropdown = this.barDetails.id;
             }
-        },
-        dropOnClickToAdd: function (event) {
-            this.dropToBar(event);
         },
         changeUserBarToCommunityBar: function () {
             if (this.isChanged || !this.barDetails.is_shared) {
@@ -546,30 +187,6 @@ export default {
                     this.updateOriginalBarDetails();
                 });
             });
-        },
-        // used to avoid bug where a "click" event is triggered at end of drag
-        setDragInProgress: function (newValue) {
-            this.dragInProgress = newValue;
-        },
-
-        removeButton: function (item, itemList) {
-            const compareObjects = function (x, y) {
-                for (const key in x) {
-                    if (x[key] !== y[key]) {
-                        return false;
-                    } else {
-                        if (x[key] instanceof Object && y[key] instanceof Object) {
-                            if (compareObjects(x[key], y[key]) === false) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-                return true;
-            };
-            const index = itemList.findIndex(x => compareObjects(x, item));
-            itemList.splice(index, 1);
-            this.onBarChanged();
         },
 
         loadAllData: function () {
@@ -637,20 +254,12 @@ export default {
                 }
             }
         },
-        addIds: function (items) {
-            items.forEach(item => { item.id = this.generateId(item); });
-        },
         // hack to refresh css rendering due to bars being fucked up in their CSS
         refreshBar() {
             const myref = this.$refs.myref;
             if (myref) {
                 myref.classList.toggle("minWidth1px");
             }
-        },
-        distributeItems: function (items) {
-            // add id's
-            this.addIds(items);
-            // items.map(item => item.id = this.generateId(item));
         },
         deleteMember: function () {
             deleteCommunityMember(this.communityId, this.memberDetails.id)
@@ -782,16 +391,14 @@ export default {
          * @param {BarItem} [item] The item to edit.
          */
         showEditDialog: function (item) {
-            if (!this.dragInProgress) {
-                this.selectedItem = item;
-                this.editDialog.showDialog(item).then(changed => {
-                    Bar.checkBar(this.barDetails);
-                    if (changed) {
-                        this.onBarChanged();
-                    }
-                    this.$forceUpdate();
-                });
-            }
+            this.selectedItem = item;
+            this.editDialog.showDialog(item).then(changed => {
+                Bar.checkBar(this.barDetails);
+                if (changed) {
+                    this.onBarChanged();
+                }
+                this.$forceUpdate();
+            });
         },
         loadBarMembers: function () {
             getCommunityBars(this.communityId)
@@ -847,16 +454,6 @@ export default {
             }
 
             return route || Bar.getBarEditRoute(bar);
-        },
-        highlight(value, buttons) {
-            for (let a = 1; a < arguments.length; a++) {
-                this.makeArray(arguments[a]).forEach(button => {
-                    const preview = this.$refs[this.buttonRef(button)];
-                    if (preview) {
-                        preview.classList.toggle("highlight", !!value);
-                    }
-                });
-            }
         },
         /**
          * Confirms if the user wants to leave the page, if there have been unsaved changes
@@ -927,9 +524,6 @@ export default {
         "barDetails.is_shared": function (newValue, oldValue) {
             this.barSelectedInDropdown = newValue ? this.memberDetails.bar_id : "customized";
         },
-        "barDetails.items": function (newValue, oldValue) {
-            this.distributeItems(newValue);
-        },
         "memberDetails.id": function (newValue, oldValue) {
             this.updateBarLists();
             if (this.barDetails.is_shared) {
@@ -991,10 +585,7 @@ export default {
             leavePageMessage: MESSAGES.leavePageAlert,
             barSelectedInDropdown: "",
             // flags
-            addToBar: false,
-            addToDrawer: false,
             newBar: false,
-            openDrawer: true,
             editDialogShown: false,
             tab: 0,
             dragFromEditor: false,
@@ -1025,7 +616,6 @@ export default {
 
             /** @type {ButtonCatalog} Button catalog. */
             buttonCatalog: buttonCatalog,
-            dragInProgress: false,
 
             // storage
             buttonStorage: {},

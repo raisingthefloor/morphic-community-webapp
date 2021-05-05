@@ -104,21 +104,19 @@
                           <PreviewItem :item="button"
                                        :simplified="true" :noImage="true"
                                        class="noImage"
-                                             @addToBarFromPreview="dropToBar($event)"
-                                             @click="dropToBar($event, true)"
+                                             @click="onItemSelected(button, true)"
                           />
                         </drag>
 
                         <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage">
                           <template v-slot:drag-image>
                             <PreviewItem :item="button" :noImage="false" class="noImage"
-                                               @click="dropToBar($event, true)"
+                                               @click="onItemSelected(button, true)"
                             />
                           </template>
                           <PreviewItem v-if="button.configuration.image_url"
                                        :item="button" :simplified="true" class="withImage"
-                                             @addToBarFromPreview="dropToBar($event)"
-                                             @click="dropToBar($event)"
+                                             @click="onItemSelected(button)"
                           />
                         </drag>
                       </div>
@@ -338,8 +336,11 @@ export default {
         };
     },
     methods: {
-        dropToBar: function ($event) {
-            this.$emit("drop-to-bar", $event);
+        onItemSelected: function (item, noImage) {
+            this.$emit("item-selected", {
+                item: item,
+                noImage: !!noImage
+            });
         },
         /**
          * A key is pressed, while a catalog item is focused.
@@ -348,7 +349,7 @@ export default {
          */
         onCatalogItemKeyPress: function ($event, button) {
             if ($event.key === "Enter") {
-                this.dropToBar({data: button});
+                this.onItemSelected(button);
             }
         },
         expandCatalogButton: function (button, buttonId, subkind) {

@@ -223,6 +223,67 @@ ul.relatedButtons {
     margin-right: 30px;
   }
 }
+
+.compactIconHolder {
+  height: 22rem;
+  overflow-y: auto;
+  .iconBoxHolder {
+    margin-left: .5rem !important;
+  }
+}
+
+.colorBoxHolder {
+  display: inline-block;
+  cursor: pointer;
+  margin: 0 .25rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  .colorBox {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.iconBoxHolder {
+  display: inline-block;
+  cursor: pointer;
+  width: 5.25rem;
+  height: 5.25rem;
+  margin: .75rem 0 .75rem .75rem;
+  .iconBox {
+    background: white;
+    border: 1px solid black;
+    border-radius: 100%;
+    padding: .75rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    text-align: center;
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
+    p {
+      width: 3rem;
+      height: 3rem;
+      line-height: 100%;
+      margin: 0;
+    }
+  }
+}
+
+.colorBoxHolder, .iconBoxHolder {
+  padding: .3rem;
+  &.active {
+    padding: .1rem;
+    border: .2rem solid green;
+  }
+}
+
+#modalEditGeneric {
+  padding: .5rem 1rem 0 0;
+  border-bottom: none;
+}
+
 </style>
 
 <script>
