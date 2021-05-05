@@ -32,7 +32,7 @@
       <b-col md="2">
         <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
       </b-col>
-      <b-col md="8">
+      <b-col fluid>
         <div id="barEditor" class="pt-2">
 
           <!-- Bar info, actions, and editor tabs -->
@@ -58,7 +58,7 @@
       </b-col>
 
       <!-- Button Catalogue -->
-      <b-col md="2">
+      <b-col md="3" lg="2">
         <ButtonCatalog ref="ButtonCatalog"
                        :button-catalog="buttonCatalog"
                        @item-selected="addBarItem($event.item, $event.noImage)"

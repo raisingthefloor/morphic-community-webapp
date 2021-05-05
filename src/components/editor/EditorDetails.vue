@@ -1,162 +1,165 @@
 <!-- The details displayed above the bar editor -->
 <template>
-  <div id="EditorDetails" class="border-bottom">
-    <!-- details and tabs -->
-    <div>
-      <div id="BarDetails">
-        <!-- Bar name -->
-        <div class="bar-name">
-          <h2>
-            {{barName}}
+  <b-container id="EditorDetails" class="border-bottom p-0">
+    <b-row no-gutters>
+      <!-- details and tabs -->
+      <b-col fluid>
+        <div id="BarDetails">
+          <!-- Bar name -->
+          <div class="bar-name">
+            <h2>
+              {{barName}}
 
-            <!-- rename bar -->
-            <span v-if="barDetails.name !== 'Default'">
-                      <TextInputDialog id="barNameDialog"
-                                       title="Rename Bar"
-                                       prompt="Enter the new name for the bar"
-                                       v-model="barDetails.name"
-                                       @ok="renameBar"
-                      />
-                      &nbsp;<small><b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button></small>
-                    </span>
-          </h2>
+              <!-- rename bar -->
+              <span v-if="barDetails.name !== 'Default'">
+                        <TextInputDialog id="barNameDialog"
+                                         title="Rename Bar"
+                                         prompt="Enter the new name for the bar"
+                                         v-model="barDetails.name"
+                                         @ok="renameBar"
+                        />
+                        &nbsp;<small><b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button></small>
+                      </span>
+            </h2>
 
-        </div>
-        <div class="lead">
-          <template v-if="barMembers.length === 0">
-            Shared bar
-          </template>
-          <template v-else-if="barMembers.length === 1">
-            Bar for: <b>{{ barMembers[0].displayName }}</b>
-          </template>
-          <template v-else>
-            Bar for: <b>{{ barMembers.length }} members</b>
-          </template>
-        </div>
-      </div>
-
-      <div id="EditorTabs">
-        <b-tabs class="editorTabs"
-                v-model="editorTabIndex"
-                small
-                :content-class="'bg-white border border-top-0 ' + (editorTabIndex ? '' : 'd-none')">
-
-          <!-- hidden tab to simulate no tab being selected -->
-          <b-tab title="" active title-item-class="d-none" class="d-none"/>
-
-          <!-- Members tab -->
-          <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
-            <template #title>
-              <b-icon-person-circle/>&nbsp;
-              <span v-if="memberDetails">{{ memberDetails.displayName }} details ({{memberDetails.stateText}})</span>
-              <span v-else-if="memberCount === 0">Unused Bar</span>
-              <span v-else>Members ({{ memberCount }})</span>
+          </div>
+          <div class="lead">
+            <template v-if="barMembers.length === 0">
+              Shared bar
             </template>
-            <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
-
-            <b-card>
-              <b-card-title>
-                <span v-if="memberDetails"><b-icon-person-circle/> {{ memberDetails.first_name }}</span>
-                <span v-else-if="memberCount === 1"><b-icon-person-circle/> This Morphic Bar is used by 1 member</span>
-                <span v-else-if="memberCount > 0"><b-icon-people-fill/> This Morphic Bar is used by {{memberCount}} members</span>
-                <span v-else>This Morphic Bar is NOT used</span>
-              </b-card-title>
-
-              <!-- member's own bar -->
-              <ul v-if="memberDetails" class="list-unstyled">
-                <li v-if="memberDetails.role === 'member'">
-                  <b-button variant="link" v-b-modal.roleChangeConfirm>Make member a Group Manager</b-button>
-                </li>
-                <li v-else>
-                  <b-button variant="link" v-b-modal.roleChangeConfirm>Remove group manager role from member</b-button>
-                </li>
-                <li>
-                  <b-button variant="link" v-b-modal.deleteConfirm class="text-danger">Delete member</b-button>
-                </li>
-
-                <li v-if="!memberDetails.isCurrent">
-                  <b-button variant="link" v-b-modal="'inviteMemberDialog'">{{ memberDetails.state === 'uninvited' ?
-                    "Send Invitation" : "Re-invite member" }}
-                  </b-button>
-                </li>
-              </ul>
-
-              <!-- community bar -->
-              <ul v-else-if="memberCount > 0">
-                <li v-for="member in members" v-bind:key="member.id">
-                  {{ member.first_name }} {{ member.last_name }}
-                </li>
-              </ul>
-
-              <!-- unused community bar -->
-              <b-card-sub-title v-else>You can go back to the
-                <b-link to="/dashboard">Dashboard</b-link>
-                and invite members to use it.
-              </b-card-sub-title>
-            </b-card>
-
-          </b-tab>
-
-          <!-- Bar settings tab -->
-          <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled title-item-class="notProduction">
-            <template #title>
-              <b-icon-gear-fill/>
-              Morphic Bar settings
+            <template v-else-if="barMembers.length === 1">
+              Bar for: <b>{{ barMembers[0].displayName }}</b>
             </template>
-            <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+            <template v-else>
+              Bar for: <b>{{ barMembers.length }} members</b>
+            </template>
+          </div>
+        </div>
 
-            <b-card>
-              <b-card-title>
+        <div id="EditorTabs">
+          <b-tabs class="editorTabs"
+                  v-model="editorTabIndex"
+                  small
+                  :content-class="'bg-white border border-top-0 ' + (editorTabIndex ? '' : 'd-none')">
+
+            <!-- hidden tab to simulate no tab being selected -->
+            <b-tab title="" active title-item-class="d-none" class="d-none"/>
+
+            <!-- Members tab -->
+            <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
+              <template #title>
+                <b-icon-person-circle/>&nbsp;
+                <span v-if="memberDetails">{{ memberDetails.displayName }} details ({{memberDetails.stateText}})</span>
+                <span v-else-if="memberCount === 0">Unused Bar</span>
+                <span v-else>Members ({{ memberCount }})</span>
+              </template>
+              <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+
+              <b-card>
+                <b-card-title>
+                  <span v-if="memberDetails"><b-icon-person-circle/> {{ memberDetails.first_name }}</span>
+                  <span v-else-if="memberCount === 1"><b-icon-person-circle/> This Morphic Bar is used by 1 member</span>
+                  <span v-else-if="memberCount > 0"><b-icon-people-fill/> This Morphic Bar is used by {{memberCount}} members</span>
+                  <span v-else>This Morphic Bar is NOT used</span>
+                </b-card-title>
+
+                <!-- member's own bar -->
+                <ul v-if="memberDetails" class="list-unstyled">
+                  <li v-if="memberDetails.role === 'member'">
+                    <b-button variant="link" v-b-modal.roleChangeConfirm>Make member a Group Manager</b-button>
+                  </li>
+                  <li v-else>
+                    <b-button variant="link" v-b-modal.roleChangeConfirm>Remove group manager role from member</b-button>
+                  </li>
+                  <li>
+                    <b-button variant="link" v-b-modal.deleteConfirm class="text-danger">Delete member</b-button>
+                  </li>
+
+                  <li v-if="!memberDetails.isCurrent">
+                    <b-button variant="link" v-b-modal="'inviteMemberDialog'">{{ memberDetails.state === 'uninvited' ?
+                      "Send Invitation" : "Re-invite member" }}
+                    </b-button>
+                  </li>
+                </ul>
+
+                <!-- community bar -->
+                <ul v-else-if="memberCount > 0">
+                  <li v-for="member in members" v-bind:key="member.id">
+                    {{ member.first_name }} {{ member.last_name }}
+                  </li>
+                </ul>
+
+                <!-- unused community bar -->
+                <b-card-sub-title v-else>You can go back to the
+                  <b-link to="/dashboard">Dashboard</b-link>
+                  and invite members to use it.
+                </b-card-sub-title>
+              </b-card>
+
+            </b-tab>
+
+            <!-- Bar settings tab -->
+            <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled title-item-class="notProduction">
+              <template #title>
                 <b-icon-gear-fill/>
                 Morphic Bar settings
-              </b-card-title>
+              </template>
+              <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
 
-              <b-form-checkbox id="barOnRight" v-model="barSettings.barOnRight" name="barOnRight" value="true"
-                               unchecked-value="false">
-                Bar on the right of the screen
-              </b-form-checkbox>
-              <b-form-checkbox id="cannotClose" v-model="barSettings.cannotClose" name="cannotClose" value="true"
-                               unchecked-value="false">
-                Member cannot close bar
-              </b-form-checkbox>
-              <b-form-checkbox id="startsOpen" v-model="barSettings.startsOpen" name="startsOpen" value="true"
-                               unchecked-value="false">
-                Morphic Bar always starts open
-              </b-form-checkbox>
-            </b-card>
-          </b-tab>
+              <b-card>
+                <b-card-title>
+                  <b-icon-gear-fill/>
+                  Morphic Bar settings
+                </b-card-title>
 
-        </b-tabs>
+                <b-form-checkbox id="barOnRight" v-model="barSettings.barOnRight" name="barOnRight" value="true"
+                                 unchecked-value="false">
+                  Bar on the right of the screen
+                </b-form-checkbox>
+                <b-form-checkbox id="cannotClose" v-model="barSettings.cannotClose" name="cannotClose" value="true"
+                                 unchecked-value="false">
+                  Member cannot close bar
+                </b-form-checkbox>
+                <b-form-checkbox id="startsOpen" v-model="barSettings.startsOpen" name="startsOpen" value="true"
+                                 unchecked-value="false">
+                  Morphic Bar always starts open
+                </b-form-checkbox>
+              </b-card>
+            </b-tab>
 
-      </div>
-    </div>
+          </b-tabs>
 
-    <div id="EditorActions">
-      <b-button variant="outline-dark"
-                v-b-modal="'copyBarDialog'"
-      >Copy bar from...
-      </b-button>
+        </div>
+      </b-col>
 
-      <b-button variant="outline-dark"
-                :disabled="!isChanged || newBar"
-                @click="revertBar"
-      >Revert to user's current bar
-      </b-button>
+      <b-col id="EditorActions" lg="fluid" xs="6">
+        <b-button variant="outline-dark"
+                  v-b-modal="'copyBarDialog'"
+        >Copy bar from...
+        </b-button>
 
-      <b-button variant="success"
-                style="visibility: hidden"
-                disabled
-      >Try it
-      </b-button>
+        <b-button variant="outline-dark"
+                  :disabled="!isChanged || newBar"
+                  @click="revertBar"
+        >Revert to user's current bar
+        </b-button>
 
-      <b-button variant="success"
-                :disabled="!isChanged"
-                @click="saveBar"
-      >Save bar
-      </b-button>
-    </div>
-  </div>
+        <b-button variant="success"
+                  style="visibility: hidden"
+                  disabled
+        >Try it
+        </b-button>
+
+        <b-button variant="success"
+                  :disabled="!isChanged"
+                  @click="saveBar"
+        >Save bar
+        </b-button>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
+
 <script>
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import * as Bar from "@/utils/bar";
@@ -228,20 +231,8 @@ export default {
     }
 };
 </script>
+
 <style lang="scss">
-$primary-color: #002957;
-$secondary-color: #84c661;
-
-
-#EditorDetails {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-
-  & > :first-child {
-    flex-grow: 1;
-  }
-}
 
 #BarDetails {
   flex-grow: 1;
@@ -271,6 +262,10 @@ $secondary-color: #84c661;
 
   .editorTabs {
     margin-bottom: -1px;
+    .nav-tabs {
+      flex-wrap: nowrap;
+      white-space: nowrap;
+    }
     .tab-content {
       position: absolute;
       z-index: 10;
