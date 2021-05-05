@@ -1,5 +1,5 @@
 <template>
-  <b-card>
+  <b-card :no-body="isDialog" class="dialogCard memberDetails">
     <InviteMemberDialog id="inviteMemberDialog" :member="memberDetails" />
 
     <b-card-title>
@@ -42,6 +42,15 @@
     <b-card-sub-title v-else>{{ $t('MemberDetails.bar-unused') }}</b-card-sub-title>
   </b-card>
 </template>
+
+<style lang="scss">
+.card.memberDetails {
+  li {
+    margin-top: 0.5em;
+  }
+}
+</style>
+
 <script>
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 import { membersMixin } from "@/mixins/members.js";
@@ -55,7 +64,9 @@ export default {
         /** @type {CommunityMember} */
         memberDetails: Object,
         /** @type {Array<CommunityMember>} */
-        members: Object
+        members: Object,
+        // true if this component is the body of a dialog
+        isDialog: Boolean
     },
     computed: {
         memberCount: function () {

@@ -1,6 +1,17 @@
 <!-- The details displayed above the bar editor -->
 <template>
-  <b-container id="EditorDetails" class="border-bottom p-0">
+  <b-container id="EditorDetails" class="border-bottom p-0" fluid="">
+
+    <template v-if="focusMode">
+      <b-modal id="MemberDetailsDialog"
+               hide-header
+               ok-only
+               ok-title="Close"
+      >
+        <MemberDetails v-if="memberDetails" id="MemberDetailsDialog" :member-details="memberDetails" :members="members" is-dialog />
+      </b-modal>
+    </template>
+
     <b-row no-gutters>
       <!-- details and tabs -->
       <b-col fluid>
@@ -23,7 +34,8 @@
             </h2>
 
           </div>
-          <div class="lead">
+          <div class="mb-1">
+            <span  class="lead">
             <template v-if="barMembers.length === 0">
               Shared bar
             </template>
@@ -33,6 +45,13 @@
             <template v-else>
               Bar for: <b>{{ barMembers.length }} members</b>
             </template>
+            </span>
+            <b-link class="ml-4 onlyFocus"
+                    v-b-modal="'MemberDetailsDialog'"
+            >Person Details</b-link>
+          </div>
+          <div v-if="focusMode" class="mb-2">
+            <b-link><b-icon-gear-fill/>Settings for this MorphicBar</b-link>
           </div>
         </div>
 
@@ -197,8 +216,15 @@ export default {
 <style lang="scss">
 
 #BarDetails {
+  min-width: 20em;
   flex-grow: 1;
+  .bar-name {
+    h2 {
+      margin-bottom: 0;
+    }
+  }
 }
+
 
 #EditorActions {
   display: grid;
@@ -207,6 +233,8 @@ export default {
 
   column-gap: 0.5rem;
   row-gap: 0.5rem;
+
+  margin: 0.5em auto 0.5em auto;
 
   .btn {
     font-size: 0.9rem;
