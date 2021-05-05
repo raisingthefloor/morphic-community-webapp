@@ -28,6 +28,8 @@
     "existing_email": "There is already an account associated with that email address.",
     "existing_username": "There is already an account which uses that user name.",
     "limit_reached": "The maximum number of members for your subscription has been reached.",
+    "cannot_demote_self": "You are unable to demote yourself.",
+    "cannot_delete_self": "You are unable to delete yourself from the community.",
     "http": {
       "404": "Unable to access to the server. Please try again later.",
       "500": "There is a problem with the server. Please try again later."
