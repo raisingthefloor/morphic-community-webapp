@@ -4,7 +4,12 @@
       <b-link to="/">
         <img src="/img/logo-wordmark.svg" alt="" />
       </b-link>
-      <span class="headerTitle d-none d-xl-inline" v-t="'Header.product-name'" />
+      <span class="headerTitle d-none"
+            :class="{
+               'd-xl-inline': focusMode,
+               'd-lg-inline': !focusMode
+            }"
+            v-t="'Header.product-name'" />
     </b-navbar-brand>
 
 

@@ -59,7 +59,7 @@ a > .b-icon:not(.noSpace):first-child {
 }
 
 body.isMobile .main {
-  a, .btn-link, .text-link {
+  a:not(.previewItem), .btn-link, .text-link {
     text-decoration: underline;
     color: $link-color-darker;
   }
