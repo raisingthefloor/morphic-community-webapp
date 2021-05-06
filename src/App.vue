@@ -151,7 +151,7 @@ export default {
                 }
             }
             console.log(height);
-            //setTimeout(() => this.getHeaderHeight(), 1000);
+            // setTimeout(() => this.getHeaderHeight(), 1000);
         }
     }
 };
