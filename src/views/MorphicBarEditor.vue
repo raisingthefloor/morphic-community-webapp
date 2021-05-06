@@ -35,8 +35,17 @@
                          @save-bar="saveBar()" @revert-bar="revertBar()"
           />
 
-          <!-- the desktop -->
-          <DesktopBarEditor ref="DesktopBarEditor"
+          <!-- the focus/mobile editor -->
+          <LiteBarEditor v-if="focusMode"
+                         ref="LiteBarEditor"
+                         :bar-details="barDetails"
+                         @edit-item="showEditDialog($event)"
+          />
+
+
+          <!-- the desktop editor -->
+          <DesktopBarEditor v-else
+                            ref="DesktopBarEditor"
                             :bar-details="barDetails"
                             @edit-item="showEditDialog($event)"
                             @bar-changed="onBarChanged"
@@ -71,7 +80,6 @@ import SidePanel from "@/components/side-panel/SidePanel";
 import {
     createCommunityBar,
     deleteCommunityBar,
-    deleteCommunityMember,
     getCommunity,
     getCommunityBar,
     getCommunityBars,
@@ -84,19 +92,19 @@ import { predefinedBars } from "@/utils/predefined";
 import * as Bar from "@/utils/bar";
 import EditButtonDialog from "@/components/editor/EditButtonDialog";
 import ButtonCatalog from "@/components/editor/ButtonCatalog";
-import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 import CopyBarDialog from "@/components/dialogs/CopyBarDialog";
 import EditorDetails from "@/components/editor/EditorDetails";
-import DesktopBarEditor from "@/views/DesktopBarEditor";
+import DesktopBarEditor from "@/components/editor/DesktopBarEditor";
+import LiteBarEditor from "@/components/editor/LiteBarEditor";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        LiteBarEditor,
         DesktopBarEditor,
         EditorDetails,
         ButtonCatalog,
         CopyBarDialog,
-        InviteMemberDialog,
         EditButtonDialog,
         SidePanel
     },
@@ -475,7 +483,14 @@ export default {
             return this.activeMemberId && this.membersList.find(m => m.id === this.activeMemberId);
         },
 
-        editDialog: function () { return this.$refs.editDialog; }
+        editDialog: function () { return this.$refs.editDialog; },
+
+        /**
+         * @return {DesktopBarEditor|LiteBarEditor} The bar editor.
+         */
+        barEditor: function () {
+            return this.$refs.DesktopBarEditor || this.$refs.LiteBarEditor;
+        }
 
     },
     mounted() {

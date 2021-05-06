@@ -53,7 +53,9 @@ export default {
         return {
             loaded: false,
             /** @type {MediaQueryList} */
-            mobileMatchMedia: null
+            mobileMatchMedia: null,
+            headerHeight: 0,
+            headerHeightStyle: null
         };
     },
     mounted() {
@@ -68,6 +70,8 @@ export default {
         errorHandler.useErrorHandler(this.showError);
 
         this.detectMobile();
+
+        this.getHeaderHeight();
     },
     computed: {
         /**
@@ -126,6 +130,28 @@ export default {
             }
 
             this.$store.commit("isMobile", this.mobileMatchMedia.matches);
+        },
+
+        getHeaderHeight() {
+            const content = document.querySelector("#PageContainer > #top");
+            let height = -1;
+            if (content) {
+                height = content.getBoundingClientRect().height;
+
+                if (height !== this.headerHeight) {
+
+                    if (!this.headerHeightStyle) {
+                        this.headerHeightStyle = document.createElement("style");
+                        document.head.appendChild(this.headerHeightStyle);
+                    }
+
+                    const styleSheet = this.headerHeightStyle.sheet;
+                    styleSheet.insertRule(`.headerMarginTop { margin-top: ${height}px; }`);
+                    this.headerHeight = height;
+                }
+            }
+            console.log(height);
+            //setTimeout(() => this.getHeaderHeight(), 1000);
         }
     }
 };

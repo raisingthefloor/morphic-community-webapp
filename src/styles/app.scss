@@ -59,7 +59,7 @@ a > .b-icon:not(.noSpace):first-child {
 }
 
 body.isMobile .main {
-  a, .btn-link, .text-link {
+  a:not(.previewItem), .btn-link, .text-link {
     text-decoration: underline;
     color: $link-color-darker;
   }
@@ -74,6 +74,19 @@ body.isMobile .main {
   .card-title {
     padding-bottom: 0.5em;
     border-bottom: #ccc 1px solid;
+  }
+}
+
+// Make dialogs appear full-screen on focus mode
+body.focusMode {
+  .modal {
+    padding:0 !important;
+    .modal-dialog.modal-lg {
+      max-width: 100%;
+      margin: 0;
+      margin-top: 70px;
+      //min-width: 100%;
+    }
   }
 }
 

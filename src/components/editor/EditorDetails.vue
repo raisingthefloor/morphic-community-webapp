@@ -1,6 +1,9 @@
 <!-- The details displayed above the bar editor -->
 <template>
-  <b-container id="EditorDetails" class="border-bottom p-0" fluid="">
+  <b-container id="EditorDetails"
+               class="p-0"
+               :class="{ 'border-bottom': !focusMode }"
+               fluid="1">
 
     <template v-if="focusMode">
       <b-modal id="MemberDetailsDialog"
@@ -113,24 +116,24 @@
       </b-col>
 
       <b-col id="EditorActions" lg="fluid" xs="6">
-        <b-button variant="outline-dark"
+        <b-button variant="invert-morphic-blue"
                   v-b-modal="'copyBarDialog'"
         >Copy bar from...
         </b-button>
 
-        <b-button variant="outline-dark"
+        <b-button variant="invert-morphic-blue"
                   :disabled="!isChanged || newBar"
                   @click="revertBar"
         >Revert to user's current bar
         </b-button>
 
-        <b-button variant="success"
+        <b-button variant="morphic-green"
                   style="visibility: hidden"
                   disabled
         >Try it
         </b-button>
 
-        <b-button variant="success"
+        <b-button variant="morphic-green"
                   :disabled="!isChanged"
                   @click="saveBar"
         >Save bar

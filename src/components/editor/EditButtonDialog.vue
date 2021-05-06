@@ -1,7 +1,7 @@
 <template>
   <b-modal id="modalEditGeneric"
            @ok="okClicked" @cancel="closeDialog(false)" @hide="onHide"
-           size="lg" scrollable centered
+           size="lg" scrollable
            footer-bg-variant="light"
            :title="dialogTitle">
 
