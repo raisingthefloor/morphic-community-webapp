@@ -77,5 +77,32 @@ body.isMobile .main {
   }
 }
 
+// Make dialogs appear full-screen on mobiles
+body.isMobile {
+  div[largedialog] {
+    .modal {
+      padding: 0 !important;
+
+      .modal-dialog.modal-lg {
+        background-color: $light;
+        max-width: none;
+        width: 100%;
+        margin: 0;
+        padding-bottom: 1em;
+
+        .modal-content {
+          border-radius: 1em;
+        }
+      }
+    }
+  }
+  &.modal-open {
+    //overflow: auto;
+  }
+  &.menu-open, &.modal-open.menu-open {
+    overflow: hidden;
+  }
+}
+
 @import "./expander";
 

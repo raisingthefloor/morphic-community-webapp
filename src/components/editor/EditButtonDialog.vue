@@ -1,8 +1,8 @@
 <template>
   <b-modal id="modalEditGeneric"
+           v-bind="dialogAttrs"
            @ok="okClicked" @cancel="closeDialog(false)" @hide="onHide"
-           size="lg" scrollable centered
-           footer-bg-variant="light"
+           size="lg"
            :title="dialogTitle">
 
     <template #modal-footer="{ok, cancel, hide}" >
@@ -293,6 +293,7 @@ import * as params from "@/utils/params";
 import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/editor/BarItemFields";
 import { CONFIG } from "@/config/config";
+import {dialogMixin} from "@/mixins/dialog.js";
 
 export default {
     name: "EditButtonDialog",
@@ -300,6 +301,8 @@ export default {
         /** @type {BarDetails} */
         bar: Object
     },
+
+    mixins: [dialogMixin],
 
     components: {
         BarItemFields,

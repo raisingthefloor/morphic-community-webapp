@@ -1,14 +1,14 @@
 <!-- A dialog that accepts a single text field -->
 <template>
 
-  <Dialog v-bind="$attrs"
+  <b-modal
           :id="dialogId"
           @show="dialogShown"
           size="lg"
           ok-only
-          scrollable
           :title="$t('CopyBarDialog.title')"
           ok-title="Cancel"
+          v-bind="dialogAttrs"
   >
     <p v-t="'CopyBarDialog.intro'"/>
 
@@ -63,7 +63,7 @@
 
     </b-modal>
 
-  </Dialog>
+  </b-modal>
 
 </template>
 
@@ -90,14 +90,15 @@ ul.memberBarList {
 
 <script>
 
-import Dialog from "@/components/dialogs/Dialog";
 import * as communityService from "@/services/communityService";
 import * as Bar from "@/utils/bar.js";
 import BarSummary from "@/components/dialogs/BarSummary";
+import {dialogMixin} from "@/mixins/dialog.js";
 
 export default {
     name: "CopyBarDialog",
-    components: {BarSummary, Dialog},
+    components: {BarSummary},
+    mixins: [dialogMixin],
     props: {
         /** @type {Array<BarDetails>} */
         bars: Array,

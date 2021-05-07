@@ -53,7 +53,10 @@ export default {
         return {
             loaded: false,
             /** @type {MediaQueryList} */
-            mobileMatchMedia: null
+            mobileMatchMedia: null,
+            headerHeight: null,
+            headerHeightStyle: null,
+            headerSizeObserver: null
         };
     },
     mounted() {
@@ -68,6 +71,9 @@ export default {
         errorHandler.useErrorHandler(this.showError);
 
         this.detectMobile();
+
+        this.getHeaderHeight();
+        this.dialogScroll();
     },
     computed: {
         /**
@@ -126,7 +132,94 @@ export default {
             }
 
             this.$store.commit("isMobile", this.mobileMatchMedia.matches);
+        },
+
+        /**
+         * Updates some css rules based on the header on the page, and continue to monitor it.
+         * Used to locate dialogs just above the header on mobile devices.
+         */
+        getHeaderHeight() {
+            const content = document.querySelector("#PageContainer #top");
+
+            if (this.headerHeight === null) {
+                window.addEventListener("resize", () => this.getHeaderHeight());
+            }
+
+            let height = 0;
+            if (content) {
+                height = content.getBoundingClientRect().height;
+
+                // Use the ResizeObserver if it's available.
+                if (!this.headerSizeObserver && window.ResizeObserver) {
+                    this.headerSizeObserver = new ResizeObserver(() => this.getHeaderHeight());
+                    this.headerSizeObserver.observe(content);
+                }
+
+                if (height !== this.headerHeight) {
+
+                    if (this.headerHeightStyle) {
+                        document.head.removeChild(this.headerHeightStyle);
+                    }
+                    this.headerHeightStyle = document.createElement("style");
+
+                    document.head.appendChild(this.headerHeightStyle);
+                    const styleSheet = this.headerHeightStyle.sheet;
+
+                    // Add some rules to adjust position and height of things while taking the header into consideration
+                    [".", "body.focusMode .focus-", "body.isMobile .mobile-"].forEach(prefix => {
+                        styleSheet.insertRule(`${prefix}headerMarginTop { margin-top: ${height}px !important; }`);
+                        styleSheet.insertRule(`${prefix}headerMaxHeight { max-height: calc(100vh - ${height}px) !important; }`);
+                        styleSheet.insertRule(`${prefix}headerMinHeight { min-height: calc(100vh - ${height}px) !important; }`);
+                    });
+                }
+            } else {
+                // Content is not available yet.
+                setTimeout(() => this.getHeaderHeight(), 1000);
+            }
+
+            this.headerHeight = height;
+
+            console.log(height);
+        },
+
+        /**
+         * For mobile: When a full-screen dialog is shown, scroll to the top (and restore when hidden).
+         * This prevents the the active input field being scrolled out of view when the on-screen keyboard opens.
+         */
+        dialogScroll: function () {
+            const scrollPos = {};
+
+            // Scroll to the top of a window when a large dialog is shown.
+            this.$root.$on("bv::modal::shown", (event) => {
+                if (this.isMobile) {
+                    const elem = event.target;
+                    const large = !!elem.querySelector(".modal-lg");
+                    if (large) {
+                        scrollPos[event.componentId] = {x: window.scrollY, y: window.scrollY};
+                        window.scrollTo(0, 0);
+                        // Handle header clicks when a dialog is shown
+                        elem.addEventListener("click", (e) => {
+                            if (e.target === e.currentTarget) {
+                                if (e.clientY < this.headerHeight) {
+                                    this.$refs.Header.$refs.navToggle.$el.click(e);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            // Restore the scroll position when a large dialog is hidden.
+            this.$root.$on("bv::modal::hidden", (event) => {
+                if (this.isMobile) {
+                    const pos = scrollPos[event.componentId];
+                    if (pos) {
+                        window.scrollTo(pos.x, pos.y);
+                    }
+                }
+            });
         }
+
     }
 };
 </script>
