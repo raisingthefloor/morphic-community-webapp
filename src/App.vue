@@ -1,6 +1,6 @@
 <template>
   <b-container v-if="loaded" fluid id="PageContainer">
-    <Header />
+    <Header ref="Header" />
     <router-view role="main" class="main" />
     <Footer />
   </b-container>
@@ -19,7 +19,7 @@
   }
 
   // Put the footer at the bottom of the viewport, if the page is too short
-  body {
+  body:not(.modal-open) {
     height: 100vh;
   }
   #PageContainer {

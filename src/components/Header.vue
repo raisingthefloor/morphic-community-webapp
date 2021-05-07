@@ -12,26 +12,25 @@
             v-t="'Header.product-name'" />
     </b-navbar-brand>
 
-
     <template v-if="isLoggedIn">
-      <b-navbar-toggle target="nav-actions"></b-navbar-toggle>
-      <b-collapse id="nav-actions" is-nav>
+      <b-navbar-toggle target="nav-actions" ref="navToggle"/>
+      <b-collapse id="nav-actions" is-nav v-model="showMenu">
         <b-navbar-nav v-if="isLoggedIn" class="ml-auto loggedInNav">
           <b-nav-text>
             <b-button v-if="focusMode"
                       variant="invert-dark"
-                      @click="setFocusMode(false)" v-t="'Header.standard-mode_button'" />
+                      @click="showMenu = false; setFocusMode(false)" v-t="'Header.standard-mode_button'" />
             <b-button v-else
                       variant="invert-dark"
-                      @click="setFocusMode(true)" v-t="'Header.focus-mode_button'" />
+                      @click="showMenu = false; setFocusMode(true)" v-t="'Header.focus-mode_button'" />
           </b-nav-text>
 
           <b-nav-text v-if="focusMode">
-            <b-button variant="invert-dark" v-t="'Header.home_button'" />
+            <b-button variant="invert-dark" @click="showMenu = false" v-t="'Header.home_button'" />
           </b-nav-text>
 
           <b-nav-text>
-            <b-button variant="invert-dark" @click="logout"><b-icon icon="box-arrow-right"/> {{ $t('Header.logout_button') }}</b-button>
+            <b-button variant="invert-dark" @click="showMenu = false; logout()"><b-icon icon="box-arrow-right"/> {{ $t('Header.logout_button') }}</b-button>
           </b-nav-text>
         </b-navbar-nav>
       </b-collapse>
@@ -43,25 +42,14 @@
       </b-nav-text>
     </b-navbar-nav>
 
-
-    <b-navbar-nav v-if="false && $route.name !== 'Login'" role="navigation">
-      <b-nav-item :href="dashboardUrl" :active="!focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.dashboard_link'" /></b-nav-item>
-      <b-nav-item :href="focusedUrl" :active="focusMode" v-if="isLoggedIn" exact-active-class="active"><b v-t="'Header.focus-mode_link'" /></b-nav-item>
-
-      <b-nav-item v-if="isLoggedIn" @click="logout" class="logout-nav-item">
-        <b-icon-box-arrow-right aria-hidden="true" />&nbsp;
-        <span v-t="'Header.logout_link'" />
-      </b-nav-item>
-      <b-nav-item v-else href="#/login" class="logout-nav-item">
-        <b-icon-box-arrow-in-right aria-hidden="true" />&nbsp;
-        <span v-t="'Header.login_link'" />
-      </b-nav-item>
-    </b-navbar-nav>
+    <!-- clicking outside the menu will close it -->
+    <div v-show="showMenu" tabindex="0" class="onlyMobile modal-backdrop headerMarginTop" @focusin="$refs.navToggle && $refs.navToggle.$el.focus()" @click="showMenu = false"/>
   </b-navbar>
 </template>
 
 <style lang="scss">
-  @import "~@/styles/variables";
+  @import "~@/styles/bootstrap-util";
+
   #top {
     a.nav-link:focus {
       outline: 0;
@@ -75,6 +63,7 @@
 
     padding-left: 0;
     padding-right: 0;
+    padding-bottom: 0;
 
     & > :first-child {
       margin-left: 1rem;
@@ -121,7 +110,7 @@
           padding: 0;
         }
         background-color: #000;
-        button {
+        .btn {
           text-align: left;
           margin: 0 0 -1px;
 
@@ -134,11 +123,32 @@
       }
     }
   }
+  body.menu-open {
+    #top {
+      .navbar-collapse {
+        z-index: ($zindex-modal + 102);
+      }
+
+      .modal-backdrop {
+        z-index: ($zindex-modal + 100);
+
+        &:focus-within {
+          background-color: red !important;
+        }
+      }
+    }
+  }
+  //z-index: ($zindex-modal + 101);
 </style>
 
 <script>
 
 export default {
+    data() {
+        return {
+            showMenu: false
+        };
+    },
     computed: {
         isLoggedIn: function () {
             return this.$store.getters.isLoggedIn;
@@ -149,6 +159,10 @@ export default {
         dashboardUrl: function () {
             return this.getUrl(false).href;
         }
+    },
+
+    mounted() {
+        this.showMenu = false;
     },
 
     methods: {
@@ -176,6 +190,11 @@ export default {
          */
         setFocusMode: function (flag) {
             this.$store.commit("forceFocusMode", !!flag);
+        }
+    },
+    watch: {
+        showMenu: function () {
+            document.body.classList.toggle("menu-open", this.showMenu);
         }
     }
 };
