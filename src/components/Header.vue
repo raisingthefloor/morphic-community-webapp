@@ -6,8 +6,8 @@
       </b-link>
       <span class="headerTitle d-none"
             :class="{
-               'd-xl-inline': focusMode,
-               'd-lg-inline': !focusMode
+               'd-xl-inline': isLite,
+               'd-lg-inline': !isLite
             }"
             v-t="'Header.product-name'" />
     </b-navbar-brand>

@@ -45,8 +45,8 @@ export default {
     methods: {
         getBarEditRoute: function (bar) {
             return this.member
-                ? Bar.getUserBarEditRoute(this.member, bar.id, this.focusMode)
-                : Bar.getBarEditRoute(bar, this.focusMode);
+                ? Bar.getUserBarEditRoute(this.member, bar.id)
+                : Bar.getBarEditRoute(bar);
         },
         getBars: function () {
             const filter = this.member

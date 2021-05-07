@@ -18,7 +18,7 @@
 
     <!-- EDITOR v2 -->
     <b-row no-gutters id="EditorContainer">
-      <b-col v-if="!focusMode" md="2">
+      <b-col v-if="!isLite" md="2">
         <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
       </b-col>
       <b-col fluid>
@@ -36,7 +36,7 @@
           />
 
           <!-- the focus/mobile editor -->
-          <LiteBarEditor v-if="focusMode"
+          <LiteBarEditor v-if="isLite"
                          ref="LiteBarEditor"
                          :bar-details="barDetails"
                          @edit-item="showEditDialog($event)"
@@ -56,7 +56,7 @@
       </b-col>
 
       <!-- Button Catalogue -->
-      <b-col v-if="!focusMode" md="3" lg="2">
+      <b-col xv-if="!focusMode" md="3" lg="2">
         <ButtonCatalog ref="ButtonCatalog"
                        :button-catalog="buttonCatalog"
                        @item-selected="addBarItem($event.item, $event.noImage)"
@@ -360,7 +360,6 @@ export default {
          * @param {BarItem} [item] The item to edit.
          */
         showEditDialog: function (item) {
-            this.selectedItem = item;
             this.editDialog.showDialog(item).then(changed => {
                 Bar.checkBar(this.barDetails);
                 if (changed) {
@@ -562,14 +561,10 @@ export default {
             barSelectedInDropdown: "",
             // flags
             newBar: false,
-            editDialogShown: false,
-            tab: 0,
-            dragFromEditor: false,
             isChanged: false,
             editBarName: false,
             onSave: false,
-            initialChangesPrimaryItems: false,
-            initialChangesDrawerItems: false,
+
             // data for the community manager
             community: {},
             /**
@@ -593,43 +588,16 @@ export default {
             /** @type {ButtonCatalog} Button catalog. */
             buttonCatalog: buttonCatalog,
 
-            // storage
-            buttonStorage: {},
-            /**
-             * The selected item.
-             * @type {BarItem}
-             */
-            selectedItem: {
-                /** @type {BarItemConfiguration} */
-                configuration: {
-                    label: "hi",
-                    color: "",
-                    image_url: ""
-                },
-                data: {}
-            },
-            invitationEmail: "",
             /** @type {BarDetails} */
             barDetails: {},
             originalBarDetails: {},
 
-            // configurations
-            preview: {
-                drawer: {
-                    w: 2,
-                    h: 6
-                },
-                bar: {
-                    h: 100
-                }
-            },
             newBarDetails: {
                 name: "New Bar",
                 is_shared: false,
                 items: []
             },
-            predefinedBars: predefinedBars,
-            checkBarTimer: null
+            predefinedBars: predefinedBars
         };
     }
 };

@@ -240,23 +240,33 @@ Vue.mixin({
         document.body.classList.toggle("production", this.CONFIG.PRODUCTION);
     },
     computed: {
-        /**
-         * Determines if the page is currently in focused mode.
-         * Focus-mode is always enabled if running on a mobile device, or by user preference.
-         * @return {Boolean} true if in focus mode.
-         */
-        focusMode: function () {
-            return this.isMobile || this.$store.getters.forceFocusMode || this.$route.path.includes("/focused/");
-        },
         isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
         hasAccount: function () { return this.$store.getters.hasAccount; },
         communityId: function () { return this.$store.getters.communityId; },
         userId: function () { return this.$store.getters.userId; },
+
+        /**
+         * Determines if the page is currently in focused mode.
+         * @return {Boolean} true if in focus mode.
+         */
+        focusMode: function () {
+            return this.$store.getters.forceFocusMode || this.$route.path.includes("/focused/");
+        },
+
         /**
          * Determines if the device is a mobile device (or, very small screen).
          * @return {Boolean} true if running on a mobile device
          */
         isMobile: function () { return !!this.$store.getters.isMobile; },
+
+        /**
+         * Lite mode - display a simpler UI. (either focus mode or on a mobile device)
+         * @return {Boolean} true if focusMode or isMobile are set.
+         */
+        isLite: function () {
+            return this.focusMode || this.isMobile;
+        },
+
         console: () => console,
         CONFIG: () => CONFIG,
         externalLinks: () => externalLinks

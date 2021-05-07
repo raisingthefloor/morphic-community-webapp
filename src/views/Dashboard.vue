@@ -304,7 +304,7 @@ export default {
     updated() {
         this.cleanUpArrows();
         // TODO: Find a better way to detect whether the hints are displayed
-        if (this.showHints && !this.focusMode) {
+        if (this.showHints && !this.isLite) {
             this.createArrows();
         }
     },

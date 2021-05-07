@@ -84,7 +84,8 @@ export default {
             return {
                 focusMode: this.focusMode,
                 dashboardMode: !this.focusMode,
-                isMobile: this.isMobile
+                isMobile: this.isMobile,
+                isLite: this.isLite
             };
         }
     },

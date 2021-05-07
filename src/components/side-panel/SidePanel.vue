@@ -79,7 +79,7 @@
   $indent: 0.3em;
 
   // non-mobile
-  body:not(.focusMode) #SidePanel {
+  body:not(.isLite) #SidePanel {
     //noinspection CssUnknownTarget
     background: #a5d58a url(/img/bg-green.png) repeat-x bottom;
     min-height: 600px;
@@ -202,7 +202,7 @@
   }
 
   // Mobile overrides
-  body.focusMode #SidePanel {
+  body.isLite #SidePanel {
     font-size: 1.2rem;
     padding: 1em;
     //noinspection CssUnknownTarget
@@ -400,8 +400,8 @@ export default {
         selectBar(bar) {
             const member = bar.userId ? bar : bar._member;
             const goto = member
-                ? Bar.getUserBarEditRoute(member, undefined, this.focusMode)
-                : Bar.getBarEditRoute(bar, this.focusMode);
+                ? Bar.getUserBarEditRoute(member, undefined)
+                : Bar.getBarEditRoute(bar);
 
             this.$router.push(goto);
         },

@@ -4,7 +4,6 @@
                @click="$emit('click', {data: barItem})"
                @mouseover="$emit('mouseover', {data: barItem})"
                @mouseleave="$emit('mouseleave', {data: barItem})"
-               :to="editLink"
   />
   <b-button v-else
           variant="link"
@@ -13,7 +12,6 @@
           @click="$emit('click', {data: barItem})"
           @mouseover="$emit('mouseover', {data: barItem})"
           @mouseleave="$emit('mouseleave', {data: barItem})"
-          :to="editLink"
     >{{
     barItem.configuration.label
   }}</b-button>
@@ -53,27 +51,6 @@ export default {
         /** @return {BarDetails} The bar that the item belongs to. */
         barDetails: function () {
             return Bar.getItemBar(this.barItem);
-        },
-        /**
-         * Create the link to the edit page, for focus mode.
-         * @return {Object} The edit page route.
-         */
-        editLink: function () {
-            let link;
-            if (this.focusMode) {
-                link = {
-                    path: "/focused/button-edit",
-                    query: {
-                        barId: this.barDetails.id,
-                        buttonIndex: Bar.getItemIndex(this.barItem, this.barDetails),
-                        communityId: this.communityId
-                    }
-                };
-                if (this.$route.query.memberId) {
-                    link.memberId = this.$route.query.memberId;
-                }
-            }
-            return link;
         }
     }
 };

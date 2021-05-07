@@ -2,10 +2,10 @@
 <template>
   <b-container id="EditorDetails"
                class="p-0"
-               :class="{ 'border-bottom': !focusMode }"
+               :class="{ 'border-bottom': !isLite }"
                fluid="1">
 
-    <template v-if="focusMode">
+    <template v-if="isLite">
       <b-modal id="MemberDetailsDialog"
                hide-header
                ok-only
@@ -53,12 +53,12 @@
                     v-b-modal="'MemberDetailsDialog'"
             >Person Details</b-link>
           </div>
-          <div v-if="focusMode" class="mb-2">
+          <div v-if="isLite" class="mb-2">
             <b-link><b-icon-gear-fill/>Settings for this MorphicBar</b-link>
           </div>
         </div>
 
-        <div v-if="!focusMode" id="EditorTabs">
+        <div v-if="!isLite" id="EditorTabs">
           <b-tabs class="editorTabs"
                   v-model="editorTabIndex"
                   small

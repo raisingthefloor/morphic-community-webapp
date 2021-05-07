@@ -34,9 +34,11 @@ button.btn.btn-link, a.btn.btn-link {
 
 // General hide/show
 // production-ready: .notProduction vs .onlyProduction
+// lite (mobile or focus): .notLite vs onlyLite
 // mobile: .notMobile vs .onlyMobile
 // focus mode: .notFocus vs .onlyFocus
 body.production .notProduction, body:not(.production) .onlyProduction,
+body.isLite .notLite, body:not(.isLite) .onlyLite,
 body.isMobile .notMobile, body:not(.isMobile) .onlyMobile,
 body.focusMode .notFocus, body:not(.focusMode) .onlyFocus {
   display: none !important;
@@ -58,7 +60,7 @@ a > .b-icon:not(.noSpace):first-child {
   color: $link-color;
 }
 
-body.isMobile .main {
+body.focusMode .main {
   a:not(.previewItem), .btn-link, .text-link {
     text-decoration: underline;
     color: $link-color-darker;
