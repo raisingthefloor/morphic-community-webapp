@@ -85,6 +85,15 @@
     "join_link": "Click here to begin"
   },
   "EditButtonDialog": {
+    "color": {
+      "teal": "Teal",
+      "blue": "Blue",
+      "purple":  "Purple",
+      "red": "Red",
+      "green":  "Green",
+      "orange": "Orange",
+      "other": "Other"
+    }
   },
   "FocusedAddCommunityBar": {
   },
