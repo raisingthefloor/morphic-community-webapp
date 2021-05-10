@@ -84,7 +84,9 @@ h1.communityName {
   }
 }
 
-@import "~bootstrap/scss/bootstrap";
+//@import "~bootstrap/scss/bootstrap";
+@import "~@/styles/bootstrap-util";
+
 
 .memberList {
 

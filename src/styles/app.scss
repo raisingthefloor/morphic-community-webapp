@@ -1,9 +1,9 @@
 @import "variables";
-
+@import "bootstrap-util";
 // Bootstrap customisations
 $theme-colors: (
-  morphic-blue: $morphic-blue-color,
-  morphic-green: $morphic-green-color
+        morphic-blue: $morphic-blue-color,
+        morphic-green: $morphic-green-color
 );
 
 // Bootstrap
@@ -80,7 +80,7 @@ body.focusMode .main {
 }
 
 // Make dialogs appear full-screen on mobiles
-body.isMobile {
+body.isLite {
   div[largedialog] {
     .modal {
       padding: 0 !important;
@@ -94,6 +94,8 @@ body.isMobile {
 
         .modal-content {
           border-radius: 1em;
+          margin: 0 auto;
+          max-width: 800px;
         }
       }
     }

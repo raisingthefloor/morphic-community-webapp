@@ -190,6 +190,7 @@ const routes = [
         path: "/dashboard/morphicbar-editor/",
         name: "MorphicBar Editor",
         component: MorphicBarEditor,
+        props: route => ({ catalogView: !!route.query.catalogView }),
         meta: {
             title: "MorphicBar Editor :: Morphic"
         }

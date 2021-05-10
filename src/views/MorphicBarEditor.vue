@@ -17,11 +17,11 @@
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
-    <b-row no-gutters id="EditorContainer">
+    <b-row no-gutters id="EditorContainer" align-v="stretch">
       <b-col v-if="!isLite" md="2">
         <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
       </b-col>
-      <b-col fluid>
+      <b-col v-show="editorVisible" fluid>
         <div id="barEditor" class="pt-2">
 
           <!-- Bar info, actions, and editor tabs -->
@@ -40,6 +40,7 @@
                          ref="LiteBarEditor"
                          :bar-details="barDetails"
                          @edit-item="showEditDialog($event)"
+                         @add-item="showCatalog(true)"
           />
 
 
@@ -56,7 +57,17 @@
       </b-col>
 
       <!-- Button Catalogue -->
-      <b-col xv-if="!focusMode" md="3" lg="2">
+      <b-col v-show="catalogVisible" :md="isLite || 3" :lg="isLite || 2"  :class="isLite && 'p-3'">
+
+        <template v-if="isLite">
+          <h1>Button Catalog: Buttons you can add</h1>
+          <div>
+            <b-button @click="showCatalog(false)">Cancel</b-button>
+          </div>
+          <em>Click on a button name to configure and add to MorphicBar</em>
+        </template>
+
+
         <ButtonCatalog ref="ButtonCatalog"
                        :button-catalog="buttonCatalog"
                        @item-selected="addBarItem($event.item, $event.noImage)"
@@ -108,6 +119,9 @@ export default {
         EditButtonDialog,
         SidePanel
     },
+    props: {
+        catalogView: Boolean
+    },
     methods: {
 
         /**
@@ -123,12 +137,12 @@ export default {
                 barItem.configuration.image_url = "";
             }
 
-            // close any expanded button
+            // close the catalog
+            this.showCatalog(false);
             this.$refs.ButtonCatalog.expandCatalogButton(null);
             this.onBarChanged();
 
-
-            var showEdit;
+            let showEdit;
             if (barItem.data.isPlaceholder) {
                 showEdit = true;
             } else {
@@ -368,6 +382,25 @@ export default {
                 this.$forceUpdate();
             });
         },
+
+        /**
+         * Lite mode: Shows the button catalog.
+         */
+        showCatalog: function (show) {
+            const catalogRoute = {...this.$route };
+            catalogRoute.query = {...catalogRoute.query };
+            if (show) {
+                catalogRoute.query.catalogView = true;
+            } else {
+                delete catalogRoute.query.catalogView;
+            }
+
+            this.$router.push(catalogRoute);
+
+            this.$refs.ButtonCatalog.$el.focus();
+
+        },
+
         loadBarMembers: function () {
             getCommunityBars(this.communityId)
                 .then(resp => {
@@ -489,6 +522,13 @@ export default {
          */
         barEditor: function () {
             return this.$refs.DesktopBarEditor || this.$refs.LiteBarEditor;
+        },
+
+        editorVisible: function () {
+            return !(this.isLite && this.catalogVisible);
+        },
+        catalogVisible: function () {
+            return !this.isLite || this.catalogView;
         }
 
     },
@@ -538,14 +578,8 @@ export default {
             this.storeUnsavedBar();
         },
         "$route.query": function () {
-            this.initialChangesPrimaryItems = false;
-            this.initialChangesDrawerItems = false;
-            this.loadAllData();
+            //this.loadAllData();
         }
-    },
-    async beforeRouteUpdate(to, from, next) {
-        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;
-        next(proceed);
     },
     async beforeRouteLeave(to, from, next) {
         const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;

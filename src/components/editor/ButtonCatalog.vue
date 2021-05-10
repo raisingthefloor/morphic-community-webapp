@@ -23,8 +23,7 @@
       <ul v-for="(catalog, isSearchResult) in [buttonCatalog, searchResult]"
           :key="isSearchResult"
           class="buttonCatalogListing linkList list-unstyled"
-          :class="{ searchResults: isSearchResult}"
-          style="overflow-y: scroll; max-height: 630px;">
+          :class="{ searchResults: isSearchResult}">
 
         <li v-if="isSearchResult && searchResult && searchResult.itemsFound.hidden">
           <small>No buttons where found while searching for '<code>{{searchText}}</code>'</small>
@@ -36,7 +35,7 @@
               class="catalogGroup"
               :class="{
                         hasSecondary: buttonGroup.hasSecondary,
-                        showSecondary: secondaryItemsShown[subkind],
+                        showSecondary: alwaysShowSecondaryItems || secondaryItemsShown[subkind],
                         searchResult: buttonGroup.isSearchResult
                     }">
 
@@ -44,7 +43,8 @@
 
             <ul class="buttonCatalogEntries">
               <template v-for="(button, buttonId) in buttonGroup.items">
-                <li :key="button.data.buttonKey"
+                <li v-if="!(button.data.isExpander && alwaysShowSecondaryItems)"
+                    :key="button.data.buttonKey"
                     class="buttonCatalogEntry"
                     :class="{
                               noImage: !button.configuration.image_url && !button.data.isExpander,
@@ -55,10 +55,10 @@
                     :title="button.configuration.description"
                     :ref="'catalog_' + buttonId"
                     tabindex="-1"
-                          @keypress="onCatalogItemKeyPress($event, button)"
+                      @keypress.enter="isLite || onItemSelected(button)"
                 >
                   <!-- Render each button as draggable -->
-                  <drag :data="button" type="catalogButtonWithImage">
+                  <drag :data="button" type="catalogButtonWithImage" :disabled="isLite">
                     <!-- Define looks when dragged -->
                     <template v-slot:drag-image>
                       <PreviewItem :item="button" :noImage="false" xclass="noImage"/>
@@ -67,7 +67,7 @@
                     <!-- Define looks when not selected -->
                     <b-button v-if="buttonId !== expandedCatalogButtonId"
                               variant="link"
-                                    @click="expandCatalogButton(button, buttonId, subkind)"
+                              @click="expandCatalogButton(button, buttonId, subkind)"
                               :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
                               class="buttonCatalogEntry nonExpandedCatalogEntry">
                       <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}">
@@ -81,8 +81,9 @@
                         <b-img v-else-if="button.configuration.image_url"
                                :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
                       </div>
-                            <span v-html="getCatalogItemLabel(button, buttonGroup.searchWords)" />
+                      <span v-html="getCatalogItemLabel(button, buttonGroup.searchWords)" />
                     </b-button>
+
                     <!-- Define looks when selected (expanded) -->
                     <div v-else class="active" @click="expandedCatalogButtonId = undefined"
                     >
@@ -100,7 +101,7 @@
                       <div class="buttons"
                            @click="$event.stopPropagation()"
                       >
-                        <drag :data="button" type="catalogButtonNoImage">
+                        <drag :data="button" type="catalogButtonNoImage" :disabled="isLite">
                           <PreviewItem :item="button"
                                        :simplified="true" :noImage="true"
                                        class="noImage"
@@ -108,7 +109,7 @@
                           />
                         </drag>
 
-                        <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage">
+                        <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage" :disabled="isLite">
                           <template v-slot:drag-image>
                             <PreviewItem :item="button" :noImage="false" class="noImage"
                                                @click="onItemSelected(button, true)"
@@ -159,6 +160,9 @@
 
   .buttonCatalogListing {
     padding: 0.5rem;
+
+    overflow-y: scroll;
+    max-height: 630px;
 
     h3 {
       font-size: 1.30rem;
@@ -284,11 +288,13 @@
         display: block;
       }
     }
-
-
   }
 }
 
+body.isLite #ButtonCatalog .buttonCatalogListing {
+  overflow-y: auto;
+  max-height: none;
+}
 
 
 </style>
@@ -335,22 +341,17 @@ export default {
             }, {})
         };
     },
+    computed: {
+        alwaysShowSecondaryItems: function () {
+            return this.focusMode;
+        }
+    },
     methods: {
         onItemSelected: function (item, noImage) {
             this.$emit("item-selected", {
                 item: item,
                 noImage: !!noImage
             });
-        },
-        /**
-         * A key is pressed, while a catalog item is focused.
-         * @param {KeyboardEvent} $event The event.
-         * @param {BarItem} button The button.
-         */
-        onCatalogItemKeyPress: function ($event, button) {
-            if ($event.key === "Enter") {
-                this.onItemSelected(button);
-            }
         },
         expandCatalogButton: function (button, buttonId, subkind) {
             if (!button) {
