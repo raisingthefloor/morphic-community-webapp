@@ -189,7 +189,7 @@ export default {
          * @param {Boolean} flag true to enable.
          */
         setFocusMode: function (flag) {
-            this.$store.commit("forceFocusMode", !!flag);
+            this.$store.dispatch("forceFocusMode", !!flag);
         }
     },
     watch: {

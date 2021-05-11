@@ -199,6 +199,14 @@ export default new Vuex.Store({
                 localStorage.removeItem("unsavedBar");
             }
             commit("unsavedBar", barDetails);
+        },
+        forceFocusMode({ commit }, flag) {
+            if (flag) {
+                localStorage.setItem("focusMode", true);
+            } else {
+                localStorage.removeItem("focusMode");
+            }
+            commit("forceFocusMode", !!flag);
         }
     },
     getters: {
