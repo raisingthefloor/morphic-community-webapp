@@ -116,24 +116,24 @@
       </b-col>
 
       <b-col id="EditorActions" lg="fluid" xs="6">
-        <b-button variant="invert-morphic-blue"
+        <b-button variant="secondary"
                   v-b-modal="'copyBarDialog'"
         >Copy bar from...
         </b-button>
 
-        <b-button variant="invert-morphic-blue"
+        <b-button variant="secondary"
                   :disabled="!isChanged || newBar"
                   @click="revertBar"
         >Revert to user's current bar
         </b-button>
 
-        <b-button variant="morphic-green"
+        <b-button variant="primary"
                   style="visibility: hidden"
                   disabled
         >Try it
         </b-button>
 
-        <b-button variant="morphic-green"
+        <b-button variant="primary"
                   :disabled="!isChanged"
                   @click="saveBar"
         >Save bar

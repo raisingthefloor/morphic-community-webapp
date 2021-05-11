@@ -19,15 +19,15 @@ export const dialogMixin = {
             // Make some adjustments to the dialogs for mobiles
             const attrs = {
                 ...this.$attrs,
-                largeDialog: this.isMobile,
+                largeDialog: this.isLite,
                 // Stop the back-drop covering the header (the dialog will be stretched over the screen anyway)
-                hideBackdrop: this.isMobile,
-                noCloseOnBackdrop: this.isMobile,
+                hideBackdrop: this.isLite,
+                noCloseOnBackdrop: this.isLite,
                 // The buttons take up too much space when the on-screen keyboard is open
-                scrollable: !this.isMobile
+                scrollable: !this.isLite
             };
 
-            attrs.dialogClass = `${attrs.dialogClass} mobile-headerMarginTop mobile-headerMinHeight`;
+            attrs.dialogClass = `${attrs.dialogClass} mobile-headerMarginTop mobile-headerMinHeight focus-headerMarginTop focus-headerMinHeight`;
 
             return attrs;
         }

@@ -134,6 +134,16 @@
 
   #SidePanel {
 
+    .memberName {
+      display: flex;
+      & > :first-child {
+        flex-grow: 1;
+      }
+      .expander {
+        margin-right: 0.5em;
+      }
+    }
+
     .buttonRow {
       button:first-child {
         margin-right: 1em;
@@ -218,6 +228,10 @@
     }
     h3 {
       margin-top: 1em;
+    }
+
+    li > a {
+      display: block;
     }
 
     .expander {
@@ -311,13 +325,13 @@ export default {
             return [this.newestMemberId];
         },
         buttonAttrs() {
-            return this.isMobile
+            return this.isLite
                 ? {
-                    variant: "invert-morphic-blue",
+                    variant: "secondary",
                     size: "md"
                 }
                 : {
-                    variant: "morphic-green",
+                    variant: "primary",
                     size: "sm"
                 };
         }

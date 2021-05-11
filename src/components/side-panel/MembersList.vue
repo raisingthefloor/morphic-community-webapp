@@ -34,7 +34,8 @@
           }"
           @click="$emit('expandClick', $refs[member.id][0])"
       >
-          {{ member.displayName }}
+        <span>{{ member.displayName }}</span>
+
         <!-- the +/- expander button -->
         <span class="expander">
           <b-iconstack scale="1.2">
@@ -51,13 +52,13 @@
         <!-- uninvited -->
         <div v-if="member.state === 'uninvited'">
           {{ $t('MembersList.not-invited') }}<br/>
-          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
+          <b-button v-bind="buttonAttrs" variant="secondary" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
         </div>
 
         <!-- invited -->
         <div v-else-if="member.state === 'invited'">
           {{ $t('MembersList.invitation-not-accepted') }}<br/>
-          <b-button v-bind="buttonAttrs" variant="invert-morphic-blue" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
+          <b-button v-bind="buttonAttrs" variant="secondary" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 
         <!-- Member's bars - currently, there's only 1 bar per person  -->

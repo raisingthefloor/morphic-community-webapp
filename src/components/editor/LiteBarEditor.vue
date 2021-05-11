@@ -3,7 +3,7 @@
     <div class="editorHeader">
       <div/>
       <div class="editorTitle"><h3>Buttons on the Bar</h3></div>
-      <div><b-button variant="invert-morphic-blue" @click="showCatalog()">Add a button</b-button></div>
+      <div><b-button variant="secondary" @click="showCatalog()">Add a button</b-button></div>
     </div>
 
     <div class="bar">

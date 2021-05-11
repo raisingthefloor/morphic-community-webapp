@@ -192,7 +192,7 @@ export default {
 
             // Scroll to the top of a window when a large dialog is shown.
             this.$root.$on("bv::modal::shown", (event) => {
-                if (this.isMobile) {
+                if (this.isLite) {
                     const elem = event.target;
                     const large = !!elem.querySelector(".modal-lg");
                     if (large) {
@@ -212,7 +212,7 @@ export default {
 
             // Restore the scroll position when a large dialog is hidden.
             this.$root.$on("bv::modal::hidden", (event) => {
-                if (this.isMobile) {
+                if (this.isLite) {
                     const pos = scrollPos[event.componentId];
                     if (pos) {
                         window.scrollTo(pos.x, pos.y);

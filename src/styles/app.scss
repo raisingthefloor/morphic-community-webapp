@@ -1,3 +1,4 @@
+//@use "sass:color";
 @import "variables";
 @import "bootstrap-util";
 // Bootstrap customisations
@@ -15,6 +16,28 @@ $theme-colors: (
   .btn-invert-#{$color} {
     @include button-variant(color-yiq($value), $value);
     color: $value;
+  }
+}
+
+// Style the buttons on focus-mode, and the editor, to green and blue inverted
+body.focusMode, body:not(.focusMode) #EditorActions, body:not(.focusMode) #SidePanel {
+
+  // green with white text
+  .btn-primary {
+    @include button-variant($morphic-green-color, $morphic-green-color);
+  }
+
+  // white with blue text
+  .btn-secondary {
+    @include button-variant(color-yiq($morphic-blue-color), $morphic-blue-color);
+    color: $morphic-blue-color;
+  }
+}
+
+// Make disabled buttons grey
+.btn {
+  &.disabled, &:disabled {
+    filter: grayscale(1) brightness(0.8) opacity(0.9);
   }
 }
 
@@ -105,6 +128,15 @@ body.isLite {
   }
   &.menu-open, &.modal-open.menu-open {
     overflow: hidden;
+  }
+}
+
+body.isMobile {
+  .modal-footer {
+    justify-content: space-evenly;
+    .btn {
+      min-width: 10em;
+    }
   }
 }
 

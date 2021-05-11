@@ -2,11 +2,11 @@
   <div>
       <b-alert :show="billingInfo && billingInfo.trial_end_days > 0" variant="warning" dismissible style="margin: auto">You have {{ billingInfo && billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
       <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
-    <b-row no-gutters>
-      <b-col md="2">
+    <b-row no-gutters class="auto">
+      <b-col :md="isLite ? 8 : 2">
         <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
       </b-col>
-      <template v-if="!isMobile">
+      <template v-if="!isLite">
         <b-col md="4" fluid>
           <div v-if="members.length > 0" class="info-box pt-3 pb-3 pl-5">
             <h1 class="h3">Welcome to Morphic</h1>
