@@ -250,7 +250,7 @@ Vue.mixin({
          * @return {Boolean} true if in focus mode.
          */
         focusMode: function () {
-            return this.$store.getters.forceFocusMode || this.$route.path.includes("/focused/");
+            return this.$store.getters.forceFocusMode;
         },
 
         /**
