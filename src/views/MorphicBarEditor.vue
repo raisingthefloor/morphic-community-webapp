@@ -384,7 +384,8 @@ export default {
         },
 
         /**
-         * Lite mode: Shows the button catalog.
+         * Lite mode: Sets the visibility of the button catalog.
+         * @param {Boolean} show true to show, false to hide.
          */
         showCatalog: function (show) {
             const catalogRoute = {...this.$route };
@@ -576,9 +577,6 @@ export default {
         },
         isChanged: function () {
             this.storeUnsavedBar();
-        },
-        "$route.query": function () {
-            //this.loadAllData();
         }
     },
     async beforeRouteLeave(to, from, next) {
