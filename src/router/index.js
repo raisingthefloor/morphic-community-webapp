@@ -44,6 +44,10 @@ Vue.use(VueRouter);
  *
  * @typedef {Object} RouteMeta
  * @property {String} title The page title.
+ * @property {String} heading The page heading (if different to the title).
+ * @property {Boolean} noHeading Do not render the heading.
+ * @property {Boolean} showHeading Do not show the heading.
+ *
  * @property {Boolean|"only"} public true if this page can be accessed without authentication. "only" if it can only
  *  be accessed without authentication (authenticated users are redirected away).
  * @property {Boolean} noAccount true if an authenticated user with no account can access.
@@ -76,7 +80,8 @@ const routes = [
         name: "Login",
         component: Home,
         meta: {
-            title: "Home :: Morphic",
+            title: "Sign in to Morphic",
+            noHeading: true,
             public: "only"
         }
     },
@@ -86,7 +91,7 @@ const routes = [
         component: Home,
         props: { messageId: "sessionTimedOut" },
         meta: {
-            title: "Home :: Morphic",
+            title: "Home",
             public: "only"
         }
     },
@@ -95,7 +100,7 @@ const routes = [
         name: "Terms of Use",
         component: Terms,
         meta: {
-            title: "Terms Of Use :: Morphic",
+            title: "Terms Of Use",
             public: true
         }
     },
@@ -104,7 +109,8 @@ const routes = [
         name: "MyCommunity",
         component: MyCommunity,
         meta: {
-            title: "My Community :: Morphic"
+            title: "My Community",
+            showHeading: true
         }
     },
     {
@@ -112,7 +118,7 @@ const routes = [
         name: "MyCommunities",
         component: MyCommunities,
         meta: {
-            title: "My Groups :: Morphic"
+            title: "My Groups"
         }
     },
     {
@@ -120,7 +126,7 @@ const routes = [
         name: "Plans",
         component: Plans,
         meta: {
-            title: "Plans :: Morphic"
+            title: "Plans"
         }
     },
     {
@@ -128,7 +134,8 @@ const routes = [
         name: "NoSubscription",
         component: NoSubscription,
         meta: {
-            title: "Plans :: No Subscription",
+            title: "No Subscription",
+            showHeading: true,
             noAccount: true
         }
     },
@@ -138,6 +145,7 @@ const routes = [
         component: EarlyReleaseProgram,
         meta: {
             title: "MorphicBar Early Release Program",
+            showHeading: true,
             public: true
         }
     },
@@ -155,7 +163,7 @@ const routes = [
         name: "BillingDetails",
         component: BillingDetails,
         meta: {
-            title: "Billing :: Morphic"
+            title: "Billing"
         }
     },
     {
@@ -163,7 +171,7 @@ const routes = [
         name: "Reset Password",
         component: ResetPassword,
         meta: {
-            title: "Reset Password :: Morphic",
+            title: "Reset Password",
             public: "only"
         }
     },
@@ -174,7 +182,7 @@ const routes = [
         name: "Dashboard",
         component: Dashboard,
         meta: {
-            title: "Dashboard :: Morphic",
+            title: "Home: MorphicBar Customization Tool",
             authHome: true
         }
     },
@@ -183,7 +191,7 @@ const routes = [
         name: "MorphicBar Preconfigured",
         component: MorphicBarPreconfigured,
         meta: {
-            title: "Pick a bar :: Morphic"
+            title: "Pick a bar"
         }
     },
     {
@@ -191,7 +199,7 @@ const routes = [
         name: "MorphicBar Editor",
         component: MorphicBarEditor,
         meta: {
-            title: "MorphicBar Editor :: Morphic"
+            title: "MorphicBar Editor"
         }
     },
     {
@@ -199,7 +207,7 @@ const routes = [
         name: "Member Invite",
         component: MemberInvite,
         meta: {
-            title: "Member Invite :: Morphic"
+            title: "Member Invite"
         }
     },
     {
@@ -207,7 +215,7 @@ const routes = [
         name: "Register",
         component: Registration,
         meta: {
-            title: "Register :: Morphic",
+            title: "Register",
             public: "only"
         }
     },
@@ -216,7 +224,7 @@ const routes = [
         name: "Register",
         component: RegistrationInvite,
         meta: {
-            title: "Register :: Morphic",
+            title: "Register",
             public: "only"
         }
     },
@@ -225,7 +233,7 @@ const routes = [
     //   name: 'Member Editor',
     //   component: MemberEditor,
     //   meta: {
-    //     title: 'Member Details :: Morphic',
+    //     title: 'Member Details',
     //     authRoute: true
     //   }
     // },

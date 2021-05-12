@@ -1,7 +1,10 @@
 <template>
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header />
-    <router-view role="main" />
+    <div role="main" id="PageContent">
+      <h1 v-if="heading" id="MainHeading" :class="{screenReader: hideHeading}">{{ heading }}</h1>
+      <router-view />
+    </div>
     <Footer />
   </b-container>
 </template>
@@ -119,6 +122,18 @@
     margin-right: 0.25em;
   }
 
+  #MainHeading, h1 {
+    font-size: 1.7rem;
+  }
+
+  // Hide something, but keep it available for screen-readers
+  .screenReader {
+    position: absolute !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    clip: rect(1px, 1px, 1px, 1px);
+  }
 </style>
 
 <script>
@@ -138,6 +153,21 @@ export default {
         return {
             loaded: false
         };
+    },
+    computed: {
+        /**
+         * @return {String} The main heading for the page.
+         */
+        heading: function () {
+            return !this.$route.meta.noHeading && (this.$route.meta.heading || this.$route.meta.title);
+        },
+        /**
+         * Determines if the heading should be hidden.
+         * @return {Boolean} true to hide the header.
+         */
+        hideHeading: function () {
+            return !this.$route.meta.showHeading && (!this.isLite || this.$route.meta.hideHeading);
+        }
     },
     mounted() {
         const work = [];
