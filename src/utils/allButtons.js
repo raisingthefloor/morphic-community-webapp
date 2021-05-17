@@ -975,6 +975,25 @@ export const allButtons = {
             url: "https://open.spotify.com/"
         }
     },
+    snip: {
+        kind: "action",
+        is_primary: true,
+        data: {
+            visual: {
+                type: "multiButton",
+                buttons: [
+                    "Copy"
+                ]
+            }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Snip",
+            description: "Copy a region of your screen to the clipboard",
+            identifier: "snip",
+            color: "blue"
+        }
+    },
     target: {
         kind: "link",
         is_primary: false,
