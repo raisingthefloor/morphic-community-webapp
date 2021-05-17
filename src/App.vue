@@ -1,13 +1,16 @@
 <template>
-  <b-container v-if="loaded" fluid id="PageContainer">
+  <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
+    <a class="contentLink" href="#PageContent" @click.prevent="skipToContent">Skip to content</a>
     <Header ref="Header" />
-    <router-view role="main" class="main" />
+    <div role="main" id="PageContent" class="main">
+      <h1 v-if="heading" id="MainHeading" :class="{screenReader: hideHeading}">{{ heading }}</h1>
+      <router-view />
+    </div>
     <Footer />
   </b-container>
 </template>
 
 <style lang="scss">
-  @import "styles/variables";
 
   body {
     font-family: 'Open Sans', sans-serif !important;
@@ -34,6 +37,36 @@
   }
 
 
+  #MainHeading, h1 {
+    font-size: 1.7rem;
+  }
+
+  // Hide something, but keep it available for screen-readers
+  .screenReader {
+    position: absolute !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    clip: rect(1px, 1px, 1px, 1px);
+  }
+
+  // Skip to content link - off-screen until focused
+  .contentLink {
+    font-size: larger;
+    background-color: white;
+    padding: 2px;
+    position: absolute;
+    z-index: 100;
+    transform: translateX(-100%);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 250ms ease-out;
+    }
+
+    &:focus {
+      transform: translateX(0);
+    }
+  }
 </style>
 
 <script>
@@ -59,6 +92,33 @@ export default {
             headerSizeObserver: null
         };
     },
+    computed: {
+        /**
+         * @return {String} The main heading for the page.
+         */
+        heading: function () {
+            return !this.$route.meta.noHeading && (this.$route.meta.heading || this.$route.meta.title);
+        },
+        /**
+         * Determines if the heading should be hidden.
+         * @return {Boolean} true to hide the header.
+         */
+        hideHeading: function () {
+            return !this.$route.meta.showHeading && (!this.isLite || this.$route.meta.hideHeading);
+        },
+        /**
+         * Gets the classes for the body element.
+         * @return {Object} The classes.
+         */
+        bodyClasses: function () {
+            return {
+                focusMode: this.focusMode,
+                dashboardMode: !this.focusMode,
+                isMobile: this.isMobile,
+                isLite: this.isLite
+            };
+        }
+    },
     mounted() {
         const work = [];
         // Set the locale to the lang= parameter on the URL, or use what was detected.
@@ -74,20 +134,6 @@ export default {
 
         this.getHeaderHeight();
         this.dialogScroll();
-    },
-    computed: {
-        /**
-         * Gets the classes for the body element.
-         * @return {Object} The classes.
-         */
-        bodyClasses: function () {
-            return {
-                focusMode: this.focusMode,
-                dashboardMode: !this.focusMode,
-                isMobile: this.isMobile,
-                isLite: this.isLite
-            };
-        }
     },
     watch: {
         bodyClasses: {
@@ -219,8 +265,18 @@ export default {
                     }
                 }
             });
+        },
+        /**
+         * Scroll the content to the top of the window, and set the focus to the first focusable element in the content.
+         */
+        skipToContent() {
+            const content = document.querySelector("#PageContent");
+            content.scrollIntoView(true);
+            const firstFocusable = content.querySelector("a,input,button,[tabindex]");
+            if (firstFocusable?.focus) {
+                firstFocusable.focus();
+            }
         }
-
     }
 };
 </script>

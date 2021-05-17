@@ -1,6 +1,5 @@
 <template>
   <div class="  ">
-    <h4>Group Settings</h4>
     <div v-if="!community"></div>
     <div v-else>
       <TextInputDialog
@@ -12,10 +11,10 @@
       />
 
       <b-container fluid="sm">
-      <h1 class="communityName">
+      <h2 class="communityName">
         {{ community.name }}
         <small>(<b-button variant="link" v-b-modal="'communityNameDialog'">Edit</b-button>)</small>
-      </h1>
+      </h2>
         <b-card v-if="plan" xno-body style="width: max-content; margin: 1em">
           <b-card-title>Plan: {{ plan.name }}</b-card-title>
           <b-card-sub-title>(up to {{plan.member_limit}} members)</b-card-sub-title>
