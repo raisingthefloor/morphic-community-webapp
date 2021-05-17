@@ -577,6 +577,12 @@ export default {
         },
         isChanged: function () {
             this.storeUnsavedBar();
+        },
+        "$route.query": function () {
+            // If the bar has changed, reload everything.
+            if (this.$route.query.barId !== this.barDetails.id) {
+                this.loadAllData();
+            }
         }
     },
     async beforeRouteLeave(to, from, next) {
