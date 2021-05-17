@@ -4,7 +4,6 @@ import store from "@/store";
 
 // General Marketing, Login and Register Components
 import Home from "@/views/Home.vue";
-import Terms from "@/views/Terms.vue";
 import Registration from "@/views/Registration";
 
 import ResetPassword from "@/views/ResetPassword.vue";
@@ -80,15 +79,6 @@ const routes = [
         meta: {
             title: "Home :: Morphic",
             public: "only"
-        }
-    },
-    {
-        path: "/terms-of-use",
-        name: "Terms of Use",
-        component: Terms,
-        meta: {
-            title: "Terms Of Use :: Morphic",
-            public: true
         }
     },
     {
