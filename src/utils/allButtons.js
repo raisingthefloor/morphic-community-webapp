@@ -980,8 +980,10 @@ export const allButtons = {
         is_primary: true,
         data: {
             visual: {
-                type: "",
-                buttons: ""
+                type: "multiButton",
+                buttons: [
+                    "Copy"
+                ]
             }
         },
         configuration: {
