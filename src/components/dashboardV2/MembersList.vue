@@ -81,14 +81,9 @@
     </div>
 
 
-    <TextInputDialog v-if="invitingMember"
-                     id="inviteMemberDialog"
-                     :title="$t('MembersList.invite-member_title', {name: invitingMember.fullName})"
-                     :prompt="$t('MembersList.email_prompt', {name: invitingMember.fullName})"
-                     validation="email"
-                     clear
-                     @ok="$event.promise = sendInvite(invitingMember, $event.newValue)"
-    />
+    <InviteMemberDialog id="inviteMemberDialog"
+                        :member="invitingMember" />
+
     <TextInputDialog id="addMemberDialog"
                      title="Add new member"
                      prompt="Enter the name of the new member"
@@ -103,14 +98,14 @@
 </style>
 
 <script>
-import * as communityService from "@/services/communityService";
 import * as Bar from "@/utils/bar";
 import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
 import BarsList from "@/components/dashboardV2/BarsList";
+import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 
 export default {
     name: "MembersList",
-    components: {BarsList, TextInputDialog},
+    components: {InviteMemberDialog, BarsList, TextInputDialog},
     props: {
         /** @type {Array<CommunityMember>} */
         members: Array,
@@ -144,19 +139,6 @@ export default {
         };
     },
     methods: {
-        /**
-         * Invites a member to enjoy fruits of morphic.
-         * @param {CommunityMember} member The chosen member.
-         * @param {String} invitationEmail The email address.
-         * @return {Promise} Resolves when complete.
-         */
-        sendInvite(member, invitationEmail) {
-            return communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail).then(() => {
-                member.state = "invited";
-                return true;
-            });
-        },
-
         /**
          * Adds a new member
          * @param {String} name Name of the new member.

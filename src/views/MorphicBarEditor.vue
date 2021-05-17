@@ -2,6 +2,8 @@
   <div>
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" :bar="barDetails" />
+    <InviteMemberDialog id="inviteMemberDialog" :member="memberDetails" />
+    <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
 
     <b-modal id="roleChangeConfirm" @ok="changeMemberRole" title="Change Member Role" footer-bg-variant="light" ok-title="Change Role">
       <p class="my-4">Please confirm this role change?</p>
@@ -11,12 +13,6 @@
     </b-modal>
     <b-modal id="barDeleteConfirm" @ok="deleteBar" title="Delete Bar" footer-bg-variant="light" ok-title="Delete">
       <p class="my-4">Please confirm the deletion of this bar?</p>
-    </b-modal>
-    <b-modal id="sendEmailInvitationModal" :ok-disabled="!invitationEmail.match('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')" @ok="sendInvite" title="Enter email address for invitation" footer-bg-variant="light" ok-title="Send Invitation">
-      <p class="my-4"></p>
-      <b-form-group :label="'Please enter email address for '+this.memberDetails.first_name+' '+this.memberDetails.last_name" label-for="email">
-        <b-form-input v-model="invitationEmail" id="email" placeholder="myemail@mail.com" class="mb-2"></b-form-input>
-      </b-form-group>
     </b-modal>
 
     <b-modal id="unsavedChanges" title="Unsaved Changes">
@@ -39,161 +35,138 @@
       <b-col md="8">
         <div id="barEditor" class="pt-2">
 
-          <!-- Topmost area above desktop image -->
-          <div id="bar-info">
-            <div class="bar-name">
-              <!-- Bar selection -->
-              <h2 v-if="barDetails.name">
-                {{barName}}
+          <!-- Bar info, actions, and editor tabs -->
+          <div id="EditorTop" class="border-bottom">
+            <!-- details and tabs -->
+            <div>
+              <div id="BarDetails">
+                <!-- Bar name -->
+                <div class="bar-name">
+                  <h2>
+                    {{barName}}
 
-                <!-- rename bar -->
-                <span v-if="!activeMemberId && barDetails.name !== 'Default'">
-                  <TextInputDialog id="barNameDialog"
-                                   title="Rename Bar"
-                                   prompt="Enter the new name for the bar"
-                                   v-model="barDetails.name"
-                                   @ok="renameBar"
-                                   />
-                  &nbsp;<small><b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button></small>
-                </span>
-              </h2>
+                    <!-- rename bar -->
+                    <span v-if="barDetails.name !== 'Default'">
+                      <TextInputDialog id="barNameDialog"
+                                       title="Rename Bar"
+                                       prompt="Enter the new name for the bar"
+                                       v-model="barDetails.name"
+                                       @ok="renameBar"
+                      />
+                      &nbsp;<small><b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button></small>
+                    </span>
+                  </h2>
 
+                </div>
+                <div class="lead">
+                  <template v-if="barMembers.length === 0">
+                    Shared bar
+                  </template>
+                  <template v-else-if="barMembers.length === 1">
+                    Bar for: <b>{{ barMembers[0].displayName }}</b>
+                  </template>
+                  <template v-else>
+                    Bar for: <b>{{ barMembers.length }} members</b>
+                  </template>
+                </div>
+              </div>
+
+              <div id="EditorTabs">
+                <b-tabs class="editorTabs"
+                        v-model="editorTabIndex"
+                        small
+                        :content-class="'bg-white border border-top-0 ' + (editorTabIndex ? '' : 'd-none')">
+
+                  <!-- hidden tab to simulate no tab being selected -->
+                  <b-tab title="" active title-item-class="d-none" class="d-none" />
+
+                  <!-- Members tab -->
+                  <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
+                    <template #title>
+                      <b-icon-person-circle/>&nbsp;
+                      <span v-if="activeMemberId">{{ memberDetails.displayName }} details ({{memberDetails.stateText}})</span>
+                      <span v-else-if="memberCount === 0">Unused Bar</span>
+                      <span v-else>Members ({{ memberCount }})</span>
+                    </template>
+                    <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+
+                    <b-card>
+                      <b-card-title>
+                        <span v-if="activeMemberId"><b-icon-person-circle /> {{ memberDetails.first_name }}</span>
+                        <span v-else-if="memberCount === 1"><b-icon-person-circle /> This Morphic Bar is used by 1 member</span>
+                        <span v-else-if="memberCount > 0"><b-icon-people-fill /> This Morphic Bar is used by {{memberCount}} members</span>
+                        <span v-else>This Morphic Bar is NOT used</span>
+                      </b-card-title>
+
+                      <!-- member's own bar -->
+                      <ul v-if="activeMemberId" class="list-unstyled">
+                        <li v-if="memberDetails.role === 'member'"><b-button variant="link" v-b-modal.roleChangeConfirm>Make member a Group Manager</b-button></li>
+                        <li v-else><b-button variant="link" v-b-modal.roleChangeConfirm>Remove group manager role from member</b-button></li>
+                        <li><b-button variant="link" v-b-modal.deleteConfirm class="text-danger">Delete member</b-button></li>
+
+                        <li v-if="!memberDetails.isCurrent"><b-button variant="link" v-b-modal="'inviteMemberDialog'">{{ memberDetails.state === 'uninvited' ? "Send Invitation" : "Re-invite member" }}</b-button></li>
+                      </ul>
+
+                      <!-- community bar -->
+                      <ul v-else-if="memberCount > 0" >
+                        <li v-for="member in members" v-bind:key="member.id">
+                          {{ member.first_name }} {{ member.last_name }}
+                        </li>
+                      </ul>
+
+                      <!-- unused community bar -->
+                      <b-card-sub-title v-else>You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</b-card-sub-title>
+                    </b-card>
+
+                  </b-tab>
+
+                  <!-- Bar settings tab -->
+                  <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled title-item-class="notProduction">
+                    <template #title>
+                      <b-icon-gear-fill/> Morphic Bar settings
+                    </template>
+                    <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+
+                    <b-card>
+                      <b-card-title><b-icon-gear-fill/> Morphic Bar settings</b-card-title>
+
+                      <b-form-checkbox id="barOnRight" v-model="bar.settings.barOnRight" name="barOnRight" value="true" unchecked-value="false">
+                        Bar on the right of the screen
+                      </b-form-checkbox>
+                      <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
+                        Member cannot close bar
+                      </b-form-checkbox>
+                      <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
+                        Morphic Bar always starts open
+                      </b-form-checkbox>
+                    </b-card>
+                  </b-tab>
+
+                </b-tabs>
+
+              </div>
             </div>
 
-            <div class="save-button-area">
-              <b-button v-if="isChanged && !newBar"
+            <div id="EditorActions">
+              <b-button variant="outline-dark"
+                        v-b-modal="'copyBarDialog'"
+                >Copy bar from...</b-button>
+
+              <b-button variant="outline-dark"
+                        :disabled="!isChanged || newBar"
                         @click="revertBar"
-                        variant="warning"
-                        class="revertButton"
-                        size="sm">Revert to last saved</b-button>
+                >Revert to user's current bar</b-button>
 
-              <b-button v-if="activeMemberId"
-                        @click="addPersonalBar"
-                        :variant="isChanged ? 'success' : 'outline-dark'"
-                        class="addButton"
-                        size="sm"><b-icon-arrow-repeat/> Save to member's MorphicBar</b-button>
-              <b-button v-else
+              <b-button variant="success"
+                        style="visibility: hidden"
+                        disabled
+                >Try it</b-button>
+
+              <b-button variant="success"
+                        :disabled="!isChanged"
                         @click="saveBar"
-                        :variant="isChanged ? 'success' : 'outline-dark'"
-                        class="updateButton"
-                        size="sm"><b-icon-arrow-repeat/> Save this Bar</b-button>
+                >Save bar</b-button>
             </div>
-          </div>
-
-
-          <!-- Secondary area above desktop image -->
-          <div v-if="true" id="secondary-bar-info" class="border-bottom">
-            <!-- tabs just above the desktop area -->
-            <b-tabs class="editorTabs"
-                    v-model="editorTabIndex"
-                    small
-                    :content-class="'bg-white border border-top-0 ' + (editorTabIndex ? '' : 'd-none')">
-
-              <!-- hidden tab to simulate no tab being selected -->
-              <b-tab title="" active title-item-class="d-none" class="d-none" />
-
-              <!-- Members tab -->
-              <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
-                <template #title>
-                  <b-icon-person-circle/>&nbsp;
-                  <span v-if="activeMemberId">Member Details</span>
-                  <span v-else-if="memberCount === 0">Unused Bar</span>
-                  <span v-else>Members ({{ memberCount }})</span>
-                </template>
-                <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
-
-                <b-card>
-                  <b-card-title>
-                    <span v-if="activeMemberId"><b-icon-person-circle /> {{ memberDetails.first_name }}</span>
-                    <span v-else-if="memberCount === 1"><b-icon-person-circle /> This Morphic Bar is used by 1 member</span>
-                    <span v-else-if="memberCount > 0"><b-icon-people-fill /> This Morphic Bar is used by {{memberCount}} members</span>
-                    <span v-else>This Morphic Bar is NOT used</span>
-                  </b-card-title>
-
-                  <!-- member's own bar -->
-                  <ul v-if="activeMemberId" class="list-unstyled">
-                    <li v-if="memberDetails.role === 'member'"><b-link v-b-modal.roleChangeConfirm>Make member a Group Manager</b-link></li>
-                    <li v-else><b-link v-b-modal.roleChangeConfirm>Remove group manager role from member</b-link></li>
-                    <li><b-link v-b-modal.deleteConfirm class="text-danger">Delete member</b-link></li>
-                    <li v-if="memberDetails.state === 'uninvited'" @click="getEmailAndSendInvite()"><b-link>Send Invitation</b-link></li>
-                    <li v-else @click="getEmailAndSendInvite()"><b-link>Reinvite member</b-link></li>
-                  </ul>
-
-                  <!-- community bar -->
-                  <ul v-else-if="memberCount > 0" >
-                    <li v-for="member in members" v-bind:key="member.id">
-                      {{ member.first_name }} {{ member.last_name }}
-                    </li>
-                  </ul>
-
-                  <!-- unused community bar -->
-                  <b-card-sub-title v-else>You can go back to the <b-link to="/dashboard">Dashboard</b-link> and invite members to use it.</b-card-sub-title>
-                </b-card>
-
-              </b-tab>
-
-              <!-- Bar settings tab -->
-              <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled title-item-class="notProduction">
-                <template #title>
-                  <b-icon-gear-fill/> Morphic Bar settings
-                </template>
-                <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
-
-                <b-card>
-                  <b-card-title><b-icon-gear-fill/> Morphic Bar settings</b-card-title>
-
-                  <b-form-checkbox id="barOnRight" v-model="bar.settings.barOnRight" name="barOnRight" value="true" unchecked-value="false">
-                    Bar on the right of the screen
-                  </b-form-checkbox>
-                  <b-form-checkbox id="cannotClose" v-model="bar.settings.cannotClose" name="cannotClose" value="true" unchecked-value="false">
-                    Member cannot close bar
-                  </b-form-checkbox>
-                  <b-form-checkbox id="startsOpen" v-model="bar.settings.startsOpen" name="startsOpen" value="true" unchecked-value="false">
-                    Morphic Bar always starts open
-                  </b-form-checkbox>
-                </b-card>
-              </b-tab>
-
-              <!-- Try it tab -->
-              <b-tab @click="editorTabIndex = (editorTabIndex === 3 ? 0 : 3)" disabled title-item-class="notProduction">
-                <template #title>
-                  <b-icon-display/> Try it
-                </template>
-                <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
-
-                <b-card>
-                  <b-card-title><b-icon-display/> Try this bar on your own computer</b-card-title>
-
-                  <b-card-sub-title>
-                    You need to have Morphic installed on your computer to try out bars in your group.
-                  </b-card-sub-title>
-
-                  <p>
-                    <b-link to="/learn/how-to-install">Learn how to set up your computer</b-link>
-                  </p>
-                  <b-button variant="primary">Try this Morphic Bar on my computer</b-button>
-                </b-card>
-              </b-tab>
-
-            </b-tabs>
-
-            <!-- Member's bar selection -->
-            <b-input-group v-if="activeMemberId"  size="sm" class="barSelection">
-              <b-form-select v-model="barSelectedInDropdown">
-                <b-form-select-option value="customized" v-if="isChanged || !barDetails.is_shared">Customized</b-form-select-option>
-                <b-form-select-option v-for="bar in sharedBars" :key="bar.id" :value="bar.id">{{bar.name}}</b-form-select-option>
-              </b-form-select>
-              <template #append>
-                <b-button class="changeButton" variant="success" :disabled="memberDetails.bar_id == barSelectedInDropdown || barSelectedInDropdown == 'customized'" @click="changeUserBarToCommunityBar">Change</b-button>
-              </template>
-            </b-input-group>
-
-            <div v-if="activeMemberId" class="userInvitationStatusArea">
-              <span :class="`${memberDetails.state}-state dot`" />&nbsp;
-              <span v-if="memberDetails.state === 'active'" class="text">Active</span>
-              <b-button v-else variant="link" @click="getEmailAndSendInvite()">{{ memberDetails.state === 'invited' ? 'Re-invite' : 'Invite' }} member</b-button>
-            </div>
-
           </div>
 
           <!-- the desktop -->
@@ -442,19 +415,40 @@
   #barEditor {
     padding-left: 15px;
     padding-right: 15px;
-    #bar-info {
-      display: flex;
 
-      .bar-name {
+    #EditorTop {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+
+      & > :first-child {
         flex-grow: 1;
       }
     }
+
+    #BarDetails {
+      flex-grow: 1;
+    }
+
+    #EditorActions {
+      display: grid;
+      align-content: center;
+      grid-template-columns: auto auto;
+
+      column-gap: 0.5rem;
+      row-gap: 0.5rem;
+
+      .btn {
+        font-size: 0.9rem;
+        min-width: max-content;
+      }
+
+    }
   }
 
-  #secondary-bar-info {
+  #EditorTabs {
     display: flex;
     align-items: center;
-    margin-top: 13px;
 
     & > :not(:last-child) {
       margin-right: 1em;
@@ -894,9 +888,7 @@ import {
     getCommunity,
     getCommunityBar,
     getCommunityBars,
-    getCommunityMember,
     getCommunityMembers,
-    inviteCommunityMember,
     updateCommunityBar,
     updateCommunityMember
 } from "@/services/communityService";
@@ -908,10 +900,14 @@ import * as search from "@/utils/search";
 import EditButtonDialog from "@/views/EditButtonDialog";
 import BarItemLink from "@/components/dashboardV2/BarItemLink";
 import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
+import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
+import CopyBarDialog from "@/components/dialogs/CopyBarDialog";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        CopyBarDialog,
+        InviteMemberDialog,
         TextInputDialog,
         BarItemLink,
         EditButtonDialog,
@@ -1038,26 +1034,10 @@ export default {
             this.onBarChanged();
         },
 
-        getEmailAndSendInvite() {
-            this.invitationEmail = "";
-            this.$bvModal.show("sendEmailInvitationModal");
-        },
-        sendInvite() {
-            if (this.invitationEmail) {
-                const communityId = this.$store.getters.communityId;
-                inviteCommunityMember(communityId, this.memberDetails.id, this.invitationEmail);
-                this.memberDetails.state = "invited";
-            }
-        },
-
         loadAllData: function () {
             this.loadBarData();
             this.loadBarMembers();
             this.getCommunityData();
-
-            if (this.activeMemberId) {
-                this.loadMemberData();
-            }
         },
 
         /** Loads the initial bar data */
@@ -1347,15 +1327,6 @@ export default {
             }
             return false;
         },
-        loadMemberData: function () {
-            getCommunityMember(this.communityId, this.activeMemberId)
-                .then((resp) => {
-                    this.memberDetails = resp.data;
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        },
         getCommunityData: function () {
             getCommunity(this.communityId)
                 .then((community) => {
@@ -1513,7 +1484,34 @@ export default {
         }
     },
     computed: {
-        activeMemberId: function () { return this.$route.query.memberId; },
+        /**
+         * Gets the bar members which this bar belongs to.
+         * @return {Array<CommunityMember>} The members this bar belongs to, empty array for shared bars.
+         */
+        barMembers: function () {
+            return this.barDetails.is_shared
+                ? []
+                : this.membersList.filter(m => m.bar_id === this.barDetails.id).sort((a, b) => b.isCurrent);
+        },
+        activeMemberId: function () {
+            var memberId;
+            if (this.barMembers.length === 1) {
+                memberId = this.barMembers[0].id;
+            } else if (this.barMembers.some(m => m.id === this.$route.query.memberId)) {
+                memberId = this.$route.query.memberId;
+            }
+
+            return memberId;
+        },
+
+        /**
+         * The details of the selected member, as identified by activeMemberId
+         * @return {CommunityMember|null} The member.
+         */
+        memberDetails: function () {
+            return this.activeMemberId && this.membersList.find(m => m.id === this.activeMemberId);
+        },
+
         editDialog: function () { return this.$refs.editDialog; },
         /**
          * @return {String} The bar title.
@@ -1658,7 +1656,6 @@ export default {
 
             memberCount: 0,
             members: [],
-            memberDetails: {},
             // drawerItems: [],
             // drawerItemsSecond: [],
             // primaryItems: [],
