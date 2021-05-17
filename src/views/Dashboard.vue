@@ -2,105 +2,107 @@
   <div>
       <b-alert :show="billingInfo && billingInfo.trial_end_days > 0" variant="warning" dismissible style="margin: auto">You have {{ billingInfo && billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
       <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
-    <b-row no-gutters>
-      <b-col md="2">
+    <b-row no-gutters class="auto">
+      <b-col :md="isLite ? 8 : 2">
         <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
       </b-col>
-      <b-col md="4" fluid>
-        <div v-if="members.length > 0" class="info-box pt-3 pb-3 pl-5">
-          <h1 class="h3">Welcome to Morphic</h1>
-          <!-- hints -->
-          <div>
-            <p class="text-left small">
-              (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
-            </p>
-          </div>
-          <br/>
-          <div>
-            <b-link :href="externalLinks.gettingStarted" class="gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
-          </div>
-          <div id="hints" v-if="showHints">
-            <div pointTo="#MyMorphicBars .addNew">
-              Want to make a MorphicBar for yourself? Start with "Add a new bar"
-            </div>
-            <div pointTo="#MembersList .addNew">
-              Do you want to make and manage MorphicBars for other people?
-              <p class="mt-2">
-                Start by adding a person.<br/>
-                Next you can create bars.<br/>
-                Finally, you can invite the person to download and use Morphic.
+      <template v-if="!isLite">
+        <b-col md="4" fluid>
+          <div v-if="members.length > 0" class="info-box pt-3 pb-3 pl-5">
+            <h1 class="h3">Welcome to Morphic</h1>
+            <!-- hints -->
+            <div>
+              <p class="text-left small">
+                (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
               </p>
             </div>
+            <br/>
+            <div>
+              <b-link :href="externalLinks.gettingStarted" class="gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
+            </div>
+            <div id="hints" v-if="showHints">
+              <div pointTo="#MyMorphicBars .addNew">
+                Want to make a MorphicBar for yourself? Start with "Add a new bar"
+              </div>
+              <div pointTo="#MembersList .addNew">
+                Do you want to make and manage MorphicBars for other people?
+                <p class="mt-2">
+                  Start by adding a person.<br/>
+                  Next you can create bars.<br/>
+                  Finally, you can invite the person to download and use Morphic.
+                </p>
+              </div>
+            </div>
+            <div v-else>
+              <p class="text-left small">Get started by clicking an item in the green menu to the left</p>
+            </div>
           </div>
-          <div v-else>
-            <p class="text-left small">Get started by clicking an item in the green menu to the left</p>
+          <div v-else id="welcome">
+            <div class="text-center pt-5 pb-5 bg-silver rounded">
+              <b-spinner variant="success" label="..."></b-spinner><br><br>
+              Loading data, please wait...
+            </div>
           </div>
-        </div>
-        <div v-else id="welcome">
-          <div class="text-center pt-5 pb-5 bg-silver rounded">
-            <b-spinner variant="success" label="..."></b-spinner><br><br>
-            Loading data, please wait...
-          </div>
-        </div>
-      </b-col>
-      <b-col md="5" class="videos">
+        </b-col>
+        <b-col md="5" class="videos">
 
-        <div v-for="(video) in [{id:'7bhdSFOiJjk',caption:'Making a custom MorphicBar - Basics',length:'4:24'}]"
-             :key="video.id"
-             @click="playVideo(video)"
-             class="videoLink">
+          <div v-for="(video) in [{id:'7bhdSFOiJjk',caption:'Making a custom MorphicBar - Basics',length:'4:24'}]"
+               :key="video.id"
+               @click="playVideo(video)"
+               class="videoLink">
 
-          <b-aspect aspect="854:480" class="videoPreview">
-            <img :src="`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
-                 class=""
-                 alt=""
-            />
+            <b-aspect aspect="854:480" class="videoPreview">
+              <img :src="`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
+                   class=""
+                   alt=""
+              />
 
-            <b-iconstack class="playOverlay">
-              <b-icon icon="circle-fill" class="playOutline mouseOver" scale="1.1" />
-              <b-icon icon="play-circle-fill" class="mouseOut"/>
-              <b-icon icon="play-circle-fill" class="mouseOver"/>
+              <b-iconstack class="playOverlay">
+                <b-icon icon="circle-fill" class="playOutline mouseOver" scale="1.1" />
+                <b-icon icon="play-circle-fill" class="mouseOut"/>
+                <b-icon icon="play-circle-fill" class="mouseOver"/>
 
-            </b-iconstack>
-          </b-aspect>
-
-          <b-button :id="`PlayVideo-${video.id}`"
-                    class="videoCaption"
-                    variant="link"
-                    v-b-modal="`PlayerDialog-${video.id}`"
-          >
-            {{ video.caption }} ({{video.length}})
-          </b-button>
-
-        </div>
-
-        <b-modal :id="'VideoDialog'"
-                 dialog-class="videoDialog"
-                 :title="playingVideo && playingVideo.caption"
-                 ok-only
-                 button-size="sm"
-                 ok-title="Close"
-                 centered
-        >
-
-          <div style="min-width: 1050px !important;">
-            <b-aspect aspect="854:480"
-                      class="videoWrapper"
-            >
-              <iframe v-if="playingVideo"
-                      id="ytplayer" class="player" type="text/html"
-                      :src="`https://www.youtube.com/embed/${playingVideo.id}?modestbranding=1&autoplay=1`"
-                      allowfullscreen
-                      frameborder="0"></iframe>
+              </b-iconstack>
             </b-aspect>
+
+            <b-button :id="`PlayVideo-${video.id}`"
+                      class="videoCaption"
+                      variant="link"
+                      v-b-modal="`PlayerDialog-${video.id}`"
+            >
+              {{ video.caption }} ({{video.length}})
+            </b-button>
+
           </div>
-        </b-modal>
+
+          <b-modal :id="'VideoDialog'"
+                   dialog-class="videoDialog"
+                   :title="playingVideo && playingVideo.caption"
+                   ok-only
+                   button-size="sm"
+                   ok-title="Close"
+                   centered
+          >
+
+            <div style="min-width: 1050px !important;">
+              <b-aspect aspect="854:480"
+                        class="videoWrapper"
+              >
+                <iframe v-if="playingVideo"
+                        id="ytplayer" class="player" type="text/html"
+                        :src="`https://www.youtube.com/embed/${playingVideo.id}?modestbranding=1&autoplay=1`"
+                        allowfullscreen
+                        frameborder="0"></iframe>
+              </b-aspect>
+            </div>
+          </b-modal>
 
 
-      </b-col>
-      <b-col md="1">
-        <div class="fill-height bg-silver"></div>
-      </b-col>
+        </b-col>
+        <b-col md="1">
+          <div class="fill-height bg-silver"></div>
+        </b-col>
+      </template>
     </b-row>
   </div>
 </template>
@@ -235,7 +237,7 @@
 <script>
 import * as ArrowLine from "arrow-line";
 import { createPopper } from "@popperjs/core";
-import SidePanel from "@/components/dashboardV2/SidePanel";
+import SidePanel from "@/components/side-panel/SidePanel";
 import {
     getCommunity,
     getCommunityBars,
@@ -302,7 +304,7 @@ export default {
     updated() {
         this.cleanUpArrows();
         // TODO: Find a better way to detect whether the hints are displayed
-        if (this.showHints) {
+        if (this.showHints && !this.isLite) {
             this.createArrows();
         }
     },

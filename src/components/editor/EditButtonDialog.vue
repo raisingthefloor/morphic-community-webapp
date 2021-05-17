@@ -1,11 +1,12 @@
 <template>
   <b-modal id="modalEditGeneric"
+           ref="EditDialog"
+           v-bind="dialogAttrs"
            @ok="okClicked" @cancel="closeDialog(false)" @hide="onHide"
-           size="lg" scrollable centered
-           footer-bg-variant="light"
+           size="lg"
            :title="dialogTitle">
 
-    <template #modal-footer="{ok, cancel, hide}" >
+    <template v-if="!isLite" #modal-footer="{ok, cancel, hide}" >
         <b-button @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove</b-button>
         <b-button @click="cancel()" variant="secondary">Cancel</b-button>
         <b-button @click="ok()"
@@ -13,12 +14,20 @@
                   :disabled="button && button.data.isPlaceholder"
         >Save</b-button>
     </template>
+
     <div v-if="button">
       <b-form>
         <b-row>
-          <b-col md="6">
+          <b-col :md="isLite || 6">
             <!-- The button fields -->
             <div>
+              <b-form-group v-if="isLite"
+              >
+                <b-button variant="invert-danger"
+                          @click="editDialog.hide('remove');">Remove Button</b-button>
+
+              </b-form-group>
+
               <b-form-group v-if="showRelated"
                             :label="buttonGroup.editItemField"
                             label-for="barItem_selectOther"
@@ -75,7 +84,20 @@
                              :bar-item="button"
                              :autofocus="!showRelated && !button.data.isPlaceholder"/>
 
-              <div class="bg-silver rounded p-3">
+              <b-form-group v-if="isLite"
+                            label="Color for button"
+                            label-for="barItem_color">
+                <b-form-select id="barItem_color" v-model="button.configuration.color" :options="colorOptions" />
+
+              </b-form-group>
+
+              <b-form-group v-if="isLite"
+                            label="Position"
+                            label-for="barItem_position">
+                <b-form-select id="barItem_position" v-model="selectedPosition" :options="positionOptions" />
+              </b-form-group>
+
+              <div v-if="!isLite" class="bg-silver rounded p-3">
                 <p v-if="showExtra" class="text-right small mb-0">
                   (<b-link @click="showExtra = false">Hide</b-link>)
                 </p>
@@ -137,7 +159,7 @@
             </div>
           </b-col>
 
-          <b-col md="6">
+          <b-col v-if="!isLite" md="6">
             <div class="max-height bg-silver rounded p-3 text-center">
               <p class="">This is the button you are making</p>
               <div class="barPreview rounded">
@@ -223,6 +245,67 @@ ul.relatedButtons {
     margin-right: 30px;
   }
 }
+
+.compactIconHolder {
+  height: 22rem;
+  overflow-y: auto;
+  .iconBoxHolder {
+    margin-left: .5rem !important;
+  }
+}
+
+.colorBoxHolder {
+  display: inline-block;
+  cursor: pointer;
+  margin: 0 .25rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  .colorBox {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.iconBoxHolder {
+  display: inline-block;
+  cursor: pointer;
+  width: 5.25rem;
+  height: 5.25rem;
+  margin: .75rem 0 .75rem .75rem;
+  .iconBox {
+    background: white;
+    border: 1px solid black;
+    border-radius: 100%;
+    padding: .75rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    text-align: center;
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
+    p {
+      width: 3rem;
+      height: 3rem;
+      line-height: 100%;
+      margin: 0;
+    }
+  }
+}
+
+.colorBoxHolder, .iconBoxHolder {
+  padding: .3rem;
+  &.active {
+    padding: .1rem;
+    border: .2rem solid green;
+  }
+}
+
+#modalEditGeneric {
+  padding: .5rem 1rem 0 0;
+  border-bottom: none;
+}
+
 </style>
 
 <script>
@@ -230,8 +313,9 @@ import PreviewItem from "@/components/dashboard/PreviewItem";
 import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons, allButtons } from "@/utils/constants";
 import * as params from "@/utils/params";
 import * as Bar from "@/utils/bar";
-import BarItemFields from "@/components/dashboardV2/BarItemFields";
+import BarItemFields from "@/components/editor/BarItemFields";
 import { CONFIG } from "@/config/config";
+import {dialogMixin} from "@/mixins/dialog.js";
 
 export default {
     name: "EditButtonDialog",
@@ -239,6 +323,8 @@ export default {
         /** @type {BarDetails} */
         bar: Object
     },
+
+    mixins: [dialogMixin],
 
     components: {
         BarItemFields,
@@ -283,12 +369,16 @@ export default {
             relatedDropdownStyle: null,
 
             /** @type {Boolean} true if the bar item was a placeholder when it was opened */
-            wasPlaceholder: false
+            wasPlaceholder: false,
+
+            selectedPosition: null,
+            originalPosition: null
 
         };
     },
 
     computed: {
+        editDialog: function () { return this.$refs.EditDialog; },
         document: function () {
             return document;
         },
@@ -374,6 +464,58 @@ export default {
                 }
             }
             return text;
+        },
+
+        /**
+         * Lite mode: Gets the options for the positions.
+         * @return {Array<Object>} options for the position select element.
+         */
+        positionOptions: function () {
+            const options = [];
+
+            const total = this.bar.items.length;
+            for (let i = 0; i < total; i++) {
+                options.push({
+                    value: i,
+                    text: `Button position ${i + 1} of ${total}`
+                });
+            }
+
+            return options;
+        },
+
+        /**
+         * Lite mode: Gets the options for the colours.
+         * @return {Array<Object>} options for the colour select element.
+         */
+        colorOptions: function () {
+            const options = [];
+
+            let found = false;
+            Object.keys(this.colors).forEach(color => {
+                if (color !== "default_button") {
+                    const hex = this.colors[color];
+
+                    if (hex === this.button.configuration.color) {
+                        found = true;
+                    }
+
+                    options.push({
+                        value: hex,
+                        text: this.$t(`EditButtonDialog.color.${color}`)
+                    });
+                }
+            });
+
+            // If the button has another colour (if a custom colour selection is implemented), add it to the list.
+            if (!found) {
+                options.push({
+                    value: this.button.configuration.color,
+                    text: this.$t("EditButtonDialog.color.other")
+                });
+            }
+
+            return options;
         }
     },
 
@@ -438,6 +580,11 @@ export default {
                         if (this.selectedItem.data.isPlaceholder && !this.button.data.isPlaceholder) {
                             delete this.selectedItem.data.isPlaceholder;
                         }
+
+                        if (this.isLite && this.selectedPosition !== this.originalPosition) {
+                            var removed = this.bar.items.splice(this.originalPosition, 1);
+                            this.bar.items.splice(this.selectedPosition, 0, removed[0]);
+                        }
                     }
 
                     this.$bvModal.hide("modalEditGeneric");
@@ -483,6 +630,11 @@ export default {
 
             this.buttonGroup = buttonCatalog[this.button.configuration.subkind];
             this.dialogTitle = this.buttonGroup.editTitle;
+
+            if (this.isLite) {
+                this.originalPosition = this.bar.items.findIndex(item => item.id === this.selectedItem.id);
+                this.selectedPosition = this.originalPosition;
+            }
 
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");

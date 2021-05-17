@@ -13,8 +13,8 @@ import { CONFIG } from "@/config/config";
 import externalLinks from "@/config/externalLinks";
 import { getErrorMessage } from "@/utils/errorHandler";
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+import "./styles/app.scss";
+
 import i18n from "./i18n/i18n";
 
 const token = localStorage.getItem("token");
@@ -160,15 +160,15 @@ Vue.mixin({
             return togo;
         },
         /**
-         * Generates an ID for a button.
-         * @param {BarItem} item The button.
+         * Generates an ID.
+         * @param {String|BarItem} prefix The prefix.
          * @return {String} The ID.
          */
-        generateId(item) {
-            if (typeof(item) === "string") {
-                return item + Math.floor(Math.random() * 10e10);
+        generateId(prefix) {
+            if (typeof(prefix) === "string") {
+                return prefix + Math.floor(Math.random() * 10e10);
             } else {
-                return Bar.generateId(item);
+                return Bar.generateId(prefix);
             }
         },
 
@@ -208,6 +208,28 @@ Vue.mixin({
             }
 
             return valid;
+        },
+        asyncTimer(ms, result) {
+            return new Promise(resolve => {
+                setTimeout(() => resolve(result), ms);
+            });
+        },
+
+        /**
+         * Waits for an API request to complete, resolving to true if it succeeded, or false on failure.
+         *
+         * @param {Promise<AxiosResponse<Any>>} responsePromise The response.
+         * @param {String} [successMessage] A message to display if it was successful.
+         * @return {Promise<Boolean>} Resolves to true if the request was a success.
+         */
+        requestToBool: function (responsePromise, successMessage) {
+            return responsePromise.then((r) => {
+                const success = (r.status === 200);
+                if (success && successMessage) {
+                    this.showMessage(successMessage);
+                }
+                return success;
+            }).catch(() => false);
         }
     },
     mounted() {
@@ -218,17 +240,33 @@ Vue.mixin({
         document.body.classList.toggle("production", this.CONFIG.PRODUCTION);
     },
     computed: {
+        isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
+        hasAccount: function () { return this.$store.getters.hasAccount; },
+        communityId: function () { return this.$store.getters.communityId; },
+        userId: function () { return this.$store.getters.userId; },
+
         /**
          * Determines if the page is currently in focused mode.
          * @return {Boolean} true if in focus mode.
          */
         focusMode: function () {
-            return this.$route.path.includes("/focused/");
+            return this.$store.getters.forceFocusMode;
         },
-        isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
-        hasAccount: function () { return this.$store.getters.hasAccount; },
-        communityId: function () { return this.$store.getters.communityId; },
-        userId: function () { return this.$store.getters.userId; },
+
+        /**
+         * Determines if the device is a mobile device (or, very small screen).
+         * @return {Boolean} true if running on a mobile device
+         */
+        isMobile: function () { return !!this.$store.getters.isMobile; },
+
+        /**
+         * Lite mode - display a simpler UI. (either focus mode or on a mobile device)
+         * @return {Boolean} true if focusMode or isMobile are set.
+         */
+        isLite: function () {
+            return this.focusMode || this.isMobile;
+        },
+
         console: () => console,
         CONFIG: () => CONFIG,
         externalLinks: () => externalLinks

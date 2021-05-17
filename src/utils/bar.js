@@ -251,12 +251,11 @@ function itemSimilar(a, b) {
 /**
  * Gets the route to edit a community bar.
  * @param {BarDetails} bar The bar.
- * @param {Boolean} [focused] If true, link to the focused editor.
  * @return {Object} A location descriptor object to the bar editor.
  */
-export function getBarEditRoute(bar, focused) {
+export function getBarEditRoute(bar) {
     return {
-        name: focused ? "Focused: Bar Editor" : "MorphicBar Editor",
+        name: "MorphicBar Editor",
         query: {
             barId: bar.id
         }
@@ -267,15 +266,24 @@ export function getBarEditRoute(bar, focused) {
  * Gets the route to edit a user's bar.
  * @param {CommunityMember} member The member who the bar belongs to, if editing a user-specific bar.
  * @param {GUID} defaultBarId The default community bar if the member does not have their own bar.
- * @param {Boolean} [focused] If true, link to the focused editor.
  * @return {Object} A location descriptor object to the bar editor.
  */
-export function getUserBarEditRoute(member, defaultBarId, focused) {
+export function getUserBarEditRoute(member, defaultBarId) {
     return {
-        name: focused ? "Focused: Bar Editor" : "MorphicBar Editor",
+        name: "MorphicBar Editor",
         query: {
             barId: member.bar_id || defaultBarId,
             memberId: member.id
         }
     };
+}
+
+/**
+ * Gets the bars belonging to a member.
+ * @param {Array<BarDetails>} allBars All bars.
+ * @param {CommunityMember} member The member.
+ * @return {Array<BarDetails>} The member's bars.
+ */
+export function getMemberBars(allBars, member) {
+    return allBars.filter(bar => bar.id === member.bar_id);
 }

@@ -23,14 +23,6 @@ import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
 import MorphicBarEditor from "@/views/MorphicBarEditor.vue";
 import MemberInvite from "@/views/MemberInvite.vue";
 
-// Focused Components
-import FocusedHome from "@/views/focused/FocusedHome.vue";
-import FocusedBarEditor from "@/views/focused/FocusedBarEditor.vue";
-import FocusedButtonCatalog from "@/views/focused/FocusedButtonCatalog.vue";
-import FocusedPeopleUsingBar from "@/views/focused/FocusedPeopleUsingBar.vue";
-import FocusedPersonPage from "@/views/focused/FocusedPersonPage.vue";
-import FocusedButtonEdit from "@/views/focused/FocusedButtonEdit.vue";
-import FocusedAddCommunityBar from "@/views/focused/FocusedAddCommunityBar.vue";
 import RegistrationInvite from "@/views/RegistrationInvite";
 
 
@@ -188,6 +180,7 @@ const routes = [
         path: "/dashboard/morphicbar-editor/",
         name: "MorphicBar Editor",
         component: MorphicBarEditor,
+        props: route => ({ catalogView: !!route.query.catalogView }),
         meta: {
             title: "MorphicBar Editor"
         }
@@ -216,73 +209,6 @@ const routes = [
         meta: {
             title: "Register",
             public: "only"
-        }
-    },
-    // {
-    //   path: '/dashboard/member/:memberId',
-    //   name: 'Member Editor',
-    //   component: MemberEditor,
-    //   meta: {
-    //     title: 'Member Details',
-    //     authRoute: true
-    //   }
-    // },
-
-    // Mobile-Focused-Accessible CM Webapp
-    {
-        path: "/focused/home",
-        name: "Home: Bar and Member Page",
-        component: FocusedHome,
-        meta: {
-            title: "Focused :: Home"
-        }
-    },
-    {
-        path: "/focused/bar-editor",
-        name: "Focused: Bar Editor",
-        component: FocusedBarEditor,
-        meta: {
-            title: "Focused :: Bar Editor"
-        }
-    },
-    {
-        path: "/focused/add-community-bar",
-        name: "Focused: Add Group Bar",
-        component: FocusedAddCommunityBar,
-        meta: {
-            title: "Focused :: Add group Bar"
-        }
-    },
-    {
-        path: "/focused/button-catalog",
-        name: "Focused: Button Catalog",
-        component: FocusedButtonCatalog,
-        meta: {
-            title: "Focused :: Button Catalog"
-        }
-    },
-    {
-        path: "/focused/people-using-bar",
-        name: "Focused: Members using bar",
-        component: FocusedPeopleUsingBar,
-        meta: {
-            title: "Focused :: Members using bar"
-        }
-    },
-    {
-        path: "/focused/person",
-        name: "Focused: Member",
-        component: FocusedPersonPage,
-        meta: {
-            title: "Focused :: Member"
-        }
-    },
-    {
-        path: "/focused/button-edit",
-        name: "Focused: Button edit",
-        component: FocusedButtonEdit,
-        meta: {
-            title: "Focused :: Button edit"
         }
     }
 ];
