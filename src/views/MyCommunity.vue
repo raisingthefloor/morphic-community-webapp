@@ -84,7 +84,9 @@ h1.communityName {
   }
 }
 
-@import "~bootstrap/scss/bootstrap";
+//@import "~bootstrap/scss/bootstrap";
+@import "~@/styles/bootstrap-util";
+
 
 .memberList {
 
@@ -159,7 +161,7 @@ h1.communityName {
 import * as communityService from "@/services/communityService";
 import * as billingService from "@/services/billingService";
 import * as billing from "@/utils/billing";
-import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
+import TextInputDialog from "@/components/dialogs/TextInputDialog";
 
 export default {
     components: {TextInputDialog},

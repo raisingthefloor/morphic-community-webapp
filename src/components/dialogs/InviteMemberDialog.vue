@@ -13,7 +13,7 @@
 
 <script>
 
-import TextInputDialog from "@/components/dashboardV2/TextInputDialog";
+import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import * as communityService from "@/services/communityService";
 
 export default {

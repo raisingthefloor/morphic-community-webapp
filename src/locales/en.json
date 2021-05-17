@@ -1,18 +1,18 @@
 {
-    "CopyBarDialog": {
-      "confirm-dialog": {
-        "no_button": "No",
-        "question": "Do you wish to continue?",
-        "summary": "This will copy the contents of the bar {barToCopy}, replacing all items of the current bar, {currentBar}.",
-        "title": "Confirm Bar Copy",
-        "yes_button": "Yes"
-      },
-      "intro": "You can copy any of the MorphicBars below into the MorphicBar you are editing. (Replacing the ALL of current contents of the MorphicBar you are editing)",
-      "no-bars": "There are no other bars to copy items from.",
-      "select-instruction": "Select a bar to copy from:",
-      "title": "Copy bar"
+  "CopyBarDialog": {
+    "confirm-dialog": {
+      "no_button": "No",
+      "question": "Do you wish to continue?",
+      "summary": "This will copy the contents of the bar {barToCopy}, replacing all items of the current bar, {currentBar}.",
+      "title": "Confirm Bar Copy",
+      "yes_button": "Yes"
     },
-    "General": {
+    "intro": "You can copy any of the MorphicBars below into the MorphicBar you are editing. (Replacing the ALL of current contents of the MorphicBar you are editing)",
+    "no-bars": "There are no other bars to copy items from.",
+    "select-instruction": "Select a bar to copy from:",
+    "title": "Copy bar"
+  },
+  "General": {
     "member-state": {
       "active": "Active",
       "invited": "Invited",
@@ -28,6 +28,8 @@
     "existing_email": "There is already an account associated with that email address.",
     "existing_username": "There is already an account which uses that user name.",
     "limit_reached": "The maximum number of members for your subscription has been reached.",
+    "cannot_demote_self": "You are unable to demote yourself.",
+    "cannot_delete_self": "You are unable to delete yourself from the community.",
     "http": {
       "404": "Unable to access to the server. Please try again later.",
       "500": "There is a problem with the server. Please try again later."
@@ -40,30 +42,36 @@
   },
   "App": {
   },
-  "BarExplainer": {
-  },
-  "BarItemFields":  {
+  "BarItemFields": {
   },
   "BarItemLink": {
   },
-  "BarPreview":  {
+  "BarPreview": {
   },
   "BarsList": {
     "default-bar": "Default Bar",
     "new-bar_button": "Add a new bar"
   },
-  "BillingDetails":  {
+  "BillingDetails": {
   },
   "BlockLoginRegister": {
   },
-  "SidePanel":  {
+  "MemberDetails": {
+    "bar-unused": "This bar has no members using it.",
+    "delete-member": "Delete member",
+    "make-manager": "Make member a Group Manager",
+    "make-non-manager": "Remove group manager role from member",
+    "member-count": "This MorphicBar is not used | This MorphicBar is used by 1 member | This MorphicBar is used by {n} members",
+    "resend-invite": "Re-invite member",
+    "send-invite": "Send Invitation"
+  },
+  "SidePanel": {
     "account-settings_link": "Account settings",
+    "group-bars_heading": "Group Bars",
     "other-bars_heading": "MorphicBars for Others",
     "own-bars_heading": "My MorphicBar"
   },
   "Dashboard": {
-  },
-  "DrawerPreview":  {
   },
   "EarlyReleaseProgram": {
     "account-created": "Your account has been created.",
@@ -77,30 +85,26 @@
     "join_link": "Click here to begin"
   },
   "EditButtonDialog": {
-  },
-  "FocusedAddCommunityBar":  {
-  },
-  "FocusedBarEditor": {
-  },
-  "FocusedButtonCatalog":  {
-  },
-  "FocusedButtonEdit": {
-  },
-  "FocusedHome":  {
-  },
-  "FocusedPeopleUsingBar": {
-  },
-  "FocusedPersonPage":  {
+    "color": {
+      "teal": "Teal",
+      "blue": "Blue",
+      "purple":  "Purple",
+      "red": "Red",
+      "green":  "Green",
+      "orange": "Orange",
+      "other": "Other"
+    }
   },
   "Footer": {
     "copyright": "Copyright © {year} Raising the Floor - US Inc. All rights Reserved."
   },
-  "Header":  {
-    "dashboard_link": "Dashboard Mode",
-    "focus-mode_link": "Focus/Mobile Mode",
-    "logout_link": "Logout",
-    "login_link": "Login",
-    "navbar-branding": "Morphic"
+  "Header": {
+    "focus-mode_button": "Focus / Mobile Mode",
+    "home_button": "Home (to select other person or bar)",
+    "logout_button": "Logout",
+    "login_button": "Login",
+    "product-name": "MorphicBar Customization Tool",
+    "standard-mode_button": "Standard Mode"
   },
   "Home": {
   },
@@ -108,11 +112,11 @@
     "email_prompt": "Please enter the email address for {name}",
     "invite-member_title": "Invite {name}"
   },
-  "MemberEditor":  {
+  "MemberEditor": {
   },
   "MemberInvite": {
   },
-  "MembersList":  {
+  "MembersList": {
     "add-bar_button": "Add a new bar",
     "add-member_button": "Add a person",
     "collapse-all": "Collapse all",
@@ -125,11 +129,11 @@
   },
   "MorphicBarEditor": {
   },
-  "MorphicBarPreconfigured":  {
+  "MorphicBarPreconfigured": {
   },
   "MyCommunities": {
   },
-  "MyCommunity":  {
+  "MyCommunity": {
   },
   "NoSubscription": {
     "go-to-signup_link": "Click here to go to sign up page for Morphic Plus",
@@ -151,7 +155,7 @@
     "plan-too-small": "Your current group is too large for this plan.",
     "renew-monthly": "automatically renews monthly until canceled"
   },
-  "Plans":  {
+  "Plans": {
     "close_button": "Close your group",
     "group_bullet": "Group: {name}",
     "leave_heading": "Not sure you want to stay with Morphic?",
@@ -163,11 +167,11 @@
   },
   "PreviewItem": {
   },
-  "Registration":  {
+  "Registration": {
   },
   "RenderList": {
   },
-  "RenderListItem":  {
+  "RenderListItem": {
   },
   "ResetPassword": {
     "enter-your-email-address": "Enter your email address",
@@ -179,7 +183,7 @@
   },
   "TextInputDialog": {
   },
-  "UserLogin":  {
+  "UserLogin": {
     "create-account_link": "I do not have a Morphic account yet",
     "email_label": "Sign in with Email",
     "heading": "Sign into Morphic",
@@ -190,6 +194,21 @@
   "UserRegistration": {
     "success": "Registration completed successfully"
   },
-  "ValidatedInput":  {
+  "ValidatedInput": {
+  },
+  "members": {
+    "changeRole": {
+      "apply_button": "Change to {role}",
+      "cancel_button": "Cancel",
+      "confirm": "Please confirm changing the role of {member} to {role}",
+      "title": "Change member role"
+    },
+    "delete": {
+      "apply_button": "Remove {member}",
+      "cancel_button": "Cancel",
+      "confirm": "Please confirm the removal of {member} from the group",
+      "title": "Remove member"
+    }
   }
 }
+

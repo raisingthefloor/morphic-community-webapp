@@ -1,44 +1,42 @@
-<!-- A dialog that accepts a single text field -->
-<template>
 
-  <b-modal @ok="onOK"
-           @show="onShow"
-           :id="dialogId"
-           v-bind="$attrs"
-  >
-
-    <slot/>
-
-    <template #modal-footer="{ ok, cancel }" >
-      <b-alert :show="!!errorMessage" variant="danger" class="small p-2">{{ errorMessage }}</b-alert>
-      <b-button v-if="!okOnly" @click="cancel()" variant="secondary">{{ cancelTitle || "Cancel" }}</b-button>
-      <b-button @click="ok()" variant="primary">{{ okTitle || "OK" }}</b-button>
-    </template>
-  </b-modal>
-
-</template>
-
-<script>
-
-export default {
-    name: "Dialog",
-
-    props: {
-        id: String,
-        okOnly: Boolean,
-        okTitle: String,
-        cancelTitle: String
-    },
+/**
+ * Mix-in for dialogs.
+ * @type {Component}
+ */
+export const dialogMixin = {
     data: function () {
         return {
             errorMessage: null,
             dialogId: this.id || this.generateId("dialog")
         };
     },
+    computed: {
+        /**
+         * Attributes for a b-modal.
+         * @return {Object<String,String>} A modified $attrs object
+         */
+        dialogAttrs: function () {
+            // Make some adjustments to the dialogs for mobiles
+            const attrs = {
+                ...this.$attrs,
+                largeDialog: this.isLite,
+                // Stop the back-drop covering the header (the dialog will be stretched over the screen anyway)
+                hideBackdrop: this.isLite,
+                noCloseOnBackdrop: this.isLite,
+                // The buttons take up too much space when the on-screen keyboard is open
+                scrollable: !this.isLite
+            };
+
+            attrs.dialogClass = `${attrs.dialogClass} mobile-headerMarginTop mobile-headerMinHeight focus-headerMarginTop focus-headerMinHeight`;
+
+            return attrs;
+        }
+    },
     methods: {
         onShow: function () {
             this.$emit("show");
         },
+
         /**
          * OK button was clicked. Raises an "ok" event, and closes the dialog. If the event object comes back with the
          * promise field set, then the dialog is closed when the promise resolves with true.
@@ -68,23 +66,6 @@ export default {
         hideDialog: function () {
             this.$bvModal.hide(this.dialogId);
         }
+
     }
 };
-</script>
-
-<style lang="scss">
-.textInputDialog {
-  .textInputDialogField .requiredText {
-    display: none;
-  }
-
-  footer.modal-footer {
-    flex-wrap: nowrap;
-
-    .alert {
-      margin-right: auto;
-      width: fit-content;
-    }
-  }
-}
-</style>

@@ -1,19 +1,15 @@
 <template>
-  <div id="SidePanel" class="bar-people-controls fill-height bg-green">
-    <h2>{{ community.name }}</h2>
+  <div id="SidePanel">
+    <h2 class="accountName">{{ community.name }}</h2>
     <div class="accountInfo">
       <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
     </div>
 
 
     <!-- member's own bars -->
-    <h3 ref="MorphicBars" @click="expandClick($refs.MorphicBars)" class="expandable expanded">
-      {{ $t('SidePanel.own-bars_heading') }}
-      <span class="expander">
-        <b-icon class="expandIcon" icon="plus" />
-      </span>
-    </h3>
+    <h3 v-t="'SidePanel.own-bars_heading'" />
     <BarsList ref="BarsList"
+              :button-attrs="buttonAttrs"
               id="MyMorphicBars"
               :bars="bars"
               :activeBarId="activeBarId"
@@ -23,13 +19,10 @@
 
     <!-- managed members -->
     <template v-if="isManager">
-      <h3 ref="MembersMorphicBars" @click="expandClick($refs.MembersMorphicBars)" class="expandable expanded">{{ $t('SidePanel.other-bars_heading') }}
-        <span class="expander">
-          <b-icon class="expandIcon" icon="plus" />
-        </span>
-      </h3>
+      <h3 v-t="'SidePanel.other-bars_heading'" />
       <MembersList ref="MembersList"
                    id="MembersList"
+                   :button-attrs="buttonAttrs"
                    :members="members"
                    :community="community"
                    :activeBarId="activeBarId"
@@ -45,12 +38,7 @@
     <!-- hiding group bars for now -->
     <template v-if="false">
       <!-- group bars -->
-      <h3 ref="GroupBars" @click="expandClick($refs.GroupBars)" class="expandable expanded">
-        Group Bars
-        <span class="expander">
-          <b-icon class="expandIcon" icon="plus" />
-        </span>
-      </h3>
+      <h3 v-t="'SidePanel.group-bars_heading'" />
       <BarsList ref="BarsList"
                 :bars="bars"
                 :activeBarId="activeBarId"
@@ -61,118 +49,72 @@
 </template>
 
 <style lang="scss">
-  $primary-color: #002957;
-  $secondary-color: #84c661;
-
-  .bg-green {
-    //noinspection CssUnknownTarget
-    background: #a5d58a url(/img/bg-green.png) repeat-x bottom;
-  }
+  @import "~@/styles/_variables.scss";
 
   #SidePanel {
-    min-height: 680px;
+    font-size: 1rem;
+    padding-top: 0.5em;
+
     h2, h3, h4, h5 {
       font-weight: bold;
-      font-size: 1rem;
-      margin: 1rem 0 0.5rem 0;
+      font-size: 1em;
+      margin: 1em 0 0.5em 0;
     }
+
     h2 {
-      font-size: 1.5rem;
+      margin-top: 0;
+      font-size: 1.5em;
     }
+
     h3 {
       margin-top: 3em;
     }
+
     h4, h5 {
       margin: 4px 2px;
     }
 
-    .btn-link {
-      color: $primary-color;
-    }
+  }
 
-    .expandable {
-      cursor: pointer;
-    }
+  $indent: 0.3em;
 
-    .expander {
-      position: absolute;
-      right: 0.5em;
-    }
-    .expandIcon, .collapseIcon {
-      transition: all 500ms ease;
-      opacity: 1;
-    }
-    :not(.expandable) > .expander {
-      display: none;
-    }
+  // non-mobile
+  body:not(.isLite) #SidePanel {
+    //noinspection CssUnknownTarget
+    background: #a5d58a url(/img/bg-green.png) repeat-x bottom;
+    min-height: 600px;
+    height: 100%;
 
-    .expandable.expanded .expandIcon,
-    .expandable:not(.expanded) .collapseIcon,
-    {
-      opacity: 0;
+    .btn-link, a {
+      color: black;
     }
-
-    .expandable.expanded {
-      font-weight: bold;
-    }
-
-    .expandable + .expandableContent,
-    .expandable + :not(.expandableContent) > :not(.active) {
-      transition: all 500ms ease, max-height 300ms ease-out,
-        font-weight 0s, background-color 0s, color 0s;
-      opacity: 1;
-      max-height: 500px;
-    }
-
-    .expandable:not(.expanded) + .expandableContent,
-    .expandable:not(.expanded) + :not(.expandableContent) > :not(.active),
-    {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-    }
-
-    .expandable.collapsed + .expandableContent,
-    .expandable.collapsed + :not(.expandableContent) > :not(.active) {
-      display: none;
-    }
-
 
     button:not(.btn-link) {
       margin: 1px;
       min-width: 50%;
     }
-    .buttonRow {
-      button:first-child {
-        margin-right: 0.5em;
-      }
-      button {
-        font-size: 80%;
-      }
-    }
 
     a {
-      color: black;
       text-decoration: underline;
+
       &.barLink {
-        padding: 0.1rem 0.4rem;
-        font-size: 1rem;
+        padding: 0.1em 0.4em;
+        font-size: 1em;
         color: black;
         display: block;
       }
     }
+
     // Indentation
-    $indent: 0.3em;
     padding-left: $indent;
+
     .accountInfo {
       padding-left: $indent * 2;
     }
+
     .panelBox {
-      padding-left: $indent * 2;
+      padding: 0.3em 0 0.3em $indent * 2;
+
       button {
         margin-left: $indent * 2;
       }
@@ -184,18 +126,50 @@
       padding-left: $indent * 3;
     }
 
+    .expander .text-link {
+      color: $morphic-green-color;
+    }
+
+  }
+
+  #SidePanel {
+
+    .memberName {
+      display: flex;
+      & > :first-child {
+        flex-grow: 1;
+      }
+      .expander {
+        margin-right: 0.5em;
+      }
+    }
+
+    .buttonRow {
+      button:first-child {
+        margin-right: 1em;
+      }
+
+      button {
+        font-size: 80%;
+      }
+    }
+
     ul {
       margin: 0.5em 0;
+
       li {
         &.active {
           background-color: $primary-color;
+
           .barLink {
             color: white !important;
           }
         }
+
         // Custom bullet to reduce the space after the bullet.
         a::before {
           content: "\2022";
+          color: black;
           text-decoration: none !important;
           display: inline-block;
           font-size: 1em;
@@ -204,7 +178,6 @@
         }
       }
     }
-
 
     $panelBox-color: #85C399;
     .panelBox {
@@ -219,7 +192,7 @@
 
       font-size: 0.95em;
       border-radius: 8px;
-      margin-top: 0.25em;
+      margin-top: 0.5em;
       margin-right: $indent;
       background-color: $panelBox-color;
 
@@ -235,32 +208,66 @@
       & > .expandable {
         font-weight: bold;
       }
-
     }
+  }
+
+  // Mobile overrides
+  body.isLite #SidePanel {
+    font-size: 1.2rem;
+    padding: 1em;
+    //noinspection CssUnknownTarget
+    background: unset;
+    .accountName {
+      font-size: 1.1em;
+      font-weight: normal;
+    }
+
+    h2, h3, h4, h5 {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+    h3 {
+      margin-top: 1em;
+    }
+
+    li > a {
+      display: block;
+    }
+
+    .expander {
+      right: 2em;
+    }
+    .expander-background {
+      color: $link-color-darker;
+    }
+
+    .panelBox {
+      padding: 0.5em;
+      margin-right: 0;;
+      &:nth-child(even) {
+        background-color: #e0f1d7;
+      }
+      &:nth-child(odd) {
+        background-color: #bfdfd0;
+      }
+    }
+
+    button:not(.btn-link) {
+      padding-left: 1.5em;
+      padding-right: 1.5em;
+    }
+
   }
 
   #MembersList > div:last-child {
     margin-top: 0.5em;
   }
-
-  .bar-people-controls {
-    a {
-      color: $primary-color;
-    }
-    .icon-add {
-      float: right;
-      background: white;
-      border-radius: 100%;
-      font-size: 2rem;
-      line-height: 100%;
-    }
-  }
 </style>
 
 <script>
 
-import MembersList from "@/components/dashboardV2/MembersList";
-import BarsList from "@/components/dashboardV2/BarsList";
+import MembersList from "@/components/side-panel/MembersList";
+import BarsList from "@/components/side-panel/BarsList";
 import * as Bar from "@/utils/bar";
 import * as communityService from "@/services/communityService";
 
@@ -316,6 +323,17 @@ export default {
         },
         expandedMembers() {
             return [this.newestMemberId];
+        },
+        buttonAttrs() {
+            return this.isLite
+                ? {
+                    variant: "secondary",
+                    size: "md"
+                }
+                : {
+                    variant: "primary",
+                    size: "sm"
+                };
         }
     },
     methods: {
@@ -396,8 +414,8 @@ export default {
         selectBar(bar) {
             const member = bar.userId ? bar : bar._member;
             const goto = member
-                ? Bar.getUserBarEditRoute(member, undefined, this.focusMode)
-                : Bar.getBarEditRoute(bar, this.focusMode);
+                ? Bar.getUserBarEditRoute(member, undefined)
+                : Bar.getBarEditRoute(bar);
 
             this.$router.push(goto);
         },
