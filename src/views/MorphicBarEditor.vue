@@ -18,7 +18,7 @@
 
     <!-- EDITOR v2 -->
     <b-row no-gutters id="EditorContainer" align-v="stretch">
-      <b-col v-if="!isLite" md="2">
+      <b-col v-if="!isLite" md="2" class="editorSide left">
         <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
       </b-col>
       <b-col v-show="editorVisible" fluid>
@@ -57,7 +57,7 @@
       </b-col>
 
       <!-- Button Catalogue -->
-      <b-col v-show="catalogVisible" :md="isLite || 3" :lg="isLite || 2"  :class="isLite && 'p-3'">
+      <b-col v-show="catalogVisible" :md="isLite || 3" :lg="isLite || 2"  :class="isLite && 'p-3'" class="editorSide right">
 
         <template v-if="isLite">
           <h1>Button Catalog: Buttons you can add</h1>
@@ -81,6 +81,12 @@
   #barEditor {
     padding-left: 15px;
     padding-right: 15px;
+  }
+
+  #EditorContainer {
+    .editorSide {
+      min-width: 15em;
+    }
   }
 
 </style>
