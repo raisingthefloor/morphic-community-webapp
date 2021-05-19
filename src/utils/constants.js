@@ -257,7 +257,10 @@ Object.keys(defaultApps).forEach((appKey) => {
 /** Gets the host part of a URL */
 const getHost = /.*:\/\/([^/:]+)/;
 
-Object.keys(allButtons).forEach((buttonKey) => {
+Object.keys(allButtons).sort((a, b) => {
+    // Put the default applications first.
+    return allButtons[a].configuration.default ? -1 : 0;
+}).forEach((buttonKey) => {
     const button = allButtons[buttonKey];
 
     if (!button.data) {
