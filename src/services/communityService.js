@@ -215,6 +215,8 @@ export function getCommunityMember(communityId, memberId) {
  * @return {Promise<AxiosResponse<Any>>} Response.
  */
 export function updateCommunityMember(communityId, memberId, member) {
+    // TODO: really support multiple bars
+    member.bar_ids = member.bar_id ? [member.bar_id] : [];
     return HTTP.put(`/v1/communities/${communityId}/members/${memberId}`, member, {action: "update member"});
 }
 
@@ -311,4 +313,8 @@ function makeMember(member, currentUserId) {
             return i18n.t(key);
         }
     });
+
+    // TODO: really support multiple bars
+    // This hack is to make the site work now that the API expects multiple bars
+    member.bar_id = member.bar_ids && member.bar_ids[0];
 }
