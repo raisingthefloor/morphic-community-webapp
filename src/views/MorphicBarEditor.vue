@@ -230,39 +230,19 @@ export default {
                 }
             }
 
-
-            if (barId === "new") {
-                // Create a new empty bar.
-                this.newBar = true;
-                this.barDetails = this.newBarDetails;
-            } else if (barId.indexOf("predefined") !== -1) {
-                // Create a bar from the predefined collection.
-                const bar = this.predefinedBars.find(function (predefined) {
-                    return predefined.id === barId;
-                });
-
-                if (bar) {
-                    this.newBar = true;
-                    this.barDetails = this.newBarDetails;
-                    this.barDetails.items = bar.items;
-                    this.addBar();
-                }
+            if (unsavedBar && unsavedBar.id === barId) {
+                this.barDetails = unsavedBar;
+                this.onBarChanged();
             } else {
-                const unsavedBar = this.$store.getters.unsavedBar;
-                if (unsavedBar && unsavedBar.id === barId) {
-                    this.barDetails = unsavedBar;
-                    this.onBarChanged();
-                } else {
-                    // Load a saved bar.
-                    getCommunityBar(this.communityId, barId)
-                        .then(resp => {
-                            this.barDetails = resp.data;
-                            this.updateOriginalBarDetails();
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        });
-                }
+                // Load a saved bar.
+                getCommunityBar(this.communityId, barId)
+                    .then(resp => {
+                        this.barDetails = resp.data;
+                        this.updateOriginalBarDetails();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
             }
         },
         // hack to refresh css rendering due to bars being fucked up in their CSS
@@ -274,41 +254,6 @@ export default {
         },
         updateOriginalBarDetails: function () {
             this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
-        },
-        addPersonalBar: function () {
-            if (this.barDetails.is_shared) {
-                this.onSave = true;
-
-                this.barDetails.name = this.memberDetails.first_name;
-                this.barDetails.is_shared = false;
-
-                const data = this.barDetails;
-                // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-                // data.items = this.primaryItems.concat(drawerItems)
-
-                createCommunityBar(this.communityId, data)
-                    .then((resp) => {
-                        if (resp.status === 200) {
-                            this.memberDetails.bar_id = resp.data.bar.id;
-                            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-                                .then((resp) => {
-                                    if (resp.status === 200) {
-                                        this.showMessage(MESSAGES.barUpdated);
-                                        this.isChanged = false;
-                                        this.updateOriginalBarDetails();
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                });
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
-            } else {
-                this.saveBar();
-            }
         },
         addBar: function () {
             this.onSave = true;

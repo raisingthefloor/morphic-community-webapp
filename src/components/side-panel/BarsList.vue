@@ -50,7 +50,7 @@ export default {
         },
         getBars: function () {
             const filter = this.member
-                ? b => b.id === this.member.bar_id && !b.is_shared
+                ? b => !b.is_shared && this.member.bar_ids.includes(b.id)
                 : b => b.is_shared;
 
             return this.bars.filter(filter).sort((a, b) => {

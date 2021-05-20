@@ -307,7 +307,7 @@ export default {
          * @return {Array<BarDetails>} The bars owned by the member.
          */
         memberBars() {
-            return this.bars.filter(b => b.id === this.currentMember.bar_id && !b.is_shared);
+            return this.bars.filter(b => this.currentMember.bar_ids.includes(b.id) && !b.is_shared);
         },
         hasOwnBar() {
             return this.memberBars.length > 0;
@@ -405,19 +405,6 @@ export default {
             }
 
             return bar;
-        },
-
-        /**
-         * Opens the bar editor with the given bar.
-         * @param {BarDetails} bar The bar to edit
-         */
-        selectBar(bar) {
-            const member = bar.userId ? bar : bar._member;
-            const goto = member
-                ? Bar.getUserBarEditRoute(member, undefined)
-                : Bar.getBarEditRoute(bar);
-
-            this.$router.push(goto);
         },
 
         /**
