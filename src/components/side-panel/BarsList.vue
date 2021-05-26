@@ -18,7 +18,6 @@
                 @click="$emit('newbar', member)"
                 class="addNew"
                 v-if="showAddButton"
-                :disabled="orderedBars.length > 0"
                 v-t="'BarsList.new-bar_button'" />
       <em v-if="!anyBars" class="d-block">You have no MorphicBars of your own yet.</em>
     </div>
@@ -45,15 +44,23 @@ export default {
     methods: {
         getBarEditRoute: function (bar) {
             return this.member
-                ? Bar.getUserBarEditRoute(this.member, bar.id)
+                ? Bar.getUserBarEditRoute(bar.id, this.member)
                 : Bar.getBarEditRoute(bar);
         },
-        getBars: function () {
-            const filter = this.member
-                ? b => !b.is_shared && this.member.bar_ids.includes(b.id)
-                : b => b.is_shared;
 
-            return this.bars.filter(filter).sort((a, b) => {
+        /**
+         * Get the bars belonging to the current member, or all shared bars.
+         * @return {Array<BarDetails>} The bars
+         */
+        getBars: function () {
+            let bars;
+            if (this.member) {
+                bars = Bar.getMemberBars(this.bars, this.member);
+            } else {
+                bars = this.bars.filter(b => b.is_shared);
+            }
+
+            return bars.sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
         }
@@ -64,7 +71,7 @@ export default {
             return this.getBars();
         },
         showAddButton() {
-            return this.member && this.orderedBars.length === 0;
+            return this.member && this.orderedBars.length < this.CONFIG.MAX_BARS;
         },
         anyBars: function () {
             return this.getBars().length > 0;

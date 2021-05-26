@@ -241,8 +241,7 @@ import SidePanel from "@/components/side-panel/SidePanel";
 import {
     getCommunity,
     getCommunityBars,
-    getCommunityMembers,
-    updateCommunityMember
+    getCommunityMembers
 } from "@/services/communityService";
 import * as billingService from "@/services/billingService";
 

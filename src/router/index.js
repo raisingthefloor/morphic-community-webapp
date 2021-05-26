@@ -21,7 +21,6 @@ import EarlyReleaseProgram from "@/views/billing/EarlyReleaseProgram.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
 import MorphicBarEditor from "@/views/MorphicBarEditor.vue";
-import MemberInvite from "@/views/MemberInvite.vue";
 
 import RegistrationInvite from "@/views/RegistrationInvite";
 
@@ -183,14 +182,6 @@ const routes = [
         props: route => ({ catalogView: !!route.query.catalogView }),
         meta: {
             title: "MorphicBar Editor"
-        }
-    },
-    {
-        path: "/dashboard/member-invite",
-        name: "Member Invite",
-        component: MemberInvite,
-        meta: {
-            title: "Member Invite"
         }
     },
     {

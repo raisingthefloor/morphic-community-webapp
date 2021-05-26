@@ -61,7 +61,6 @@
           <b-button v-bind="buttonAttrs" variant="secondary" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 
-        <!-- Member's bars - currently, there's only 1 bar per person  -->
         <BarsList :member="member"
                   :active-bar-id="activeBarId"
                   :bars="bars"
@@ -99,7 +98,6 @@
 </style>
 
 <script>
-import * as Bar from "@/utils/bar";
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import BarsList from "@/components/side-panel/BarsList";
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
@@ -167,7 +165,7 @@ export default {
                 }
             }
             return false;
-        },
+        }
     }
 };
 </script>

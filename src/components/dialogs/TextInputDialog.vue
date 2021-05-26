@@ -22,11 +22,7 @@
             v-bind="$attrs"
       />
 
-    <template #modal-footer="{ ok, cancel }" class="hello">
-      <b-alert :show="errorAlert" variant="danger" class="small p-2">{{ errorMessage }}</b-alert>
-      <b-button @click="cancel()" variant="secondary">{{ cancelTitle || "Cancel" }}</b-button>
-      <b-button @click="ok()" variant="primary">{{ okTitle || "OK" }}</b-button>
-    </template>
+    <b-alert :show="errorAlert" variant="danger" class="small p-2">{{ errorMessage }}</b-alert>
   </b-modal>
 
 </template>

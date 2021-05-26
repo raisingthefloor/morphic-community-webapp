@@ -285,5 +285,5 @@ export function getUserBarEditRoute(barId, member) {
  * @return {Array<BarDetails>} The member's bars.
  */
 export function getMemberBars(allBars, member) {
-    return allBars.filter(bar => bar.id === member.bar_id);
+    return allBars.filter(bar => member.bar_ids.includes(bar.id));
 }

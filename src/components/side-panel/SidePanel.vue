@@ -307,7 +307,7 @@ export default {
          * @return {Array<BarDetails>} The bars owned by the member.
          */
         memberBars() {
-            return this.bars.filter(b => this.currentMember.bar_ids.includes(b.id) && !b.is_shared);
+            return Bar.getMemberBars(this.bars, this.currentMember);
         },
         hasOwnBar() {
             return this.memberBars.length > 0;
@@ -395,16 +395,42 @@ export default {
             if (barName === "(no name)") {
                 barName = "My MorphicBar";
             }
-            const bar = Bar.newBar(!member, barName);
+
+            const existingNames = this.bars.filter(b => member.bar_ids.includes(b.id)).map(b => b.name);
+            let suffixNumber = 1;
+            let newBarName = barName;
+            while (existingNames.includes(newBarName)) {
+                newBarName = `${barName} (${suffixNumber})`;
+                suffixNumber++;
+            }
+
+            const bar = Bar.newBar(!member, newBarName);
 
             const createResponse = await communityService.createCommunityBar(this.communityId, bar);
+            bar.id = createResponse.data.bar.id;
+
             if (member) {
-                const updatedMember = { ...member, bar_id: createResponse.data.bar.id };
-                await communityService.updateCommunityMember(this.communityId, member.id, updatedMember);
-                member.bar_id = createResponse.data.bar.id;
+                await this.addBarToMember(bar, member);
             }
 
             return bar;
+        },
+
+        /**
+         *  Adds a bar to a member
+         *  @param {BarDetails} bar The bar to add.
+         *  @param {CommunityMember} member The member to own the bar.
+         *  @return {Promise} Resolves when complete
+         */
+        async addBarToMember(bar, member) {
+            // Reload the member data
+            const memberResponse = communityService.getCommunityMember(this.communityId, member.id);
+            Object.assign(member, memberResponse.data);
+            if (!member.bar_ids.includes(bar.id)) {
+                member.bar_ids.push(bar.id);
+            }
+
+            await communityService.updateCommunityMember(this.communityId, member.id, member);
         },
 
         /**
