@@ -17,11 +17,11 @@
     <!-- MODALs: END -->
 
     <!-- EDITOR v2 -->
-    <b-row no-gutters id="EditorContainer" align-v="stretch">
-      <b-col v-if="!isLite" md="2">
+    <div id="EditorContainer">
+      <div v-if="!isLite" class="editorSide left">
         <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
-      </b-col>
-      <b-col v-show="editorVisible" fluid>
+      </div>
+      <div v-show="editorVisible" class="editor">
         <div id="barEditor" class="pt-2">
 
           <!-- Bar info, actions, and editor tabs -->
@@ -54,10 +54,10 @@
                             @item-dropped="addBarItem($event.item, $event.noImage, $event.index)"
           />
         </div>
-      </b-col>
+      </div>
 
       <!-- Button Catalogue -->
-      <b-col v-show="catalogVisible" :md="isLite || 3" :lg="isLite || 2"  :class="isLite && 'p-3'">
+      <div v-show="catalogVisible" :class="isLite && 'p-3'" class="editorSide right">
 
         <template v-if="isLite">
           <h1>Button Catalog: Buttons you can add</h1>
@@ -72,8 +72,8 @@
                        :button-catalog="buttonCatalog"
                        @item-selected="addBarItem($event.item, $event.noImage)"
         />
-      </b-col>
-    </b-row>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -83,6 +83,22 @@
     padding-right: 15px;
   }
 
+body:not(.isLite) {
+  #EditorContainer {
+    display: flex;
+
+    .editor {
+      flex-grow: 1;
+      flex-shrink: 1;
+    }
+
+    .editorSide {
+      flex-shrink: 0;
+      width: 15em;
+      min-width: 16.66%;
+    }
+  }
+}
 </style>
 
 <script>
