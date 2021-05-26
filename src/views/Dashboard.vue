@@ -4,11 +4,11 @@
       <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
     <b-row no-gutters class="auto">
       <b-col :md="isLite ? 8 : 2">
-        <SidePanel :community="community" :bars="list" :members="members" ref="SidePanel" @reload="loadData()" />
+        <SidePanel :community="community" :bars="barsList" :members="membersList" ref="SidePanel" @reload="loadData()" />
       </b-col>
       <template v-if="!isLite">
         <b-col md="4" fluid>
-          <div v-if="members.length > 0" class="info-box pt-3 pb-3 pl-5">
+          <div v-if="membersList.length > 0" class="info-box pt-3 pb-3 pl-5">
             <h1 class="h3">Welcome to Morphic</h1>
             <!-- hints -->
             <div>
@@ -241,8 +241,7 @@ import SidePanel from "@/components/side-panel/SidePanel";
 import {
     getCommunity,
     getCommunityBars,
-    getCommunityMembers,
-    updateCommunityMember
+    getCommunityMembers
 } from "@/services/communityService";
 import * as billingService from "@/services/billingService";
 
@@ -254,9 +253,9 @@ export default {
     data() {
         return {
             // data
-            list: [],
+            barsList: [],
             community: {},
-            members: [],
+            membersList: [],
             barPreviewData: {},
             showHints: true,
             showHideHintsText: "Hide hints",
@@ -270,24 +269,6 @@ export default {
         };
     },
     computed: {
-        membersNotInvited: function () {
-            const list = [];
-            for (let i = 0; i < this.members.length; i++) {
-                if (this.members[i].state === "uninvited") {
-                    list.push(this.members[i]);
-                }
-            }
-            return list;
-        },
-        membersNotAccepted: function () {
-            const list = [];
-            for (let i = 0; i < this.members.length; i++) {
-                if (this.members[i].state === "invited") {
-                    list.push(this.members[i]);
-                }
-            }
-            return list;
-        }
     },
     mounted: function () {
         this.loadData();
@@ -353,30 +334,8 @@ export default {
                     const bars = resp.data.bars;
                     getCommunityMembers(this.communityId)
                         .then((resp) => {
-                            this.list = this.autoHideDetails(bars, true);
-                            // ensure all members have a bar_id associated, else set default
-                            // on a brand new community the community doesn't have a default bar, so we use the first (and only) bar id
-                            const defaultBarId = this.community.default_bar_id ? this.community.default_bar_id : bars[0].id;
-                            // Let's ensure that all the community members have a bar assigned.
-                            // If not, add the the default one - usually required for the CM
-                            this.members = resp.data.members.map(m => {
-                                if (!m.bar_id) {
-                                    Object.assign(m, { bar_id: defaultBarId });
-                                    updateCommunityMember(this.communityId, m.id, m);
-                                }
-                                return m;
-                            });
-
-                            if (this.members.length > 0 && this.list.length > 0) {
-                                for (let i = 0; i < this.list.length; i++) {
-                                    this.list[i].members = [];
-                                    for (let j = 0; j < this.members.length; j++) {
-                                        if (this.list[i].id === this.members[j].bar_id) {
-                                            this.list[i].members.push(this.members[j]);
-                                        }
-                                    }
-                                }
-                            }
+                            this.barsList = bars;
+                            this.membersList = resp.data.members;
                         })
                         .catch(err => {
                             console.error(err);
@@ -385,18 +344,6 @@ export default {
                 .catch(err => {
                     console.error(err);
                 });
-        },
-        autoHideDetails: function (data, showFirstOne) {
-            if (data && data.length > 0) {
-                for (var i = data.length - 1; i >= 0; i--) {
-                    if (showFirstOne && i === 0) {
-                        data[i].showDetails = true;
-                    } else {
-                        data[i].showDetails = false;
-                    }
-                }
-            }
-            return data;
         },
         hintsSwitch: function () {
             this.showHints = !this.showHints;

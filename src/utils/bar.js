@@ -264,15 +264,15 @@ export function getBarEditRoute(bar) {
 
 /**
  * Gets the route to edit a user's bar.
+ * @param {GUID} barId The bar to edit.
  * @param {CommunityMember} member The member who the bar belongs to, if editing a user-specific bar.
- * @param {GUID} defaultBarId The default community bar if the member does not have their own bar.
  * @return {Object} A location descriptor object to the bar editor.
  */
-export function getUserBarEditRoute(member, defaultBarId) {
+export function getUserBarEditRoute(barId, member) {
     return {
         name: "MorphicBar Editor",
         query: {
-            barId: member.bar_id || defaultBarId,
+            barId: barId,
             memberId: member.id
         }
     };
@@ -285,5 +285,5 @@ export function getUserBarEditRoute(member, defaultBarId) {
  * @return {Array<BarDetails>} The member's bars.
  */
 export function getMemberBars(allBars, member) {
-    return allBars.filter(bar => bar.id === member.bar_id);
+    return allBars.filter(bar => member.bar_ids.includes(bar.id));
 }

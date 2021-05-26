@@ -307,7 +307,7 @@ export default {
          * @return {Array<BarDetails>} The bars owned by the member.
          */
         memberBars() {
-            return this.bars.filter(b => b.id === this.currentMember.bar_id && !b.is_shared);
+            return Bar.getMemberBars(this.bars, this.currentMember);
         },
         hasOwnBar() {
             return this.memberBars.length > 0;
@@ -395,29 +395,42 @@ export default {
             if (barName === "(no name)") {
                 barName = "My MorphicBar";
             }
-            const bar = Bar.newBar(!member, barName);
+
+            const existingNames = this.bars.filter(b => member.bar_ids.includes(b.id)).map(b => b.name);
+            let suffixNumber = 1;
+            let newBarName = barName;
+            while (existingNames.includes(newBarName)) {
+                newBarName = `${barName} (${suffixNumber})`;
+                suffixNumber++;
+            }
+
+            const bar = Bar.newBar(!member, newBarName);
 
             const createResponse = await communityService.createCommunityBar(this.communityId, bar);
+            bar.id = createResponse.data.bar.id;
+
             if (member) {
-                const updatedMember = { ...member, bar_id: createResponse.data.bar.id };
-                await communityService.updateCommunityMember(this.communityId, member.id, updatedMember);
-                member.bar_id = createResponse.data.bar.id;
+                await this.addBarToMember(bar, member);
             }
 
             return bar;
         },
 
         /**
-         * Opens the bar editor with the given bar.
-         * @param {BarDetails} bar The bar to edit
+         *  Adds a bar to a member
+         *  @param {BarDetails} bar The bar to add.
+         *  @param {CommunityMember} member The member to own the bar.
+         *  @return {Promise} Resolves when complete
          */
-        selectBar(bar) {
-            const member = bar.userId ? bar : bar._member;
-            const goto = member
-                ? Bar.getUserBarEditRoute(member, undefined)
-                : Bar.getBarEditRoute(bar);
+        async addBarToMember(bar, member) {
+            // Reload the member data
+            const memberResponse = communityService.getCommunityMember(this.communityId, member.id);
+            Object.assign(member, memberResponse.data);
+            if (!member.bar_ids.includes(bar.id)) {
+                member.bar_ids.push(bar.id);
+            }
 
-            this.$router.push(goto);
+            await communityService.updateCommunityMember(this.communityId, member.id, member);
         },
 
         /**

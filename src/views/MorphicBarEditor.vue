@@ -95,8 +95,7 @@ import {
     getCommunityBar,
     getCommunityBars,
     getCommunityMembers,
-    updateCommunityBar,
-    updateCommunityMember
+    updateCommunityBar
 } from "@/services/communityService";
 import { buttonCatalog, MESSAGES } from "@/utils/constants";
 import { predefinedBars } from "@/utils/predefined";
@@ -163,7 +162,6 @@ export default {
         },
 
         storeUnsavedBar: function () {
-            this.barSelectedInDropdown = "customized";
             Bar.checkBar(this.barDetails);
             this.$store.dispatch("unsavedChanges", this.isChanged);
             this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
@@ -173,31 +171,7 @@ export default {
             if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will lose all unsaved changes!")) {
                 this.isChanged = false;
                 this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
-                this.barSelectedInDropdown = this.barDetails.id;
             }
-        },
-        changeUserBarToCommunityBar: function () {
-            if (this.isChanged || !this.barDetails.is_shared) {
-                if (!confirm("Warning! Changing to a different group bar will delete all MorphicBar customizations for this member.")) {
-                    return;
-                }
-            }
-
-            // if we've made it to this point, either the the user was already using a community bar, or has accepted to loose customized data
-            updateCommunityMember(this.community.id, this.memberDetails.id, {
-                first_name: this.memberDetails.first_name,
-                last_name: this.memberDetails.last_name,
-                bar_id: this.barSelectedInDropdown,
-                role: this.memberDetails.role
-            }).then(r => {
-                getCommunityBar(this.community.id, this.barSelectedInDropdown).then(newBarDetails => {
-                    this.barDetails = newBarDetails.data;
-                    this.isChanged = false;
-                    this.newBar = false;
-                    this.memberDetails.bar_id = this.barSelectedInDropdown;
-                    this.updateOriginalBarDetails();
-                });
-            });
         },
 
         loadAllData: function () {
@@ -230,39 +204,19 @@ export default {
                 }
             }
 
-
-            if (barId === "new") {
-                // Create a new empty bar.
-                this.newBar = true;
-                this.barDetails = this.newBarDetails;
-            } else if (barId.indexOf("predefined") !== -1) {
-                // Create a bar from the predefined collection.
-                const bar = this.predefinedBars.find(function (predefined) {
-                    return predefined.id === barId;
-                });
-
-                if (bar) {
-                    this.newBar = true;
-                    this.barDetails = this.newBarDetails;
-                    this.barDetails.items = bar.items;
-                    this.addBar();
-                }
+            if (unsavedBar && unsavedBar.id === barId) {
+                this.barDetails = unsavedBar;
+                this.onBarChanged();
             } else {
-                const unsavedBar = this.$store.getters.unsavedBar;
-                if (unsavedBar && unsavedBar.id === barId) {
-                    this.barDetails = unsavedBar;
-                    this.onBarChanged();
-                } else {
-                    // Load a saved bar.
-                    getCommunityBar(this.communityId, barId)
-                        .then(resp => {
-                            this.barDetails = resp.data;
-                            this.updateOriginalBarDetails();
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        });
-                }
+                // Load a saved bar.
+                getCommunityBar(this.communityId, barId)
+                    .then(resp => {
+                        this.barDetails = resp.data;
+                        this.updateOriginalBarDetails();
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    });
             }
         },
         // hack to refresh css rendering due to bars being fucked up in their CSS
@@ -274,41 +228,6 @@ export default {
         },
         updateOriginalBarDetails: function () {
             this.originalBarDetails = JSON.parse(JSON.stringify(this.barDetails));
-        },
-        addPersonalBar: function () {
-            if (this.barDetails.is_shared) {
-                this.onSave = true;
-
-                this.barDetails.name = this.memberDetails.first_name;
-                this.barDetails.is_shared = false;
-
-                const data = this.barDetails;
-                // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
-                // data.items = this.primaryItems.concat(drawerItems)
-
-                createCommunityBar(this.communityId, data)
-                    .then((resp) => {
-                        if (resp.status === 200) {
-                            this.memberDetails.bar_id = resp.data.bar.id;
-                            updateCommunityMember(this.communityId, this.memberDetails.id, this.memberDetails)
-                                .then((resp) => {
-                                    if (resp.status === 200) {
-                                        this.showMessage(MESSAGES.barUpdated);
-                                        this.isChanged = false;
-                                        this.updateOriginalBarDetails();
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                });
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
-            } else {
-                this.saveBar();
-            }
         },
         addBar: function () {
             this.onSave = true;
@@ -410,7 +329,6 @@ export default {
                         .then((resp) => {
                             this.barsList = barsData;
                             this.membersList = resp.data.members;
-                            this.membersList = this.membersList.map(m => { return m.bar_id ? m : Object.assign(m, { bar_id: this.community.default_bar_id }); });
                         })
                         .catch(err => {
                             console.error(err);
@@ -451,8 +369,8 @@ export default {
         getBarEditRoute: function (bar) {
             let route;
             if (!bar.is_shared) {
-                var member = this.membersList.find(m => m.bar_id === bar.id);
-                route = member && Bar.getUserBarEditRoute(member, this.community.default_bar_id);
+                var member = this.membersList.find(m => m.bar_ids.includes(bar.id));
+                route = member && Bar.getUserBarEditRoute(bar.id, member);
             }
 
             return route || Bar.getBarEditRoute(bar);
@@ -489,13 +407,13 @@ export default {
     },
     computed: {
         /**
-         * Gets the bar members which this bar belongs to.
+         * Gets the members which this bar belongs to.
          * @return {Array<CommunityMember>} The members this bar belongs to, empty array for shared bars.
          */
         barMembers: function () {
             return this.barDetails.is_shared
                 ? []
-                : this.membersList.filter(m => m.bar_id === this.barDetails.id).sort((a, b) => b.isCurrent);
+                : this.membersList.filter(m => m.bar_ids.includes(this.barDetails.id)).sort((a, b) => b.isCurrent);
         },
         activeMemberId: function () {
             var memberId;
@@ -537,14 +455,8 @@ export default {
         this.loadAllData();
     },
     watch: {
-        "barDetails.is_shared": function (newValue, oldValue) {
-            this.barSelectedInDropdown = newValue ? this.memberDetails.bar_id : "customized";
-        },
         "memberDetails.id": function (newValue, oldValue) {
             this.updateBarLists();
-            if (this.barDetails.is_shared) {
-                this.barSelectedInDropdown = this.memberDetails.bar_id;
-            }
         },
         barsList: function (newValue) {
             this.updateBarLists();
@@ -596,7 +508,6 @@ export default {
         return {
             // messages
             leavePageMessage: MESSAGES.leavePageAlert,
-            barSelectedInDropdown: "",
             // flags
             newBar: false,
             isChanged: false,

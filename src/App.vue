@@ -225,8 +225,6 @@ export default {
             }
 
             this.headerHeight = height;
-
-            console.log(height);
         },
 
         /**

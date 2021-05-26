@@ -112,8 +112,6 @@
     "email_prompt": "Please enter the email address for {name}",
     "invite-member_title": "Invite {name}"
   },
-  "MemberEditor": {
-  },
   "MemberInvite": {
   },
   "MembersList": {

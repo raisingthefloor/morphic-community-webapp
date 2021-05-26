@@ -21,7 +21,7 @@
          :key="member.id"
          class="panelBox"
          :class="{
-            active: activeMemberId === member.id || member.bar_id === activeBarId,
+            active: activeMemberId === member.id || member.bar_ids.includes(activeBarId),
           }"
     >
       <!-- member's name -->
@@ -29,7 +29,7 @@
           class="memberName"
           expand-group="MembersList"
           :class="{
-            expandable: !(activeMemberId === member.id || member.bar_id === activeBarId),
+            expandable: !(activeMemberId === member.id || member.bar_ids.includes(activeBarId)),
             expanded: expandedMembers.includes(member.id)
           }"
           @click="$emit('expandClick', $refs[member.id][0])"
@@ -61,7 +61,6 @@
           <b-button v-bind="buttonAttrs" variant="secondary" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
         </div>
 
-        <!-- Member's bars - currently, there's only 1 bar per person  -->
         <BarsList :member="member"
                   :active-bar-id="activeBarId"
                   :bars="bars"
@@ -99,7 +98,6 @@
 </style>
 
 <script>
-import * as Bar from "@/utils/bar";
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import BarsList from "@/components/side-panel/BarsList";
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
@@ -167,27 +165,7 @@ export default {
                 }
             }
             return false;
-        },
-        /**
-         * Get the bar editor route for a member's bar.
-         * @param {CommunityMember} member The member.
-         * @return {Object} The location.
-         */
-        getBarEditRoute(member) {
-            return Bar.getUserBarEditRoute(member, this.community.default_bar_id);
-        },
-
-        /**
-         * Get the name of the bar used by a member.
-         * @param {CommunityMember} member The member.
-         * @return {String} The bar name.
-         */
-        getMemberBarName(member) {
-            const barId = member.bar_id || this.community.default_bar_id;
-            const bar = this.bars.find(bar => bar.id === barId);
-            return bar && Bar.getBarName(bar);
         }
-
     }
 };
 </script>

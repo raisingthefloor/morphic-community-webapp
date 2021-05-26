@@ -20,6 +20,7 @@ if (href.host.endsWith(".morphic.dev")) {
  * @property {Boolean} PRODUCTION true if production.
  * @property {Boolean} DISABLE_FAVICONS true to disable the use of favicons in buttons.
  * @property {Boolean} DISABLE_TRIAL true to ignore any trial checking - hide the banner.
+ * @property {Number} MAX_BARS Number of bars a member can have, before hiding the add bar button.
  */
 
 /**
@@ -31,7 +32,8 @@ const CONF = {
         ENV: ENV,
         PRODUCTION: false,
         RECAPTCHA_SITEKEY: "6LcDs3waAAAAAFGKPHxnNuPBO__5LqaEybnS6wn0",
-        DISABLE_TRIAL: true
+        DISABLE_TRIAL: true,
+        MAX_BARS: 5
     },
 
     // Local development (npm run dev)
