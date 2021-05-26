@@ -33,7 +33,7 @@ const CONF = {
         PRODUCTION: false,
         RECAPTCHA_SITEKEY: "6LcDs3waAAAAAFGKPHxnNuPBO__5LqaEybnS6wn0",
         DISABLE_TRIAL: true,
-        MAX_BARS: 100
+        MAX_BARS: 1
     },
 
     // Local development (npm run dev)
