@@ -270,6 +270,7 @@ import MembersList from "@/components/side-panel/MembersList";
 import BarsList from "@/components/side-panel/BarsList";
 import * as Bar from "@/utils/bar";
 import * as communityService from "@/services/communityService";
+import { membersMixin } from "@/mixins/members.js";
 
 export default {
     name: "SidePanel",
@@ -277,6 +278,7 @@ export default {
         MembersList,
         BarsList
     },
+    mixins: [membersMixin],
     props: {
         /** @type {Community} */
         community: Object,
@@ -410,27 +412,10 @@ export default {
             bar.id = createResponse.data.bar.id;
 
             if (member) {
-                await this.addBarToMember(bar, member);
+                await this.memberAddBar(bar, member);
             }
 
             return bar;
-        },
-
-        /**
-         *  Adds a bar to a member
-         *  @param {BarDetails} bar The bar to add.
-         *  @param {CommunityMember} member The member to own the bar.
-         *  @return {Promise} Resolves when complete
-         */
-        async addBarToMember(bar, member) {
-            // Reload the member data
-            const memberResponse = communityService.getCommunityMember(this.communityId, member.id);
-            Object.assign(member, memberResponse.data);
-            if (!member.bar_ids.includes(bar.id)) {
-                member.bar_ids.push(bar.id);
-            }
-
-            await communityService.updateCommunityMember(this.communityId, member.id, member);
         },
 
         /**

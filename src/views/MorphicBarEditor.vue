@@ -291,18 +291,6 @@ export default {
                     }
                 });
         },
-        deleteBar: function () {
-            deleteCommunityBar(this.communityId, this.$route.query.barId)
-                .then((resp) => {
-                    if (resp.status === 200) {
-                        this.showMessage(MESSAGES.successfulBarDelete);
-                        this.$router.push("/dashboard");
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        },
 
         /**
          * Shows the edit button dialog.

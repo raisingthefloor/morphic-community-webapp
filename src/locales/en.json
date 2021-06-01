@@ -1,4 +1,8 @@
 {
+  "BarSettings": {
+    "delete_button": "Delete Bar",
+    "rename_button": "Edit bar name"
+  },
   "CopyBarDialog": {
     "confirm-dialog": {
       "no_button": "No",
@@ -206,6 +210,11 @@
       "cancel_button": "Cancel",
       "confirm": "Please confirm the removal of {member} from the group",
       "title": "Remove member"
+    },
+    "removeBar": {
+      "apply_button": "Delete bar",
+      "cancel_button": "Cancel",
+      "confirm": "Are you sure you want to delete the bar?\\nThis will remove the bar from this account. This cannot be undone"
     }
   }
 }
