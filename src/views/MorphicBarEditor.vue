@@ -106,7 +106,6 @@ body:not(.isLite) {
 import SidePanel from "@/components/side-panel/SidePanel";
 import {
     createCommunityBar,
-    deleteCommunityBar,
     getCommunity,
     getCommunityBar,
     getCommunityBars,
