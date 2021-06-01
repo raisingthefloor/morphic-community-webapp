@@ -214,7 +214,7 @@
     "removeBar": {
       "apply_button": "Delete bar",
       "cancel_button": "Cancel",
-      "confirm": "Are you sure you want to delete the bar?\\nThis will remove the bar from this account. This cannot be undone"
+      "confirm": "Are you sure you want to delete the bar?\nThis will remove the bar from this account. This cannot be undone"
     }
   }
 }
