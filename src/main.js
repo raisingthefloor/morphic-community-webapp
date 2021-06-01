@@ -103,14 +103,19 @@ Vue.mixin({
          * Wrapper for $bvModal.msgBoxConfirm.
          *
          * @see https://bootstrap-vue.org/docs/components/modal#modal-message-boxes
-         * @param {String} message The main message.
+         * @param {String|String[]} message The main message.
          * @param {Array<String>} [buttons] Text for the two buttons (default: ["Yes","No"])
          * @param {String} [title] A title for the dialog.
          * @param {BvMsgBoxOptions} options Options passed to $bvModal.msgBoxConfirm (b-modal props)
          * @return {Promise<Boolean>} Resolve to true for 'yes'
          */
         showConfirm(message, buttons, title, options) {
-            return this.$bvModal.msgBoxConfirm(message, Object.assign({
+            const lines = Array.isArray(message)
+                ? message
+                : message.split("\n");
+            const messageNodes = lines.map(line => this.$createElement("p", {}, line));
+
+            return this.$bvModal.msgBoxConfirm(messageNodes, Object.assign({
                 title: title,
                 okTitle: (buttons && buttons[0]) || "Yes",
                 cancelTitle: (buttons && buttons[1]) || "No",
