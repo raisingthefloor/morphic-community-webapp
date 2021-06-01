@@ -58,7 +58,8 @@ const CONF = {
     PRODUCTION: {
         API_URL: "https://api.morphic.org",
         PRODUCTION: true,
-        DISABLE_FAVICONS: true
+        DISABLE_FAVICONS: true,
+        MAX_BARS: 1
     }
 };
 
