@@ -5,6 +5,13 @@
                :class="{ 'border-bottom': !isLite }"
                fluid="1">
 
+    <TextInputDialog id="barNameDialog"
+                     title="Rename Bar"
+                     prompt="Enter the new name for the bar"
+                     v-model="barDetails.name"
+                     @ok="renameBar"
+    />
+
     <template v-if="isLite">
       <b-modal id="MemberDetailsDialog"
                hide-header
@@ -12,6 +19,13 @@
                ok-title="Close"
       >
         <MemberDetails v-if="memberDetails" id="MemberDetailsDialog" :member-details="memberDetails" :members="members" is-dialog />
+      </b-modal>
+      <b-modal id="BarSettingsDialog"
+               hide-header
+               ok-only
+               ok-title="Close"
+      >
+        <BarSettings :bar-details="barDetails" is-dialog :member="memberDetails" @rename="showRenameBarDialog()"/>
       </b-modal>
     </template>
 
@@ -26,13 +40,7 @@
 
               <!-- rename bar -->
               <span v-if="barDetails.name !== 'Default'">
-                        <TextInputDialog id="barNameDialog"
-                                         title="Rename Bar"
-                                         prompt="Enter the new name for the bar"
-                                         v-model="barDetails.name"
-                                         @ok="renameBar"
-                        />
-                        &nbsp;<small><b-button variant="link" v-b-modal="'barNameDialog'">rename</b-button></small>
+                        &nbsp;<small><b-button variant="link" @click="showRenameBarDialog()" Xv-b-modal="'barNameDialog'">rename</b-button></small>
                       </span>
             </h2>
 
@@ -54,7 +62,7 @@
             >Person Details</b-link>
           </div>
           <div v-if="isLite" class="mb-2">
-            <b-link><b-icon-gear-fill/>Settings for this MorphicBar</b-link>
+            <b-link v-b-modal="'BarSettingsDialog'"><b-icon-gear-fill/>Settings for this MorphicBar</b-link>
           </div>
         </div>
 
@@ -82,32 +90,14 @@
             </b-tab>
 
             <!-- Bar settings tab -->
-            <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" disabled title-item-class="notProduction">
+            <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" >
               <template #title>
                 <b-icon-gear-fill/>
-                Morphic Bar settings
+                Settings for this MorphicBar
               </template>
               <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
 
-              <b-card>
-                <b-card-title>
-                  <b-icon-gear-fill/>
-                  Morphic Bar settings
-                </b-card-title>
-
-                <b-form-checkbox id="barOnRight" v-model="barSettings.barOnRight" name="barOnRight" value="true"
-                                 unchecked-value="false">
-                  Bar on the right of the screen
-                </b-form-checkbox>
-                <b-form-checkbox id="cannotClose" v-model="barSettings.cannotClose" name="cannotClose" value="true"
-                                 unchecked-value="false">
-                  Member cannot close bar
-                </b-form-checkbox>
-                <b-form-checkbox id="startsOpen" v-model="barSettings.startsOpen" name="startsOpen" value="true"
-                                 unchecked-value="false">
-                  Morphic Bar always starts open
-                </b-form-checkbox>
-              </b-card>
+              <BarSettings :bar-details="barDetails" :member="memberDetails" @rename="showRenameBarDialog()"/>
             </b-tab>
 
           </b-tabs>
@@ -148,10 +138,11 @@ import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import * as Bar from "@/utils/bar";
 import { getCommunityBar, updateCommunityBar } from "@/services/communityService";
 import MemberDetails from "@/components/editor/MemberDetails";
+import BarSettings from "@/components/editor/BarSettings";
 
 export default {
     name: "EditorDetails",
-    components: {MemberDetails, TextInputDialog},
+    components: {BarSettings, MemberDetails, TextInputDialog},
     props: {
         /** @type {BarDetails} */
         barDetails: Object,
@@ -183,6 +174,13 @@ export default {
         }
     },
     methods: {
+        /**
+         * Shows the bar name dialog
+         */
+        showRenameBarDialog: function () {
+            this.$bvModal.show("barNameDialog");
+        },
+
         /**
          * OK button on the bar name dialog clicked.
          * @param {TextInputOKEvent} event The event object.
@@ -311,6 +309,12 @@ export default {
       cursor: pointer;
     }
   }
+}
+
+.tab-content .dialogCard .card-title {
+  border-bottom: none !important;
+  padding-bottom: 0;
+  font-size: 1.1em;
 }
 
 </style>

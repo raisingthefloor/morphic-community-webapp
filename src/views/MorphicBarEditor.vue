@@ -106,7 +106,6 @@ body:not(.isLite) {
 import SidePanel from "@/components/side-panel/SidePanel";
 import {
     createCommunityBar,
-    deleteCommunityBar,
     getCommunity,
     getCommunityBar,
     getCommunityBars,
@@ -289,18 +288,6 @@ export default {
                         this.isChanged = false;
                         this.updateOriginalBarDetails();
                     }
-                });
-        },
-        deleteBar: function () {
-            deleteCommunityBar(this.communityId, this.$route.query.barId)
-                .then((resp) => {
-                    if (resp.status === 200) {
-                        this.showMessage(MESSAGES.successfulBarDelete);
-                        this.$router.push("/dashboard");
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
                 });
         },
 
