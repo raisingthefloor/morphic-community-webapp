@@ -588,7 +588,7 @@ export default {
                     }
 
                     this.$bvModal.hide("modalEditGeneric");
-                    this.dialogClosed(applyChanges);
+                    this.dialogClosed(applyChanges || this.selectedItem.deleted);
                 }
             });
         },
@@ -672,6 +672,7 @@ export default {
             this.showConfirm("Do you want to remove this item from the bar?").then(result => {
                 if (result) {
                     Bar.removeItem(this.selectedItem, this.bar);
+                    this.selectedItem.deleted = true;
                     this.closeDialog(false);
                     this.showMessage("Button removed");
                 }
