@@ -5,6 +5,7 @@
         <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px" />
       </template>
 
+      <input type="number" value="14" v-model="barFontSize" />
       <!-- Bar item problems -->
       <div class="desktop-alerts">
         <b-alert v-for="(error) in barDetails.errors"
@@ -301,8 +302,15 @@ export default {
     data() {
         return {
             openDrawer: true,
-            dragInProgress: false
+            dragInProgress: false,
+            barFontSize: "14"
         };
+    },
+    watch: {
+        barFontSize: function (newValue) {
+            const bar = document.querySelector("#preview-bar");
+            bar.style.fontSize = `${newValue}px`;
+        }
     },
     methods: {
         /**
