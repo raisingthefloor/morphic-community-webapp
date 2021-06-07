@@ -381,7 +381,10 @@ export default {
         newBar(member, name) {
             return this.createBar(member, name).then(bar => {
                 this.showMessage("New bar created");
-                this.reloadAll();
+
+                const route = Bar.getUserBarEditRoute(bar.id, member);
+                this.$router.push(route);
+
                 return bar;
             });
         },
@@ -434,11 +437,14 @@ export default {
             const member = addResult.data.member;
 
             // Create a new bar for the member
-            await this.createBar(member, `Bar for ${member.fullName}`);
+            const bar = await this.createBar(member, `Bar for ${member.fullName}`);
 
             this.newestMemberId = member.id;
             this.reloadAll();
             this.showMessage("New member added");
+
+            const route = Bar.getUserBarEditRoute(bar.id, member);
+            this.$router.push(route);
 
             return member;
         }
