@@ -223,6 +223,8 @@ export default {
                 this.barDetails = unsavedBar;
                 this.onBarChanged();
             } else {
+                this.isChanged = false;
+                this.storeUnsavedBar();
                 // Load a saved bar.
                 getCommunityBar(this.communityId, barId)
                     .then(resp => {
@@ -499,6 +501,10 @@ export default {
                 this.loadAllData();
             }
         }
+    },
+    async beforeRouteUpdate(to, from, next) {
+        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;
+        next(proceed);
     },
     async beforeRouteLeave(to, from, next) {
         const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;
