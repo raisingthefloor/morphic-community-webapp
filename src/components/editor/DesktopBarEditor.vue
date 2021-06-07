@@ -61,7 +61,6 @@
           </div>
         </b-alert>
       </div>
-
     </drop>
 
     <!-- Buttons Bar -->
@@ -102,6 +101,8 @@
 </template>
 
 <style lang="scss">
+@import "~@/styles/variables";
+
 #preview-holder.desktop {
   width: 100%;
   height: 600px;
@@ -153,13 +154,19 @@
   }
 
   #preview-bar {
+    // This sets the scale of the bar items.
+    // All the sizes are measured in pixels, but converted to ems at a font-size of 14px.
+    font-size: 10px;
+
+    $bar-width: 120px;
+
     border: 1px solid #002957;
     background: white;
     // vertical line separating bar from drawer
     background-image: linear-gradient(#000, #000);
     background-size: 1px 100%;
     background-repeat: no-repeat;
-    background-position: right 122px bottom 0px;
+    background-position: right em($bar-width) bottom 0px;
 
     display: flex;
     justify-content: center;
@@ -169,7 +176,7 @@
     writing-mode: vertical-rl;
 
     .barPreviewEditor {
-      min-width: 120px;
+      min-width: em($bar-width);
       flex-grow: 1;
 
       .buttonsList {
@@ -183,7 +190,7 @@
 
         // Hide the drawer by limiting the width
         &:not(.showDrawer) {
-          width: 120px !important;
+          width: em($bar-width) !important;
           overflow: hidden;
         }
 
@@ -196,12 +203,12 @@
           display: block;
           background-color: #e5f4ed;
           border: 2px dashed rgb(16 141 74);
-          height: 50px;
-          min-width: 95px;
-          margin-left: 10px;
-          margin-right: 10px;
-          border-radius: 10px;
-          margin-top: 10px;
+          height: em(50px);
+          min-width: em(95px);
+          margin-left: em(10px);
+          margin-right: em(10px);
+          border-radius: em(10px);
+          margin-top: em(10px);
 
           &.clickDropSpot {
             margin-top: 0px;
@@ -211,35 +218,34 @@
 
       .buttonDragger {
         writing-mode: horizontal-tb;
-        margin: 10px 10px 0 10px;
+        margin: em(10px) em(10px) 0 em(10px);
       }
     }
 
     .logoHolder {
       writing-mode: initial;
       text-align: center;
-      width: 120px;
-      padding: 15px 0 15px 0;
+      width: em($bar-width);
+      padding: em(15px) 0 em(15px) 0;
 
       img {
-        width: 3rem;
-        height: 3rem;
+        width: em(48px);
+        height: em(48px);
       }
     }
 
     .openDrawerIconHolder {
       cursor: pointer;
+      position: absolute;
+      right: em($bar-width);
+      bottom: 25px;
 
       & > span {
         cursor: pointer;
       }
 
       .b-icon {
-        // margin-left: -19px;
-        right: 104px;
         font-size: 2em;
-        position: absolute;
-        bottom: 25px;
         background: black;
         color: white;
         border-radius: 100%;
@@ -378,38 +384,4 @@ export default {
 };
 
 </script>
-<style lang="scss">
-$primary-color: #002957;
-$secondary-color: #84c661;
 
-#preview-holder.desktop {
-  width: 100%;
-  height: 600px;
-  position: relative;
-  display: flex;
-
-  //noinspection CssUnknownTarget
-  background: url(/img/background-editor.png);
-
-  margin-top: 0 !important;
-
-  #preview-bar {
-    border: 1px solid #002957;
-    background: white;
-    // vertical line separating bar from drawer
-    background-image: linear-gradient(#000, #000);
-    background-size: 1px 100%;
-    background-repeat: no-repeat;
-    background-position: right 122px bottom 0px;
-
-    display: flex;
-    justify-content: center;
-    align-content: center;
-
-    // flex columns don't expand the container, so rotate the text flow here, and make the buttonList flex-direction to row
-    writing-mode: vertical-rl;
-
-  }
-}
-
-</style>

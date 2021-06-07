@@ -13,3 +13,7 @@ $link-color: #007bff; // $blue
 $link-color-darker: #405e81;
 
 
+/** Convert px to em, for bar items */
+@function em($pixels) {
+  @return ($pixels / 14px) * 1em;
+}
