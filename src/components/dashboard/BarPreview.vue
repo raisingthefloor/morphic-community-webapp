@@ -33,11 +33,6 @@
       position: relative;
     }
   }
-
-  .logoHolder {
-    margin: 0 -0.5rem;
-    text-align: center;
-  }
 </style>
 
 <script>

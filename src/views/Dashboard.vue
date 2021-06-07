@@ -197,14 +197,6 @@
   h1 {
     font-weight: bold !important;
   }
-  .desktopDashboard {
-    .barPreview {
-      min-height: 500px;
-    }
-    .logoHolder {
-      margin: 0 -2rem !important;
-    }
-  }
   .info-box {
     h5 {
       color: $primary-color;

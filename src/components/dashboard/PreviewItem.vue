@@ -56,6 +56,8 @@
 </template>
 
 <style lang="scss">
+  @import "~@/styles/variables";
+
   .previewItem.simplified {
     display: flex;
     justify-content: center;
@@ -113,16 +115,18 @@
       box-shadow: 0 0 5px 5px red;
     }
   }
+
+  // A bar item.
   .previewItem {
     display: inline-block;
     text-align: center;
     position: relative;
-    width: 100px;
+    width: em(100px);
     background: none;
     border: none;
     color: white;
     padding: 0;
-    font-size: 14px;
+
 
     cursor: pointer;
 
@@ -133,20 +137,21 @@
 
 
     &.standardButton {
+      $icon-size: em(66px);
       b {
-        padding: 10px;
-        border-radius: 10px;
+        padding: em(10px);
+        border-radius: em(10px);
         display: block;
 
         &.withImage {
-          padding-top: calc(66px/3);
+          padding-top: ($icon-size / 3);
         }
       }
 
       .iconHolder {
-        width: 66px;
-        height: 66px;
-        margin-bottom: calc(-66px/3);
+        width: $icon-size;
+        height: $icon-size;
+        margin-bottom: (-$icon-size / 3);
         margin-left: auto;
         margin-right: auto;
         background: white;
@@ -159,8 +164,8 @@
         align-items: center;
 
         img {
-          height: calc(64px*0.6);
-          width: calc(64px*0.6);
+          height: $icon-size * 0.6;
+          width: $icon-size * 0.6;
         }
       }
     }
@@ -168,26 +173,26 @@
     &.multiButton {
       label {
         color: black;
-        margin-bottom: 3px;
+        margin-bottom: em(3px);
       }
 
       .buttons {
         display: flex;
 
         button:not(:last-child) {
-          margin-right: 5px;
+          margin-right: em(5px);
         }
 
         button {
           border: none;
           flex-grow: 1;
-          padding: 5px !important;
+          padding: em(5px) !important;
           color: white;
           font-weight: bold;
 
           &.extraBig {
-            font-size: 18px;
-            line-height: 16px;
+            font-size: em(18px);
+            line-height: em(16px);
           }
         }
       }
