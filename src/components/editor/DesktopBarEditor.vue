@@ -181,7 +181,6 @@
         justify-content: flex-start;
         align-content: flex-start;
 
-        max-width: 400px;
         // Hide the drawer by limiting the width
         &:not(.showDrawer) {
           width: 120px !important;
