@@ -59,7 +59,7 @@ const CONF = {
         API_URL: "https://api.morphic.org",
         PRODUCTION: true,
         DISABLE_FAVICONS: true,
-        MAX_BARS: 1
+        MAX_BARS: 5
     }
 };
 
