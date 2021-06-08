@@ -156,7 +156,7 @@
   #preview-bar {
     // This sets the scale of the bar items.
     // All the sizes are measured in pixels, but converted to ems at a font-size of 14px.
-    font-size: 10px;
+    font-size: 12px;
 
     $bar-width: 120px;
 
