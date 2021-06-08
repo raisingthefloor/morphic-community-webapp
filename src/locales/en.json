@@ -170,6 +170,17 @@
   "PreviewItem": {
   },
   "Registration": {
+    "account-benefits-lead": "An account allows you to",
+    "account-benefits_list": [
+      "Back up your accessibility and usability settings to Morphic",
+      "Apply your settings quickly to any computer with Morphic on it",
+      "Make your own MorphicBar (with a subscription or if part of the Early Release Program)"
+    ],
+    "back_link": "I already have a Morphic account",
+    "form_heading": "New to Morphic?",
+    "form_lead": "Create your Morphic account now",
+    "side-heading": "Morphic is better with a Morphic account",
+    "submit_button": "Sign up"
   },
   "RenderList": {
   },

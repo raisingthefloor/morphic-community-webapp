@@ -5,25 +5,24 @@
         <div class="bg-light mt-5 p-4 rounded-lg">
           <div class="d-flex justify-content-around align-items-center">
             <img src="/img/logo-color.svg" alt="" class="mr-3">
-            <h3>Morphic is better with a Morphic account</h3>
+            <h3 v-t="'Registration.side-heading'" />
           </div>
           <div class="mt-4 lead font-weight-bold">
-            <p class="h4">An account allows you to</p>
+            <p class="h4" v-t="'Registration.account-benefits-lead'" />
             <ul>
-              <li>Back up your accessibility and usability settings to Morphic</li>
-              <li>Apply your settings quickly to any computer with Morphic on it</li>
-              <li>Make your own MorphicBar (with a subscription or if part of the <b-link>Early Release Program</b-link>)</li>
+              <li v-for="(item, index) in $t('Registration.account-benefits_list')"
+                  :key="index">{{ item }}</li>
             </ul>
           </div>
         </div>
       </b-col>
 
       <b-col md="6">
-          <div class="mb-3">
-            <h2>New to Morphic?</h2>
-            <div>Create your Morphic account now</div>
-          </div>
-        <UserRegistration back-link="I already have a Morphic account" submit-button-text="Sign up"/>
+        <div class="mb-3">
+          <h2 v-t="'Registration.form_heading'" />
+          <div v-t="'Registration.form_lead'" />
+        </div>
+        <UserRegistration :back-link="$t('Registration.back_link')" :submit-button-text="$t('Registration.submit_button')"/>
       </b-col>
     </b-row>
   </b-container>
