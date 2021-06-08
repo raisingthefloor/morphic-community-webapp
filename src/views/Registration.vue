@@ -1,7 +1,7 @@
 <template>
   <b-container id="RegistrationPage">
     <b-row>
-      <b-col md="6" order-md="2">
+      <b-col md="6" order="2">
         <div class="bg-light mt-5 p-4 rounded-lg">
           <div class="d-flex justify-content-around align-items-center">
             <img src="/img/logo-color.svg" alt="" class="mr-3">
