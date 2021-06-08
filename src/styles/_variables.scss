@@ -12,6 +12,7 @@ $success-color: $success;
 $link-color: #007bff; // $blue
 $link-color-darker: #405e81;
 
+$headings-font-weight: bold;
 
 /** Convert px to em, for bar items */
 @function em($pixels) {
