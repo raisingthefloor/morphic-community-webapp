@@ -1,32 +1,51 @@
 <template>
-  <b-jumbotron class="bg-white" style="height: 77%; padding-top: 20px">
-    <b-row style="width: 90vw; margin-left: auto; margin-right: auto">
-      <b-col md="6" style="">
-          <div class="mb-3">
-              <h3 style="font-size: x-large; font-weight: bolder; color: #022957">New to Morphic?</h3>
-              <div>Create your Morphic account now</div>
+  <b-container id="RegistrationPage">
+    <b-row>
+      <b-col md="6" order="2">
+        <div class="bg-light mt-5 p-4 rounded-lg">
+          <div class="d-flex justify-content-around align-items-center">
+            <img src="/img/logo-color.svg" alt="" class="mr-3">
+            <h3 v-t="'Registration.side-heading'" />
           </div>
-        <UserRegistration back-link="I already have a Morphic account" submit-button-text="Sign up"/>
+          <div class="mt-4 lead font-weight-bold">
+            <p class="h4" v-t="'Registration.account-benefits-lead'" />
+            <ul>
+              <li v-for="(item, index) in $t('Registration.account-benefits_list')"
+                  :key="index">{{ item }}</li>
+            </ul>
+          </div>
+        </div>
       </b-col>
-      <b-col  class="bg-light" col md="6" style="padding-left: 80px; padding-bottom: 20px; padding-top: 20px; border-radius: 50px">
-          <div class="d-flex justify-content-around align-items-center mt-5 color: #022957" style="color: #022957;">
-              <img src="/img/logo-color.svg">
-              <h4 style="font-weight: bolder; font-size: xx-large; margin-left: 10px;">Morphic is better with a Morphic account</h4>
-          </div>
-          <div style="margin-top: 10px">
-              <div style="font-size: 20px; font-weight: bold; height: 50vh;">
-                  <h4 style="font-weight: bold;">An account allows you to</h4>
-                  <ul style="display: flex; align-items: center; flex-direction: column; justify-content: space-evenly; height: 60%; padding-right: 175px;">
-                      <li>Back up your accessibility and usability settings to Morphic</li>
-                      <li>Apply your settings quickly to any computer with Morphic on it</li>
-                      <li>Make your own MorphicBar (with a subscription or if part of the <b-link>Early Release Program</b-link>)</li>
-                  </ul>
-              </div>
-          </div>
+
+      <b-col md="6">
+        <div class="mb-3">
+          <h2 v-t="'Registration.form_heading'" />
+          <div v-t="'Registration.form_lead'" />
+        </div>
+        <UserRegistration :back-link="$t('Registration.back_link')" :submit-button-text="$t('Registration.submit_button')"/>
       </b-col>
     </b-row>
-  </b-jumbotron>
+  </b-container>
 </template>
+
+
+<style lang="scss">
+
+#RegistrationPage {
+  h1, h2, h3 {
+    color: #022957;
+  }
+
+  .rounded-lg {
+    border-radius: 2em !important;
+  }
+
+  li {
+    margin-top: 1em;
+  }
+
+}
+</style>
 
 <script>
 import UserRegistration from "@/components/UserRegistration";

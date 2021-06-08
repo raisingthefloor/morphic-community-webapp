@@ -1,7 +1,7 @@
 <template>
 <!--  <div style="height: 80vh; display: flex; justify-content: center; align-content: center">-->
 <!--    <BlockLoginRegister />-->
-      <b-container style="height: 80vh;">
+      <b-container>
           <b-row>
               <b-col>
                   <b-alert variant="success" :show="displayMessage">
