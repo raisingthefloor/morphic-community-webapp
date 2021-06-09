@@ -16,10 +16,6 @@
                 (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
               </p>
             </div>
-            <br/>
-            <div>
-              <b-link :href="externalLinks.gettingStarted" class="gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
-            </div>
             <div id="hints" v-if="showHints">
               <div pointTo="#MyMorphicBars .addNew">
                 Want to make a MorphicBar for yourself? Start with "Add a new bar"
@@ -45,14 +41,17 @@
           </div>
         </b-col>
         <b-col md="5" class="videos">
+          <div class="gettingStarted">
+            <b-link :href="externalLinks.gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
+          </div>
 
-          <div v-for="(video) in [{id:'7bhdSFOiJjk',caption:'Making a custom MorphicBar - Basics',length:'4:24'}]"
+          <div v-for="(video) in videos"
                :key="video.id"
                @click="playVideo(video)"
                class="videoLink">
 
-            <b-aspect aspect="854:480" class="videoPreview">
-              <img :src="`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
+            <b-aspect :aspect="video.thumbRatio || '854:480'" class="videoPreview">
+              <img :src="video.thumb || `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
                    class=""
                    alt=""
               />
@@ -114,8 +113,11 @@
   .videos {
     padding-top: 6em;
 
-    .videoLink {
+    & > * {
       margin-left: 2em;
+    }
+
+    .videoLink {
       width: 50%;
       position: relative;
       cursor: pointer;
@@ -205,6 +207,7 @@
 
   .gettingStarted {
     position: relative;
+    margin-bottom: 1em;
     text-decoration: underline;
     font-size: 1.1em;
     .b-icon {
@@ -257,7 +260,14 @@ export default {
             sidePanel: null,
             hintTimer: null,
 
-            playingVideo: null
+            playingVideo: null,
+            videos: [{
+                id: "7bhdSFOiJjk",
+                caption: "Making a custom MorphicBar - Basics",
+                length: "4:24",
+                thumb: "/img/tutorial-thumb.png",
+                thumbRatio: "756:506"
+            }]
         };
     },
     computed: {
