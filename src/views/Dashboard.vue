@@ -20,7 +20,7 @@
               <div pointTo="#MyMorphicBars .addNew">
                 Want to make a MorphicBar for yourself? Start with "Add a new bar"
               </div>
-              <div pointTo="#MembersList .addNew">
+              <div v-if="membersList.length === 1" pointTo="#MembersList .addNew">
                 Do you want to make and manage MorphicBars for other people?
                 <p class="mt-2">
                   Start by adding a person.<br/>
@@ -218,20 +218,19 @@
   }
 
   #hints {
-    position: relative;
     font-family: 'Coming Soon', sans-serif;
     font-weight: 600;
     width: 20em;
 
     & > * {
       padding-left: 0.3em;
+      position: absolute;
     }
   }
 </style>
 
 <script>
 import * as ArrowLine from "arrow-line";
-import { createPopper } from "@popperjs/core";
 import SidePanel from "@/components/side-panel/SidePanel";
 import {
     getCommunity,
@@ -353,68 +352,46 @@ export default {
         },
         createArrows: function () {
             this.sidePanel = document.querySelector("#SidePanel");
+            const hints = this.$el.querySelectorAll("#hints > *");
 
-            const hintElems = this.$el.querySelectorAll("#hints > *");
-
-            const pairs = [];
-            hintElems.forEach(e => {
-                const pointTo = document.querySelector(e.getAttribute("pointTo"));
-                pairs.push([e, pointTo]);
-            });
-
-            pairs.forEach(pair => {
-                const hint = pair[0];
-                const target = pair[1];
-                const arrowFrom = pair[2] || hint;
+            hints.forEach(hint => {
+                const target = document.querySelector(hint.getAttribute("pointTo"));
 
                 if (!hint || !target) {
                     if (hint) {
                         hint.style.display = "none";
                     }
                 } else {
-                    hint.style.visibility = "visible";
-                    const virtualElement = {
-                        getBoundingClientRect: () => {
-                            const rect = target.getBoundingClientRect();
-                            rect.width = this.sidePanel.getBoundingClientRect().right - rect.left + 40;
-                            return rect;
-                        }
+                    const targetRect = target.getBoundingClientRect();
+                    const hintRect = hint.getBoundingClientRect();
+                    const sourceRect = {
+                        x: hintRect.x,
+                        y: targetRect.y
                     };
+
+                    hint.style.top = `${sourceRect.y - this.sidePanel.getBoundingClientRect().y}px`;
 
                     const arrow = {
-                        target: virtualElement,
-                        hint: hint
+                        target: target,
+                        hint: hint,
+                        targetRect: targetRect,
+
+                        sourcePoint: {
+                            x: sourceRect.x - 1,
+                            y: sourceRect.y + 10 + window.scrollY
+                        },
+                        targetPoint: {
+                            x: targetRect.x + targetRect.width + 5,
+                            y: targetRect.y + targetRect.height / 2 + 2 + window.scrollY
+                        }
                     };
 
-                    arrow.popper = createPopper(virtualElement, hint, {
-                        placement: "right-start",
-                        onFirstUpdate: (state) => {
-                            const targetRect = target.getBoundingClientRect();
-                            const sourceRect = arrowFrom.getBoundingClientRect();
-
-                            const sourcePoint = {
-                                x: sourceRect.x - 1,
-                                y: sourceRect.y + 10// sourceRect.height / 2
-                            };
-                            const targetPoint = {
-                                x: targetRect.x + targetRect.width + 5,
-                                y: targetRect.y + targetRect.height / 2 + 2
-                            };
-
-                            sourcePoint.y += window.scrollY;
-                            targetPoint.y += window.scrollY;
-
-                            arrow.arrowLine = new ArrowLine(sourcePoint, targetPoint, {
-                                curvature: 0.5,
-                                forceDirection: "horizontal"
-                            });
-
-                            arrow.target = target;
-                            arrow.targetRect = targetRect;
-
-                            this.arrows.push(arrow);
-                        }
+                    arrow.arrowLine = new ArrowLine(arrow.sourcePoint, arrow.targetPoint, {
+                        curvature: 0.5,
+                        forceDirection: "horizontal"
                     });
+
+                    this.arrows.push(arrow);
                 }
             });
             this.hintTimer = setInterval(this.checkHints, 500);
@@ -432,9 +409,7 @@ export default {
         },
         cleanUpArrows: function () {
             this.arrows.forEach(arrow => {
-                arrow.hint.style.visibility = "hidden";
                 arrow.arrowLine.remove();
-                arrow.popper.destroy();
             });
             this.arrows = [];
             if (this.hintTimer) {
