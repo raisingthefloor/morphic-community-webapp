@@ -64,7 +64,8 @@
                       class="videoCaption"
                       variant="link"
             >
-              {{ video.caption }} {{video.length && `(${video.length})`}}
+              <span v-html="video.caption"/>
+              {{video.length && `(${video.length})`}}
             </b-button>
 
           </div>
