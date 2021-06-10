@@ -16,15 +16,11 @@
                 (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
               </p>
             </div>
-            <br/>
-            <div>
-              <b-link :href="externalLinks.gettingStarted" class="gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
-            </div>
             <div id="hints" v-if="showHints">
               <div pointTo="#MyMorphicBars .addNew">
                 Want to make a MorphicBar for yourself? Start with "Add a new bar"
               </div>
-              <div pointTo="#MembersList .addNew">
+              <div v-if="membersList.length === 1" pointTo="#MembersList .addNew">
                 Do you want to make and manage MorphicBars for other people?
                 <p class="mt-2">
                   Start by adding a person.<br/>
@@ -45,14 +41,13 @@
           </div>
         </b-col>
         <b-col md="5" class="videos">
-
-          <div v-for="(video) in [{id:'7bhdSFOiJjk',caption:'Making a custom MorphicBar - Basics',length:'4:24'}]"
+          <div v-for="(video) in videos"
                :key="video.id"
                @click="playVideo(video)"
                class="videoLink">
 
-            <b-aspect aspect="854:480" class="videoPreview">
-              <img :src="`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
+            <b-aspect :aspect="video.thumbRatio || '854:480'" class="videoPreview">
+              <img :src="video.thumb || `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`"
                    class=""
                    alt=""
               />
@@ -68,9 +63,9 @@
             <b-button :id="`PlayVideo-${video.id}`"
                       class="videoCaption"
                       variant="link"
-                      v-b-modal="`PlayerDialog-${video.id}`"
             >
-              {{ video.caption }} ({{video.length}})
+              <span v-html="video.caption"/>
+              {{video.length && `(${video.length})`}}
             </b-button>
 
           </div>
@@ -114,11 +109,15 @@
   .videos {
     padding-top: 6em;
 
-    .videoLink {
+    & > * {
       margin-left: 2em;
+    }
+
+    .videoLink {
       width: 50%;
       position: relative;
       cursor: pointer;
+      margin-bottom: 2em;
 
       .videoPreview {
         position: relative;
@@ -205,6 +204,7 @@
 
   .gettingStarted {
     position: relative;
+    margin-bottom: 1em;
     text-decoration: underline;
     font-size: 1.1em;
     .b-icon {
@@ -215,20 +215,19 @@
   }
 
   #hints {
-    position: relative;
     font-family: 'Coming Soon', sans-serif;
     font-weight: 600;
     width: 20em;
 
     & > * {
       padding-left: 0.3em;
+      position: absolute;
     }
   }
 </style>
 
 <script>
 import * as ArrowLine from "arrow-line";
-import { createPopper } from "@popperjs/core";
 import SidePanel from "@/components/side-panel/SidePanel";
 import {
     getCommunity,
@@ -261,6 +260,21 @@ export default {
         };
     },
     computed: {
+        videos: function () {
+            return [
+                {
+                    url: this.externalLinks.gettingStarted,
+                    caption: "30 Second Tutorial:<br/>Getting Started with the Customization Tool",
+                    thumb: "/img/tutorial-thumb.png",
+                    thumbRatio: "756:474"
+                },
+                {
+                    id: "7bhdSFOiJjk",
+                    caption: "Making a custom MorphicBar - Basics",
+                    length: "4:24"
+                }
+            ];
+        }
     },
     mounted: function () {
         this.loadData();
@@ -343,68 +357,46 @@ export default {
         },
         createArrows: function () {
             this.sidePanel = document.querySelector("#SidePanel");
+            const hints = this.$el.querySelectorAll("#hints > *");
 
-            const hintElems = this.$el.querySelectorAll("#hints > *");
-
-            const pairs = [];
-            hintElems.forEach(e => {
-                const pointTo = document.querySelector(e.getAttribute("pointTo"));
-                pairs.push([e, pointTo]);
-            });
-
-            pairs.forEach(pair => {
-                const hint = pair[0];
-                const target = pair[1];
-                const arrowFrom = pair[2] || hint;
+            hints.forEach(hint => {
+                const target = document.querySelector(hint.getAttribute("pointTo"));
 
                 if (!hint || !target) {
                     if (hint) {
                         hint.style.display = "none";
                     }
                 } else {
-                    hint.style.visibility = "visible";
-                    const virtualElement = {
-                        getBoundingClientRect: () => {
-                            const rect = target.getBoundingClientRect();
-                            rect.width = this.sidePanel.getBoundingClientRect().right - rect.left + 40;
-                            return rect;
-                        }
+                    const targetRect = target.getBoundingClientRect();
+                    const hintRect = hint.getBoundingClientRect();
+                    const sourceRect = {
+                        x: hintRect.x,
+                        y: targetRect.y
                     };
+
+                    hint.style.top = `${sourceRect.y - this.sidePanel.getBoundingClientRect().y}px`;
 
                     const arrow = {
-                        target: virtualElement,
-                        hint: hint
+                        target: target,
+                        hint: hint,
+                        targetRect: targetRect,
+
+                        sourcePoint: {
+                            x: sourceRect.x - 1,
+                            y: sourceRect.y + 10 + window.scrollY
+                        },
+                        targetPoint: {
+                            x: targetRect.x + targetRect.width + 5,
+                            y: targetRect.y + targetRect.height / 2 + 2 + window.scrollY
+                        }
                     };
 
-                    arrow.popper = createPopper(virtualElement, hint, {
-                        placement: "right-start",
-                        onFirstUpdate: (state) => {
-                            const targetRect = target.getBoundingClientRect();
-                            const sourceRect = arrowFrom.getBoundingClientRect();
-
-                            const sourcePoint = {
-                                x: sourceRect.x - 1,
-                                y: sourceRect.y + 10// sourceRect.height / 2
-                            };
-                            const targetPoint = {
-                                x: targetRect.x + targetRect.width + 5,
-                                y: targetRect.y + targetRect.height / 2 + 2
-                            };
-
-                            sourcePoint.y += window.scrollY;
-                            targetPoint.y += window.scrollY;
-
-                            arrow.arrowLine = new ArrowLine(sourcePoint, targetPoint, {
-                                curvature: 0.5,
-                                forceDirection: "horizontal"
-                            });
-
-                            arrow.target = target;
-                            arrow.targetRect = targetRect;
-
-                            this.arrows.push(arrow);
-                        }
+                    arrow.arrowLine = new ArrowLine(arrow.sourcePoint, arrow.targetPoint, {
+                        curvature: 0.5,
+                        forceDirection: "horizontal"
                     });
+
+                    this.arrows.push(arrow);
                 }
             });
             this.hintTimer = setInterval(this.checkHints, 500);
@@ -422,9 +414,7 @@ export default {
         },
         cleanUpArrows: function () {
             this.arrows.forEach(arrow => {
-                arrow.hint.style.visibility = "hidden";
                 arrow.arrowLine.remove();
-                arrow.popper.destroy();
             });
             this.arrows = [];
             if (this.hintTimer) {
@@ -438,8 +428,12 @@ export default {
             });
         },
         playVideo: function (video) {
-            this.playingVideo = video;
-            this.$bvModal.show("VideoDialog");
+            if (video.url) {
+                window.location = video.url;
+            } else {
+                this.playingVideo = video;
+                this.$bvModal.show("VideoDialog");
+            }
 
         }
     }
