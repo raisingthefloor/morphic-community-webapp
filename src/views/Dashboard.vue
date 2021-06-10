@@ -117,7 +117,7 @@
       width: 50%;
       position: relative;
       cursor: pointer;
-      margin-bottom: 1em;
+      margin-bottom: 2em;
 
       .videoPreview {
         position: relative;
