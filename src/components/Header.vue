@@ -26,7 +26,7 @@
           </b-nav-text>
 
           <b-nav-text v-if="focusMode">
-            <b-button variant="invert-dark" @click="showMenu = false" v-t="'Header.home_button'" />
+            <b-button variant="invert-dark" @click="showMenu = false; $router.push('/')" v-t="'Header.home_button'" />
           </b-nav-text>
 
           <b-nav-text>
