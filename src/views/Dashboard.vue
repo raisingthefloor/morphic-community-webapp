@@ -263,7 +263,7 @@ export default {
             return [
                 {
                     url: this.externalLinks.gettingStarted,
-                    caption: "30 Second Tutorial:\nGetting Started with the Customization Tool",
+                    caption: "30 Second Tutorial:<br/>Getting Started with the Customization Tool",
                     thumb: "/img/tutorial-thumb.png",
                     thumbRatio: "756:474"
                 },
