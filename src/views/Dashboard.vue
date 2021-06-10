@@ -41,10 +41,6 @@
           </div>
         </b-col>
         <b-col md="5" class="videos">
-          <div class="gettingStarted">
-            <b-link :href="externalLinks.gettingStarted"><b-icon icon="star"/>Getting Started with the Customization Tool</b-link>
-          </div>
-
           <div v-for="(video) in videos"
                :key="video.id"
                @click="playVideo(video)"
@@ -67,9 +63,8 @@
             <b-button :id="`PlayVideo-${video.id}`"
                       class="videoCaption"
                       variant="link"
-                      v-b-modal="`PlayerDialog-${video.id}`"
             >
-              {{ video.caption }} ({{video.length}})
+              {{ video.caption }} {{video.length && `(${video.length})`}}
             </b-button>
 
           </div>
@@ -121,6 +116,7 @@
       width: 50%;
       position: relative;
       cursor: pointer;
+      margin-bottom: 1em;
 
       .videoPreview {
         position: relative;
@@ -259,17 +255,25 @@ export default {
             sidePanel: null,
             hintTimer: null,
 
-            playingVideo: null,
-            videos: [{
-                id: "7bhdSFOiJjk",
-                caption: "Making a custom MorphicBar - Basics",
-                length: "4:24",
-                thumb: "/img/tutorial-thumb.png",
-                thumbRatio: "756:506"
-            }]
+            playingVideo: null
         };
     },
     computed: {
+        videos: function () {
+            return [
+                {
+                    url: this.externalLinks.gettingStarted,
+                    caption: "Tutorial: Getting Started",
+                    thumb: "/img/tutorial-thumb.png",
+                    thumbRatio: "756:474"
+                },
+                {
+                    id: "7bhdSFOiJjk",
+                    caption: "Making a custom MorphicBar - Basics",
+                    length: "4:24"
+                }
+            ];
+        }
     },
     mounted: function () {
         this.loadData();
@@ -423,8 +427,12 @@ export default {
             });
         },
         playVideo: function (video) {
-            this.playingVideo = video;
-            this.$bvModal.show("VideoDialog");
+            if (video.url) {
+                window.location = video.url;
+            } else {
+                this.playingVideo = video;
+                this.$bvModal.show("VideoDialog");
+            }
 
         }
     }
