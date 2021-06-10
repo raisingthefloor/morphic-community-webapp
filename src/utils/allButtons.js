@@ -595,9 +595,9 @@ export const allButtons = {
         is_primary: true,
         configuration: {
             subkind: "meeting",
-            label: "Jitsi",
+            label: "Jitsi - Web",
             color: "blue",
-            url: "https://meet.jit.si/",
+            url: "https://meet.jit.si/$jitsiName",
             description: "Join a meeting room in Jitsi."
         }
     },
