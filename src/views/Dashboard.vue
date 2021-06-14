@@ -17,10 +17,13 @@
               </p>
             </div>
             <div id="hints" v-if="showHints">
-              <div pointTo="#MyMorphicBars .addNew">
+              <div v-if="barsList.length === 1" point-to="#MyMorphicBars .addNew">
                 Want to make a MorphicBar for yourself? Start with "Add a new bar"
               </div>
-              <div v-if="membersList.length === 1" pointTo="#MembersList .addNew">
+              <div v-else point-to=".barsList .barLink">
+                Want to edit a bar? Click it's name to get started!
+              </div>
+              <div v-if="membersList.length === 1" point-to="#MembersList .addNew">
                 Do you want to make and manage MorphicBars for other people?
                 <p class="mt-2">
                   Start by adding a person.<br/>
@@ -360,7 +363,7 @@ export default {
             const hints = this.$el.querySelectorAll("#hints > *");
 
             hints.forEach(hint => {
-                const target = document.querySelector(hint.getAttribute("pointTo"));
+                const target = document.querySelector(hint.getAttribute("point-to"));
 
                 if (!hint || !target) {
                     if (hint) {
