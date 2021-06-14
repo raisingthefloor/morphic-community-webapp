@@ -23,6 +23,7 @@
               <div v-else point-to=".barsList .barLink">
                 Want to edit a bar? Click it's name to get started!
               </div>
+
               <div v-if="membersList.length === 1" point-to="#MembersList .addNew">
                 Do you want to make and manage MorphicBars for other people?
                 <p class="mt-2">
@@ -30,6 +31,9 @@
                   Next you can create bars.<br/>
                   Finally, you can invite the person to download and use Morphic.
                 </p>
+              </div>
+              <div v-else-if="membersList.length > 1" point-to="#MembersList :nth-child(2) .expandable:not(.expanded)">
+                Click a person's name to see their MorphicBars
               </div>
             </div>
             <div v-else>
@@ -363,13 +367,16 @@ export default {
             const hints = this.$el.querySelectorAll("#hints > *");
 
             hints.forEach(hint => {
-                const target = document.querySelector(hint.getAttribute("point-to"));
+                const getTarget = () => document.querySelector(hint.getAttribute("point-to"));
+                const target = getTarget();
 
                 if (!hint || !target) {
                     if (hint) {
                         hint.style.display = "none";
                     }
+                    this.arrows.push({getTarget});
                 } else {
+                    hint.style.display = "unset";
                     const targetRect = target.getBoundingClientRect();
                     const hintRect = hint.getBoundingClientRect();
                     const sourceRect = {
@@ -380,7 +387,7 @@ export default {
                     hint.style.top = `${sourceRect.y - this.sidePanel.getBoundingClientRect().y}px`;
 
                     const arrow = {
-                        target: target,
+                        getTarget: getTarget,
                         hint: hint,
                         targetRect: targetRect,
 
@@ -406,8 +413,8 @@ export default {
         },
         checkHints: function () {
             const changed = this.arrows.some(arrow => {
-                const newRect = arrow.target.getBoundingClientRect();
-                return newRect.y !== arrow.targetRect.y;
+                const newRect = arrow.getTarget()?.getBoundingClientRect();
+                return !newRect || newRect.y !== arrow.targetRect?.y;
             });
 
             if (changed) {
@@ -417,7 +424,9 @@ export default {
         },
         cleanUpArrows: function () {
             this.arrows.forEach(arrow => {
-                arrow.arrowLine.remove();
+                if (arrow.arrowLine) {
+                    arrow.arrowLine.remove();
+                }
             });
             this.arrows = [];
             if (this.hintTimer) {
