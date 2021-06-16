@@ -55,8 +55,6 @@
                     :style="{order: button.searchResult && button.searchResult.order}"
                     :title="button.configuration.description"
                     :ref="'catalog_' + buttonId"
-
-                      @x-keypress.enter="isLite || onItemSelected(button)"
                 >
                   <!-- Render each button as draggable -->
                   <drag :data="button" type="catalogButtonWithImage" :disabled="isLite">
