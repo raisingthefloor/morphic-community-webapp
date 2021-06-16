@@ -10,11 +10,11 @@
     <template v-if="buttonClass === 'simplified'">
       <div v-if="item.data.visual && item.data.visual.type === 'multiButton'" class="multiButton">
         <div class="buttons" style="margin-top: 5px;">
-          <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
+          <span v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                   class="rounded multiButton"
                   :style="'background: '+colors.default_button"
                   v-bind:class="{ 'extraBig': item.data.visual.extraBig}">
-          </button>
+          </span>
         </div>
       </div>
       <div v-else-if="noImage" class="noImage" :style="'background: '+colors.default_button">
@@ -33,7 +33,7 @@
         <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                 :style="'background: '+colors.default_button + '; background-color: ' + (item.configuration.color || colors.default_button) + ';'"
                 v-bind:class="{ 'extraBig': item.data.visual.extraBig}"
-              tabindex="-1">
+                tabindex="-1">
           {{ button }}
         </button>
       </div>
