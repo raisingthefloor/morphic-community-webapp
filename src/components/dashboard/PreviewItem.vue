@@ -1,5 +1,6 @@
 <template>
-  <b-link class="previewItem" id="previewItemButton"
+  <b-link class="previewItem" role="button"
+          :disabled="disabled"
           :class="[buttonClass, {broken: hasError}]"
           v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}"
            :to="linkTo"
@@ -229,7 +230,8 @@ export default {
         item: Object,
         simplified: Boolean,
         noImage: Boolean,
-        to: Object
+        to: Object,
+        disabled: Boolean
     },
     data() {
         return {

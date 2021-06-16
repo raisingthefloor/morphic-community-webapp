@@ -50,28 +50,28 @@
                               noImage: !button.configuration.image_url && !button.data.isExpander,
                               secondaryItem: !button.is_primary,
                               expander: button.data.isExpander,
+                              active: expandedCatalogButtonId === buttonId
                           }"
                     :style="{order: button.searchResult && button.searchResult.order}"
                     :title="button.configuration.description"
                     :ref="'catalog_' + buttonId"
-                    tabindex="-1"
-                      @keypress.enter="isLite || onItemSelected(button)"
+
+                      @x-keypress.enter="isLite || onItemSelected(button)"
                 >
                   <!-- Render each button as draggable -->
                   <drag :data="button" type="catalogButtonWithImage" :disabled="isLite">
                     <!-- Define looks when dragged -->
                     <template v-slot:drag-image>
-                      <PreviewItem :item="button" :noImage="false" xclass="noImage"/>
+                      <PreviewItem :item="button" :noImage="false" disabled />
                     </template>
 
-                    <!-- Define looks when not selected -->
-                    <b-button v-if="buttonId !== expandedCatalogButtonId"
+                    <b-button
                               variant="link"
-                              @click="expandCatalogButton(button, buttonId, subkind)"
+                              @click="expandCatalogButton(buttonId === expandedCatalogButtonId ? null : button, buttonId, subkind)"
                               :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
-                              class="buttonCatalogEntry nonExpandedCatalogEntry">
-                      <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}">
-                        <b-iconstack v-if="button.data.isExpander">
+                              class="itemName">
+                      <span class="imageWrapper" >
+                        <b-iconstack v-if="button.data.isExpander" class="expanderIcon">
                           <b-icon stacked icon="circle-fill"/>
                           <b-icon stacked icon="caret-right-fill"
                                   scale="0.9"
@@ -80,48 +80,40 @@
 
                         <b-img v-else-if="button.configuration.image_url"
                                :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
-                      </div>
+                      </span>
                       <span v-html="getCatalogItemLabel(button, buttonGroup.searchWords)" />
                     </b-button>
 
-                    <!-- Define looks when selected (expanded) -->
-                    <div v-else class="active" @click="expandedCatalogButtonId = undefined"
-                    >
-                      <div style="width: 100%; display: inline-flex; align-items: center;">
-                        <b-img v-if="button.configuration.image_url" :src="getIconUrl(button.configuration.image_url)"
-                               style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"/>
-                        <b-img v-else :src="'/icons/bootstrap.svg'"
-                               style="width: 20px; height: 20px; max-width: 20px; max-height: 20px;"></b-img>
-                        <h3 style="margin-block-start: inherit; text-decoration-line: underline; margin-left: 0.5rem; margin-bottom: 0.05rem;">
-                          {{button.configuration.label}}</h3>
-                      </div>
-                      <div class="description">{{button.configuration.description || "A button that enables the functionality described above"}}
-                      </div>
-                      <div class="help">To add this button, press ENTER, RETURN, or drag button below onto the bar</div>
-                      <div class="buttons"
-                           @click="$event.stopPropagation()"
-                      >
-                        <drag :data="button" type="catalogButtonNoImage" :disabled="isLite">
-                          <PreviewItem :item="button"
-                                       :simplified="true" :noImage="true"
-                                       class="noImage"
-                                             @click="onItemSelected(button, true)"
-                          />
-                        </drag>
-
-                        <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage" :disabled="isLite">
-                          <template v-slot:drag-image>
-                            <PreviewItem :item="button" :noImage="false" class="noImage"
-                                               @click="onItemSelected(button, true)"
+                    <b-collapse :visible="expandedCatalogButtonId === buttonId">
+                      <div v-if="expandedCatalogButtonId === buttonId" @click="expandedCatalogButtonId = undefined">
+                      <!-- Define looks when selected (expanded) -->
+                        <div class="description">{{button.configuration.description || `Add a ${button.data.catalogLabel || button.configuration.label} button`}}</div>
+                        <div class="help">To add this button, press ENTER, RETURN, or drag button below onto the bar</div>
+                        <div class="buttons"
+                             @click="$event.stopPropagation()"
+                        >
+                          <drag :data="button" type="catalogButtonNoImage" :disabled="isLite">
+                            <PreviewItem :item="button"
+                                         :simplified="true" :noImage="true"
+                                         class="noImage"
+                                         @click="onItemSelected(button, true)"
                             />
-                          </template>
-                          <PreviewItem v-if="button.configuration.image_url"
-                                       :item="button" :simplified="true" class="withImage"
-                                             @click="onItemSelected(button)"
-                          />
-                        </drag>
+                          </drag>
+
+                          <drag v-if="button.kind !== 'action'" :data="button" type="catalogButtonWithImage" :disabled="isLite">
+                            <template v-slot:drag-image>
+                              <PreviewItem :item="button" :noImage="false" class="noImage" disabled
+                              />
+                            </template>
+                            <PreviewItem v-if="button.configuration.image_url"
+                                         :item="button" :simplified="true" class="withImage"
+                                         @click="onItemSelected(button)"
+                            />
+                          </drag>
+                        </div>
                       </div>
-                    </div>
+                    </b-collapse>
+
                   </drag>
                 </li>
               </template>
@@ -182,7 +174,7 @@
       }
 
       &.showSecondary {
-        .expanderIcon > * {
+        .expanderIcon {
           transform: rotate(90deg) !important;
         }
       }
@@ -190,7 +182,7 @@
       .buttonCatalogEntries {
         display: flex;
         flex-direction: column;
-        padding-left: 30px;
+        padding-left: 0.3em;
         list-style: none;
 
         .buttonCatalogEntry {
@@ -209,26 +201,9 @@
             order: 2;
           }
 
-          .imageWrapper {
-            // Position the icon to the left, and remove it from the flow.
-            display: inline-block;
-            position: relative;
-            left: -23px;
-            width: 0;
-            overflow: visible;
-
-            & > * {
-              transition: all 0.2s ease-in-out;
-            }
-          }
-
-          .buttonsCatalogLink {
-            text-align: left;
-
-            &:hover {
-              .imageWrapper > * {
-                transform: scale(1.5);
-              }
+          &:not(.active):hover .imageWrapper {
+            img, svg {
+              transform: scale(1.5);
             }
           }
 
@@ -236,9 +211,25 @@
             img {
               display: none;
             }
+            .itemName {
+              padding-left: 1.3em;
+            }
           }
 
-          .active {
+          .itemName {
+            width: 100%;
+            display: flex;
+
+            img, svg {
+              margin-right: 0.3em;
+              transition: all 0.2s ease-in-out;
+              width: 1em;
+              max-height: 1em;
+              display: inline-block;
+            }
+          }
+
+          &.active {
             background-color: #e0f1d7;
             border: solid 1px #008145;
             border-radius: 5px;
@@ -250,10 +241,14 @@
               align-items: flex-end;
             }
 
-            h3 {
-              margin-top: 15px;
+            .itemName {
               font-size: 20px;
-              margin-bottom: 0px;
+              text-decoration: underline;
+              img, svg {
+                transition: none;
+                width: 1.2em;
+                max-height: 1.2em;
+              }
             }
 
             div.description {
@@ -268,24 +263,6 @@
             }
           }
         }
-      }
-    }
-
-    .nonExpandedCatalogEntry {
-      width: 100%;
-      display: block;
-
-      img, svg {
-        max-width: 16px;
-        width: 16px;
-        max-width: 16px;
-        width: 16px;
-        display: inline-block;
-      }
-
-      .buttonCatalogEntry {
-        width: 100%;
-        display: block;
       }
     }
   }
@@ -354,17 +331,18 @@ export default {
             });
         },
         expandCatalogButton: function (button, buttonId, subkind) {
-            if (!button) {
-                this.expandedCatalogButtonId = undefined;
-                this.expandedCatalogButton = undefined;
-            } else if (button.data.isExpander) {
-                this.showSecondaryItems(subkind);
+            if (!button || button.data.isExpander) {
                 this.expandedCatalogButtonId = undefined;
                 this.expandedCatalogButton = undefined;
             } else {
                 this.expandedCatalogButtonId = buttonId;
                 this.expandedCatalogButton = button;
-                this.$refs["catalog_" + buttonId][0].focus();
+                // Focus the first button.
+                this.$nextTick(() => this.$refs["catalog_" + buttonId][0].querySelector(".buttons .previewItem")?.focus());
+            }
+
+            if (button?.data.isExpander) {
+                this.showSecondaryItems(subkind);
             }
         },
 
