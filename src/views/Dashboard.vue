@@ -263,8 +263,9 @@ export default {
         videos: function () {
             return [
                 {
-                    url: this.externalLinks.gettingStarted,
-                    caption: "30 Second Tutorial:<br/>Getting Started with the Customization Tool",
+                    tutorial: "getting-started",
+                    caption: this.$t("Tutorial.getting-started.link"),
+                    title: this.$t("Tutorial.getting-started.title"),
                     thumb: "/img/tutorial-thumb.png",
                     thumbRatio: "756:474"
                 },
