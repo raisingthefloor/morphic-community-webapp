@@ -203,6 +203,7 @@
   "TextInputDialog": {
   },
   "Tutorial": {
+    "done_button": "Done",
     "getting-started": {
       "link": "30 Second Tutorial:<br/>Getting Started with the Customization Tool",
       "steps": [
@@ -249,7 +250,7 @@
         },
         {
           "text": [
-            "Done!",
+            "<b>Done!</b>",
             "When you are done, select another bar or just close the tool.",
             "",
             "You can come back and make changes at any time."
@@ -257,7 +258,10 @@
         }
       ],
       "title": "Tutorial: Getting started with Morphic Plus"
-    }
+    },
+    "next_aria-label": "Next Step",
+    "previous_aria-label": "Previous step",
+    "step_arial-label": "Step {step}"
   },
   "UserLogin": {
     "create-account_link": "I do not have a Morphic account yet",

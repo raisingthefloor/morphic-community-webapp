@@ -70,6 +70,16 @@
 
           </div>
 
+          <b-modal id="TutorialDialog"
+                   :title="playingVideo && playingVideo.title"
+                   size="lg"
+                   hide-footer
+                   @shown="$refs.Tutorial.start()"
+              >
+            <Tutorial ref="Tutorial" :tutorial-id="playingVideo && playingVideo.tutorial"
+                      @done="$bvModal.hide('TutorialDialog');"/>
+          </b-modal>
+
           <b-modal :id="'VideoDialog'"
                    dialog-class="videoDialog"
                    :title="playingVideo && playingVideo.caption"
@@ -235,10 +245,12 @@ import {
     getCommunityMembers
 } from "@/services/communityService";
 import * as billingService from "@/services/billingService";
+import Tutorial from "@/components/dashboard/Tutorial";
 
 export default {
     name: "Dashboard",
     components: {
+        Tutorial,
         SidePanel
     },
     data() {
@@ -433,9 +445,15 @@ export default {
                 window.location = video.url;
             } else {
                 this.playingVideo = video;
-                this.$bvModal.show("VideoDialog");
+                // Show in the next tick, to allow the dialog content to load.
+                this.$nextTick(() => {
+                    if (video.tutorial) {
+                        this.$bvModal.show("TutorialDialog");
+                    } else {
+                        this.$bvModal.show("VideoDialog");
+                    }
+                });
             }
-
         }
     }
 };
