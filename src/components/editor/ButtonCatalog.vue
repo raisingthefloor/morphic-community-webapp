@@ -6,6 +6,12 @@
                 searchResults: !!searchState
                }">
 
+    <h2>Button Catalog</h2>
+    <div id="CatalogDescription">
+      <span v-if="isLite">Click on a button name to configure and add to MorphicBar</span>
+      <span v-else>Click or Drag name (below) to add button to the bar</span>
+    </div>
+
     <!-- search -->
     <b-input-group id="search-group" class="catalogSearch" size="sm">
       <b-form-input type="search" placeholder="Search buttons" v-model="searchText"/>
@@ -22,6 +28,7 @@
       </template>
       <ul v-for="(catalog, isSearchResult) in [buttonCatalog, searchResult]"
           :key="isSearchResult"
+          aria-describedby="CatalogDescription"
           class="buttonCatalogListing linkList list-unstyled"
           :class="{ searchResults: isSearchResult}">
 
@@ -137,6 +144,15 @@
 
 #ButtonCatalog {
   padding: 0.5rem;
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 0.1em;
+  }
+  #CatalogDescription {
+    font-size: 15px;
+    margin-bottom: 0.5em;
+  }
 
   .catalogSearch {
   }

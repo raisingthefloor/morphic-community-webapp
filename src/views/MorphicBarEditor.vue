@@ -64,7 +64,6 @@
           <div>
             <b-button @click="showCatalog(false)">Cancel</b-button>
           </div>
-          <em>Click on a button name to configure and add to MorphicBar</em>
         </template>
 
 
