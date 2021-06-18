@@ -20,7 +20,7 @@
             <b-button v-if="focusMode"
                       variant="invert-dark"
                       @click="showMenu = false; setFocusMode(false)" v-t="'Header.standard-mode_button'" />
-            <b-button v-else
+            <b-button v-else-if="!isMobile"
                       variant="invert-dark"
                       @click="showMenu = false; setFocusMode(true)" v-t="'Header.focus-mode_button'" />
           </b-nav-text>
