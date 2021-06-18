@@ -57,7 +57,7 @@
               Bar for: <b>{{ barMembers.length }} members</b>
             </template>
             </span>
-            <b-link class="ml-4 onlyFocus"
+            <b-link class="ml-4 onlyLite"
                     v-b-modal="'MemberDetailsDialog'"
             >Person Details</b-link>
           </div>
