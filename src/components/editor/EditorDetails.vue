@@ -35,27 +35,26 @@
         <div id="BarDetails">
           <!-- Bar name -->
           <div class="bar-name">
-            <h2>
-              {{barName}}
+            <h2>Bar: <span class="name">{{barName}}</span>
 
-              <!-- rename bar -->
-              <span v-if="barDetails.name !== 'Default'">
+            </h2>
+            <!-- rename bar -->
+            <span v-if="barDetails.name !== 'Default'" class="rename">
                         &nbsp;<small><b-button variant="link" @click="showRenameBarDialog()" Xv-b-modal="'barNameDialog'">rename</b-button></small>
                       </span>
-            </h2>
 
           </div>
           <div class="mb-1">
-            <span  class="lead">
-            <template v-if="barMembers.length === 0">
-              Shared bar
-            </template>
-            <template v-else-if="barMembers.length === 1">
-              Bar for: <b>{{ barMembers[0].displayName }}</b>
-            </template>
-            <template v-else>
-              Bar for: <b>{{ barMembers.length }} members</b>
-            </template>
+            <span class="lead">
+              <template v-if="barMembers.length === 0">
+                Shared bar
+              </template>
+              <template v-else-if="barMembers.length === 1">
+                Person: <span class="name">{{ barMembers[0].displayName }}</span>
+              </template>
+              <template v-else>
+                Person: <span class="name">{{ barMembers.length }} members</span>
+              </template>
             </span>
             <b-link class="ml-4 onlyFocus"
                     v-b-modal="'MemberDetailsDialog'"
