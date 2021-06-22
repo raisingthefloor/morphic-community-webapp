@@ -77,10 +77,12 @@
             <!-- Members tab -->
             <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
               <template #title>
-                <b-icon-person-circle/>&nbsp;
-                <span v-if="memberDetails">{{ memberDetails.displayName }} details ({{memberDetails.stateText}})</span>
-                <span v-else-if="memberCount === 0">Unused Bar</span>
-                <span v-else>Members ({{ memberCount }})</span>
+                <span :class="`state-${memberDetails.state}`">
+                  <b-icon icon="person-circle" alt="User settings: " aria-label="User settings" />&nbsp;
+                  <span v-if="memberDetails">{{ memberDetails.displayName }} ({{memberDetails.stateText}})</span>
+                  <span v-else-if="memberCount === 0">Unused Bar</span>
+                  <span v-else>Members ({{ memberCount }})</span>
+                </span>
               </template>
               <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
 
@@ -214,14 +216,21 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~@/styles/bootstrap-util";
 
 #BarDetails {
   min-width: 20em;
   flex-grow: 1;
-  .bar-name {
-    h2 {
+
+  .name {
+    font-weight: bold;
+  }
+
+  .bar-name h2 {
       margin-bottom: 0;
-    }
+      display: inline-block;
+      font-weight: normal;
+      margin-right: 1em;
   }
 }
 
@@ -245,6 +254,10 @@ export default {
 #EditorTabs {
   display: flex;
   align-items: center;
+
+  .state-invited, .state-uninvited {
+    color: $danger;
+  }
 
   & > :not(:last-child) {
     margin-right: 1em;

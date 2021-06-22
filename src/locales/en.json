@@ -19,7 +19,7 @@
   "General": {
     "member-state": {
       "active": "Active",
-      "invited": "Invited",
+      "invited": "Not yet accepted",
       "uninvited": "Uninvited"
     }
   },
