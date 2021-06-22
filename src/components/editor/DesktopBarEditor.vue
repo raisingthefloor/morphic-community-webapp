@@ -5,6 +5,13 @@
         <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px" />
       </template>
 
+      <div class="bar-label-container">
+        <div class="bar-label">
+          <strong class="bar-name" aria-label="Bar name">{{barDetails.name}}</strong>
+          <span v-if="memberDetails" class="bar-owner" aria-label="Bar owner">{{memberDetails.displayName}}</span>
+        </div>
+      </div>
+
       <!-- Bar item problems -->
       <div class="desktop-alerts">
         <b-alert v-for="(error) in barDetails.errors"
@@ -115,12 +122,37 @@
   margin-top: 0 !important;
 
   .desktop-portion {
-    display: inline-block;
+    display: flex;
     flex-grow: 1;
+    flex-direction: column;
+
+    .bar-label-container {
+      flex-grow: 1;
+      text-align: center;
+      .bar-label {
+        display: inline-block;
+        position: relative;
+
+        top: 25%;
+
+
+        margin: 0.5rem;
+        padding: 1rem;
+        font-size: 18px;
+
+        border-radius: 1rem;
+        background-color: #CCE5FD;
+
+
+        .bar-name, .bar-owner {
+          display: block;
+        }
+      }
+    }
   }
 
+
   .desktop-alerts {
-    height: 100%;
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
@@ -296,7 +328,10 @@ export default {
         DropList
     },
     props: {
-        barDetails: {}
+        /** @type {BarDetails} */
+        barDetails: {},
+        /** @type {CommunityMember} */
+        memberDetails: {}
     },
     data() {
         return {
