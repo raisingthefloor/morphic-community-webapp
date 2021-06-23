@@ -61,7 +61,7 @@
                   <drag :data="button" type="catalogButtonWithImage" :disabled="isLite">
                     <!-- Define looks when dragged -->
                     <template v-slot:drag-image>
-                      <PreviewItem :item="button" :noImage="false" xclass="noImage"/>
+                      <PreviewItem :item="button" disabled :noImage="false" />
                     </template>
 
                     <!-- Define looks when not selected -->
