@@ -63,7 +63,7 @@
                     </template>
 
                     <b-button variant="link"
-                              @click="onItemSelected(button)"
+                              @click="onItemSelected(button, $event.altKey)"
                               :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
                               class="buttonCatalogEntry nonExpandedCatalogEntry">
                       <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}">
