@@ -153,7 +153,6 @@ export default {
 
             // close the catalog
             this.showCatalog(false);
-            this.$refs.ButtonCatalog.expandCatalogButton(null);
             this.onBarChanged();
 
             let showEdit;
