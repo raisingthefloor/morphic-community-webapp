@@ -493,18 +493,16 @@ export default {
 
             let found = false;
             Object.keys(this.colors).forEach(color => {
-                if (color !== "default_button") {
-                    const hex = this.colors[color];
+                const hex = this.colors[color];
 
-                    if (hex === this.button.configuration.color) {
-                        found = true;
-                    }
-
-                    options.push({
-                        value: hex,
-                        text: this.$t(`EditButtonDialog.color.${color}`)
-                    });
+                if (hex === this.button.configuration.color) {
+                    found = true;
                 }
+
+                options.push({
+                    value: hex,
+                    text: this.$t(`EditButtonDialog.color.${color}`)
+                });
             });
 
             // If the button has another colour (if a custom colour selection is implemented), add it to the list.
