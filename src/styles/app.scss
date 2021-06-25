@@ -140,5 +140,16 @@ body.isMobile {
   }
 }
 
+// Hide the widget for a radio button, so it can be customised.
+.customRadio {
+  input {
+    position: absolute !important;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+
 @import "./expander";
 

@@ -97,27 +97,26 @@
                 <b-form-select id="barItem_position" v-model="selectedPosition" :options="positionOptions" />
               </b-form-group>
 
-              <div v-if="!isLite" class="bg-silver rounded p-3">
-                <p v-if="showExtra" class="text-right small mb-0">
-                  (<b-link @click="showExtra = false">Hide</b-link>)
-                </p>
-                <p v-else class="small">
-                  Optional: <b-link @click="showExtra = true">Customize the button (color &amp; picture)</b-link>
-                </p>
-                <div v-if="showExtra">
-                  <h6><b>Color for button</b></h6>
-                  <div class="bg-white rounded p-3 mb-4">
-                    <div
-                            v-for="(hex, name) in colors"
-                            :key="name"
-                            @click="changeColor(hex)"
-                            :title="name"
-                            :class="{ active: (button.configuration.color || colors.blue) === hex }"
-                            class="colorBoxHolder"
-                    >
-                      <div :style="'background-color: ' + hex + ';'" class="colorBox"></div>
-                    </div>
-                  </div>
+              <div v-if="!isLite"
+                   class="secondaryFields bg-silver rounded"
+              >
+
+                <!-- colour selection -->
+                <b-form-group label="Color for button"
+                              label-for="ColorSelection">
+                  <b-form-radio-group id="ColorSelection"
+                                      class="colorSelection"
+                                      v-model="button.configuration.color"
+                                      plain>
+                    <b-form-radio v-for="(hex, name) in colors"
+                                  :key="name"
+                                  :value="hex"
+                                  class="customRadio colorRadio">
+                      <span class="screenReader">{{name}}</span>
+                      <div class="colorBlock" :style="'background-color: ' + hex + ';'" />
+                    </b-form-radio>
+                  </b-form-radio-group>
+                </b-form-group>
 
                   <h6><b>Picture for button</b></h6>
                   <div class="bg-white rounded p-3 compactIconHolder">
@@ -178,6 +177,8 @@
 </template>
 
 <style lang="scss">
+
+@import "~@/styles/bootstrap-util";
 
 .relatedSelection {
   .dropdown-menu {
@@ -254,18 +255,6 @@ ul.relatedButtons {
   }
 }
 
-.colorBoxHolder {
-  display: inline-block;
-  cursor: pointer;
-  margin: 0 .25rem;
-  width: 2.6rem;
-  height: 2.6rem;
-  .colorBox {
-    width: 2rem;
-    height: 2rem;
-  }
-}
-
 .iconBoxHolder {
   display: inline-block;
   cursor: pointer;
@@ -293,11 +282,54 @@ ul.relatedButtons {
   }
 }
 
-.colorBoxHolder, .iconBoxHolder {
+.iconBoxHolder {
   padding: .3rem;
   &.active {
     padding: .1rem;
     border: .2rem solid green;
+  }
+}
+
+.secondaryFields {
+  padding: 1em;
+  margin: 0 -0.5em;
+
+  & > .form-group > label {
+    margin-left: -0.25em;
+  }
+
+  .colorSelection {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    justify-items: center;
+
+    background-color: white;
+    padding: 0.5em 0.25em;
+  }
+
+  .colorRadio.customRadio {
+    cursor: pointer;
+    margin: 5px 0;
+
+    label {
+      border: 3px solid transparent;
+      width: 2.5em;
+      height: 2.5em;
+      padding: 2px;
+
+      .colorBlock {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    input:checked + label {
+      border-color: green;
+    }
+
+    input:focus-visible + label {
+      border-style: dashed;
+    }
   }
 }
 
@@ -310,12 +342,20 @@ ul.relatedButtons {
 
 <script>
 import PreviewItem from "@/components/dashboard/PreviewItem";
-import { buttonCatalog, colors, defaultIcons, groupedButtons, groupedIcons, icons, allButtons } from "@/utils/constants";
+import {
+    allButtons,
+    buttonCatalog,
+    colors,
+    defaultIcons,
+    groupedButtons,
+    groupedIcons,
+    icons
+} from "@/utils/constants";
 import * as params from "@/utils/params";
 import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/editor/BarItemFields";
 import { CONFIG } from "@/config/config";
-import {dialogMixin} from "@/mixins/dialog.js";
+import { dialogMixin } from "@/mixins/dialog.js";
 
 export default {
     name: "EditButtonDialog",
@@ -343,7 +383,6 @@ export default {
              * @type {BarItem}
              */
             button: null,
-            showExtra: false,
 
             dialogClosed: null,
 
@@ -518,9 +557,6 @@ export default {
     },
 
     methods: {
-        changeColor: function (hex) {
-            this.button.configuration.color = hex;
-        },
         changeIcon: function (icon) {
             this.button.configuration.favicon = (icon === "$favicon");
 
