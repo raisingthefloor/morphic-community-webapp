@@ -5,6 +5,19 @@
         <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px" />
       </template>
 
+      <!-- Show a hint pointing to the bar, for new bars -->
+      <div v-if="!isChanged && barDetails.items && barDetails.items.length === 0" class="hint-box">
+        <Arrow point-to=".hint-box .arrowTo" :options="{
+                sourcePosition: 'middleRight',
+                destinationPosition: 'bottomRight',
+                thickness: 1,
+                endpoint: {type: 'arrowHead'}
+        }"/>
+        <span class="arrowTo" />
+        <p>This is an empty MorphicBar.</p>
+        Click or drag a button from the Button Catalog (on the right) to add it to the bar.
+      </div>
+
       <!-- Bar item problems -->
       <div class="desktop-alerts">
         <b-alert v-for="(error) in barDetails.errors"
@@ -117,6 +130,21 @@
   .desktop-portion {
     display: inline-block;
     flex-grow: 1;
+  }
+
+  .hint-box {
+    width: 20em;
+    float: right;
+    margin: 4em 3em 0 0;
+    position: relative;
+    .arrowStart {
+      float: right;
+    }
+    .arrowTo {
+      position: absolute;
+      right: -4.5em;
+      top: -0.5em;
+    }
   }
 
   .desktop-alerts {
@@ -285,10 +313,12 @@
 import { Drag, Drop, DropList } from "vue-easy-dnd";
 import BarItemLink from "@/components/editor/BarItemLink";
 import PreviewItem from "@/components/dashboard/PreviewItem";
+import Arrow from "@/components/Arrow";
 
 export default {
     name: "DesktopBarEditor",
     components: {
+        Arrow,
         BarItemLink,
         PreviewItem,
         Drag,
@@ -296,7 +326,8 @@ export default {
         DropList
     },
     props: {
-        barDetails: {}
+        barDetails: {},
+        isChanged: Boolean
     },
     data() {
         return {
