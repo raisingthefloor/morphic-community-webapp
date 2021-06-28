@@ -140,5 +140,16 @@ body.isMobile {
   }
 }
 
+.hint-box {
+  display: inline-block;
+  background-color: #ffffcc;
+  border: 1px solid black;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5);
+  font-family: 'Coming Soon', sans-serif;
+  font-size: 15px;
+}
+
 @import "./expander";
 
