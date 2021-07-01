@@ -158,7 +158,7 @@
           </b-col>
 
           <b-col v-if="!isLite" md="6">
-            <div class="max-height bg-silver rounded p-3 text-center">
+            <div class="sticky-top bg-silver rounded p-3 text-center">
               <p class="">This is the button you are making</p>
               <div class="barPreview rounded">
                 <div class="previewHolder">
