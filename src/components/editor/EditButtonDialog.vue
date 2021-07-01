@@ -161,7 +161,7 @@
             <div class="sticky-top bg-silver rounded p-3 text-center">
               <p class="">This is the button you are making</p>
               <div class="barPreview rounded">
-                <div class="previewHolder">
+                <div class="previewHolder" :aria-description="'Preview of button with ' + (selectedIcon ? 'image' : 'no image') ">
                   <PreviewItem :item="button" />
                 </div>
               </div>
