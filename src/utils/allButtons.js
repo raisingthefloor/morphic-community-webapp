@@ -901,7 +901,7 @@ export const allButtons = {
         },
         configuration: {
             subkind: "action",
-            label: "Read Aloud",
+            label: "Read Selected",
             description: "A button that reads out the selected text.",
             identifier: "read-aloud",
             color: "blue"

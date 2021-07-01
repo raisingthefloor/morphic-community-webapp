@@ -1,6 +1,7 @@
 <template>
   <b-link class="previewItem" id="previewItemButton"
           :class="[buttonClass, {broken: hasError}]"
+          :disabled="disabled"
           v-b-tooltip="{title: 'This button has an issue. Click for more information', placement: 'left', variant: 'warning', disabled: !hasError}"
            :to="linkTo"
           @click="$emit('click', {data: item})"
@@ -10,11 +11,11 @@
     <template v-if="buttonClass === 'simplified'">
       <div v-if="item.data.visual && item.data.visual.type === 'multiButton'" class="multiButton">
         <div class="buttons" style="margin-top: 5px;">
-          <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
+          <span v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                   class="rounded multiButton"
                   :style="'background: ' + defaultColor"
                   v-bind:class="{ 'extraBig': item.data.visual.extraBig}">
-          </button>
+          </span>
         </div>
       </div>
       <div v-else-if="noImage" class="noImage" :style="'background: ' + defaultColor">
@@ -33,7 +34,7 @@
         <button v-for="(button, index) in item.data.visual.buttons" v-bind:key="index"
                 :style="'background: ' + defaultColor + '; background-color: ' + (item.configuration.color || defaultColor) + ';'"
                 v-bind:class="{ 'extraBig': item.data.visual.extraBig}"
-              tabindex="-1">
+                tabindex="-1">
           {{ button }}
         </button>
       </div>
@@ -229,7 +230,8 @@ export default {
         item: Object,
         simplified: Boolean,
         noImage: Boolean,
-        to: Object
+        to: Object,
+        disabled: Boolean
     },
     data() {
         return {
