@@ -274,9 +274,11 @@ Object.keys(allButtons).sort((a, b) => {
     }
 
     // Use the site's favicon if there's no local image.
+    var usingFavicon;
     if (!button.configuration.image_url && button.configuration.url) {
         var m = getHost.exec(button.configuration.url);
         if (m) {
+            usingFavicon = true;
             button.configuration.image_url = `https://icons.duckduckgo.com/ip2/${m[1]}.ico`;
         }
     }
@@ -300,7 +302,10 @@ Object.keys(allButtons).sort((a, b) => {
         delete button.configuration.groups;
     }
 
-    defaultIcons[buttonKey] = button.configuration.image_url;
+    if (!usingFavicon) {
+        // So the button edit dialog can show the default icon for this item.
+        defaultIcons[buttonKey] = button.configuration.image_url;
+    }
 });
 
 

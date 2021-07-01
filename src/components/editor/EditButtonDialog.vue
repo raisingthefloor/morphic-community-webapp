@@ -118,41 +118,40 @@
                   </b-form-radio-group>
                 </b-form-group>
 
-                  <h6><b>Picture for button</b></h6>
-                  <div class="bg-white rounded p-3 compactIconHolder">
-                    <!-- no image -->
-                    <div class="iconBoxHolder" :class="{ active: (!button.configuration.image_url) }">
-                      <div
-                              @click="changeIcon('')"
-                              :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
-                              class="iconBox"
-                      >
-                        <p>No image</p>
-                      </div>
-                    </div>
-
-                    <!-- favicon -->
-                    <div v-if="buttonFavicon" class="iconBoxHolder" :class="{ active: (button.configuration.favicon) }">
-                      <div
-                              @click="changeIcon('$favicon')"
-                              :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'"
-                              class="iconBox"
-                      >
-                        <b-img :src="buttonFavicon" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
-                      </div>
-                    </div>
-
-                    <div v-for="(filename, icon) in listedIcons"
-                         :key="icon"
-                         @click="changeIcon(icon)"
-                         :class="{ active: button.configuration.image_url === icon }"
-                         class="iconBoxHolder"
-                    >
-                      <div :style="'border-color: ' + (button.configuration.color || colors.blue) + ';'" class="iconBox">
-                        <b-img :src="getIconUrl(icon)" :style="'color: ' + (button.configuration.color || colors.blue) + ';'"/>
-                      </div>
-                    </div>
+                <!-- icon selection -->
+                <div class="buttonIcons">
+                  <div class="actionButtons">
+                    <b-button variant="invert-morphic-blue"
+                              size="sm"
+                              :disabled="!selectedIcon && !showImages"
+                              @click="selectedIcon = null, showImages = false">Remove button image</b-button>
+                    <b-button variant="invert-morphic-blue"
+                              size="sm"
+                              :disabled="showImages"
+                              @click="showImages = true">{{ selectedIcon ? "Change button image" : "Add button image"}}</b-button>
                   </div>
+
+                  <b-form-group v-if="showImages"
+                                label="Image for button"
+                                label-for="ImageSelection">
+                    <b-form-radio-group id="ImageSelection"
+                                        class="imageSelection"
+                                        v-model="selectedIcon"
+                                        plain>
+                      <b-form-radio v-for="(filename, icon) in listedIcons" xxv-if="icon !== '$favicon' || buttonFavicon"
+                                    :key="icon"
+                                    :value="icon"
+                                    class="customRadio iconRadio">
+                        <div>
+                          <span v-if="icon === ''">No image</span>
+                          <b-img v-else-if="icon === '$favicon'" :src="filename"/>
+                          <b-img v-else :src="getIconUrl(icon)"/>
+                        </div>
+                      </b-form-radio>
+
+                    </b-form-radio-group>
+                  </b-form-group>
+
                 </div>
               </div>
             </div>
@@ -247,49 +246,6 @@ ul.relatedButtons {
   }
 }
 
-.compactIconHolder {
-  height: 22rem;
-  overflow-y: auto;
-  .iconBoxHolder {
-    margin-left: .5rem !important;
-  }
-}
-
-.iconBoxHolder {
-  display: inline-block;
-  cursor: pointer;
-  width: 5.25rem;
-  height: 5.25rem;
-  margin: .75rem 0 .75rem .75rem;
-  .iconBox {
-    background: white;
-    border: 1px solid black;
-    border-radius: 100%;
-    padding: .75rem;
-    width: 4.5rem;
-    height: 4.5rem;
-    text-align: center;
-    img {
-      width: 3rem;
-      height: 3rem;
-    }
-    p {
-      width: 3rem;
-      height: 3rem;
-      line-height: 100%;
-      margin: 0;
-    }
-  }
-}
-
-.iconBoxHolder {
-  padding: .3rem;
-  &.active {
-    padding: .1rem;
-    border: .2rem solid green;
-  }
-}
-
 .secondaryFields {
   padding: 1em;
   margin: 0 -0.5em;
@@ -307,20 +263,13 @@ ul.relatedButtons {
     padding: 0.5em 0.25em;
   }
 
-  .colorRadio.customRadio {
-    cursor: pointer;
-    margin: 5px 0;
+  .customRadio {
+    display: inline;
 
     label {
+      cursor: pointer;
       border: 3px solid transparent;
-      width: 2.5em;
-      height: 2.5em;
       padding: 2px;
-
-      .colorBlock {
-        width: 100%;
-        height: 100%;
-      }
     }
 
     input:checked + label {
@@ -329,6 +278,66 @@ ul.relatedButtons {
 
     input:focus-visible + label {
       border-style: dashed;
+    }
+
+    &.colorRadio {
+      margin: 5px 0;
+
+      label {
+        width: 2.5em;
+        height: 2.5em;
+
+        .colorBlock {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+
+    &.iconRadio {
+      margin: 5px 5px;
+
+      label {
+        width: 5.5em;
+        height: 5.5em;
+
+
+        & > * {
+          position: relative;
+          width: 100%;
+          height: 100%;
+
+          border: 1px solid black;
+          border-radius: 100%;
+          & > * {
+            position: absolute;
+            width: 60%;
+            max-height: 60%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            font-size: 14px;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+
+  .buttonIcons {
+    .actionButtons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1em;
+    }
+
+    .imageSelection {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+
+      background-color: white;
     }
   }
 }
@@ -403,6 +412,9 @@ export default {
              */
             knownFavicons: {},
 
+            // The key of the selected icon
+            selectedIcon: null,
+
             fieldChanged: 0,
 
             relatedDropdownStyle: null,
@@ -411,7 +423,10 @@ export default {
             wasPlaceholder: false,
 
             selectedPosition: null,
-            originalPosition: null
+            originalPosition: null,
+
+            // true to show the images, even if there is no image selected
+            showImages: false
 
         };
     },
@@ -457,6 +472,14 @@ export default {
             iconKeys.push.apply(iconKeys, groupedIcons.generic);
 
             const togo = {};
+
+            // Add a placeholder for no image
+            togo[""] = "";
+
+            if (this.buttonFavicon) {
+                togo.$favicon = this.buttonFavicon;
+            }
+
             if (defaultIcon) {
                 togo[defaultIcon] = icons[defaultIcon];
             }
@@ -567,6 +590,8 @@ export default {
             } else {
                 this.button.configuration.image_url = icon;
             }
+
+            this.selectedIcon = icon;
         },
 
         /**
@@ -669,6 +694,9 @@ export default {
                 this.originalPosition = this.bar.items.findIndex(item => item.id === this.selectedItem.id);
                 this.selectedPosition = this.originalPosition;
             }
+
+            this.selectedIcon = this.button.configuration.favicon ? "$favicon" : this.button.configuration.image_url;
+            this.showImages = false;
 
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
@@ -784,6 +812,9 @@ export default {
                 }
             },
             deep: true
+        },
+        selectedIcon: function (newValue) {
+            this.changeIcon(newValue);
         }
     }
 };
