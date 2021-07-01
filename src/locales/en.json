@@ -16,6 +16,12 @@
     "select-instruction": "Select a bar to copy from:",
     "title": "Copy bar"
   },
+  "EditorDetails": {
+    "copy-bar_button": "Copy bar from...",
+    "revert-bar_button": "Revert to user's current bar",
+    "save-bar_button": "Save bar",
+    "try-it_button": "Try it"
+  },
   "General": {
     "member-state": {
       "active": "Active",
@@ -195,6 +201,67 @@
     "success": "Instructions to recover your password have been emailed to you."
   },
   "TextInputDialog": {
+  },
+  "Tutorial": {
+    "done_button": "Done",
+    "getting-started": {
+      "link": "30 Second Tutorial:<br/>Getting Started with the Customization Tool",
+      "steps": [
+        {
+          "text": [
+            "<b>Making a bar for yourself?</b>",
+            "Under My MorphicBar, click <i>@:(BarsList.new-bar_button)</i>.",
+            "",
+            "<b>Making a bar for someone else?</b>",
+            "Click the <i>@:(MembersList.add-member_button)</i> button. Then click <i>@:(MembersList.add-bar_button)</i> for that person."
+          ]
+        },
+        {
+          "text": [
+            "<b>Step 2: View & edit the bar</b>",
+            "The MorphicBar you selected appears in the middle section of the screen.",
+            "",
+            "It looks the way it might look on a computer."
+          ]
+        },
+        {
+          "text": [
+            "<b>Step 3: Adding buttons</b>",
+            "The right column lists different buttons you can add.",
+            "",
+            "Add buttons by clicking or dragging."
+          ]
+        },
+        {
+          "text": [
+            "<b>Step 4: Making changes to a button</b>",
+            "Do you want to make changes to a button?",
+            "",
+            "Click a button on the bar and make your changes."
+          ]
+        },
+        {
+          "text": [
+            "<b>Step 5: Pushing the bar to the user</b>",
+            "When you like how the bar looks, push it to the user and it will appear on the user’s computer.",
+            "",
+            "Click the <i>@:(EditorDetails.save-bar_button)</i> button"
+          ]
+        },
+        {
+          "text": [
+            "<b>Done!</b>",
+            "When you are done, select another bar or just close the tool.",
+            "",
+            "You can come back and make changes at any time."
+          ]
+        }
+      ],
+      "title": "Tutorial: Getting started with Morphic Plus"
+    },
+    "next_aria-label": "Next Step",
+    "previous_aria-label": "Previous step",
+    "step_arial-label": "Step {step}"
   },
   "UserLogin": {
     "create-account_link": "I do not have a Morphic account yet",
