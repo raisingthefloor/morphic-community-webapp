@@ -82,18 +82,23 @@ export const allParameters = {
             urlWorking: {}
         }
     },
+    skypeNoCall: {
+        type: "checkbox",
+        label: "Open Skype App without starting a call"
+    },
     skypeId: {
-        label: "Skype ID of who to call"
+        label: "Skype ID of who to call",
+        isEnabled: (button) => !button.data.parameters.skypeNoCall
     },
     skypeAction: {
         type: "select",
         label: "Type of call",
         initial: "call",
-        isEnabled: (button) => !!button.data.parameters.skypeId,
+        isEnabled: (button) => !!button.data.parameters.skypeId && !button.data.parameters.skypeNoCall,
         selectOptions: [
-            { value: "call", text: "Voice" },
-            { value: "call&video=true", text: "Video" },
-            { value: "chat", text: "Chat" }
+            { value: "?call", text: "Voice" },
+            { value: "?call&video=true", text: "Video" },
+            { value: "?chat", text: "Chat" }
         ]
     },
     defaultApp: {

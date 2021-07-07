@@ -950,7 +950,8 @@ export const allButtons = {
             label: "Skype",
             color: "blue",
             image_url: "skype",
-            url: "skype:$skypeId?$skypeAction"
+            // eslint-disable-next-line no-template-curly-in-string
+            url: "skype:${skypeNoCall?:$skypeId$skypeAction}"
         }
     },
     soundcloud: {
