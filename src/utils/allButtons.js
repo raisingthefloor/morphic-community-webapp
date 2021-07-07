@@ -680,6 +680,8 @@ export const allButtons = {
             subkind: "app",
             label: "Skype",
             exe: "microsoftSkype",
+            // eslint-disable-next-line no-template-curly-in-string
+            args: "${skypeNoCall?:$skypeId$skypeAction}",
             color: "blue",
             image_url: "skype"
         }
