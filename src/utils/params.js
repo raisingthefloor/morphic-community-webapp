@@ -88,7 +88,10 @@ export const allParameters = {
     },
     skypeId: {
         label: "Skype ID of who to call",
-        isEnabled: (button) => !button.data.parameters.skypeNoCall
+        isEnabled: (button) => !button.data.parameters.skypeNoCall,
+        validation: {
+            required: "Skype ID of who to call needs to be entered"
+        }
     },
     skypeAction: {
         type: "select",
