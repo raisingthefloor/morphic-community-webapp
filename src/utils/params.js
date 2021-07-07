@@ -17,8 +17,10 @@ These are then used to create input fields in the editor dialog.
  * A parameter.
  * @typedef {Object} ParameterInfo
  * @property {Any} initial The initial value.
+ * @property {"text"|"select"|"checkbox"} type The type of field.
  * @property {String} label Text displayed with the input field.
- * @property {Array<Object>} [selectOptions] A list of items for a select field.
+ * @property {Array<Object>} selectOptions A list of items for a select field (type="select").
+ * @property {Array<String>} values Array containing the values of the parameter, depending on the checkbox state.
  * @property {String} attrs The HTML attributes for the input element.
  * @property {isEnabledFunc} [isApplicable] A function, returning true if the field should be shown.
  * @property {isEnabledFunc} [isEnabled] A function, returning true if the field should be enabled.
@@ -84,6 +86,7 @@ export const allParameters = {
         label: "Skype ID of who to call"
     },
     skypeAction: {
+        type: "select",
         label: "Type of call",
         initial: "call",
         isEnabled: (button) => !!button.data.parameters.skypeId,
@@ -94,6 +97,7 @@ export const allParameters = {
         ]
     },
     defaultApp: {
+        type: "select",
         label: "App",
         initial: null,
         selectOptions: [
@@ -234,6 +238,10 @@ Object.values(allParameters).forEach(
         }
         if (typeof(paramInfo.isEnabled) !== "function") {
             paramInfo.isEnabled = constantFunction(paramInfo.isEnabled === undefined ? true : paramInfo.isEnabled);
+        }
+
+        if (!paramInfo.type) {
+            paramInfo.type = "text";
         }
     });
 
