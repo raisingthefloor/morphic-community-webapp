@@ -327,8 +327,8 @@ export function applyParameters(button) {
     button.data.hasError = validate(button) ? undefined : true;
 }
 
-// Matches all `${name1}` or `$name2` in a string.
-const matchExpanders = /\$\{(?<name1>[^}]+)\}|\$(?<name2>\w+)/g;
+// Matches all `${name1}`, `${name1?v1:v2}` or `$name2` in a string.
+const matchExpanders = /\$\{(?<name1>[^}:]+)(?<ternary>\?(?<v1>[^}:]*):(?<v2>[^}:]*))?\}|\$(?<name2>\w+)/g;
 
 /**
  * Gets the parameter expanders in a string.
@@ -338,10 +338,22 @@ const matchExpanders = /\$\{(?<name1>[^}]+)\}|\$(?<name2>\w+)/g;
  */
 function getParameterNames(input) {
     const paramNames = [];
+    var matches = [];
+
+    // Get all matches upfront, otherwise the recursive call will reset the lastIndex of the regex.
     var match;
     while ((match = matchExpanders.exec(input))) {
-        paramNames.push(match.groups.name1 || match.groups.name2);
+        matches.push(match);
     }
+
+    matches.forEach(match => {
+        paramNames.push(match.groups.name1 || match.groups.name2);
+
+        if (match.groups.ternary) {
+            paramNames.push.apply(paramNames, getParameterNames(match.groups.v1));
+            paramNames.push.apply(paramNames, getParameterNames(match.groups.v2));
+        }
+    });
 
     return paramNames;
 }
@@ -353,9 +365,19 @@ function getParameterNames(input) {
  * @return {String} The input string, with the parameter expanders replaced with their value.
  */
 function replaceParameters(params, input) {
-    return input.replace(matchExpanders, (match, name1, name2) => {
+    return input.replace(matchExpanders, (match, name1, ternary, v1, v2, name2) => {
         var name = name1 || name2;
-        return params[name] || "";
+        const value = params[name] || "";
+
+        let togo;
+        if (ternary) {
+            togo = value ? replaceParameters(params, v1) : replaceParameters(params, v2);
+        } else {
+            togo = value;
+        }
+
+        return togo;
+
     });
 }
 
