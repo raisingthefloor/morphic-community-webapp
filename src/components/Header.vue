@@ -2,13 +2,9 @@
   <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="">
     <b-navbar-brand role="banner">
       <b-link to="/">
-        <img src="/img/logo-wordmark.svg" alt="" />
+        <img src="/img/logo-color.svg" alt="" />
       </b-link>
-      <span class="headerTitle d-none"
-            :class="{
-               'd-xl-inline': isLite,
-               'd-lg-inline': !isLite
-            }"
+      <span class="headerTitle"
             v-t="'Header.product-name'" />
     </b-navbar-brand>
 
@@ -51,6 +47,9 @@
   @import "~@/styles/bootstrap-util";
 
   #top {
+    border-bottom: 2px solid $morphic-blue-color;
+    padding: 0;
+
     a.nav-link:focus {
       outline: 0;
     }
@@ -61,9 +60,6 @@
       border-bottom: 3px solid #84c661;
     }
 
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
 
     & > :first-child {
       margin-left: 1rem;
@@ -78,10 +74,12 @@
 
     .navbar-brand {
       flex-grow: 0;
-      margin-right: 0.5em;
+
       .headerTitle {
-        margin-left: 2em;
+        color:  $morphic-blue-color;
+        margin-left: 0.8em;
         font-weight: bold;
+        font-size: 22px;
       }
       img {
         height: 2.4rem;
