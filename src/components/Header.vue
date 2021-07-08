@@ -21,10 +21,6 @@
                       @click="showMenu = false; setFocusMode(true)" v-t="'Header.focus-mode_button'" />
           </b-nav-text>
 
-          <b-nav-text v-if="focusMode">
-            <b-button variant="invert-dark" @click="showMenu = false; $router.push('/')" v-t="'Header.home_button'" />
-          </b-nav-text>
-
           <b-nav-text>
             <b-button variant="invert-dark" @click="showMenu = false; logout()"><b-icon icon="box-arrow-right"/> {{ $t('Header.logout_button') }}</b-button>
           </b-nav-text>
