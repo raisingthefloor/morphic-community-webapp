@@ -2,7 +2,7 @@
   <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="">
     <b-navbar-brand role="banner">
       <b-link to="/">
-        <img src="/img/logo-color.svg" alt="" />
+        <img src="/img/logo-color.svg" class="logo" alt="" />
       </b-link>
       <span class="headerTitle"
             v-t="'Header.product-name'" />
@@ -59,6 +59,9 @@
 
     & > :first-child {
       margin-left: 1rem;
+      @include media-breakpoint-down(sm) {
+        margin-left: 3px;
+      }
     }
 
     max-width: 100%;
@@ -66,19 +69,31 @@
 
     .navbar-toggler, .navbar-collapse,  {
       margin-right: 1rem;
+      @include media-breakpoint-down(sm) {
+        margin-right: 0.3rem;
+      }
     }
 
     .navbar-brand {
       flex-grow: 0;
-
       .headerTitle {
         color:  $morphic-blue-color;
-        margin-left: 0.8em;
+
         font-weight: bold;
+
+        margin-left: 0.8em;
         font-size: 22px;
+
+        @include media-breakpoint-down(sm) {
+          margin-left: 0.4em;
+          font-size: 20px;
+        }
       }
-      img {
+      .logo {
         height: 2.4rem;
+        @include media-breakpoint-down(sm) {
+          height: 2rem;
+        }
       }
     }
 
