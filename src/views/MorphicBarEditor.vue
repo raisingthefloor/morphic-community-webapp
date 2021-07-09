@@ -66,7 +66,7 @@
 
         <template v-if="isLite">
           <h1>Button Catalog: Buttons you can add</h1>
-          <div>
+          <div class="mb-3">
             <b-button @click="showCatalog(false)">Cancel</b-button>
           </div>
         </template>
