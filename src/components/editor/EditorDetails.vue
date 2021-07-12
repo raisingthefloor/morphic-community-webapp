@@ -56,7 +56,7 @@
                 Person: <span class="name">{{ barMembers.length }} members</span>
               </template>
             </span>
-            <b-link class="ml-4 onlyFocus"
+            <b-link class="ml-4 onlyLite"
                     v-b-modal="'MemberDetailsDialog'"
             >Person Details</b-link>
           </div>
@@ -109,26 +109,22 @@
       <b-col id="EditorActions" lg="fluid" xs="6">
         <b-button variant="secondary"
                   v-b-modal="'copyBarDialog'"
-        >Copy bar from...
-        </b-button>
+                  v-t="'EditorDetails.copy-bar_button'" />
 
         <b-button variant="secondary"
                   :disabled="!isChanged || newBar"
                   @click="revertBar"
-        >Revert to user's current bar
-        </b-button>
+                  v-t="'EditorDetails.revert-bar_button'" />
 
         <b-button variant="primary"
                   style="visibility: hidden"
                   disabled
-        >Try it
-        </b-button>
+                  v-t="'EditorDetails.try-it_button'" />
 
         <b-button variant="primary"
                   :disabled="!isChanged"
                   @click="saveBar"
-        >Save bar
-        </b-button>
+                  v-t="'EditorDetails.save-bar_button'" />
       </b-col>
     </b-row>
   </b-container>

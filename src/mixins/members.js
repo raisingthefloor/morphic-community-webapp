@@ -13,9 +13,10 @@ export const membersMixin = {
          * Deletes a member (from the community).
          * @param {CommunityMember} member The member to delete.
          * @param {Boolean} force Force the operation, without confirming with the user.
+         * @param {Boolean} keepRoute Keep the current route, and don't redirect to the home page.
          * @return {Promise<Boolean>} Resolves with true if the member was deleted.
          */
-        memberDelete: async function (member, force) {
+        memberDelete: async function (member, force, keepRoute) {
             const confirmed = force ||
                 await this.showConfirm(
                     this.$t("members.delete.confirm", {member: member.displayName}),
@@ -26,7 +27,11 @@ export const membersMixin = {
                     this.$t("members.delete.title"));
 
             const req = confirmed && communityService.deleteCommunityMember(this.communityId, member.id);
-            return req && this.requestToBool(req, MESSAGES.successfulMemberDelete);
+            return req && this.requestToBool(req, MESSAGES.successfulMemberDelete).then(success => {
+                if (!keepRoute) {
+                    this.$router.push("/");
+                }
+            });
         },
 
         /**

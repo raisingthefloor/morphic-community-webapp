@@ -17,10 +17,10 @@
       <b-collapse id="nav-actions" is-nav v-model="showMenu">
         <b-navbar-nav v-if="isLoggedIn" class="ml-auto loggedInNav">
           <b-nav-text>
-            <b-button v-if="focusMode"
+            <b-button v-if="focusMode && !isMobile"
                       variant="invert-dark"
                       @click="showMenu = false; setFocusMode(false)" v-t="'Header.standard-mode_button'" />
-            <b-button v-else
+            <b-button v-else-if="!isMobile"
                       variant="invert-dark"
                       @click="showMenu = false; setFocusMode(true)" v-t="'Header.focus-mode_button'" />
           </b-nav-text>

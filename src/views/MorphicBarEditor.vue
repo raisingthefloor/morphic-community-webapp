@@ -49,6 +49,7 @@
                             ref="DesktopBarEditor"
                             :bar-details="barDetails"
                             :member-details="memberDetails"
+                            :is-changed="isChanged"
                             @edit-item="showEditDialog($event)"
                             @bar-changed="onBarChanged"
                             @click="$refs.EditorDetails.closeTab()"
@@ -65,7 +66,6 @@
           <div>
             <b-button @click="showCatalog(false)">Cancel</b-button>
           </div>
-          <em>Click on a button name to configure and add to MorphicBar</em>
         </template>
 
 
@@ -154,7 +154,6 @@ export default {
 
             // close the catalog
             this.showCatalog(false);
-            this.$refs.ButtonCatalog.expandCatalogButton(null);
             this.onBarChanged();
 
             let showEdit;
@@ -315,13 +314,17 @@ export default {
         showCatalog: function (show) {
             const catalogRoute = {...this.$route };
             catalogRoute.query = {...catalogRoute.query };
+            const lastValue = catalogRoute.query.catalogView;
+
             if (show) {
                 catalogRoute.query.catalogView = true;
             } else {
                 delete catalogRoute.query.catalogView;
             }
 
-            this.$router.push(catalogRoute);
+            if (lastValue !== catalogRoute.query.catalogView) {
+                this.$router.push(catalogRoute);
+            }
 
             this.$refs.ButtonCatalog.$el.focus();
 
@@ -383,11 +386,15 @@ export default {
         },
         /**
          * Confirms if the user wants to leave the page, if there have been unsaved changes
+         * @param {Route} to The target route.
+         * @param {Route} from The current route.
          * @return {Promise<Boolean>} Resolves with true to move to the next page.
          */
-        leavePage: async function () {
+        leavePage: async function (to, from) {
             var nextPage = true;
-            if (this.isChanged) {
+            const sameBar = (to.query.barId === from.query.barId && to.query.memberId === from.query.memberId);
+
+            if (!sameBar && this.isChanged) {
                 const dialogResult = await this.showModalDialog("unsavedChanges");
 
                 switch (dialogResult) {
@@ -504,11 +511,11 @@ export default {
         }
     },
     async beforeRouteUpdate(to, from, next) {
-        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;
+        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage(to, from) : true;
         next(proceed);
     },
     async beforeRouteLeave(to, from, next) {
-        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage() : true;
+        const proceed = this.$store.getters.isLoggedIn ? await this.leavePage(to, from) : true;
         next(proceed);
     },
     beforeUpdate() {

@@ -17,16 +17,23 @@
               </p>
             </div>
             <div id="hints" v-if="showHints">
-              <div pointTo="#MyMorphicBars .addNew">
+              <div v-if="barsList.length === 1" point-to="#MyMorphicBars .addNew">
                 Want to make a MorphicBar for yourself? Start with "Add a new bar"
               </div>
-              <div v-if="membersList.length === 1" pointTo="#MembersList .addNew">
+              <div v-else point-to=".barsList .barLink">
+                Want to edit a bar? Click it's name to get started!
+              </div>
+
+              <div v-if="membersList.length === 1" point-to="#MembersList .addNew">
                 Do you want to make and manage MorphicBars for other people?
                 <p class="mt-2">
                   Start by adding a person.<br/>
                   Next you can create bars.<br/>
                   Finally, you can invite the person to download and use Morphic.
                 </p>
+              </div>
+              <div v-else-if="membersList.length > 1" point-to="#MembersList :nth-child(2) .expandable:not(.expanded)">
+                Click a person's name to see their MorphicBars
               </div>
             </div>
             <div v-else>
@@ -69,6 +76,16 @@
             </b-button>
 
           </div>
+
+          <b-modal id="TutorialDialog"
+                   :title="playingVideo && playingVideo.title"
+                   size="lg"
+                   hide-footer
+                   @shown="$refs.Tutorial.start()"
+              >
+            <Tutorial ref="Tutorial" :tutorial-id="playingVideo && playingVideo.tutorial"
+                      @done="$bvModal.hide('TutorialDialog');"/>
+          </b-modal>
 
           <b-modal :id="'VideoDialog'"
                    dialog-class="videoDialog"
@@ -235,10 +252,12 @@ import {
     getCommunityMembers
 } from "@/services/communityService";
 import * as billingService from "@/services/billingService";
+import Tutorial from "@/components/dashboard/Tutorial";
 
 export default {
     name: "Dashboard",
     components: {
+        Tutorial,
         SidePanel
     },
     data() {
@@ -263,8 +282,9 @@ export default {
         videos: function () {
             return [
                 {
-                    url: this.externalLinks.gettingStarted,
-                    caption: "30 Second Tutorial:<br/>Getting Started with the Customization Tool",
+                    tutorial: "getting-started",
+                    caption: this.$t("Tutorial.getting-started.link"),
+                    title: this.$t("Tutorial.getting-started.title"),
                     thumb: "/img/tutorial-thumb.png",
                     thumbRatio: "756:474"
                 },
@@ -360,13 +380,16 @@ export default {
             const hints = this.$el.querySelectorAll("#hints > *");
 
             hints.forEach(hint => {
-                const target = document.querySelector(hint.getAttribute("pointTo"));
+                const getTarget = () => document.querySelector(hint.getAttribute("point-to"));
+                const target = getTarget();
 
                 if (!hint || !target) {
                     if (hint) {
                         hint.style.display = "none";
                     }
+                    this.arrows.push({getTarget});
                 } else {
+                    hint.style.display = "unset";
                     const targetRect = target.getBoundingClientRect();
                     const hintRect = hint.getBoundingClientRect();
                     const sourceRect = {
@@ -377,7 +400,7 @@ export default {
                     hint.style.top = `${sourceRect.y - this.sidePanel.getBoundingClientRect().y}px`;
 
                     const arrow = {
-                        target: target,
+                        getTarget: getTarget,
                         hint: hint,
                         targetRect: targetRect,
 
@@ -403,8 +426,8 @@ export default {
         },
         checkHints: function () {
             const changed = this.arrows.some(arrow => {
-                const newRect = arrow.target.getBoundingClientRect();
-                return newRect.y !== arrow.targetRect.y;
+                const newRect = arrow.getTarget()?.getBoundingClientRect();
+                return !newRect || newRect.y !== arrow.targetRect?.y;
             });
 
             if (changed) {
@@ -414,7 +437,9 @@ export default {
         },
         cleanUpArrows: function () {
             this.arrows.forEach(arrow => {
-                arrow.arrowLine.remove();
+                if (arrow.arrowLine) {
+                    arrow.arrowLine.remove();
+                }
             });
             this.arrows = [];
             if (this.hintTimer) {
@@ -432,9 +457,15 @@ export default {
                 window.location = video.url;
             } else {
                 this.playingVideo = video;
-                this.$bvModal.show("VideoDialog");
+                // Show in the next tick, to allow the dialog content to load.
+                this.$nextTick(() => {
+                    if (video.tutorial) {
+                        this.$bvModal.show("TutorialDialog");
+                    } else {
+                        this.$bvModal.show("VideoDialog");
+                    }
+                });
             }
-
         }
     }
 };
