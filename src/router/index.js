@@ -181,7 +181,8 @@ const routes = [
         component: MorphicBarEditor,
         props: route => ({ catalogView: !!route.query.catalogView }),
         meta: {
-            title: "MorphicBar Editor"
+            title: "MorphicBar Editor",
+            hideHeading: true
         }
     },
     {
