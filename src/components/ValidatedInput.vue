@@ -113,7 +113,8 @@ export default {
             inputId: this.id || "input" + Math.random(),
             errorMessages: Object.assign({}, defaultErrorMessages, this.errors),
             currentValue: this.value || (this.validation && this.validation.$model),
-            showPassword: undefined
+            showPassword: undefined,
+            hasChanged: false
         };
     },
     computed: {
@@ -160,6 +161,7 @@ export default {
     },
     methods: {
         onInput($event) {
+            this.hasChanged = true;
             if (this.validation) {
                 this.validation.$model = $event;
             }
@@ -167,7 +169,8 @@ export default {
             this.$emit("input", $event);
         },
         onBlur($event) {
-            if (this.validation) {
+            // Only validate a field if it was changed.
+            if (this.hasChanged && this.validation) {
                 this.validation.$touch();
             }
         },
