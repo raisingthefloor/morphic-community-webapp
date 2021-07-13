@@ -138,6 +138,7 @@
     display: flex;
     flex-grow: 1;
     flex-direction: column;
+    position: relative;
 
     .bar-label-container {
       flex-grow: 1;
@@ -157,7 +158,7 @@
         background-color: #CCE5FD;
 
 
-        .bar-name, .bar-owner {
+        .bar-name, .bar-owner, .bar-tip {
           display: block;
         }
       }
@@ -167,16 +168,17 @@
 
   .hint-box {
     width: 20em;
-    float: right;
-    margin: 4em 3em 0 0;
-    position: relative;
+    right: 0;
+    margin: 1em 3em 0 0;
+    position: absolute;
     .arrowStart {
       float: right;
+      margin-top: 1em;
     }
     .arrowTo {
       position: absolute;
       right: -4.5em;
-      top: -0.5em;
+      top: 0.5em;
     }
   }
 
