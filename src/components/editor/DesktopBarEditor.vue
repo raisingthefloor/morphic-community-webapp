@@ -9,6 +9,7 @@
         <div class="bar-label">
           <strong class="bar-name" aria-label="Bar name">{{barDetails.name}}</strong>
           <span v-if="memberDetails" class="bar-owner" aria-label="Bar owner">{{memberDetails.displayName}}</span>
+          <small class="bar-tip">Tip: To customize a button on the bar, click on it.</small>
         </div>
       </div>
 
@@ -160,6 +161,10 @@
 
         .bar-name, .bar-owner, .bar-tip {
           display: block;
+        }
+        .bar-tip {
+          margin-top: 1em;
+          width: 15em;
         }
       }
     }
