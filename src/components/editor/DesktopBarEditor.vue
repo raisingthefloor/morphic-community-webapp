@@ -27,7 +27,7 @@
 
       <!-- Bar item problems -->
       <div class="desktop-alerts">
-        <b-alert v-for="(error) in barDetails.errors"
+        <b-alert v-for="(error) in barWarnings"
                  :key="error.key"
                  show
                  variant="warning"
@@ -346,6 +346,7 @@ import { Drag, Drop, DropList } from "vue-easy-dnd";
 import BarItemLink from "@/components/editor/BarItemLink";
 import PreviewItem from "@/components/dashboard/PreviewItem";
 import Arrow from "@/components/Arrow";
+import * as Bar from "@/utils/bar";
 
 export default {
     name: "DesktopBarEditor",
@@ -369,6 +370,12 @@ export default {
             openDrawer: true,
             dragInProgress: false
         };
+    },
+    computed: {
+        barWarnings: function () {
+            Bar.checkBar(this.barDetails);
+            return this.barDetails.errors;
+        }
     },
     methods: {
         /**

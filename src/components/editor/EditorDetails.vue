@@ -32,7 +32,7 @@
     <b-row no-gutters>
       <!-- details and tabs -->
       <b-col fluid>
-        <div id="BarDetails">
+        <div id="BarDetails" :class="isLite && 'bg-silver rounded p-2'">
           <!-- Bar name -->
           <div class="bar-name">
             <h2>Bar: <span class="name">{{barName}}</span>
@@ -106,7 +106,7 @@
         </div>
       </b-col>
 
-      <b-col id="EditorActions" lg="fluid" xs="6">
+      <b-col id="EditorActions" lg="fluid" xs="6" :class="isLite && 'ml-2 mr-2'">
         <b-button variant="secondary"
                   v-b-modal="'copyBarDialog'"
                   v-t="'EditorDetails.copy-bar_button'" />
@@ -227,6 +227,9 @@ export default {
       display: inline-block;
       font-weight: normal;
       margin-right: 1em;
+  }
+  &.rounded {
+    border-radius: 0.6rem !important;
   }
 }
 

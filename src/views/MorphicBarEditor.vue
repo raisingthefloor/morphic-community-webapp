@@ -24,6 +24,10 @@
       <div v-show="editorVisible" class="editor">
         <div id="barEditor" class="pt-2">
 
+          <b-link v-if="isLite" to="/">
+            <b-img src="/img/back-arrow.svg" width="20" height="20" class="switchBarIcon" />Switch Bar or Person
+          </b-link>
+
           <!-- Bar info, actions, and editor tabs -->
           <EditorDetails ref="EditorDetails"
                          :bar-details="barDetails"
@@ -63,7 +67,7 @@
 
         <template v-if="isLite">
           <h1>Button Catalog: Buttons you can add</h1>
-          <div>
+          <div class="mb-3">
             <b-button @click="showCatalog(false)">Cancel</b-button>
           </div>
         </template>
@@ -83,6 +87,10 @@
     padding-left: 15px;
     padding-right: 15px;
   }
+
+.switchBarIcon {
+  vertical-align: top;
+}
 
 body:not(.isLite) {
   #EditorContainer {
