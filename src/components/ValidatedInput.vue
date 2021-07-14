@@ -21,6 +21,8 @@
           :state="state"
           :id="inputId"
           class="h-20 w-80"
+          :class="{autofocus}"
+          :autofocus="autofocus"
           :aria-required="required"
           :type="inputType"
           v-bind="$attrs"
@@ -106,7 +108,8 @@ export default {
         /** Show the toggle button to show/hide the password */
         passwordToggle: Boolean,
         /** ID of the related password confirm input */
-        passwordConfirm: String
+        passwordConfirm: String,
+        autofocus: Boolean
     },
     data() {
         return {
