@@ -109,7 +109,7 @@
     "copyright": "Copyright © {year} Raising the Floor - US Inc. All rights Reserved."
   },
   "Header": {
-    "focus-mode_button": "Focus / Mobile Mode",
+    "focus-mode_button": "Mobile Mode",
     "logout_button": "Logout",
     "login_button": "Login",
     "product-name": "Custom MorphicBar Tool",
