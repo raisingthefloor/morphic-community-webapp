@@ -2,7 +2,7 @@
   <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="">
     <b-navbar-brand role="banner">
       <b-link to="/">
-        <img src="/img/logo-color.svg" class="logo" alt="" />
+        <img src="/img/logo-color.svg" class="logo" alt="Return to dashboard" />
       </b-link>
       <span class="headerTitle"
             v-t="'Header.product-name'" />

@@ -5,6 +5,14 @@
         <img src="/img/trash.svg" style="height: 100px; width: 100px; margin-left: -50px; margin-top: -50px" />
       </template>
 
+      <div class="bar-label-container">
+        <div class="bar-label">
+          <strong class="bar-name" aria-label="Bar name">{{barDetails.name}}</strong>
+          <span v-if="memberDetails" class="bar-owner" aria-label="Bar owner">{{memberDetails.displayName}}</span>
+          <small class="bar-tip">Tip: To customize a button on the bar, click on it.</small>
+        </div>
+      </div>
+
       <!-- Show a hint pointing to the bar, for new bars -->
       <div v-if="!isChanged && barDetails.items && barDetails.items.length === 0" class="hint-box">
         <Arrow point-to=".hint-box .arrowTo" :options="{
@@ -128,27 +136,58 @@
   margin-top: 0 !important;
 
   .desktop-portion {
-    display: inline-block;
+    display: flex;
     flex-grow: 1;
+    flex-direction: column;
+    position: relative;
+
+    .bar-label-container {
+      flex-grow: 1;
+      text-align: center;
+      .bar-label {
+        display: inline-block;
+        position: relative;
+
+        top: 25%;
+
+
+        margin: 0.5rem;
+        padding: 1rem;
+        font-size: 18px;
+
+        border-radius: 1rem;
+        background-color: #CCE5FD;
+
+
+        .bar-name, .bar-owner, .bar-tip {
+          display: block;
+        }
+        .bar-tip {
+          margin-top: 1em;
+          width: 15em;
+        }
+      }
+    }
   }
+
 
   .hint-box {
     width: 20em;
-    float: right;
-    margin: 4em 3em 0 0;
-    position: relative;
+    right: 0;
+    margin: 1em 3em 0 0;
+    position: absolute;
     .arrowStart {
       float: right;
+      margin-top: 1em;
     }
     .arrowTo {
       position: absolute;
       right: -4.5em;
-      top: -0.5em;
+      top: 0.5em;
     }
   }
 
   .desktop-alerts {
-    height: 100%;
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
@@ -329,6 +368,8 @@ export default {
     props: {
         /** @type {BarDetails} */
         barDetails: {},
+        /** @type {CommunityMember} */
+        memberDetails: {},
         isChanged: Boolean
     },
     data() {

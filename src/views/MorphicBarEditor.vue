@@ -52,6 +52,7 @@
           <DesktopBarEditor v-else
                             ref="DesktopBarEditor"
                             :bar-details="barDetails"
+                            :member-details="memberDetails"
                             :is-changed="isChanged"
                             @edit-item="showEditDialog($event)"
                             @bar-changed="onBarChanged"

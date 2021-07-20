@@ -116,7 +116,8 @@ export default {
             inputId: this.id || "input" + Math.random(),
             errorMessages: Object.assign({}, defaultErrorMessages, this.errors),
             currentValue: this.value || (this.validation && this.validation.$model),
-            showPassword: undefined
+            showPassword: undefined,
+            hasChanged: false
         };
     },
     computed: {
@@ -163,6 +164,7 @@ export default {
     },
     methods: {
         onInput($event) {
+            this.hasChanged = true;
             if (this.validation) {
                 this.validation.$model = $event;
             }
@@ -170,7 +172,8 @@ export default {
             this.$emit("input", $event);
         },
         onBlur($event) {
-            if (this.validation) {
+            // Only validate a field if it was changed.
+            if (this.hasChanged && this.validation) {
                 this.validation.$touch();
             }
         },
@@ -182,8 +185,9 @@ export default {
          *
          * This changes the type between `password` and `text`, and focuses the last password input.
          *
+         * @param {MouseEvent} event Event object
          */
-        togglePassword() {
+        togglePassword(event) {
             this.showPassword = !this.showPassword;
             this.$emit("toggle-password", this.showPassword);
 
@@ -193,18 +197,20 @@ export default {
                 confirmElem.type = this.inputType;
             }
 
-            // Set the focus to the last password field used.
-            let focusElem;
-            if (this.passwordConfirm && this.lastFocus && this.lastFocus.id === confirmElem.id) {
-                focusElem = confirmElem;
-            } else {
-                focusElem = this.$refs.inputField;
-            }
+            if (event.screenX && event.screenY) {
+                // Set the focus to the last password field used.
+                let focusElem;
+                if (this.passwordConfirm && this.lastFocus && this.lastFocus.id === confirmElem.id) {
+                    focusElem = confirmElem;
+                } else {
+                    focusElem = this.$refs.inputField;
+                }
 
-            setTimeout(() => {
-                focusElem.focus();
-                focusElem.selectionStart = 0xff;
-            }, 100);
+                setTimeout(() => {
+                    focusElem.focus();
+                    focusElem.selectionStart = 0xff;
+                }, 100);
+            }
         }
     }
 };
