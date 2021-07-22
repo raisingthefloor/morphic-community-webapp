@@ -1,6 +1,5 @@
 <template>
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
-    <a class="contentLink" href="#PageContent" @click.prevent="skipToContent">Skip to content</a>
     <Header ref="Header" />
     <div role="main" id="PageContent" class="main">
       <h1 v-if="heading" id="MainHeading" :class="{screenReader: hideHeading}">{{ heading }}</h1>
@@ -48,24 +47,6 @@
     width: 1px;
     height: 1px;
     clip: rect(1px, 1px, 1px, 1px);
-  }
-
-  // Skip to content link - off-screen until focused
-  .contentLink {
-    font-size: larger;
-    background-color: white;
-    padding: 2px;
-    position: absolute;
-    z-index: 100;
-    transform: translateX(-100%);
-
-    @media (prefers-reduced-motion: no-preference) {
-      transition: transform 250ms ease-out;
-    }
-
-    &:focus {
-      transform: translateX(0);
-    }
   }
 </style>
 
@@ -264,17 +245,6 @@ export default {
                 }
             });
         },
-        /**
-         * Scroll the content to the top of the window, and set the focus to the first focusable element in the content.
-         */
-        skipToContent() {
-            const content = document.querySelector("#PageContent");
-            content.scrollIntoView(true);
-            const firstFocusable = content.querySelector("a,input,button,[tabindex]");
-            if (firstFocusable?.focus) {
-                firstFocusable.focus();
-            }
-        }
     }
 };
 </script>
