@@ -6,7 +6,7 @@
                 searchResults: !!searchState
                }">
 
-    <h2>Button Catalog</h2>
+    <h3>Button Catalog</h3>
     <div id="CatalogDescription">
       <span v-if="isLite">Click on a button name to configure and add to MorphicBar</span>
       <span v-else>Click or Drag name (below) to add button to the bar</span>
@@ -46,7 +46,7 @@
                         searchResult: buttonGroup.isSearchResult
                     }">
 
-            <h3 v-if="buttonGroup.title">{{buttonGroup.title}}</h3>
+            <h4 v-if="buttonGroup.title">{{buttonGroup.title}}</h4>
 
             <ul class="buttonCatalogEntries">
               <template v-for="(button, buttonId) in buttonGroup.items">
