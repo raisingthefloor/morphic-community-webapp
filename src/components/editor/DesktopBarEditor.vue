@@ -109,10 +109,10 @@
           </template>
         </drop-list>
       </div>
-      <div class="logoHolder">
-        <b-img src="/img/logo-color.svg" alt="Morphic Logo" />
+      <div class="logoHolder" aria-hidden="true">
+        <b-img src="/img/logo-color.svg" alt=""/>
       </div>
-      <div class="openDrawerIconHolder">
+      <div class="openDrawerIconHolder" aria-hidden="true">
         <span @click="openDrawer = !openDrawer" class="">
           <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
         </span>
