@@ -6,7 +6,7 @@
                 searchResults: !!searchState
                }">
 
-    <h3>Button Catalog</h3>
+    <h3 id="ButtonCatalogHeader">Button Catalog</h3>
     <div id="CatalogDescription">
       <span v-if="isLite">Click on a button name to configure and add to MorphicBar</span>
       <span v-else>Click or Drag name (below) to add button to the bar</span>
@@ -14,9 +14,9 @@
 
     <!-- search -->
     <b-input-group id="search-group" class="catalogSearch" size="sm">
-      <b-form-input type="search" placeholder="Search buttons" v-model="searchText"/>
+      <b-form-input type="search" placeholder="Search buttons" v-model="searchText" aria-label="Search the button catalog"/>
       <b-input-group-append>
-        <b-button variant="outline-secondary">
+        <b-button variant="outline-secondary" aria-label="Search">
           <b-icon-search/>
         </b-button>
       </b-input-group-append>
@@ -29,6 +29,7 @@
       <ul v-for="(catalog, isSearchResult) in [buttonCatalog, searchResult]"
           :key="isSearchResult"
           aria-describedby="CatalogDescription"
+          aria-labelledby="ButtonCatalogHeader"
           class="buttonCatalogListing linkList list-unstyled"
           :class="{ searchResults: isSearchResult}">
 
@@ -59,7 +60,7 @@
                               expander: button.data.isExpander,
                           }"
                     :style="{order: button.searchResult && button.searchResult.order}"
-                    :title="button.configuration.description"
+                    :aria-details="button.configuration.description"
                     :ref="'catalog_' + buttonId"
                 >
                   <!-- Render each button as draggable -->
