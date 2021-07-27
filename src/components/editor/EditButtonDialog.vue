@@ -119,7 +119,7 @@
                 </b-form-group>
 
                 <!-- icon selection -->
-                <div class="buttonIcons">
+                <div class="buttonIcons" aria-live="polite">
                   <div class="actionButtons">
                     <b-button variant="invert-morphic-blue"
                               size="sm"
@@ -158,14 +158,14 @@
           </b-col>
 
           <b-col v-if="!isLite" md="6">
-            <div class="sticky-top bg-silver rounded p-3 text-center">
+            <div class="sticky-top bg-silver rounded p-3  d-flex flex-column align-items-center">
               <p class="">This is the button you are making</p>
+              <p class="" style="margin-top: 4em; order: 1">{{ button.configuration.description }}</p>
               <div class="barPreview rounded">
                 <div class="previewHolder" :aria-description="'Preview of button with ' + (selectedIcon ? 'image' : 'no image') ">
-                  <PreviewItem :item="button" />
+                  <PreviewItem :item="button" disabled />
                 </div>
               </div>
-              <p class="" style="margin-top: 4em">{{ button.configuration.description }}</p>
             </div>
           </b-col>
         </b-row>

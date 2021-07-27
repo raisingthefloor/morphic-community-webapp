@@ -22,7 +22,7 @@
       </div>
       <div v-else class="regular" :style="'background: ' + defaultColor">
         <div class="imageContainer" :style="'border-color: ' + defaultColor">
-          <b-img :src="getIconUrl(item.configuration.image_url)" :alt="item.configuration.label + ' logo'"></b-img>
+          <b-img :src="getIconUrl(item.configuration.image_url)" alt="" />
         </div>
       </div>
     </template>
@@ -45,7 +45,7 @@
       <div v-if="item.configuration.image_url && !noImage"
            :style="'border-color: ' + (item.configuration.color || defaultColor) + '; color: ' + (item.configuration.color || defaultColor) + ';'"
            class="iconHolder">
-        <b-img :src="getIconUrl(item.configuration.image_url)" :alt="item.configuration.label + ' logo'"/>
+        <b-img :src="getIconUrl(item.configuration.image_url)" alt="" />
       </div>
       <b :style="'background-color: ' + (item.configuration.color || defaultColor) + ';'"
          v-bind:class="{ withImage: !noImage && item.configuration.image_url }">{{ item.configuration.label }}</b>
