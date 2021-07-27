@@ -182,6 +182,8 @@ export default {
                     Bar.removeItem(barItem, this.barDetails);
                 }
             }
+
+            this.screenReaderMessage(`New item added: ${barItem.configuration.label}`);
         },
         /**
          * Called when the bar changes, after it is loaded.
