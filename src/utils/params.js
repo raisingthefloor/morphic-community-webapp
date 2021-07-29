@@ -22,6 +22,7 @@ These are then used to create input fields in the editor dialog.
  * @property {Array<Object>} selectOptions A list of items for a select field (type="select").
  * @property {Array<String>} values Array containing the values of the parameter, depending on the checkbox state.
  * @property {String} attrs The HTML attributes for the input element.
+ * @property {changedFunc} [onChange] A function called when the value has changed.
  * @property {isEnabledFunc} [isApplicable] A function, returning true if the field should be shown.
  * @property {isEnabledFunc} [isEnabled] A function, returning true if the field should be enabled.
  * @property {Object<String,String>} validation The validation rules. Key is the key in {@link validators}, value is the message.
@@ -48,6 +49,13 @@ These are then used to create input fields in the editor dialog.
  * @param {BarItem} barItem The bar item being checked.
  * @param {String} paramKey The parameter key.
  * @return {Promise<CheckResult>} Resolves when complete.
+ */
+
+/**
+ * Callback for when a value has changed.
+ * @callback changedFunc
+ * @param {BarItem} item The bar item being checked.
+ * @param {String} value The new value
  */
 
 
@@ -84,7 +92,10 @@ export const allParameters = {
     },
     skypeNoCall: {
         type: "checkbox",
-        label: "Open Skype App without starting a call"
+        label: "Open Skype App without starting a call",
+        onChange: (button, value) => {
+            button.kind = value ? "application" : "link";
+        }
     },
     skypeId: {
         label: "Skype ID of who to call",
@@ -283,7 +294,7 @@ export function prepareBarItem(button) {
                         label: paramKey
                     });
                 }
-                params[paramKey] = paramInfo.initial || "";
+                params[paramKey] = paramInfo.initial || button.configuration[`$${paramKey}`] || "";
             });
 
             paramFields.push(key);

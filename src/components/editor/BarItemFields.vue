@@ -4,7 +4,7 @@
     <div v-if="allParameters[paramKey].isApplicable(barItem)"
          :key="paramKey"
          role="group" class="mb-3">
-      <b-form-group :label="(allParameters[paramKey].type !== 'checkbox') && allParameters[paramKey].label"
+      <b-form-group :label="(allParameters[paramKey].type === 'checkbox') ? '' : allParameters[paramKey].label"
                     :label-for="'barItem_' + paramKey"
                     :class="{
                         checking: isChecking[paramKey] && validationStates[paramKey] === null
@@ -25,6 +25,7 @@
                      :unchecked-value="allParameters[paramKey].values && allParameters[paramKey].values[0]"
                      v-bind="allParameters[paramKey].attrs"
                      @blur="validate(paramKey)"
+                     @input="allParameters[paramKey].onChange && allParameters[paramKey].onChange(barItem, $event)"
           >
             <template v-if="allParameters[paramKey].type === 'checkbox'">
               {{ allParameters[paramKey].label }}
@@ -33,6 +34,7 @@
       </b-form-group>
     </div>
   </template>
+  <pre>{{ barItem }}</pre>
 </div>
 </template>
 
