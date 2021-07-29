@@ -2,13 +2,9 @@
   <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="">
     <b-navbar-brand role="banner">
       <b-link to="/">
-        <img src="/img/logo-wordmark.svg" alt="" />
+        <img src="/img/logo-color.svg" class="logo" alt="Return to dashboard" />
       </b-link>
-      <span class="headerTitle d-none"
-            :class="{
-               'd-xl-inline': isLite,
-               'd-lg-inline': !isLite
-            }"
+      <span class="headerTitle"
             v-t="'Header.product-name'" />
     </b-navbar-brand>
 
@@ -23,10 +19,6 @@
             <b-button v-else-if="!isMobile"
                       variant="invert-dark"
                       @click="showMenu = false; setFocusMode(true)" v-t="'Header.focus-mode_button'" />
-          </b-nav-text>
-
-          <b-nav-text v-if="focusMode">
-            <b-button variant="invert-dark" @click="showMenu = false; $router.push('/')" v-t="'Header.home_button'" />
           </b-nav-text>
 
           <b-nav-text>
@@ -51,6 +43,9 @@
   @import "~@/styles/bootstrap-util";
 
   #top {
+    border-bottom: 2px solid $morphic-blue-color;
+    padding: 0;
+
     a.nav-link:focus {
       outline: 0;
     }
@@ -61,12 +56,12 @@
       border-bottom: 3px solid #84c661;
     }
 
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
 
     & > :first-child {
       margin-left: 1rem;
+      @include media-breakpoint-down(sm) {
+        margin-left: 3px;
+      }
     }
 
     max-width: 100%;
@@ -74,17 +69,31 @@
 
     .navbar-toggler, .navbar-collapse,  {
       margin-right: 1rem;
+      @include media-breakpoint-down(sm) {
+        margin-right: 0.3rem;
+      }
     }
 
     .navbar-brand {
       flex-grow: 0;
-      margin-right: 0.5em;
       .headerTitle {
-        margin-left: 2em;
+        color:  $morphic-blue-color;
+
         font-weight: bold;
+
+        margin-left: 0.8em;
+        font-size: 22px;
+
+        @include media-breakpoint-down(sm) {
+          margin-left: 0.4em;
+          font-size: 20px;
+        }
       }
-      img {
+      .logo {
         height: 2.4rem;
+        @include media-breakpoint-down(sm) {
+          height: 2rem;
+        }
       }
     }
 

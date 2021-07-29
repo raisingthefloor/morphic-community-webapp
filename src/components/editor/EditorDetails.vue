@@ -32,30 +32,29 @@
     <b-row no-gutters>
       <!-- details and tabs -->
       <b-col fluid>
-        <div id="BarDetails">
+        <div id="BarDetails" :class="isLite && 'bg-silver rounded p-2'">
           <!-- Bar name -->
           <div class="bar-name">
-            <h2>
-              {{barName}}
+            <h2>Bar: <span class="name">{{barName}}</span>
 
-              <!-- rename bar -->
-              <span v-if="barDetails.name !== 'Default'">
+            </h2>
+            <!-- rename bar -->
+            <span v-if="barDetails.name !== 'Default'" class="rename">
                         &nbsp;<small><b-button variant="link" @click="showRenameBarDialog()" Xv-b-modal="'barNameDialog'">rename</b-button></small>
                       </span>
-            </h2>
 
           </div>
           <div class="mb-1">
-            <span  class="lead">
-            <template v-if="barMembers.length === 0">
-              Shared bar
-            </template>
-            <template v-else-if="barMembers.length === 1">
-              Bar for: <b>{{ barMembers[0].displayName }}</b>
-            </template>
-            <template v-else>
-              Bar for: <b>{{ barMembers.length }} members</b>
-            </template>
+            <span class="lead">
+              <template v-if="barMembers.length === 0">
+                Shared bar
+              </template>
+              <template v-else-if="barMembers.length === 1">
+                Person: <span class="name">{{ barMembers[0].displayName }}</span>
+              </template>
+              <template v-else>
+                Person: <span class="name">{{ barMembers.length }} members</span>
+              </template>
             </span>
             <b-link class="ml-4 onlyLite"
                     v-b-modal="'MemberDetailsDialog'"
@@ -78,10 +77,12 @@
             <!-- Members tab -->
             <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
               <template #title>
-                <b-icon-person-circle/>&nbsp;
-                <span v-if="memberDetails">{{ memberDetails.displayName }} details ({{memberDetails.stateText}})</span>
-                <span v-else-if="memberCount === 0">Unused Bar</span>
-                <span v-else>Members ({{ memberCount }})</span>
+                <span :class="`state-${memberDetails.state}`">
+                  <b-icon icon="person-circle" alt="User settings: " aria-label="User settings" />&nbsp;
+                  <span v-if="memberDetails">{{ memberDetails.displayName }} ({{memberDetails.stateText}})</span>
+                  <span v-else-if="memberCount === 0">Unused Bar</span>
+                  <span v-else>Members ({{ memberCount }})</span>
+                </span>
               </template>
               <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
 
@@ -105,7 +106,7 @@
         </div>
       </b-col>
 
-      <b-col id="EditorActions" lg="fluid" xs="6">
+      <b-col id="EditorActions" lg="fluid" xs="6" :class="isLite && 'ml-2 mr-2'">
         <b-button variant="secondary"
                   v-b-modal="'copyBarDialog'"
                   v-t="'EditorDetails.copy-bar_button'" />
@@ -211,14 +212,24 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~@/styles/bootstrap-util";
 
 #BarDetails {
   min-width: 20em;
   flex-grow: 1;
-  .bar-name {
-    h2 {
+
+  .name {
+    font-weight: bold;
+  }
+
+  .bar-name h2 {
       margin-bottom: 0;
-    }
+      display: inline-block;
+      font-weight: normal;
+      margin-right: 1em;
+  }
+  &.rounded {
+    border-radius: 0.6rem !important;
   }
 }
 
@@ -242,6 +253,10 @@ export default {
 #EditorTabs {
   display: flex;
   align-items: center;
+
+  .state-invited, .state-uninvited {
+    color: $danger;
+  }
 
   & > :not(:last-child) {
     margin-right: 1em;
