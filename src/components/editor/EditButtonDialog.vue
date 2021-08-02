@@ -2,7 +2,7 @@
   <b-modal id="modalEditGeneric"
            ref="EditDialog"
            v-bind="dialogAttrs"
-           @ok="okClicked" @cancel="closeDialog(false)" @hide="onHide"
+           @ok="okClicked" @hide="onHide" @cancel="closeDialog(false)"  @close="closeDialog(false)"
            size="lg"
            :title="dialogTitle">
 
@@ -621,6 +621,8 @@ export default {
                 this.removeButton();
                 // removeButton() will close the dialog, if required.
                 e.preventDefault();
+            } else if (e.trigger === "esc") {
+                this.closeDialog(false);
             }
         },
         /**
