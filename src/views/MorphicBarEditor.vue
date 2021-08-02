@@ -153,7 +153,7 @@ export default {
          * @param {Boolean} [noImage] True if the button shall have no image.
          * @param {Number} [insertAt] The index of the new button.
          */
-        addBarItem: function (catalogButton, noImage, insertAt) {
+        addBarItem: async function (catalogButton, noImage, insertAt) {
             /** @type {BarItem} */
             const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt);
             if (noImage) {
@@ -173,8 +173,17 @@ export default {
 
             // Edit the button, if it has parameterised fields.
             if (showEdit) {
-                this.showEditDialog(barItem);
+                barItem.data.isNew = true;
+                const ok = await this.showEditDialog(barItem);
+                delete barItem.data.isNew;
+
+                if (!ok) {
+                    // Dialog was cancelled - remove the button
+                    Bar.removeItem(barItem, this.barDetails);
+                }
             }
+
+            this.screenReaderMessage(`New item added: ${barItem.configuration.label}`);
         },
         /**
          * Called when the bar changes, after it is loaded.
@@ -303,14 +312,16 @@ export default {
         /**
          * Shows the edit button dialog.
          * @param {BarItem} [item] The item to edit.
+         * @return {Promise} Resolves when the dialog is closed, result is false if cancelled.
          */
         showEditDialog: function (item) {
-            this.editDialog.showDialog(item).then(changed => {
+            return this.editDialog.showDialog(item).then(changed => {
                 Bar.checkBar(this.barDetails);
                 if (changed) {
                     this.onBarChanged();
                 }
                 this.$forceUpdate();
+                return changed;
             });
         },
 

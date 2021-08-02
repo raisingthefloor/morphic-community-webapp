@@ -7,7 +7,7 @@
            :title="dialogTitle">
 
     <template v-if="!isLite" #modal-footer="{ok, cancel, hide}" >
-        <b-button @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove</b-button>
+        <b-button v-if="showDeleteButton" @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove</b-button>
         <b-button @click="cancel()" variant="secondary">Cancel</b-button>
         <b-button @click="ok()"
                   variant="primary"
@@ -23,7 +23,7 @@
             <div>
               <b-form-group v-if="isLite"
               >
-                <b-button variant="invert-danger"
+                <b-button v-if="showDeleteButton" variant="invert-danger"
                           @click="editDialog.hide('remove');">Remove Button</b-button>
 
               </b-form-group>
@@ -502,6 +502,14 @@ export default {
         showRelated: function () {
             return this.buttonGroup.related &&
                 Object.values(this.relatedButtons).filter(item => !item.data.isPlaceholder).length > 1;
+        },
+
+        /**
+         * Determines if the delete button should be shown.
+         * @return {Boolean} true to show the delete button.
+         */
+        showDeleteButton: function () {
+            return !this.button.data.isNew;
         },
 
         /**

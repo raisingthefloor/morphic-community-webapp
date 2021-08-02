@@ -97,6 +97,14 @@ Vue.mixin({
             }, options));
         },
 
+        /**
+         * Presents a message only visible to screen readers.
+         * @param {String} message The message.
+         */
+        screenReaderMessage(message) {
+            this.showMessage(message, undefined, {toastClass: "screenReader"});
+        },
+
         showError(message, title, options) {
             this.$root.$bvToast.toast(message, Object.assign({
                 variant: "danger",
