@@ -185,7 +185,6 @@ export default {
         },
 
         storeUnsavedBar: function () {
-            Bar.checkBar(this.barDetails);
             this.$store.dispatch("unsavedChanges", this.isChanged);
             this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
         },

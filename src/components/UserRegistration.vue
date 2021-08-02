@@ -8,6 +8,7 @@
                     :validation="$v.form.email"
                     placeholder="user@somewhere.com"
                     description="You will need to confirm using email send to you"
+                    autofocus
     />
     <ValidatedInput id="new-password"
                     ref="newPassword"

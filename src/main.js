@@ -49,7 +49,11 @@ Vue.mixin({
         getErrorMessage: getErrorMessage,
 
         /**
-         * Handles an error, if this component has the errorMessage and errorAlert fields.
+         * Handles an error for a form.
+         *
+         * If this component has the errorMessage and errorAlert fields, then they are filled in with the error message.
+         * Focus is then given to the autofocus field.
+         *
          * @param {Error} err The error object.
          */
         handleServerError(err) {
@@ -57,6 +61,12 @@ Vue.mixin({
                 err.handled = true;
                 this.errorMessage = this.getErrorMessage(err);
                 this.errorAlert = true;
+            }
+
+            // Get the autofocus input, or just the first one.
+            const f = this.$el.querySelector("input.autofocus") || this.$el.querySelector("input");
+            if (f && f.focus) {
+                f.focus();
             }
         },
         /**
