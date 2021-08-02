@@ -25,7 +25,7 @@
           }"
     >
       <!-- member's name -->
-      <h4 :ref="member.id"
+      <h3 :ref="member.id"
           class="memberName"
           expand-group="MembersList"
           :class="{
@@ -44,7 +44,7 @@
             <b-icon icon="dash" variant="white" scale="1.4" class="collapseIcon"/>
           </b-iconstack>
         </span>
-      </h4>
+      </h3>
 
       <!-- member details (expanding) -->
       <div class="expandableContent">

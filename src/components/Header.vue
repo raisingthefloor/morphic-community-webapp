@@ -1,6 +1,7 @@
 <template>
-  <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="">
-    <b-navbar-brand role="banner">
+  <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="banner">
+    <a class="contentLink" href="#PageContent" @click.prevent="skipToContent">Skip to content</a>
+    <b-navbar-brand>
       <b-link to="/">
         <img src="/img/logo-color.svg" class="logo" alt="Return to dashboard" />
       </b-link>
@@ -46,6 +47,24 @@
     border-bottom: 2px solid $morphic-blue-color;
     padding: 0;
 
+    // Skip to content link - off-screen until focused
+    .contentLink {
+      font-size: larger;
+      background-color: white;
+      padding: 2px;
+      position: absolute;
+      z-index: 100;
+      transform: translateX(-100%);
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 250ms ease-out;
+      }
+
+      &:focus {
+        transform: translateX(0);
+      }
+    }
+
     a.nav-link:focus {
       outline: 0;
     }
@@ -57,7 +76,7 @@
     }
 
 
-    & > :first-child {
+    .navbar-brand {
       margin-left: 1rem;
       @include media-breakpoint-down(sm) {
         margin-left: 3px;
@@ -199,6 +218,17 @@ export default {
          */
         setFocusMode: function (flag) {
             this.$store.dispatch("forceFocusMode", !!flag);
+        },
+        /**
+         * Scroll the content to the top of the window, and set the focus to the first focusable element in the content.
+         */
+        skipToContent() {
+            const content = document.querySelector("#PageContent");
+            content.scrollIntoView(true);
+            const firstFocusable = content.querySelector("a,input,button,[tabindex]");
+            if (firstFocusable?.focus) {
+                firstFocusable.focus();
+            }
         }
     },
     watch: {

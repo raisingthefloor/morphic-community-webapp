@@ -3,6 +3,9 @@
     "delete_button": "Delete Bar",
     "rename_button": "Edit bar name"
   },
+  "ButtonCatalog": {
+    "search-result-summary": "No items found | 1 item found | {n} items found"
+  },
   "CopyBarDialog": {
     "confirm-dialog": {
       "no_button": "No",

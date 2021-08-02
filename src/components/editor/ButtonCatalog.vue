@@ -6,7 +6,7 @@
                 searchResults: !!searchState
                }">
 
-    <h2>Button Catalog</h2>
+    <h3 id="ButtonCatalogHeader">Button Catalog</h3>
     <div id="CatalogDescription">
       <span v-if="isLite">Click on a button name to configure and add to MorphicBar</span>
       <span v-else>Click or Drag name (below) to add button to the bar</span>
@@ -14,13 +14,15 @@
 
     <!-- search -->
     <b-input-group id="search-group" class="catalogSearch" size="sm">
-      <b-form-input type="search" placeholder="Search buttons" v-model="searchText"/>
+      <b-form-input type="search" placeholder="Search buttons" v-model="searchText" aria-label="Search the button catalog"/>
       <b-input-group-append>
-        <b-button variant="outline-secondary">
+        <b-button variant="outline-secondary" aria-label="Search" @click="searchButtonClick">
           <b-icon-search/>
         </b-button>
       </b-input-group-append>
     </b-input-group>
+
+    <div ref="SearchResultSummary" class="screenReader" aria-live="polite" aria-atomic="true" >{{ resultSummary }}</div>
 
     <drop class="cut" mode="cut">
       <template v-slot:drag-image="">
@@ -29,6 +31,7 @@
       <ul v-for="(catalog, isSearchResult) in [buttonCatalog, searchResult]"
           :key="isSearchResult"
           aria-describedby="CatalogDescription"
+          aria-labelledby="ButtonCatalogHeader"
           class="buttonCatalogListing linkList list-unstyled"
           :class="{ searchResults: isSearchResult}">
 
@@ -46,9 +49,10 @@
                         searchResult: buttonGroup.isSearchResult
                     }">
 
-            <h3 v-if="buttonGroup.title">{{buttonGroup.title}}</h3>
+            <h4 v-if="buttonGroup.title">{{buttonGroup.title}}</h4>
 
-            <ul class="buttonCatalogEntries">
+            <ul class="buttonCatalogEntries"
+                :aria-label="buttonGroup.isSearchResult && 'Search results'">
               <template v-for="(button, buttonId) in buttonGroup.items">
                 <li v-if="!(button.data.isExpander && alwaysShowSecondaryItems)"
                     :key="button.data.buttonKey"
@@ -59,7 +63,7 @@
                               expander: button.data.isExpander,
                           }"
                     :style="{order: button.searchResult && button.searchResult.order}"
-                    :title="button.configuration.description"
+                    :aria-details="button.configuration.description"
                     :ref="'catalog_' + buttonId"
                 >
                   <!-- Render each button as draggable -->
@@ -73,7 +77,7 @@
                               @click="onItemSelected(button, $event.altKey)"
                               :style="'color: ' + (button.configuration.color || colors.blue) + ';'"
                               class="buttonCatalogEntry nonExpandedCatalogEntry">
-                      <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}">
+                      <div class="imageWrapper" :class="{expanderIcon:button.data.isExpander}" aria-hidden="true">
                         <b-iconstack v-if="button.data.isExpander">
                           <b-icon stacked icon="circle-fill"/>
                           <b-icon stacked icon="caret-right-fill"
@@ -82,7 +86,7 @@
                         </b-iconstack>
 
                         <b-img v-else-if="button.configuration.image_url"
-                               :src="getIconUrl(button.configuration.image_url)" alt="Logo"/>
+                               :src="getIconUrl(button.configuration.image_url)" alt=""/>
                       </div>
                       <span v-html="getCatalogItemLabel(button, buttonGroup.searchWords)" />
                     </b-button>
@@ -267,6 +271,9 @@ export default {
 
             /** @type {ButtonCatalog} */
             searchResult: false,
+            searchResultCount: undefined,
+            resultSummary: null,
+
             /**
              * The display of secondary items in each catalog group.
              * @type {Object<String,Boolean>}
@@ -345,9 +352,18 @@ export default {
 
                 this.searchResult = groups;
                 this.searchState = results.length > 0 ? "gotResults" : "noResults";
+                this.searchResultCount = results.length;
             } else {
                 this.searchState = null;
                 this.searchResult = null;
+                this.searchResultCount = undefined;
+            }
+        },
+        searchButtonClick() {
+            if (this.searchResultCount === undefined) {
+                this.resultSummary = "";
+            } else {
+                this.resultSummary = this.$tc("ButtonCatalog.search-result-summary", this.searchResultCount);
             }
         },
 

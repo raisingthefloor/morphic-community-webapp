@@ -1,13 +1,13 @@
 <template>
   <div id="SidePanel">
-    <h2 class="accountName">{{ community.name }}</h2>
+    <div class="accountName">{{ community.name }}</div>
     <div class="accountInfo">
       <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
     </div>
 
 
     <!-- member's own bars -->
-    <h3 v-t="'SidePanel.own-bars_heading'" />
+    <h2 v-t="'SidePanel.own-bars_heading'" />
     <BarsList ref="BarsList"
               :button-attrs="buttonAttrs"
               id="MyMorphicBars"
@@ -19,7 +19,7 @@
 
     <!-- managed members -->
     <template v-if="isManager">
-      <h3 v-t="'SidePanel.other-bars_heading'" />
+      <h2 v-t="'SidePanel.other-bars_heading'" />
       <MembersList ref="MembersList"
                    id="MembersList"
                    :button-attrs="buttonAttrs"
@@ -38,7 +38,7 @@
     <!-- hiding group bars for now -->
     <template v-if="false">
       <!-- group bars -->
-      <h3 v-t="'SidePanel.group-bars_heading'" />
+      <h2 v-t="'SidePanel.group-bars_heading'" />
       <BarsList ref="BarsList"
                 :bars="bars"
                 :activeBarId="activeBarId"
@@ -61,16 +61,17 @@
       margin: 1em 0 0.5em 0;
     }
 
-    h2 {
+    .accountName {
       margin-top: 0;
       font-size: 1.5em;
+      font-weight: bold;
     }
 
-    h3 {
+    h2 {
       margin-top: 3em;
     }
 
-    h4, h5 {
+    h3, h4 {
       margin: 4px 2px;
     }
 
