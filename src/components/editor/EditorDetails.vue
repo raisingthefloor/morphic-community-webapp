@@ -66,42 +66,37 @@
         </div>
 
         <div v-if="!isLite" id="EditorTabs">
-          <b-tabs class="editorTabs"
-                  v-model="editorTabIndex"
-                  small
-                  :content-class="'bg-white border border-top-0 ' + (editorTabIndex ? '' : 'd-none')">
 
-            <!-- hidden tab to simulate no tab being selected -->
-            <b-tab title="" active title-item-class="d-none" class="d-none"/>
+          <div class="editorTabs nav-tabs">
 
             <!-- Members tab -->
-            <b-tab @click="editorTabIndex = (editorTabIndex === 1 ? 0 : 1)">
-              <template #title>
+            <b-button v-if="memberDetails" variant="none" size="sm" class="tabButton nav-link" v-b-toggle="'memberDetailsContent'">
                 <span :class="`state-${memberDetails.state}`">
                   <b-icon icon="person-circle" alt="User settings: " aria-label="User settings" />&nbsp;
                   <span v-if="memberDetails">{{ memberDetails.displayName }} ({{memberDetails.stateText}})</span>
                   <span v-else-if="memberCount === 0">Unused Bar</span>
                   <span v-else>Members ({{ memberCount }})</span>
                 </span>
-              </template>
-              <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+            </b-button>
+
+            <b-collapse id="memberDetailsContent" class="tabContent" accordion="editorTabs">
+              <b-button aria-label="Close" class="close" v-b-toggle="'memberDetailsContent'">×</b-button>
 
               <MemberDetails v-if="memberDetails" :member-details="memberDetails" :members="members" />
-
-            </b-tab>
+            </b-collapse>
 
             <!-- Bar settings tab -->
-            <b-tab @click="editorTabIndex = (editorTabIndex === 2 ? 0 : 2)" >
-              <template #title>
-                <b-icon-gear-fill/>
-                Settings for this MorphicBar
-              </template>
-              <button @click="editorTabIndex = 0" type="button" aria-label="Close" class="close">×</button>
+            <b-button variant="none" size="sm" class="tabButton nav-link" v-b-toggle="'settingsContent'">
+              <b-icon-gear-fill/>
+              Settings for this MorphicBar
+            </b-button>
+
+            <b-collapse id="settingsContent" class="tabContent" accordion="editorTabs">
+              <b-button aria-label="Close" class="close" v-b-toggle="'settingsContent'">×</b-button>
 
               <BarSettings :bar-details="barDetails" :member="memberDetails" @rename="showRenameBarDialog()"/>
-            </b-tab>
-
-          </b-tabs>
+            </b-collapse>
+          </div>
 
         </div>
       </b-col>
@@ -155,8 +150,7 @@ export default {
     },
     data() {
         return {
-            barSettings: {},
-            editorTabIndex: 0
+            barSettings: {}
         };
     },
     computed: {
@@ -205,7 +199,11 @@ export default {
             this.$emit("save-bar");
         },
         closeTab: function () {
-            this.editorTabIndex = 0;
+            const openTab = this.$el.querySelector(".tabContent.show");
+            if (openTab) {
+                this.$root.$emit("bv::toggle::collapse", openTab.id);
+            }
+
         }
     }
 };
@@ -264,25 +262,48 @@ export default {
 
   .editorTabs {
     margin-bottom: -1px;
-    .nav-tabs {
-      flex-wrap: nowrap;
-      white-space: nowrap;
+
+    .tabButton {
+      display: inline-block;
+      position: relative;
+      z-index: $zindex-dropdown + 2;
+
+      background-color: #fff;
+
+      outline: unset;
+      box-shadow: none;
+
+      &:focus-visible {
+        border-color: $gray-800;
+      }
+      &.not-collapsed {
+        border-color: $border-color $border-color #fff;
+      }
+      border-bottom-color: $border-color;
     }
-    .tab-content {
+
+    .tabContent {
+      background-color: white;
       position: absolute;
-      z-index: 10;
+
+      z-index: $zindex-dropdown;
+
       max-width: 70%;
       min-width: 25rem;
+
+      border: $border-width solid $border-color;
       border-radius: 0 3px 3px 3px;
+      box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5);
+
+      &.show {
+        z-index: $zindex-dropdown + 1;
+      }
 
       & > div {
         margin-top: 0;
         padding: 0.3rem;
       }
 
-    }
-    .hidden-tab {
-      display: none;
     }
     .card {
       border: 0;
