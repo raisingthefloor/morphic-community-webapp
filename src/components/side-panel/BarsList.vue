@@ -15,6 +15,7 @@
     </ul>
     <div>
       <b-button v-bind="buttonAttrs"
+                variant="morphic-blue"
                 @click="$emit('newbar', member)"
                 class="addNew"
                 v-if="showAddButton"
