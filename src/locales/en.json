@@ -62,8 +62,10 @@
   "BarPreview": {
   },
   "BarsList": {
+    "bars_aria-label": "Bars for {name}",
     "default-bar": "Default Bar",
-    "new-bar_button": "Add a new bar"
+    "new-bar_button": "Add a new bar",
+    "new-bar_button_aria-label": "Add a new bar for {name}"
   },
   "BillingDetails": {
   },
@@ -82,7 +84,7 @@
     "account-settings_link": "Account settings",
     "group-bars_heading": "Group Bars",
     "other-bars_heading": "MorphicBars for Others",
-    "own-bars_heading": "My MorphicBar"
+    "own-bars_heading": "My MorphicBars"
   },
   "Dashboard": {
   },
@@ -131,11 +133,16 @@
     "add-member_button": "Add a person",
     "collapse-all": "Collapse all",
     "expand-all": "Expand all",
+    "collapse-all_aria-label": "@:(MembersList.collapse-all) members",
+    "expand-all_aria-label": "@:(MembersList.expand-all) members",
+    "expand_button_arial-label": "Expand {name}",
     "invitation-not-accepted": "Invited, but has not yet accepted.",
     "invite_button": "Invite",
+    "invite_button_aria-label": "Invite {name}",
     "no-members": "Create and manage MorphicBars for others! Your {subscription} Morphic subscription allows you to invite {maxMembers} people to your account.",
     "not-invited": "Not yet invited.",
     "re-invite_button": "Re-send invitation",
+    "re-invite_button_aria-label": "Re-send invation to {name}",
     "settings_tooltip": "Settings for {name}"
   },
   "MorphicBarEditor": {

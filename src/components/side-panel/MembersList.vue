@@ -8,15 +8,17 @@
                 @click="expandAll(true)"
                 variant="link"
                 class="expandAll"
+                :aria-label="$t('MembersList.expand-all_aria-label')"
       >{{ $t('MembersList.expand-all') }}</b-button>
       <b-button ref="CollapseAllButton"
                 @click="expandAll(false)"
                 variant="link"
                 class="collapseAll"
+                :aria-label="$t('MembersList.collapse-all_aria-label')"
       >{{ $t('MembersList.collapse-all') }}</b-button>
     </div>
 
-    <ul class="list-unstyled">
+    <ul class="list-unstyled" :aria-labelledby="ariaLabelledby">
       <!-- Expanding section for a member -->
       <li v-for="(member) in orderedMembers"
            :key="member.id"
@@ -25,18 +27,21 @@
               active: activeMemberId === member.id || member.bar_ids.includes(activeBarId),
               expanded: activeMemberId === member.id || member.bar_ids.includes(activeBarId)
             }"
-           :aria-labelledby="`MemberHeader_${member.id}`"
            :ref="`MemberDetails_${member.id}`"
+          :aria-labelledby="`MemberHeader_${member.id}`"
       >
         <div class="header" :id="`MemberHeader_${member.id}`"
              @click.self="expandMember(member.id)"
         >
           <!-- member's name -->
-          <h3 class="memberName" @click.self="expandMember(member.id)">{{ member.displayName }}</h3>
+          <h3 :id="`MemberHeader_${member.id}`"
+              class="memberName"
+              @click.self="expandMember(member.id)">{{ member.displayName }}</h3>
 
           <!-- the expander icon -->
           <b-button variant="none" class="expander"
-               v-b-toggle="`Collapse_${member.id}`"
+                    v-b-toggle="`Collapse_${member.id}`"
+                    :aria-label="$t('MembersList.expand_button_arial-label', {name: member.displayName})"
           >
             <b-icon icon="caret-down-square-fill" variant="morphic-blue" />
           </b-button>
@@ -60,13 +65,19 @@
           <!-- uninvited -->
           <div v-if="member.state === 'uninvited'">
             {{ $t('MembersList.not-invited') }}<br/>
-            <b-button v-bind="buttonAttrs" variant="secondary" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
+            <b-button v-bind="buttonAttrs" variant="secondary"
+                      v-b-modal="'membersList-inviteMemberDialog'"
+                      :aria-label="$t('MembersList.invite_button_aria-label', {name: member.displayName})"
+                      @click="invitingMember = member">{{ $t('MembersList.invite_button') }}</b-button>
           </div>
 
           <!-- invited -->
           <div v-else-if="member.state === 'invited'">
             {{ $t('MembersList.invitation-not-accepted') }}<br/>
-            <b-button v-bind="buttonAttrs" variant="link" v-b-modal="'membersList-inviteMemberDialog'" @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
+            <b-button v-bind="buttonAttrs" variant="link"
+                      v-b-modal="'membersList-inviteMemberDialog'"
+                      :aria-label="$t('MembersList.re-invite_button_aria-label', {name: member.displayName})"
+                      @click="invitingMember = member">{{ $t('MembersList.re-invite_button') }}</b-button>
           </div>
 
           <BarsList :member="member"
@@ -128,7 +139,8 @@ export default {
         /** @type {Community} */
         community: Object,
         // variant attribute for buttons
-        buttonAttrs: Object
+        buttonAttrs: Object,
+        ariaLabelledby: String
     },
     computed: {
         /**

@@ -6,11 +6,10 @@
         <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
       </div>
 
-
       <!-- member's own bars -->
-      <div class="panelDetails">
+      <div class="panelDetails" >
         <div class="header">
-          <h2 v-t="'SidePanel.own-bars_heading'" />
+          <h2 id="OwnBarsHeading" v-t="'SidePanel.own-bars_heading'" />
         </div>
         <div>
           <BarsList ref="BarsList"
@@ -27,7 +26,7 @@
 
     <!-- managed members -->
     <div v-if="isManager" class="panelSection">
-      <h2 v-t="'SidePanel.other-bars_heading'" />
+      <h2 id="OtherBarsHeading" v-t="'SidePanel.other-bars_heading'" />
       <MembersList ref="MembersList"
                    id="MembersList"
                    :button-attrs="buttonAttrs"
@@ -39,6 +38,7 @@
                    :expandedMembers="expandedMembers"
                    @newbar="newBar($event)"
                    @addMember="$event.promise = addMember($event.name)"
+                   aria-labelledby="OtherBarsHeading"
       />
     </div>
 
