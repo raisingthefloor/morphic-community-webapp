@@ -38,6 +38,7 @@
                    :expandedMembers="expandedMembers"
                    @newbar="newBar($event)"
                    @addMember="$event.promise = addMember($event.name)"
+                   @memberDetails="showMemberDetails($event)"
                    aria-labelledby="OtherBarsHeading"
       />
     </div>
@@ -52,6 +53,11 @@
                 @newBar="newBar()"
       />
     </div>
+
+    <MemberDetailsDialog v-if="memberDetails" id="SidePanelMemberDetailsDialog"
+                         :member-details="memberDetails"
+                         :members="members"
+    />
   </div>
 </template>
 
@@ -278,10 +284,8 @@
               }
             }
           }
-
-
-        }      }
-
+        }
+      }
     }
   }
 
@@ -342,10 +346,12 @@ import BarsList from "@/components/side-panel/BarsList";
 import * as Bar from "@/utils/bar";
 import * as communityService from "@/services/communityService";
 import { membersMixin } from "@/mixins/members.js";
+import MemberDetailsDialog from "@/components/dialogs/MemberDetailsDialog";
 
 export default {
     name: "SidePanel",
     components: {
+        MemberDetailsDialog,
         MembersList,
         BarsList
     },
@@ -368,7 +374,9 @@ export default {
     data() {
         return {
             /** @type {GUID} The member that was just added */
-            newestMemberId: null
+            newestMemberId: null,
+            /** @type {CommunityMember} The member to show the details' dialog for. */
+            memberDetails: {}
         };
     },
     computed: {
@@ -486,6 +494,14 @@ export default {
             this.$router.push(route);
 
             return member;
+        },
+        /**
+         * Shows the member details dialog.
+         * @param {CommunityMember }member The member.
+         */
+        showMemberDetails(member) {
+            this.memberDetails = member;
+            this.$nextTick(() => this.$bvModal.show("SidePanelMemberDetailsDialog"));
         }
     }
 };

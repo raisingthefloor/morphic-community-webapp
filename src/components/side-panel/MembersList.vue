@@ -47,6 +47,7 @@
           </b-button>
           <!-- the user settings button -->
           <b-button variant="none" class="memberSettings whenExpanded"
+                    @click="$emit('memberDetails', member)"
                     v-b-tooltip.hover="$t('MembersList.settings_tooltip', {name : member.displayName})"
                     :aria-label="$t('MembersList.settings_tooltip', {name : member.displayName})">
             <b-icon icon="gear-fill" variant="morphic-blue" />

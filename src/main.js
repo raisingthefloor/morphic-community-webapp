@@ -243,16 +243,25 @@ Vue.mixin({
          *
          * @param {Promise<AxiosResponse<Any>>} responsePromise The response.
          * @param {String} [successMessage] A message to display if it was successful.
+         * @param {Boolean} reject true to reject on failure.
          * @return {Promise<Boolean>} Resolves to true if the request was a success.
          */
-        requestToBool: function (responsePromise, successMessage) {
-            return responsePromise.then((r) => {
+        requestToBool: function (responsePromise, successMessage, reject) {
+
+            if (reject === undefined && (successMessage === true || successMessage === false)) {
+                reject = successMessage;
+                successMessage = undefined;
+            }
+
+            const r = responsePromise.then((r) => {
                 const success = (r.status === 200);
                 if (success && successMessage) {
                     this.showMessage(successMessage);
                 }
                 return success;
-            }).catch(() => false);
+            });
+
+            return reject ? r : r.catch(() => false);
         }
     },
     mounted() {

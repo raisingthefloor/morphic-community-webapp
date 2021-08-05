@@ -73,12 +73,9 @@
   },
   "MemberDetails": {
     "bar-unused": "This bar has no members using it.",
-    "delete-member": "Delete member",
-    "make-manager": "Make member a Group Manager",
-    "make-non-manager": "Remove group manager role from member",
-    "member-count": "This MorphicBar is not used | This MorphicBar is used by 1 member | This MorphicBar is used by {n} members",
-    "resend-invite": "Re-invite member",
-    "send-invite": "Send Invitation"
+    "delete-member_button": "Delete member",
+    "re-invite_button": "Send a new invitation",
+    "invite_button": "Send an invitation"
   },
   "SidePanel": {
     "account-settings_link": "Account settings",
