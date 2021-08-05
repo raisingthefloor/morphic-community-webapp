@@ -96,7 +96,8 @@ export default {
                 focusMode: this.focusMode,
                 dashboardMode: !this.focusMode,
                 isMobile: this.isMobile,
-                isLite: this.isLite
+                isLite: this.isLite,
+                editorPage: this.$route.meta.isEditorPage
             };
         }
     },
@@ -119,6 +120,7 @@ export default {
     watch: {
         bodyClasses: {
             deep: true,
+            immediate: true,
             /**
              * Sets the classes of the body element, based on `this.bodyClasses`.
              */
@@ -194,7 +196,7 @@ export default {
                     const styleSheet = this.headerHeightStyle.sheet;
 
                     // Add some rules to adjust position and height of things while taking the header into consideration
-                    [".", "body.focusMode .focus-", "body.isMobile .mobile-"].forEach(prefix => {
+                    [".", "body.focusMode .focus-", "body.isMobile .mobile-", "body:not(.isMobile, .focusMode) .desktop-"].forEach(prefix => {
                         styleSheet.insertRule(`${prefix}headerMarginTop { margin-top: ${height}px !important; }`);
                         styleSheet.insertRule(`${prefix}headerMaxHeight { max-height: calc(100vh - ${height}px) !important; }`);
                         styleSheet.insertRule(`${prefix}headerMinHeight { min-height: calc(100vh - ${height}px) !important; }`);

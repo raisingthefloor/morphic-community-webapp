@@ -43,14 +43,14 @@
                     v-b-toggle="`Collapse_${member.id}`"
                     :aria-label="$t('MembersList.expand_button_arial-label', {name: member.displayName})"
           >
-            <b-icon icon="caret-down-square-fill" variant="morphic-blue" />
+            <b-icon icon="caret-down-square-fill" variant="morphic-blue" scale="1.3" />
           </b-button>
           <!-- the user settings button -->
           <b-button variant="none" class="memberSettings whenExpanded"
                     @click="$emit('memberDetails', member)"
                     v-b-tooltip.hover="$t('MembersList.settings_tooltip', {name : member.displayName})"
                     :aria-label="$t('MembersList.settings_tooltip', {name : member.displayName})">
-            <b-icon icon="gear-fill" variant="morphic-blue" />
+            <b-icon icon="gear-fill" variant="morphic-blue" scale="1.3" />
           </b-button>
         </div>
 

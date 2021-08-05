@@ -62,7 +62,7 @@
 </template>
 
 <style lang="scss">
-  @import "~@/styles/_variables.scss";
+  @import "~@/styles/_bootstrap-util.scss";
 
   #SidePanel {
     font-size: 1rem;
@@ -108,7 +108,6 @@
     }
 
     min-height: 600px;
-    height: 100%;
 
     padding-left: 1px;
 
@@ -193,7 +192,7 @@
           .header .expander {
             // Turn the icon around
             svg {
-              transform: rotate(-180deg) scale(1.2);
+              transform: rotate(180deg) scale(1.2);
             }
           }
         }
@@ -236,12 +235,12 @@
           }
 
           .expander {
-            margin-left: 0.3em;
+            margin-left: 0.6em;
             order: 5;
 
             // make the icon round
             & > svg {
-              clip-path: circle(8px at center);
+              clip-path: circle(50% at center);
               transform: scale(1.2);
             }
           }
@@ -265,6 +264,7 @@
 
           ul {
             margin-bottom: 0.2em;
+            font-size: 1.1em;
 
             li {
               padding: 0.2em $detailsPadding;
@@ -272,6 +272,9 @@
 
               line-height: 1.3em;
 
+              &:hover {
+                background-color: $list-group-hover-bg;
+              }
               &.active {
                 background-color: $primary-color;
 
@@ -320,10 +323,15 @@
       padding: 0.5em;
       margin-right: 0;;
       &:nth-child(even) {
-        background-color: #e0f1d7;
+        background-color: #e0f1d7 !important;
       }
       &:nth-child(odd) {
-        background-color: #bfdfd0;
+        background-color: #bfdfd0 !important;
+      }
+
+      .header .btn {
+        transform: scale(1.5);
+        margin-left: 2em;
       }
     }
 

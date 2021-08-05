@@ -182,7 +182,8 @@ const routes = [
         props: route => ({ catalogView: !!route.query.catalogView }),
         meta: {
             title: "MorphicBar Editor",
-            hideHeading: true
+            hideHeading: true,
+            isEditorPage: true
         }
     },
     {

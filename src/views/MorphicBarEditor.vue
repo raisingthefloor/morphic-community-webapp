@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div id="EditorContainer" class="desktop-headerMaxHeight">
+
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" :bar="barDetails" />
     <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
@@ -16,77 +17,94 @@
     </b-modal>
     <!-- MODALs: END -->
 
-    <!-- EDITOR v2 -->
-    <div id="EditorContainer">
-      <div v-if="!isLite" class="editorSide left">
-        <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
-      </div>
-      <div v-show="editorVisible" class="editor">
-        <div id="barEditor" class="pt-2">
+    <div v-if="!isLite" class="editorSide left">
+      <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
+    </div>
+    <div v-show="editorVisible" class="editor">
+      <div id="barEditor" class="pt-2">
 
-          <b-link v-if="isLite" to="/">
-            <b-img src="/img/back-arrow.svg" width="20" height="20" class="switchBarIcon" />Switch Bar or Person
-          </b-link>
+        <b-link v-if="isLite" to="/">
+          <b-img src="/img/back-arrow.svg" width="20" height="20" class="switchBarIcon" />Switch Bar or Person
+        </b-link>
 
-          <!-- Bar info, actions, and editor tabs -->
-          <EditorDetails ref="EditorDetails"
-                         :bar-details="barDetails"
-                         :bars-list="barsList"
-                         :bar-members="barMembers"
-                         :is-changed="isChanged"
-                         :member-details="memberDetails"
-                         :new-bar="newBar"
-                         @save-bar="saveBar()" @revert-bar="revertBar()"
-          />
+        <!-- Bar info, actions, and editor tabs -->
+        <EditorDetails ref="EditorDetails"
+                       :bar-details="barDetails"
+                       :bars-list="barsList"
+                       :bar-members="barMembers"
+                       :is-changed="isChanged"
+                       :member-details="memberDetails"
+                       :new-bar="newBar"
+                       @save-bar="saveBar()" @revert-bar="revertBar()"
+        />
 
-          <!-- the focus/mobile editor -->
-          <LiteBarEditor v-if="isLite"
-                         ref="LiteBarEditor"
-                         :bar-details="barDetails"
-                         @edit-item="showEditDialog($event)"
-                         @add-item="showCatalog(true)"
-          />
+        <!-- the focus/mobile editor -->
+        <LiteBarEditor v-if="isLite"
+                       ref="LiteBarEditor"
+                       :bar-details="barDetails"
+                       @edit-item="showEditDialog($event)"
+                       @add-item="showCatalog(true)"
+        />
 
 
-          <!-- the desktop editor -->
-          <DesktopBarEditor v-else
-                            ref="DesktopBarEditor"
-                            :bar-details="barDetails"
-                            :member-details="memberDetails"
-                            :is-changed="isChanged"
-                            @edit-item="showEditDialog($event)"
-                            @bar-changed="onBarChanged"
-                            @click="$refs.EditorDetails.closeTab()"
-                            @item-dropped="addBarItem($event.item, $event.noImage, $event.index)"
-          />
-        </div>
-      </div>
-
-      <!-- Button Catalogue -->
-      <div v-show="catalogVisible" :class="isLite && 'p-3'" class="editorSide right">
-
-        <template v-if="isLite">
-          <h1>Button Catalog: Buttons you can add</h1>
-          <div class="mb-3">
-            <b-button @click="showCatalog(false)">Cancel</b-button>
-          </div>
-        </template>
-
-
-        <ButtonCatalog ref="ButtonCatalog"
-                       :button-catalog="buttonCatalog"
-                       @item-selected="addBarItem($event.item, $event.noImage)"
+        <!-- the desktop editor -->
+        <DesktopBarEditor v-else
+                          ref="DesktopBarEditor"
+                          :bar-details="barDetails"
+                          :member-details="memberDetails"
+                          :is-changed="isChanged"
+                          @edit-item="showEditDialog($event)"
+                          @bar-changed="onBarChanged"
+                          @click="$refs.EditorDetails.closeTab()"
+                          @item-dropped="addBarItem($event.item, $event.noImage, $event.index)"
         />
       </div>
+      <div id="EditorFooter"></div>
+    </div>
+
+    <!-- Button Catalogue -->
+    <div v-show="catalogVisible" :class="isLite && 'p-3'" class="editorSide right">
+
+      <template v-if="isLite">
+        <h1>Button Catalog: Buttons you can add</h1>
+        <div class="mb-3">
+          <b-button @click="showCatalog(false)">Cancel</b-button>
+        </div>
+      </template>
+
+
+      <ButtonCatalog ref="ButtonCatalog"
+                     :button-catalog="buttonCatalog"
+                     @item-selected="addBarItem($event.item, $event.noImage)"
+      />
     </div>
   </div>
 </template>
 
 <style lang="scss">
-  #barEditor {
-    padding-left: 15px;
-    padding-right: 15px;
+@import "~@/styles/_bootstrap-util.scss";
+
+.editorPage {
+  #PageContent {
+    display: flex;
+    flex-direction: column;
+    #EditorContainer {
+      flex-grow: 1;
+    }
   }
+  #SidePanel {
+    //max-height: 100%;
+  }
+
+  #PageContainer > footer {
+    display: none;
+  }
+}
+
+#barEditor {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 
 .switchBarIcon {
   vertical-align: top;
@@ -95,16 +113,30 @@
 body:not(.isLite) {
   #EditorContainer {
     display: flex;
+    align-items: stretch;
 
     .editor {
       flex-grow: 1;
       flex-shrink: 1;
+
+      display: flex;
+      flex-direction: column;
+      #barEditor {
+        flex-grow: 1;
+      }
+
+      #EditorFooter > * {
+        background-color: unset !important;
+      }
+
     }
 
     .editorSide {
       flex-shrink: 0;
       width: 15em;
       min-width: 16.66%;
+
+      overflow-y: auto;
     }
   }
 }
@@ -484,6 +516,11 @@ export default {
     },
     mounted() {
         this.loadAllData();
+
+        // Move the footer text
+        const footer = document.querySelector("#PageContainer > footer");
+        const editorFooter = document.querySelector("#EditorFooter");
+        editorFooter.innerHTML = footer.outerHTML.replace(/(<\/?)footer/g, "$1div");
     },
     watch: {
         "memberDetails.id": function (newValue, oldValue) {
