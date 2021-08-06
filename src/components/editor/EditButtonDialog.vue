@@ -102,8 +102,7 @@
               >
 
                 <!-- colour selection -->
-                <b-form-group label="Color for button"
-                              label-for="ColorSelection">
+                <b-form-group label="Color for button">
                   <b-form-radio-group id="ColorSelection"
                                       class="colorSelection"
                                       v-model="button.configuration.color"
@@ -111,8 +110,8 @@
                     <b-form-radio v-for="(hex, name) in colors"
                                   :key="name"
                                   :value="hex"
-                                  class="customRadio colorRadio">
-                      <span class="screenReader">{{name}}</span>
+                                  class="customRadio colorRadio" :aria-labelledby="`${name}_label`">
+                      <span class="screenReader" :id="`${name}_label`">{{name}}</span>
                       <div class="colorBlock" :style="'background-color: ' + hex + ';'" />
                     </b-form-radio>
                   </b-form-radio-group>
