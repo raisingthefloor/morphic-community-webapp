@@ -34,7 +34,7 @@
 
               <b-button size="sm"
                         variant="invert-danger"
-                        @click="memberDelete(memberDetails)"
+                        @click="deleteMember()"
                         v-t="'MemberDetails.delete-member_button'"
               />
             </div>
@@ -84,6 +84,8 @@ export default {
         memberDetails: Object,
         /** @type {Array<CommunityMember>} All members */
         members: Array,
+        /** @type {GUID} */
+        activeMemberId: null,
 
         id: String
     },
@@ -136,6 +138,16 @@ export default {
             if (this.name !== this.originalName) {
                 this.memberRename(this.memberDetails, this.memberDetails.first_name);
             }
+            this.$emit("close");
+        },
+
+        closeDialog: function () {
+            this.$bvModal.hide(this.dialogId);
+        },
+
+        deleteMember: function () {
+            const keepRoute = this.activeMemberId !== this.memberDetails.id;
+            this.memberDelete(this.memberDetails, false, keepRoute).then(() => this.closeDialog());
         },
 
         /**

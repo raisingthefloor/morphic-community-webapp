@@ -57,6 +57,8 @@
     <MemberDetailsDialog v-if="memberDetails" id="SidePanelMemberDetailsDialog"
                          :member-details="memberDetails"
                          :members="members"
+                         :active-member-id="activeMemberId"
+                         @close="reloadAll()"
     />
   </div>
 </template>
