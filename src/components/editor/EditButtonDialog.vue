@@ -47,7 +47,10 @@
                   >
                     <template #button-content>
                       <template v-if="!button.data.isPlaceholder">
-                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
+                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url"
+                               :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)"
+                               aria-hidden="true"
+                               alt="" />
                         {{
                           relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
                         }}
@@ -66,6 +69,7 @@
                                               :class="{ selected: buttonKey === button.data.buttonKey }"
                       >
                       <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)"
+                             aria-hidden="true"
                              alt="" />{{ item.data.catalogLabel || item.configuration.label }}
                       </b-dropdown-item-button>
                   </template>
