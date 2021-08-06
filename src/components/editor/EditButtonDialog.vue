@@ -120,11 +120,11 @@
                 <!-- icon selection -->
                 <div class="buttonIcons" aria-live="polite">
                   <div class="actionButtons">
-                    <b-button variant="invert-morphic-blue"
+                    <b-button variant="primary"
                               size="sm"
                               :disabled="!selectedIcon && !showImages"
                               @click="selectedIcon = null, showImages = false">Remove button image</b-button>
-                    <b-button variant="invert-morphic-blue"
+                    <b-button variant="primary"
                               size="sm"
                               :disabled="showImages"
                               @click="showImages = true">{{ selectedIcon ? "Change button image" : "Add button image"}}</b-button>
