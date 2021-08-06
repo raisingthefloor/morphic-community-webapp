@@ -43,6 +43,7 @@
                               boundary="viewport"
                               @show="relatedDropdown(true)"
                               @hidden="relatedDropdown(false)"
+                              @shown="relatedDropdownFocusSelected()"
                   >
                     <template #button-content>
                       <template v-if="!button.data.isPlaceholder">
@@ -57,12 +58,12 @@
                     </template>
 
 
-                    <template v-for="(item, buttonKey) in relatedButtons"
-                              :class="buttonKey === button.data.buttonKey && 'selected'">
+                    <template v-for="(item, buttonKey) in relatedButtons">
 
                       <b-dropdown-item-button v-if="!item.data.isPlaceholder"
                                               :key="buttonKey"
                                               @click="setButton(item)"
+                                              :class="{ selected: buttonKey === button.data.buttonKey }"
                       >
                       <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)"
                              alt="" />{{ item.data.catalogLabel || item.configuration.label }}
@@ -682,6 +683,16 @@ export default {
         },
 
         /**
+         * Focus the selected item on the drop-down.
+         */
+        relatedDropdownFocusSelected: function () {
+            const selected = document.querySelector("#relatedDropdown .dropdown-menu .selected .dropdown-item");
+            if (selected) {
+                selected.focus();
+            }
+        },
+
+        /**
          * Shows a message of problems.
          * @return {Promise<Boolean>} true to continue with saving.
          */
@@ -711,7 +722,6 @@ export default {
 
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
-
 
             setTimeout(() => {
                 this.a11yWrapDropdown(this.$refs.RelatedDropdown);
