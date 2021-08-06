@@ -16,25 +16,25 @@
                 (<b-link @click="hintsSwitch" v-text="showHideHintsText"></b-link>)
               </p>
             </div>
-            <div id="hints" v-if="showHints">
-              <div v-if="barsList.length === 1" point-to="#MyMorphicBars .addNew">
-                Want to make a MorphicBar for yourself? Start with "Add a new bar"
-              </div>
-              <div v-else point-to=".barsList .barLink">
-                Want to edit a bar? Click it's name to get started!
-              </div>
 
-              <div v-if="membersList.length === 1" point-to="#MembersList .addNew">
-                Do you want to make and manage MorphicBars for other people?
-                <p class="mt-2">
-                  Start by adding a person.<br/>
-                  Next you can create bars.<br/>
-                  Finally, you can invite the person to download and use Morphic.
-                </p>
+            <div id="hints" v-if="showHints" aria-hidden="true">
+              <div v-if="!hasOwnBar"
+                   point-to="#MyMorphicBars .addNew"
+                   v-t="'Dashboard.hints.new-bar'" />
+              <div v-else point-to=".barsList .barLink"
+                   v-t="'Dashboard.hints.edit-bar'" />
+
+              <div v-if="membersList.length === 1"
+                   point-to="#MembersList .addNewMember">
+                {{ $t('Dashboard.hints.create-member') }}
+                <ul class="mt-2 list-unstyled">
+                  <li v-for="(item, index) in $t('Dashboard.hints.create-member_instructions')"
+                      :key="index">{{ item }}</li>
+                </ul>
               </div>
-              <div v-else-if="membersList.length > 1" point-to="#MembersList :nth-child(2) .expandable:not(.expanded)">
-                Click a person's name to see their MorphicBars
-              </div>
+              <div v-else-if="membersList.length > 1"
+                   point-to="#MembersList:not(.hasExpanded) ul li:first-child .expander"
+                   v-t="'Dashboard.hints.other-bars'"/>
             </div>
             <div v-else>
               <p class="text-left small">Get started by clicking an item in the green menu to the left</p>
@@ -236,6 +236,11 @@
     & > * {
       padding-left: 0.3em;
       position: absolute;
+      transition: opacity 0.35s;
+      opacity: 0;
+      &.show {
+        opacity: 1;
+      }
     }
   }
 </style>
@@ -291,6 +296,11 @@ export default {
                     length: "4:24"
                 }
             ];
+        },
+        hasOwnBar: function () {
+            /** @type {CommunityMember} */
+            const currentMember = this.membersList.find(m => m.isCurrent);
+            return currentMember?.bar_ids?.length;
         }
     },
     mounted: function () {
@@ -379,15 +389,19 @@ export default {
             hints.forEach(hint => {
                 const getTarget = () => document.querySelector(hint.getAttribute("point-to"));
                 const target = getTarget();
+                const targetRect = target && target.getBoundingClientRect();
 
-                if (!hint || !target) {
+                // Check if the target is hidden
+                const off = targetRect && (targetRect.y <= 0 || targetRect.width === 0 || targetRect.height === 0);
+
+                if (!hint || !target || off) {
                     if (hint) {
-                        hint.style.display = "none";
+                        hint.classList.remove("show");
                     }
                     this.arrows.push({getTarget});
                 } else {
-                    hint.style.display = "unset";
-                    const targetRect = target.getBoundingClientRect();
+                    hint.classList.add("show");
+
                     const hintRect = hint.getBoundingClientRect();
                     const sourceRect = {
                         x: hintRect.x,
@@ -419,17 +433,21 @@ export default {
                     this.arrows.push(arrow);
                 }
             });
-            this.hintTimer = setInterval(this.checkHints, 500);
+            this.hintTimer = setTimeout(this.checkHints, 1500);
         },
         checkHints: function () {
-            const changed = this.arrows.some(arrow => {
-                const newRect = arrow.getTarget()?.getBoundingClientRect();
-                return !newRect || newRect.y !== arrow.targetRect?.y;
-            });
+            try {
+                const changed = this.arrows.some(arrow => {
+                    const newRect = arrow.getTarget()?.getBoundingClientRect();
+                    return (!newRect !== !arrow.hint) || newRect?.y !== arrow.targetRect?.y;
+                });
 
-            if (changed) {
-                this.cleanUpArrows();
-                this.createArrows();
+                if (changed) {
+                    this.cleanUpArrows();
+                    this.createArrows();
+                }
+            } finally {
+                this.hintTimer = setTimeout(this.checkHints, 1500);
             }
         },
         cleanUpArrows: function () {

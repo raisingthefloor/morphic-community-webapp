@@ -96,7 +96,7 @@
       <b-button v-b-modal="'addMemberDialog'"
                 v-bind="buttonAttrs"
                 variant="morphic-blue"
-                class="addNew border-white"
+                class="addNew addNewMember border-white"
       ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
     </div>
     <div v-if="!anyMembers">
@@ -237,6 +237,11 @@ export default {
             this.$refs.CollapseAllButton.classList.toggle("disabled", noneExpanded);
             this.$refs.ExpandAllButton.setAttribute("aria-disabled", allExpanded);
             this.$refs.ExpandAllButton.classList.toggle("disabled", allExpanded);
+
+            const membersList = document.querySelector("#MembersList");
+            if (membersList) {
+                membersList.classList.toggle("hasExpanded", !noneExpanded);
+            }
         },
 
         /**

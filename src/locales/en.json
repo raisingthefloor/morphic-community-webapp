@@ -84,6 +84,17 @@
     "own-bars_heading": "My MorphicBars"
   },
   "Dashboard": {
+      "hints": {
+        "create-member": "Do you want to make and manage MorphicBars for other people?",
+        "create-member_instructions": [
+          "Start by adding a person.",
+          "Next you can create bars.",
+          "Finally, you can invite the person to download and use Morphic."
+        ],
+        "edit-bar": "Want to edit a bar? Click its name to get started!",
+        "new-bar": "Want to make a MorphicBar for yourself? Start with \"@:(MembersList.add-bar_button)\"",
+        "other-bars": "Click a person's name to see their MorphicBars"
+      }
   },
   "EarlyReleaseProgram": {
     "account-created": "Your account has been created.",
