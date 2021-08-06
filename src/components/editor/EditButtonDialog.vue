@@ -714,6 +714,9 @@ export default {
 
 
             setTimeout(() => {
+                this.a11yWrapDropdown(this.$refs.RelatedDropdown);
+                this.a11yDropdownMnemonics(this.$refs.RelatedDropdown);
+
                 // The drop-down doesn't support autofocus.
                 if (this.showRelated && this.button.data.isPlaceholder) {
                     document.querySelector("#relatedDropdown button").focus();
