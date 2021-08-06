@@ -365,6 +365,7 @@ import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/editor/BarItemFields";
 import { CONFIG } from "@/config/config";
 import { dialogMixin } from "@/mixins/dialog.js";
+import { a11yMixin } from "@/mixins/a11y";
 
 export default {
     name: "EditButtonDialog",
@@ -373,7 +374,7 @@ export default {
         bar: Object
     },
 
-    mixins: [dialogMixin],
+    mixins: [dialogMixin, a11yMixin],
 
     components: {
         BarItemFields,
