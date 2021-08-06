@@ -100,6 +100,7 @@ export const membersMixin = {
                     await updateResult;
                     togo = deleteCommunityBar(this.communityId, this.$route.query.barId).then((resp) => {
                         this.showMessage(MESSAGES.successfulBarDelete);
+                        return true;
                     });
 
                 } else {
