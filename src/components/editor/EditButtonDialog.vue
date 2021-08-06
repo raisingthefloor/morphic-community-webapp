@@ -740,7 +740,7 @@ export default {
          * Removes this button from the bar.
          */
         removeButton: function () {
-            this.showConfirm("Do you want to remove this item from the bar?").then(result => {
+            this.showConfirm("Do you want to remove this item from the bar?", null, `Delete the '${this.selectedItem.configuration.label}' button`, {dangerous: true}).then(result => {
                 if (result) {
                     Bar.removeItem(this.selectedItem, this.bar);
                     this.selectedItem.deleted = true;
