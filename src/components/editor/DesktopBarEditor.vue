@@ -99,7 +99,13 @@
                   @click="showEditDialog(item, $event)"
                   @cut="removeButton(item, barDetails.items)"
                   class="buttonDragger">
-              <div :key="item.id" class="previewHolder" :ref="buttonRef(item)">
+              <div :key="item.id"
+                   :class="{
+                     previewHolder: true,
+                     newItem: item.data.isNew
+                   }"
+                   :ref="buttonRef(item)"
+              >
                 <PreviewItem :item="item" />
               </div>
             </drag>
@@ -263,6 +269,10 @@
 
         & > div {
           min-width: 50px;
+        }
+
+        .newItem {
+          opacity: 0.4;
         }
 
         // Place-holder for dropping a new button.

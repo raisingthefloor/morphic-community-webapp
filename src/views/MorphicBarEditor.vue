@@ -155,15 +155,12 @@ export default {
          */
         addBarItem: async function (catalogButton, noImage, insertAt) {
             /** @type {BarItem} */
-            const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt);
+            const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt, true);
             if (noImage) {
                 barItem.configuration.image_url = "";
             }
 
-            // close the catalog
-            this.showCatalog(false);
-            this.onBarChanged();
-
+            // Edit the button, if it has parameterised fields.
             let showEdit;
             if (barItem.data.isPlaceholder) {
                 showEdit = true;
@@ -171,19 +168,21 @@ export default {
                 showEdit = barItem.data.hasError;
             }
 
-            // Edit the button, if it has parameterised fields.
-            if (showEdit) {
-                barItem.data.isNew = true;
-                const ok = await this.showEditDialog(barItem);
-                delete barItem.data.isNew;
+            const cancelled = showEdit && !(await this.showEditDialog(barItem));
 
-                if (!ok) {
-                    // Dialog was cancelled - remove the button
-                    Bar.removeItem(barItem, this.barDetails);
-                }
+            if (cancelled) {
+                // Dialog was cancelled - remove the button
+                Bar.removeItem(barItem, this.barDetails);
+            } else {
+                // Set to false before deleting, so the change is seen.
+                barItem.data.isNew = false;
+                delete barItem.data.isNew;
+                // close the catalog
+                this.showCatalog(false);
+                this.onBarChanged();
+                this.screenReaderMessage(`New item added: ${barItem.configuration.label}`);
             }
 
-            this.screenReaderMessage(`New item added: ${barItem.configuration.label}`);
         },
         /**
          * Called when the bar changes, after it is loaded.

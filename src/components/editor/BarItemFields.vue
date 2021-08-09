@@ -74,25 +74,14 @@ export default {
         autofocus: Boolean
     },
     data() {
-        const states = {};
-        const errors = {};
-        const checking = {};
-        this.barItem.data.paramFields.forEach(paramKey => {
-            const problem = params.getProblem(this.barItem, paramKey);
-            const err = problem && problem.message;
-            errors[paramKey] = err;
-            states[paramKey] = err ? false : null;
-            checking[paramKey] = false;
-        });
-
         return {
             allParameters: params.allParameters,
             /** @type {Object<String,Boolean?>} */
-            validationStates: states,
+            validationStates: {},
             /** @type {Object<String,String>} */
-            validationErrors: errors,
+            validationErrors: {},
             checkTimers: {},
-            isChecking: checking,
+            isChecking: {},
             lastValues: {}
         };
     },
@@ -202,6 +191,18 @@ export default {
             }
         }
 
+    },
+    mounted() {
+        // Show any problems associated with the fields.
+        this.barItem.data.paramFields.forEach(paramKey => {
+            const problem = params.getProblem(this.barItem, paramKey);
+            console.log(paramKey, problem);
+            const err = problem && problem.message;
+            this.validationErrors[paramKey] = err;
+            this.validationStates[paramKey] = err ? false : null;
+            this.isChecking[paramKey] = false;
+        });
+        this.$forceUpdate();
     },
     beforeDestroy() {
         this.clearCheckTimer();
