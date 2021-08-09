@@ -102,8 +102,7 @@
               >
 
                 <!-- colour selection -->
-                <b-form-group label="Color for button"
-                              label-for="ColorSelection">
+                <b-form-group label="Color for button">
                   <b-form-radio-group id="ColorSelection"
                                       class="colorSelection"
                                       v-model="button.configuration.color"
@@ -111,8 +110,8 @@
                     <b-form-radio v-for="(hex, name) in colors"
                                   :key="name"
                                   :value="hex"
-                                  class="customRadio colorRadio">
-                      <span class="screenReader">{{name}}</span>
+                                  class="customRadio colorRadio" :aria-labelledby="`${name}_label`">
+                      <span class="screenReader" :id="`${name}_label`">{{name}}</span>
                       <div class="colorBlock" :style="'background-color: ' + hex + ';'" />
                     </b-form-radio>
                   </b-form-radio-group>
@@ -121,11 +120,11 @@
                 <!-- icon selection -->
                 <div class="buttonIcons" aria-live="polite">
                   <div class="actionButtons">
-                    <b-button variant="invert-morphic-blue"
+                    <b-button variant="primary"
                               size="sm"
                               :disabled="!selectedIcon && !showImages"
                               @click="selectedIcon = null, showImages = false">Remove button image</b-button>
-                    <b-button variant="invert-morphic-blue"
+                    <b-button variant="primary"
                               size="sm"
                               :disabled="showImages"
                               @click="showImages = true">{{ selectedIcon ? "Change button image" : "Add button image"}}</b-button>
@@ -741,7 +740,7 @@ export default {
          * Removes this button from the bar.
          */
         removeButton: function () {
-            this.showConfirm("Do you want to remove this item from the bar?").then(result => {
+            this.showConfirm("Do you want to remove this item from the bar?", null, `Delete the '${this.selectedItem.configuration.label}' button`, {dangerous: true}).then(result => {
                 if (result) {
                     Bar.removeItem(this.selectedItem, this.bar);
                     this.selectedItem.deleted = true;
