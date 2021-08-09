@@ -5,6 +5,10 @@
       <h1 v-if="heading" id="MainHeading" :class="{screenReader: hideHeading}">{{ heading }}</h1>
       <router-view />
     </div>
+    <div class="screenReader">
+      <div id="ScreenReaderAnnouncements" aria-live="polite"></div>
+      <div id="ScreenReaderAnnouncementsAssertive" aria-live="assertive"></div>
+    </div>
     <Footer />
   </b-container>
 </template>
@@ -46,7 +50,7 @@
     overflow: hidden;
     width: 1px;
     height: 1px;
-    clip: rect(1px, 1px, 1px, 1px);
+    clip: rect(0, 0, 0, 0);
   }
 </style>
 

@@ -100,9 +100,25 @@ Vue.mixin({
         /**
          * Presents a message only visible to screen readers.
          * @param {String} message The message.
+         * @param {Boolean} assertive true for messages which require immediate attention.
          */
-        screenReaderMessage(message) {
-            this.showMessage(message, undefined, {toastClass: "screenReader"});
+        screenReaderMessage(message, assertive) {
+            // Add a full-stop to separate it from the next message.
+            if (!message.endsWith(".")) {
+                message += ".";
+            }
+
+            // Create a new element containing the message.
+            const newMessage = document.createElement("span");
+            newMessage.setAttribute("aria-atomic", "true");
+            newMessage.appendChild(document.createTextNode(message));
+
+            // Add it to the DOM
+            const readerElem = document.getElementById(assertive ? "ScreenReaderAnnouncementsAssertive" : "ScreenReaderAnnouncements");
+            readerElem.appendChild(newMessage);
+
+            // Remove it later.
+            setTimeout(() => newMessage.remove(), 5000);
         },
 
         showError(message, title, options) {
