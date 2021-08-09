@@ -60,7 +60,7 @@
                     :class="{
                               noImage: !button.configuration.image_url && !button.data.isExpander,
                               secondaryItem: !button.is_primary,
-                              expander: button.data.isExpander,
+                              expander: button.data.isExpander
                           }"
                     :style="{order: button.searchResult && button.searchResult.order}"
                     :aria-details="button.configuration.description"
