@@ -24,7 +24,10 @@ export const membersMixin = {
                         this.$t("members.delete.apply_button", {member: member.displayName}),
                         this.$t("members.delete.cancel_button")
                     ],
-                    this.$t("members.delete.title"));
+                    this.$t("members.delete.title"),
+                    {
+                        dangerous: true
+                    });
 
             const req = confirmed && communityService.deleteCommunityMember(this.communityId, member.id);
             return req && this.requestToBool(req, MESSAGES.successfulMemberDelete).then(success => {
@@ -90,7 +93,7 @@ export const membersMixin = {
                     [this.$t("members.removeBar.apply_button"), this.$t("members.removeBar.cancel_button")],
                     bar.name,
                     {
-                        okVariant: "danger"
+                        dangerous: true
                     });
 
             var togo;
@@ -100,6 +103,7 @@ export const membersMixin = {
                     await updateResult;
                     togo = deleteCommunityBar(this.communityId, this.$route.query.barId).then((resp) => {
                         this.showMessage(MESSAGES.successfulBarDelete);
+                        return true;
                     });
 
                 } else {

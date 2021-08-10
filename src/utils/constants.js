@@ -188,7 +188,7 @@ export const buttonCatalog = {
     news: {
         title: "News",
         editTitle: "News Site",
-        defaultIcon: "newspaper",
+        defaultIcon: "news$newspaper",
         more: {
             description: "Create a button to open a news web-site"
         }

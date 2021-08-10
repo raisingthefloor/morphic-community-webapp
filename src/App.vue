@@ -5,6 +5,10 @@
       <h1 v-if="heading" id="MainHeading" :class="{screenReader: hideHeading}">{{ heading }}</h1>
       <router-view />
     </div>
+    <div class="screenReader">
+      <div id="ScreenReaderAnnouncements" aria-live="polite"></div>
+      <div id="ScreenReaderAnnouncementsAssertive" aria-live="assertive"></div>
+    </div>
     <Footer />
   </b-container>
 </template>
@@ -46,7 +50,7 @@
     overflow: hidden;
     width: 1px;
     height: 1px;
-    clip: rect(1px, 1px, 1px, 1px);
+    clip: rect(0, 0, 0, 0);
   }
 </style>
 
@@ -115,6 +119,13 @@ export default {
 
         this.getHeaderHeight();
         this.dialogScroll();
+
+        // For screen-readers, having a footer on a dialog is not desired.
+        this.$root.$on("bv::modal::shown", (bvEvent, modalId) => {
+            document.querySelectorAll("footer.modal-footer").forEach(elem => {
+                elem.setAttribute("role", "presentation");
+            });
+        });
     },
     watch: {
         bodyClasses: {
@@ -131,9 +142,26 @@ export default {
                 document.body.classList.remove(...remove);
                 document.body.classList.add(...add);
             }
+        },
+        "$route.path": function (newValue, oldValue) {
+            this.newPage();
         }
     },
     methods: {
+        /**
+         * A new page has been loaded.
+         */
+        newPage: function () {
+            // When a new page is loaded, announce the title and move focus to the skip to content link.
+            this.screenReaderMessage(this.$route.meta.title);
+            const skipLink = document.getElementById("SkipToContent");
+            if (skipLink) {
+                // Don't show the link, until the next time it's focused.
+                skipLink.classList.add("screenReader");
+                skipLink.addEventListener("blur", () => skipLink.classList.remove("screenReader"), {once: true});
+                skipLink.focus();
+            }
+        },
         /**
          * Set the local of the page.
          * @param {String} locale Identifier of the locale.

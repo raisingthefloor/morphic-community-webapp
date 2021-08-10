@@ -155,15 +155,12 @@ export default {
          */
         addBarItem: async function (catalogButton, noImage, insertAt) {
             /** @type {BarItem} */
-            const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt);
+            const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt, true);
             if (noImage) {
                 barItem.configuration.image_url = "";
             }
 
-            // close the catalog
-            this.showCatalog(false);
-            this.onBarChanged();
-
+            // Edit the button, if it has parameterised fields.
             let showEdit;
             if (barItem.data.isPlaceholder) {
                 showEdit = true;
@@ -171,19 +168,21 @@ export default {
                 showEdit = barItem.data.hasError;
             }
 
-            // Edit the button, if it has parameterised fields.
-            if (showEdit) {
-                barItem.data.isNew = true;
-                const ok = await this.showEditDialog(barItem);
-                delete barItem.data.isNew;
+            const cancelled = showEdit && !(await this.showEditDialog(barItem));
 
-                if (!ok) {
-                    // Dialog was cancelled - remove the button
-                    Bar.removeItem(barItem, this.barDetails);
-                }
+            if (cancelled) {
+                // Dialog was cancelled - remove the button
+                Bar.removeItem(barItem, this.barDetails);
+            } else {
+                // Set to false before deleting, so the change is seen.
+                barItem.data.isNew = false;
+                delete barItem.data.isNew;
+                // close the catalog
+                this.showCatalog(false);
+                this.onBarChanged();
+                this.screenReaderMessage(`New item added: ${barItem.configuration.label}`);
             }
 
-            this.screenReaderMessage(`New item added: ${barItem.configuration.label}`);
         },
         /**
          * Called when the bar changes, after it is loaded.
@@ -205,10 +204,17 @@ export default {
             }
         },
 
-        loadAllData: function () {
-            this.loadBarData();
-            this.loadBarMembers();
-            this.getCommunityData();
+        /**
+         * Loads the required data for the page.
+         */
+        loadAllData: async function () {
+            await Promise.all([
+                this.getCommunityData(),
+                this.loadBarData(),
+                this.loadBarMembers()
+            ]);
+
+            this.screenReaderMessage(`Now editing bar '${this.barDetails.name}', owned by '${this.memberDetails.displayName}`);
         },
 
         /** Loads the initial bar data */
@@ -218,6 +224,7 @@ export default {
             // If there is a bar unsaved, redirect to that one instead.
             /** @type {BarDetails} */
             const unsavedBar = this.$store.getters.unsavedBar;
+
             if (unsavedBar && unsavedBar.id !== barId) {
                 const barName = Bar.getBarName(unsavedBar);
                 const message = `There is already a bar (${barName}) that has unsaved changes. The recent changes will be lost if you continue.`;
@@ -231,7 +238,7 @@ export default {
 
                 if (!ok) {
                     this.$router.push(this.getBarEditRoute(unsavedBar));
-                    return;
+                    throw new Error("Not loading");
                 }
             }
 
@@ -242,14 +249,8 @@ export default {
                 this.isChanged = false;
                 this.storeUnsavedBar();
                 // Load a saved bar.
-                getCommunityBar(this.communityId, barId)
-                    .then(resp => {
-                        this.barDetails = resp.data;
-                        this.updateOriginalBarDetails();
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
+                this.barDetails = (await getCommunityBar(this.communityId, barId)).data;
+                this.updateOriginalBarDetails();
             }
         },
         // hack to refresh css rendering due to bars being fucked up in their CSS
@@ -348,31 +349,29 @@ export default {
 
         },
 
-        loadBarMembers: function () {
-            getCommunityBars(this.communityId)
-                .then(resp => {
-                    const barsData = resp.data.bars;
-                    getCommunityMembers(this.communityId)
-                        .then((resp) => {
-                            this.barsList = barsData;
-                            this.membersList = resp.data.members;
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        });
-                })
-                .catch(err => {
-                    console.error(err);
-                });
+        /**
+         * Loads the bars and members
+         * @return {Promise} Resolves when complete.
+         */
+        loadBarMembers: async function () {
+            const barsResponse = getCommunityBars(this.communityId);
+            const membersResponse = getCommunityMembers(this.communityId);
+
+            const bars = await barsResponse;
+            const members = await membersResponse;
+            this.barsList = bars.data.bars;
+            this.membersList = members.data.members;
+            return true;
         },
+
+        /**
+         * Loads the community data.
+         * @return {Promise} Resolves when complete.
+         */
         getCommunityData: function () {
-            getCommunity(this.communityId)
-                .then((community) => {
-                    this.community = community.data;
-                })
-                .catch(err => {
-                    console.error(err);
-                });
+            return getCommunity(this.communityId).then((community) => {
+                this.community = community.data;
+            });
         },
         /**
          * Update the filtered arrays of bars.
