@@ -4,9 +4,10 @@
       <a class="contentLink" id="SkipToContent" href="#PageContent" @click.prevent="skipToContent">Skip to content</a>
       <b-navbar-brand>
         <b-link to="/">
-          <img src="/img/logo-color.svg" class="logo" alt="Return to dashboard" />
+          <img src="/img/logo-color.svg" class="logo" :alt="$t('Header.product-name')" />
         </b-link>
         <span class="headerTitle"
+              aria-hidden="true"
               v-t="'Header.product-name'" />
       </b-navbar-brand>
     </header>
