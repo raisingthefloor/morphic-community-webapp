@@ -135,9 +135,23 @@ export default {
                 document.body.classList.remove(...remove);
                 document.body.classList.add(...add);
             }
+        },
+        "$route.path": function (newValue, oldValue) {
+            this.newPage();
         }
     },
     methods: {
+        /**
+         * A new page has been loaded.
+         */
+        newPage: function () {
+            // When a new page is loaded, announce the title and move focus to the skip to content link.
+            this.screenReaderMessage(this.$route.meta.title);
+            const skipLink = document.getElementById("SkipToContent");
+            if (skipLink) {
+                skipLink.focus();
+            }
+        },
         /**
          * Set the local of the page.
          * @param {String} locale Identifier of the locale.

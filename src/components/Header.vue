@@ -1,13 +1,15 @@
 <template>
   <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="banner">
-    <a class="contentLink" href="#PageContent" @click.prevent="skipToContent">Skip to content</a>
-    <b-navbar-brand>
-      <b-link to="/">
-        <img src="/img/logo-color.svg" class="logo" alt="Return to dashboard" />
-      </b-link>
-      <span class="headerTitle"
-            v-t="'Header.product-name'" />
-    </b-navbar-brand>
+    <header>
+      <a class="contentLink" id="SkipToContent" href="#PageContent" @click.prevent="skipToContent">Skip to content</a>
+      <b-navbar-brand>
+        <b-link to="/">
+          <img src="/img/logo-color.svg" class="logo" alt="Return to dashboard" />
+        </b-link>
+        <span class="headerTitle"
+              v-t="'Header.product-name'" />
+      </b-navbar-brand>
+    </header>
 
     <template v-if="isLoggedIn">
       <b-navbar-toggle target="nav-actions" ref="navToggle"/>
@@ -60,7 +62,7 @@
         transition: transform 250ms ease-out;
       }
 
-      &:focus {
+      &:focus-visible {
         transform: translateX(0);
       }
     }
