@@ -119,6 +119,13 @@ export default {
 
         this.getHeaderHeight();
         this.dialogScroll();
+
+        // For screen-readers, having a footer on a dialog is not desired.
+        this.$root.$on("bv::modal::shown", (bvEvent, modalId) => {
+            document.querySelectorAll("footer.modal-footer").forEach(elem => {
+                elem.setAttribute("role", "presentation");
+            });
+        });
     },
     watch: {
         bodyClasses: {
