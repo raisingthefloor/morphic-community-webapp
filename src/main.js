@@ -149,11 +149,15 @@ Vue.mixin({
                 : message.split("\n");
             const messageNodes = lines.map(line => this.$createElement("p", {}, line));
 
+            const dangerous = options && options.dangerous;
+
             return this.$bvModal.msgBoxConfirm(messageNodes, Object.assign({
                 title: title,
                 okTitle: (buttons && buttons[0]) || "Yes",
                 cancelTitle: (buttons && buttons[1]) || "No",
-                centered: true
+                centered: true,
+                autoFocusButton: dangerous ? "cancel" : "ok",
+                okVariant: dangerous && "danger"
             }, options));
         },
 
