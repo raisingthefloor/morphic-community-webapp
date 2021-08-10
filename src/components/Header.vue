@@ -63,7 +63,7 @@
         transition: transform 250ms ease-out;
       }
 
-      &:focus-visible {
+      &:not(.screenReader):focus-visible {
         transform: translateX(0);
       }
     }

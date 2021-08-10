@@ -149,6 +149,9 @@ export default {
             this.screenReaderMessage(this.$route.meta.title);
             const skipLink = document.getElementById("SkipToContent");
             if (skipLink) {
+                // Don't show the link, until the next time it's focused.
+                skipLink.classList.add("screenReader");
+                skipLink.addEventListener("blur", () => skipLink.classList.remove("screenReader"), {once: true});
                 skipLink.focus();
             }
         },
