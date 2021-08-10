@@ -43,7 +43,7 @@
                     v-b-toggle="`Collapse_${member.id}`"
                     :aria-label="$t('MembersList.expand_button_arial-label', {name: member.displayName})"
           >
-            <b-icon icon="caret-down-square-fill" variant="morphic-blue" scale="1.3" />
+            <b-icon icon="caret-down-square-fill" variant="morphic-blue" />
           </b-button>
           <!-- the user settings button -->
           <b-button variant="none" class="memberSettings whenExpanded"
@@ -113,7 +113,7 @@
                      clear
                      @ok="$event.promise = addMember($event.newValue)"
     />
-
+    <svg class="fa-chevron-circle-down d-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM273 369.9l135.5-135.5c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L256 285.1 154.4 183.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L239 369.9c9.4 9.4 24.6 9.4 34 0z"/></svg>
   </div>
 </template>
 
@@ -165,6 +165,18 @@ export default {
     },
     mounted() {
         this.updateExpandAllButtons();
+
+        // Make the expander icons a chevron, by extracting the svg info from a font-awesome icon.
+        const viewBox = this.$el.querySelector("svg.fa-chevron-circle-down").getAttribute("viewBox");
+        const path = this.$el.querySelector("svg.fa-chevron-circle-down > path");
+
+        this.$el.querySelectorAll(".expander svg.b-icon").forEach(svg => {
+            svg.setAttribute("viewBox", viewBox);
+        });
+        this.$el.querySelectorAll(".expander svg.b-icon g").forEach(g => {
+            g.innerHTML = path.outerHTML;
+        });
+
     },
     methods: {
         /**
