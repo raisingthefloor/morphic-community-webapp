@@ -453,10 +453,7 @@ export default {
          * @return {Promise<BarDetails>} Resolves when the new bar has been created.
          */
         async createBar(member, name) {
-            let barName = name || (member ? `Bar for ${member.fullName}` : undefined);
-            if (barName === "(no name)") {
-                barName = "My MorphicBar";
-            }
+            const barName = name || (member.isCurrent ? "My MorphicBar" : `Bar for ${member.fullName}`);
 
             const existingNames = this.bars.filter(b => member.bar_ids.includes(b.id)).map(b => b.name);
             let suffixNumber = 2;
