@@ -459,7 +459,7 @@ export default {
             }
 
             const existingNames = this.bars.filter(b => member.bar_ids.includes(b.id)).map(b => b.name);
-            let suffixNumber = 1;
+            let suffixNumber = 2;
             let newBarName = barName;
             while (existingNames.includes(newBarName)) {
                 newBarName = `${barName} (${suffixNumber})`;
