@@ -6,7 +6,7 @@
                    :prompt="$t('InviteMemberDialog.email_prompt', {name: member.fullName})"
                    validation="email"
                    clear
-                   @ok="$event.promise = sendInvite(member, $event.newValue)"
+                   @ok="$event.promise = memberInvite(member, $event.newValue)"
   />
 
 </template>
@@ -14,11 +14,12 @@
 <script>
 
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
-import * as communityService from "@/services/communityService";
+import { membersMixin } from "@/mixins/members";
 
 export default {
     name: "InviteMemberDialog",
     components: {TextInputDialog},
+    mixins: [membersMixin],
     props: {
         /** @type {CommunityMember} The member to invite */
         member: Object
@@ -28,18 +29,6 @@ export default {
         };
     },
     methods: {
-        /**
-         * Invites a member to enjoy fruits of morphic.
-         * @param {CommunityMember} member The chosen member.
-         * @param {String} invitationEmail The email address.
-         * @return {Promise} Resolves when complete.
-         */
-        sendInvite(member, invitationEmail) {
-            return communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail).then(() => {
-                member.state = "invited";
-                return true;
-            });
-        }
     }
 };
 </script>

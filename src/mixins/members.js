@@ -38,6 +38,41 @@ export const membersMixin = {
         },
 
         /**
+         * Reloads a member's data.
+         * @param {CommunityMember} member The member (gets updated).
+         * @return {Promise<CommunityMember>} Resolves with the new data.
+         */
+        memberReload: async function (member) {
+            return communityService.getCommunityMember(this.communityId, member.id).then(getResponse => {
+                Object.assign(member, getResponse.data);
+                return getResponse.data;
+            });
+        },
+
+        /**
+         * Updates some of a member's details to the API service.
+         *
+         * The member's data is first refreshed, so stale information is not re-added. The member object passed
+         * gets updated with the fresh data, and with the new data if successful.
+         *
+         * @param {CommunityMember} member The member to update.
+         * @param {CommunityMember} newData Contains only the new values to update.
+         * @return {Promise<AxiosResponse>} Resolves with the response data.
+         */
+        memberUpdate: async function (member, newData) {
+            // Update the user's latest information
+            const latest = this.memberReload(member);
+
+            // Set the new values, and update.
+            Object.assign(latest, newData);
+            return communityService.updateCommunityMember(this.communityId, member.id, member).then(updateResponse => {
+                // Add the new data to the member object.
+                Object.assign(member, newData);
+                return updateResponse;
+            });
+        },
+
+        /**
          * Changes a member's role.
          * @param {CommunityMember} member The member.
          * @param {"member"|"manager"} newRole The member's new role.
@@ -45,8 +80,6 @@ export const membersMixin = {
          * @return {Promise<Boolean>} Resolves with true if the member's role was changed.
          */
         memberChangeRole: async function (member, newRole, force) {
-            const origRole = member.role;
-
             const confirmed = force ||
                 await this.showConfirm(
                     this.$t("members.changeRole.confirm", {member: member.displayName, role: newRole}),
@@ -56,16 +89,9 @@ export const membersMixin = {
                     ],
                     this.$t("members.changeRole.title"));
 
-            if (confirmed) {
-                member.role = newRole;
-            }
+            const req = confirmed && this.memberUpdate(member, {role: newRole});
 
-            const req = confirmed && communityService.updateCommunityMember(this.communityId, member.id, member);
-            return req && this.requestToBool(req, MESSAGES.successfulRoleChange).then(success => {
-                if (!success) {
-                    member.role = origRole;
-                }
-            });
+            return req && this.requestToBool(req, MESSAGES.successfulRoleChange);
         },
 
         /**
@@ -135,7 +161,29 @@ export const membersMixin = {
             }
 
             return await communityService.updateCommunityMember(this.communityId, member.id, member);
-        }
+        },
 
+        /**
+         * Invites a member to enjoy fruits of morphic.
+         * @param {CommunityMember} member The chosen member.
+         * @param {String} invitationEmail The email address.
+         * @return {Promise} Resolves when complete.
+         */
+        memberInvite: async function (member, invitationEmail) {
+            await communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail);
+            member.state = "invited";
+            return true;
+        },
+
+        /**
+         * Renames a member
+         * @param {CommunityMember} member The member.
+         * @param {String} newName The new name.
+         * @return {Promise} Resolves when complete.
+         */
+        memberRename: function (member, newName) {
+            const response = this.memberUpdate(member, { first_name: newName, last_name: null });
+            return this.requestToBool(response, MESSAGES.successfulMemberRename);
+        }
     }
 };

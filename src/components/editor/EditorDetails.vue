@@ -13,13 +13,6 @@
     />
 
     <template v-if="isLite">
-      <b-modal id="MemberDetailsDialog"
-               hide-header
-               ok-only
-               ok-title="Close"
-      >
-        <MemberDetails v-if="memberDetails" id="MemberDetailsDialog" :member-details="memberDetails" :members="members" is-dialog />
-      </b-modal>
 <!--      <b-modal id="BarSettingsDialog"-->
 <!--               hide-header-->
 <!--               ok-only-->
@@ -55,9 +48,6 @@
                 Person: <span class="name">{{ barMembers.length }} members</span>
               </template>
             </span>
-            <b-link class="ml-4 onlyLite"
-                    v-b-modal="'MemberDetailsDialog'"
-            >Person Details</b-link>
           </div>
 <!--          <div v-if="isLite" class="mb-2">-->
 <!--            <b-link v-b-modal="'BarSettingsDialog'"><b-icon-gear-fill/>Settings for this MorphicBar</b-link>-->
@@ -67,22 +57,6 @@
         <div v-if="!isLite" id="EditorTabs">
 
           <div class="editorTabs nav-tabs">
-
-            <!-- Members tab -->
-            <b-button v-if="memberDetails" variant="none" size="sm" class="tabButton nav-link" v-b-toggle="'memberDetailsContent'">
-                <span :class="`state-${memberDetails.state}`">
-                  <b-icon icon="person-circle" alt="User settings: " aria-label="User settings" />&nbsp;
-                  <span v-if="memberDetails">{{ memberDetails.displayName }} ({{memberDetails.stateText}})</span>
-                  <span v-else-if="memberCount === 0">Unused Bar</span>
-                  <span v-else>Members ({{ memberCount }})</span>
-                </span>
-            </b-button>
-
-            <b-collapse id="memberDetailsContent" class="tabContent" accordion="editorTabs">
-              <b-button aria-label="Close" class="close" v-b-toggle="'memberDetailsContent'">×</b-button>
-
-              <MemberDetails v-if="memberDetails" :member-details="memberDetails" :members="members" />
-            </b-collapse>
 
             <!-- Bar settings tab -->
 <!--            <b-button variant="none" size="sm" class="tabButton nav-link" v-b-toggle="'settingsContent'">-->
@@ -128,12 +102,11 @@
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import * as Bar from "@/utils/bar";
 import { getCommunityBar, updateCommunityBar } from "@/services/communityService";
-import MemberDetails from "@/components/editor/MemberDetails";
 import { membersMixin } from "@/mixins/members";
 
 export default {
     name: "EditorDetails",
-    components: {MemberDetails, TextInputDialog},
+    components: {TextInputDialog},
     mixins: [membersMixin],
     props: {
         /** @type {BarDetails} */

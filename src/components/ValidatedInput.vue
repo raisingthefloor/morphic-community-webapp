@@ -59,8 +59,8 @@
 <style lang="scss">
 .requiredText {
   float: right;
-  margin-top: 0.5em;
-  font-size: 0.9rem;
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
 }
 .invalid-feedback span {
   font-size: 0.9rem;
