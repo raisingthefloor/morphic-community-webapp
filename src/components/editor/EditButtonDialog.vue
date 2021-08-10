@@ -43,10 +43,14 @@
                               boundary="viewport"
                               @show="relatedDropdown(true)"
                               @hidden="relatedDropdown(false)"
+                              @shown="relatedDropdownFocusSelected()"
                   >
                     <template #button-content>
                       <template v-if="!button.data.isPlaceholder">
-                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
+                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url"
+                               :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)"
+                               aria-hidden="true"
+                               alt="" />
                         {{
                           relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
                         }}
@@ -57,14 +61,15 @@
                     </template>
 
 
-                    <template v-for="(item, buttonKey) in relatedButtons"
-                              :class="buttonKey === button.data.buttonKey && 'selected'">
+                    <template v-for="(item, buttonKey) in relatedButtons">
 
                       <b-dropdown-item-button v-if="!item.data.isPlaceholder"
                                               :key="buttonKey"
                                               @click="setButton(item)"
+                                              :class="{ selected: buttonKey === button.data.buttonKey }"
                       >
                       <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)"
+                             aria-hidden="true"
                              alt="" />{{ item.data.catalogLabel || item.configuration.label }}
                       </b-dropdown-item-button>
                   </template>
@@ -364,6 +369,7 @@ import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/editor/BarItemFields";
 import { CONFIG } from "@/config/config";
 import { dialogMixin } from "@/mixins/dialog.js";
+import { a11yMixin } from "@/mixins/a11y";
 
 export default {
     name: "EditButtonDialog",
@@ -372,7 +378,7 @@ export default {
         bar: Object
     },
 
-    mixins: [dialogMixin],
+    mixins: [dialogMixin, a11yMixin],
 
     components: {
         BarItemFields,
@@ -680,6 +686,16 @@ export default {
         },
 
         /**
+         * Focus the selected item on the drop-down.
+         */
+        relatedDropdownFocusSelected: function () {
+            const selected = document.querySelector("#relatedDropdown .dropdown-menu .selected .dropdown-item");
+            if (selected) {
+                selected.focus();
+            }
+        },
+
+        /**
          * Shows a message of problems.
          * @return {Promise<Boolean>} true to continue with saving.
          */
@@ -710,8 +726,10 @@ export default {
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
 
-
             setTimeout(() => {
+                this.a11yWrapDropdown(this.$refs.RelatedDropdown);
+                this.a11yDropdownMnemonics(this.$refs.RelatedDropdown);
+
                 // The drop-down doesn't support autofocus.
                 if (this.showRelated && this.button.data.isPlaceholder) {
                     document.querySelector("#relatedDropdown button").focus();
