@@ -273,6 +273,18 @@ Vue.mixin({
                 }
                 return success;
             }).catch(() => false);
+        },
+
+        /**
+         * Remove the built-in aria-label attributes from all icons, unless aria-hidden has been explicitly set.
+         * If a label requires an aria-label, then set the aria-hidden attribute to false.
+         */
+        removeIconLabels: function () {
+            if (this.$el.querySelectorAll) {
+                this.$el.querySelectorAll("svg[aria-label]:not([aria-hidden])").forEach(e => {
+                    e.removeAttribute("aria-label");
+                });
+            }
         }
     },
     mounted() {
@@ -282,12 +294,10 @@ Vue.mixin({
         // Apply the production-only condition
         document.body.classList.toggle("production", this.CONFIG.PRODUCTION);
 
-        // Remove the redundant aria-label attributes from all icons, unless aria-hidden has been explicitly set.
-        if (this.$el.querySelectorAll) {
-            this.$el.querySelectorAll("svg[aria-label]:not([aria-hidden])").forEach(e => {
-                e.removeAttribute("aria-label");
-            });
-        }
+        this.removeIconLabels();
+    },
+    updated() {
+        this.removeIconLabels();
     },
     computed: {
         isLoggedIn: function () { return this.$store.getters.isLoggedIn; },
