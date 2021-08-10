@@ -37,6 +37,14 @@ export const a11yMixin = {
                 return undefined;
             }
 
+            // Focus the first item, if there's nothing focused already
+            dropdown.$on("shown", function (e) {
+                const hasSelection = dropdown.$el.querySelector("ul.dropdown-menu .dropdown-item:focus");
+                if (!hasSelection) {
+                    dropdown.focusItem(0, dropdown.getItems());
+                }
+            });
+
             const elem = dropdown.$el.querySelector("ul.dropdown-menu");
 
             elem.addEventListener("keydown", (event) => {
