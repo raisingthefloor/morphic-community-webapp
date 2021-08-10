@@ -13,13 +13,13 @@
     />
 
     <template v-if="isLite">
-      <b-modal id="BarSettingsDialog"
-               hide-header
-               ok-only
-               ok-title="Close"
-      >
-        <BarSettings :bar-details="barDetails" is-dialog :member="memberDetails" @rename="showRenameBarDialog()"/>
-      </b-modal>
+<!--      <b-modal id="BarSettingsDialog"-->
+<!--               hide-header-->
+<!--               ok-only-->
+<!--               ok-title="Close"-->
+<!--      >-->
+<!--        <BarSettings :bar-details="barDetails" is-dialog :member="memberDetails" @rename="showRenameBarDialog()"/>-->
+<!--      </b-modal>-->
     </template>
 
     <b-row no-gutters>
@@ -28,13 +28,12 @@
         <div id="BarDetails" :class="isLite && 'bg-silver rounded p-2'">
           <!-- Bar name -->
           <div class="bar-name">
-            <h2>Bar: <span class="name">{{barName}}</span>
-
-            </h2>
+            <h2>Bar: <span class="name">{{barName}}</span></h2>
             <!-- rename bar -->
-            <span v-if="barDetails.name !== 'Default'" class="rename">
-                        &nbsp;<small><b-button variant="link" @click="showRenameBarDialog()" Xv-b-modal="'barNameDialog'">rename</b-button></small>
-                      </span>
+            <span v-if="barDetails.name !== 'Default'" class="actions">
+              <b-button variant="link" @click="showRenameBarDialog()">rename</b-button>
+              <b-button variant="link" @click="deleteBar()" class="text-danger">delete</b-button>
+            </span>
 
           </div>
           <div class="mb-1">
@@ -50,9 +49,9 @@
               </template>
             </span>
           </div>
-          <div v-if="isLite" class="mb-2">
-            <b-link v-b-modal="'BarSettingsDialog'"><b-icon-gear-fill/>Settings for this MorphicBar</b-link>
-          </div>
+<!--          <div v-if="isLite" class="mb-2">-->
+<!--            <b-link v-b-modal="'BarSettingsDialog'"><b-icon-gear-fill/>Settings for this MorphicBar</b-link>-->
+<!--          </div>-->
         </div>
 
         <div v-if="!isLite" id="EditorTabs">
@@ -60,16 +59,16 @@
           <div class="editorTabs nav-tabs">
 
             <!-- Bar settings tab -->
-            <b-button variant="none" size="sm" class="tabButton nav-link" v-b-toggle="'settingsContent'">
-              <b-icon-gear-fill/>
-              Settings for this MorphicBar
-            </b-button>
+<!--            <b-button variant="none" size="sm" class="tabButton nav-link" v-b-toggle="'settingsContent'">-->
+<!--              <b-icon-gear-fill/>-->
+<!--              Settings for this MorphicBar-->
+<!--            </b-button>-->
 
-            <b-collapse id="settingsContent" class="tabContent" accordion="editorTabs">
-              <b-button aria-label="Close" class="close" v-b-toggle="'settingsContent'">×</b-button>
+<!--            <b-collapse id="settingsContent" class="tabContent" accordion="editorTabs">-->
+<!--              <b-button aria-label="Close" class="close" v-b-toggle="'settingsContent'">×</b-button>-->
 
-              <BarSettings :bar-details="barDetails" :member="memberDetails" @rename="showRenameBarDialog()"/>
-            </b-collapse>
+<!--              <BarSettings :bar-details="barDetails" :member="memberDetails" @rename="showRenameBarDialog()"/>-->
+<!--            </b-collapse>-->
           </div>
 
         </div>
@@ -103,11 +102,12 @@
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import * as Bar from "@/utils/bar";
 import { getCommunityBar, updateCommunityBar } from "@/services/communityService";
-import BarSettings from "@/components/editor/BarSettings";
+import { membersMixin } from "@/mixins/members";
 
 export default {
     name: "EditorDetails",
-    components: {BarSettings, TextInputDialog},
+    components: {TextInputDialog},
+    mixins: [membersMixin],
     props: {
         /** @type {BarDetails} */
         barDetails: Object,
@@ -143,6 +143,16 @@ export default {
          */
         showRenameBarDialog: function () {
             this.$bvModal.show("barNameDialog");
+        },
+
+        /**
+         * Delete the bar.
+         */
+        deleteBar: async function () {
+            const deleted = await this.memberRemoveBar(this.barDetails, this.memberDetails, true);
+            if (deleted) {
+                this.$router.push("/");
+            }
         },
 
         /**
@@ -193,11 +203,15 @@ export default {
     font-weight: bold;
   }
 
-  .bar-name h2 {
+  .bar-name {
+    h2 {
       margin-bottom: 0;
       display: inline-block;
       font-weight: normal;
-      margin-right: 1em;
+    }
+    .actions .btn {
+      margin-left: 1.5em;
+    }
   }
   &.rounded {
     border-radius: 0.6rem !important;
