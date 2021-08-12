@@ -37,7 +37,7 @@
                    :activeMemberId="activeMemberId"
                    :expandedMembers="expandedMembers"
                    @newbar="newBar($event)"
-                   @addMember="$event.promise = addMember($event.name)"
+                   @addMember="showModalDialog('NewMemberDialog')"
                    @memberDetails="showMemberDetails($event)"
                    aria-labelledby="OtherBarsHeading"
       />
@@ -60,6 +60,25 @@
                          :active-member-id="activeMemberId"
                          @close="reloadAll()"
     />
+
+    <NewMemberDialog id="NewMemberDialog"
+                     :bars="bars"
+                     :members="members"
+                     :community="community"
+                     @ok="$event.promise = addMember($event.data.name)"
+    />
+
+    <b-modal  id="NewMemberConfirm"
+              ok-only
+    >
+      <template #modal-title>Person added: {{ newestMember && newestMember.displayName }}</template>
+      <p id="NewMemberNextSteps">Next steps:</p>
+      <ol aria-labelledby="NewMemberNextSteps">
+        <li>Add buttons to the person's bar.</li>
+        <li>Save the bar (when it's done).</li>
+        <li>Invite the person.</li>
+      </ol>
+    </b-modal>
   </div>
 </template>
 
@@ -357,15 +376,18 @@ import * as Bar from "@/utils/bar";
 import * as communityService from "@/services/communityService";
 import { membersMixin } from "@/mixins/members.js";
 import MemberDetailsDialog from "@/components/dialogs/MemberDetailsDialog";
+import { dialogMixin } from "@/mixins/dialog";
+import NewMemberDialog from "@/components/dialogs/NewMemberDialog";
 
 export default {
     name: "SidePanel",
     components: {
+        NewMemberDialog,
         MemberDetailsDialog,
         MembersList,
         BarsList
     },
-    mixins: [membersMixin],
+    mixins: [membersMixin, dialogMixin],
     props: {
         /** @type {Community} */
         community: Object,
@@ -383,8 +405,8 @@ export default {
     },
     data() {
         return {
-            /** @type {GUID} The member that was just added */
-            newestMemberId: null,
+            /** @type {CommunityMember} The member that was just added */
+            newestMember: null,
             /** @type {CommunityMember} The member to show the details' dialog for. */
             memberDetails: {}
         };
@@ -410,7 +432,7 @@ export default {
             return this.currentMember.role === "manager";
         },
         expandedMembers() {
-            return [this.newestMemberId];
+            return this.makeArray(this.newestMember && this.newestMember.id);
         },
         buttonAttrs() {
             return this.isLite
@@ -496,12 +518,15 @@ export default {
             // Create a new bar for the member
             const bar = await this.createBar(member);
 
-            this.newestMemberId = member.id;
+            this.newestMember = member;
             this.reloadAll();
-            this.showMessage("New member added");
 
-            const route = Bar.getUserBarEditRoute(bar.id, member);
-            this.$router.push(route);
+            this.showModalDialog("NewMemberConfirm").then(() => {
+                this.showMessage("New member added");
+                const route = Bar.getUserBarEditRoute(bar.id, member);
+                this.$router.push(route);
+            });
+
 
             return member;
         },

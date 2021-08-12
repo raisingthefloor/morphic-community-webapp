@@ -184,6 +184,19 @@ export const membersMixin = {
         memberRename: function (member, newName) {
             const response = this.memberUpdate(member, { first_name: newName, last_name: null });
             return this.requestToBool(response, MESSAGES.successfulMemberRename);
+        },
+
+        /**
+         * Checks if a name has already been taken.
+         * @param {String} name The name to check.
+         * @param {CommunityMember} ignore A member to ignore (for use when renaming a member).
+         * @return {Boolean} true if there is already a member with the given name.
+         */
+        memberCheckDuplicate: function (name, ignore) {
+            return this.members.some(m => {
+                return m.fullName === name && (!ignore || m.id !== ignore.id);
+            });
         }
+
     }
 };

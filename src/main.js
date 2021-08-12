@@ -59,12 +59,17 @@ Vue.mixin({
         handleServerError(err) {
             if (this.errorMessage !== undefined && this.errorAlert !== undefined) {
                 err.handled = true;
-                this.errorMessage = this.getErrorMessage(err);
+                const message = this.getErrorMessage(err, true);
+                this.errorMessage = message.message;
+                if (this.errorMessageTitle !== undefined) {
+                    this.errorMessageTitle = message.title;
+                }
                 this.errorAlert = true;
             }
 
             // Get the autofocus input, or just the first one.
-            const f = this.$el.querySelector("input.autofocus") || this.$el.querySelector("input");
+            const elem = this.$el && this.$el.querySelector ? this.$el : document.getElementById(this.dialogId);
+            const f = elem.querySelector("input.autofocus") || elem.querySelector("input");
             if (f && f.focus) {
                 f.focus();
             }
@@ -162,28 +167,6 @@ Vue.mixin({
         },
 
         /**
-         * Displays a modal dialog, resolving when the dialog is dismissed.
-         * @param {String} modalId The id of the modal dialog.
-         * @return {Promise<String>} Resolves with the trigger value of the modal's hide event.
-         */
-        showModalDialog(modalId) {
-            return new Promise((resolve, reject) => {
-
-                const onHide = (event, id) => {
-                    if (id === modalId) {
-                        resolve(event.trigger);
-                        this.$root.$off("bv::modal::hide", onHide);
-                    }
-                };
-
-                this.$root.$on("bv::modal::hide", onHide);
-
-                this.$bvModal.show(modalId);
-            });
-
-        },
-
-        /**
          * Gets the url of an icon
          * @param {String} image The icon identified (from image_url)
          * @return {String} The url.
@@ -238,16 +221,19 @@ Vue.mixin({
         /**
          * Validates a form, sets the focus to the first invalid field.
          * @param {Object} model The validation model (this.$v, or a validation group within it)
+         * @param {HTMLElement} [$el] A parent element of the form.
          * @return {Boolean} true if the form is valid.
          */
-        validateForm(model) {
+        validateForm(model, $el = this.$el) {
             model.$touch();
             const valid = !model.$anyError;
             if (!valid) {
-                const field = this.$el.querySelector(".is-invalid, :invalid");
-                if (field) {
-                    field.focus();
-                }
+                this.$nextTick(() => {
+                    const field = $el?.querySelector && $el?.querySelector(".is-invalid, :invalid");
+                    if (field) {
+                        this.$nextTick(() => field.focus());
+                    }
+                });
             }
 
             return valid;

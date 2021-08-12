@@ -77,6 +77,34 @@
     "re-invite_button": "Send a new invitation",
     "invite_button": "Send an invitation"
   },
+  "NewMember": {
+      "title": "Add a person"
+  },
+  "NewMemberDialog": {
+    "add_button": "Add Person",
+    "cancel_button": "Cancel",
+    "lead": "Manage MorphicBars for other people by adding them to your Morphic Plus subscription.",
+    "manager-steps": "First, you will need to...",
+    "manager-steps_list": [
+      "Add the person (you are here)",
+      "Make a Bar",
+      "Save the Bar",
+      "Invite the person (invite will be sent by email)"
+    ],
+    "member-plan-limit": "You can add up to {limit} people on your {plan} Morphic Plus subscription.",
+    "member-steps": "The person you invited will need to...",
+    "member-steps_info": "You may wish to help in person or using remote tools.",
+    "member-steps_list": [
+      "Click link in invitation email",
+      "Sign up for account & accept invitation",
+      "Download & install Morphic app on their computer",
+      "Sign into the Morphic app"
+    ],
+    "name-duplicate_error": "There is already a member with this name.",
+    "name_label": "Name or nickname of person to add",
+    "steps-info": "Morphic recommends that you contact the person you are inviting ahead of time.",
+    "steps_heading": "What are the steps?"
+  },
   "SidePanel": {
     "account-settings_link": "Account settings",
     "group-bars_heading": "Group Bars",
