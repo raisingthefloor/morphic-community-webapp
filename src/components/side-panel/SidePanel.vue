@@ -2,9 +2,11 @@
   <div id="SidePanel">
     <div class="panelSection">
       <div class="accountName">{{ community.name }}</div>
+      <!-- temporarily removed
       <div class="accountInfo">
         <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
       </div>
+      -->
 
       <!-- member's own bars -->
       <div class="panelDetails" >
