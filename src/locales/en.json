@@ -8,11 +8,11 @@
   },
   "CopyBarDialog": {
     "confirm-dialog": {
-      "no_button": "No",
+      "no_button": "@:(General.no_button)",
       "question": "Do you wish to continue?",
       "summary": "This will copy the contents of the bar {barToCopy}, replacing all items of the current bar, {currentBar}.",
       "title": "Confirm Bar Copy",
-      "yes_button": "Yes"
+      "yes_button": "@:(General.yes_button)"
     },
     "intro": "You can copy any of the MorphicBars below into the MorphicBar you are editing. (Replacing the ALL of current contents of the MorphicBar you are editing)",
     "no-bars": "There are no other bars to copy items from.",
@@ -26,6 +26,10 @@
     "try-it_button": "Try it"
   },
   "General": {
+    "no_button": "No",
+    "yes_button": "Yes",
+    "ok_button": "OK",
+    "cancel_button": "Cancel",
     "member-state": {
       "active": "Active",
       "invited": "Not yet accepted",
@@ -82,7 +86,7 @@
   },
   "NewMemberDialog": {
     "add_button": "Add Person",
-    "cancel_button": "Cancel",
+    "cancel_button": "@:(General.cancel_button)",
     "lead": "Manage MorphicBars for other people by adding them to your Morphic Plus subscription.",
     "manager-steps": "First, you will need to...",
     "manager-steps_list": [
@@ -325,19 +329,19 @@
   "members": {
     "changeRole": {
       "apply_button": "Change to {role}",
-      "cancel_button": "Cancel",
+      "cancel_button": "@:(General.cancel_button)",
       "confirm": "Please confirm changing the role of {member} to {role}",
       "title": "Change member role"
     },
     "delete": {
       "apply_button": "Remove {member}",
-      "cancel_button": "Cancel",
+      "cancel_button": "@:(General.cancel_button)",
       "confirm": "Please confirm the removal of {member} from the group",
       "title": "Remove member"
     },
     "removeBar": {
       "apply_button": "Delete bar",
-      "cancel_button": "Cancel",
+      "cancel_button": "@:(General.cancel_button)",
       "confirm": "Are you sure you want to delete the bar?\nThis will remove the bar from this account. This cannot be undone."
     }
   }
