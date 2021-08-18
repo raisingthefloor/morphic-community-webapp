@@ -4,7 +4,7 @@
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" :bar="barDetails" />
     <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
-    <InviteMemberDialog id="InviteMemberDialog-MorphicBarEditor" :member="memberDetails" />
+    <InviteMemberDialog id="InviteMemberDialog-MorphicBarEditor" :member="memberDetails" :members="membersList" />
 
     <b-modal id="unsavedChanges" title="Unsaved Changes">
       <p>You have made some changes to this bar, but they are not saved yet.</p>

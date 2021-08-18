@@ -12,6 +12,7 @@
 
           :form-data="newMember"
 
+          :v="$v"
   >
     <template #info-heading>
       {{ $t('NewMemberDialog.steps_heading') }}
@@ -60,31 +61,6 @@
 </template>
 
 <style lang="scss">
-@import "~@/styles/_variables.scss";
-
-.newMemberDialog {
-  .modal-header {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  h5, h6 {
-    color: $morphic-blue-color;
-    font-size: 1.5em;
-  }
-
-  .logoHeading {
-    img {
-      width: 1.75em;
-      height: 1.75em;
-      margin-right: 0.2em;
-    }
-  }
-  .rounded-lg {
-    border-radius: 1em !important;
-  }
-
-}
 
 </style>
 

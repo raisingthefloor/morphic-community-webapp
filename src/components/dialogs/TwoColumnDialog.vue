@@ -10,7 +10,7 @@
   >
     <b-container class="p-0">
 
-      <b-row>
+      <b-row class="align-items-start">
 
         <b-col v-if="!isMobile" lg="6" cols="12" order="2" class="bg-silver rounded-lg pt-3 pl-3 pr-3 mb-3 mr-3">
           <h6 class="logoHeading">
@@ -21,7 +21,7 @@
 
         </b-col>
 
-        <b-col class="pt-2 mb-3 mr-4 d-flex flex-column">
+        <b-col class="pt-2 mb-3 mr-4 d-flex flex-column align-self-stretch">
 
           <slot name="form" />
 
@@ -35,12 +35,12 @@
 
           <div class="buttons d-flex justify-content-around">
             <slot name="buttons" v-bind:ok="okClicked" v-bind:cancel="hideDialog">
-              <b-button class="pl-5 pr-5 pt-2 pb-2"
+              <b-button class="pl-3 pr-3 pt-2 pb-2"
                         variant="invert-dark"
                         @click="hideDialog">
                 {{ cancelTitle || "Cancel" }}
               </b-button>
-              <b-button class="pl-5 pr-5 pt-2 pb-2"
+              <b-button class="pl-3 pr-3 pt-2 pb-2"
                         variant="morphic-green"
                         @click="okClicked($event)">
                 {{ okTitle || "OK" }}
@@ -66,6 +66,10 @@
     padding-bottom: 0;
   }
 
+  .modal-body {
+    padding-top: 0;
+  }
+
   h5, h6 {
     color: $morphic-blue-color;
     font-size: 1.5em;
@@ -80,6 +84,12 @@
   }
   .rounded-lg {
     border-radius: 1em !important;
+  }
+
+  .buttons {
+    .btn {
+      min-width: 9em;
+    }
   }
 
 }
@@ -97,7 +107,8 @@ export default {
         id: String,
         okTitle: String,
         cancelTitle: String,
-        formData: Object
+        formData: Object,
+        v: Object
     },
     data: function () {
         return {
@@ -110,7 +121,11 @@ export default {
             errorMessageTitle: null
         };
     },
-    computed: {},
+    computed: {
+        $v: function () {
+            return this.v;
+        }
+    },
     mounted() {
     },
 
