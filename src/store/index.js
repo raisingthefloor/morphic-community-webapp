@@ -12,7 +12,7 @@ export default new Vuex.Store({
         token: localStorage.getItem("token") || "",
         userId: localStorage.getItem("userId") || "",
         communityId: localStorage.getItem("communityId") || "",
-        role: "",
+        role: localStorage.getItem("role") || "",
         user: {},
         community: {},
         errorMessage: {},
@@ -67,6 +67,7 @@ export default new Vuex.Store({
         },
         role(state, role) {
             state.role = role;
+            localStorage.setItem("role", role);
         },
         unsavedChanges(state, isChanged) {
             state.unsavedChanges = isChanged;
@@ -136,6 +137,7 @@ export default new Vuex.Store({
                 localStorage.removeItem("token");
                 localStorage.removeItem("userId");
                 localStorage.removeItem("communityId");
+                localStorage.removeItem("role");
                 delete HTTP.defaults.headers.common.Authorization;
                 window.location.href = "/#/";
                 resolve();
