@@ -13,7 +13,8 @@ export const MESSAGES = {
     leavePageAlert: "Do you really want to leave? You have unsaved changes!",
     successfulRoleChange: "Member role changed successfully",
     successfulMemberDelete: "Member deleted successfully.",
-    successfulBarDelete: "Bar successfully deleted."
+    successfulBarDelete: "Bar successfully deleted.",
+    successfulMemberRename: "Member name updated."
 };
 
 export const colors = {
@@ -188,7 +189,7 @@ export const buttonCatalog = {
     news: {
         title: "News",
         editTitle: "News Site",
-        defaultIcon: "newspaper",
+        defaultIcon: "news$newspaper",
         more: {
             description: "Create a button to open a news web-site"
         }

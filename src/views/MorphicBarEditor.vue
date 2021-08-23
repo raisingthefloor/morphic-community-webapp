@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div id="EditorContainer" class="desktop-headerMaxHeight">
+
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" :bar="barDetails" />
     <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
@@ -16,77 +17,94 @@
     </b-modal>
     <!-- MODALs: END -->
 
-    <!-- EDITOR v2 -->
-    <div id="EditorContainer">
-      <div v-if="!isLite" class="editorSide left">
-        <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
-      </div>
-      <div v-show="editorVisible" class="editor">
-        <div id="barEditor" class="pt-2">
+    <div v-if="!isLite" class="editorSide left">
+      <SidePanel :community="community" :bars="barsList" :members="membersList" :activeMemberId="activeMemberId" :activeBarId="barDetails.id" @reload="loadAllData()" />
+    </div>
+    <div v-show="editorVisible" class="editor">
+      <div id="barEditor" class="pt-2">
 
-          <b-link v-if="isLite" to="/">
-            <b-img src="/img/back-arrow.svg" width="20" height="20" class="switchBarIcon" />Switch Bar or Person
-          </b-link>
+        <b-link v-if="isLite" to="/">
+          <b-img src="/img/back-arrow.svg" width="20" height="20" class="switchBarIcon" />Switch Bar or Person
+        </b-link>
 
-          <!-- Bar info, actions, and editor tabs -->
-          <EditorDetails ref="EditorDetails"
-                         :bar-details="barDetails"
-                         :bars-list="barsList"
-                         :bar-members="barMembers"
-                         :is-changed="isChanged"
-                         :member-details="memberDetails"
-                         :new-bar="newBar"
-                         @save-bar="saveBar()" @revert-bar="revertBar()"
-          />
+        <!-- Bar info, actions, and editor tabs -->
+        <EditorDetails ref="EditorDetails"
+                       :bar-details="barDetails"
+                       :bars-list="barsList"
+                       :bar-members="barMembers"
+                       :is-changed="isChanged"
+                       :member-details="memberDetails"
+                       :new-bar="newBar"
+                       @save-bar="saveBar()" @revert-bar="revertBar()"
+        />
 
-          <!-- the focus/mobile editor -->
-          <LiteBarEditor v-if="isLite"
-                         ref="LiteBarEditor"
-                         :bar-details="barDetails"
-                         @edit-item="showEditDialog($event)"
-                         @add-item="showCatalog(true)"
-          />
+        <!-- the focus/mobile editor -->
+        <LiteBarEditor v-if="isLite"
+                       ref="LiteBarEditor"
+                       :bar-details="barDetails"
+                       @edit-item="showEditDialog($event)"
+                       @add-item="showCatalog(true)"
+        />
 
 
-          <!-- the desktop editor -->
-          <DesktopBarEditor v-else
-                            ref="DesktopBarEditor"
-                            :bar-details="barDetails"
-                            :member-details="memberDetails"
-                            :is-changed="isChanged"
-                            @edit-item="showEditDialog($event)"
-                            @bar-changed="onBarChanged"
-                            @click="$refs.EditorDetails.closeTab()"
-                            @item-dropped="addBarItem($event.item, $event.noImage, $event.index)"
-          />
-        </div>
-      </div>
-
-      <!-- Button Catalogue -->
-      <div v-show="catalogVisible" :class="isLite && 'p-3'" class="editorSide right">
-
-        <template v-if="isLite">
-          <h1>Button Catalog: Buttons you can add</h1>
-          <div class="mb-3">
-            <b-button @click="showCatalog(false)">Cancel</b-button>
-          </div>
-        </template>
-
-
-        <ButtonCatalog ref="ButtonCatalog"
-                       :button-catalog="buttonCatalog"
-                       @item-selected="addBarItem($event.item, $event.noImage)"
+        <!-- the desktop editor -->
+        <DesktopBarEditor v-else
+                          ref="DesktopBarEditor"
+                          :bar-details="barDetails"
+                          :member-details="memberDetails"
+                          :is-changed="isChanged"
+                          @edit-item="showEditDialog($event)"
+                          @bar-changed="onBarChanged"
+                          @click="$refs.EditorDetails.closeTab()"
+                          @item-dropped="addBarItem($event.item, $event.noImage, $event.index)"
         />
       </div>
+      <div id="EditorFooter"></div>
+    </div>
+
+    <!-- Button Catalogue -->
+    <div v-show="catalogVisible" :class="isLite && 'p-3'" class="editorSide right">
+
+      <template v-if="isLite">
+        <h1>Button Catalog: Buttons you can add</h1>
+        <div class="mb-3">
+          <b-button @click="showCatalog(false)">Cancel</b-button>
+        </div>
+      </template>
+
+
+      <ButtonCatalog ref="ButtonCatalog"
+                     :button-catalog="buttonCatalog"
+                     @item-selected="addBarItem($event.item, $event.noImage)"
+      />
     </div>
   </div>
 </template>
 
 <style lang="scss">
-  #barEditor {
-    padding-left: 15px;
-    padding-right: 15px;
+@import "~@/styles/_bootstrap-util.scss";
+
+.editorPage {
+  #PageContent {
+    display: flex;
+    flex-direction: column;
+    #EditorContainer {
+      flex-grow: 1;
+    }
   }
+  #SidePanel {
+    //max-height: 100%;
+  }
+
+  #PageContainer > footer {
+    display: none;
+  }
+}
+
+#barEditor {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 
 .switchBarIcon {
   vertical-align: top;
@@ -95,16 +113,30 @@
 body:not(.isLite) {
   #EditorContainer {
     display: flex;
+    align-items: stretch;
 
     .editor {
       flex-grow: 1;
       flex-shrink: 1;
+
+      display: flex;
+      flex-direction: column;
+      #barEditor {
+        flex-grow: 1;
+      }
+
+      #EditorFooter > * {
+        background-color: unset !important;
+      }
+
     }
 
     .editorSide {
       flex-shrink: 0;
       width: 15em;
       min-width: 16.66%;
+
+      overflow-y: auto;
     }
   }
 }
@@ -153,9 +185,9 @@ export default {
          * @param {Boolean} [noImage] True if the button shall have no image.
          * @param {Number} [insertAt] The index of the new button.
          */
-        addBarItem: function (catalogButton, noImage, insertAt) {
+        addBarItem: async function (catalogButton, noImage, insertAt) {
             /** @type {BarItem} */
-            const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt);
+            const barItem = Bar.addItem(this.barDetails, catalogButton, insertAt, true);
             if (noImage) {
                 barItem.configuration.image_url = "";
             }
@@ -164,7 +196,6 @@ export default {
             this.showCatalog(false);
             this.onBarChanged();
 
-            // Show the edit dialog if it has parameters, a placeholder, or has errors.
             let showEdit;
             if (barItem.data.showEdit === undefined) {
                 showEdit = barItem.data.paramFields.length > 1 || barItem.data.isPlaceholder || barItem.data.hasError;
@@ -172,9 +203,21 @@ export default {
                 showEdit = barItem.data.showEdit;
             }
 
-            if (showEdit) {
-                this.showEditDialog(barItem);
+            const cancelled = showEdit && !(await this.showEditDialog(barItem));
+
+            if (cancelled) {
+                // Dialog was cancelled - remove the button
+                Bar.removeItem(barItem, this.barDetails);
+            } else {
+                // Set to false before deleting, so the change is seen.
+                barItem.data.isNew = false;
+                delete barItem.data.isNew;
+                // close the catalog
+                this.showCatalog(false);
+                this.onBarChanged();
+                this.screenReaderMessage(`New item added: ${barItem.configuration.label}`);
             }
+
         },
         /**
          * Called when the bar changes, after it is loaded.
@@ -185,7 +228,6 @@ export default {
         },
 
         storeUnsavedBar: function () {
-            Bar.checkBar(this.barDetails);
             this.$store.dispatch("unsavedChanges", this.isChanged);
             this.$store.dispatch("unsavedBar", this.isChanged && this.barDetails);
         },
@@ -197,10 +239,17 @@ export default {
             }
         },
 
-        loadAllData: function () {
-            this.loadBarData();
-            this.loadBarMembers();
-            this.getCommunityData();
+        /**
+         * Loads the required data for the page.
+         */
+        loadAllData: async function () {
+            await Promise.all([
+                this.getCommunityData(),
+                this.loadBarData(),
+                this.loadBarMembers()
+            ]);
+
+            this.screenReaderMessage(`Now editing bar '${this.barDetails.name}', owned by '${this.memberDetails.displayName}`);
         },
 
         /** Loads the initial bar data */
@@ -210,6 +259,7 @@ export default {
             // If there is a bar unsaved, redirect to that one instead.
             /** @type {BarDetails} */
             const unsavedBar = this.$store.getters.unsavedBar;
+
             if (unsavedBar && unsavedBar.id !== barId) {
                 const barName = Bar.getBarName(unsavedBar);
                 const message = `There is already a bar (${barName}) that has unsaved changes. The recent changes will be lost if you continue.`;
@@ -223,7 +273,7 @@ export default {
 
                 if (!ok) {
                     this.$router.push(this.getBarEditRoute(unsavedBar));
-                    return;
+                    throw new Error("Not loading");
                 }
             }
 
@@ -234,14 +284,8 @@ export default {
                 this.isChanged = false;
                 this.storeUnsavedBar();
                 // Load a saved bar.
-                getCommunityBar(this.communityId, barId)
-                    .then(resp => {
-                        this.barDetails = resp.data;
-                        this.updateOriginalBarDetails();
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    });
+                this.barDetails = (await getCommunityBar(this.communityId, barId)).data;
+                this.updateOriginalBarDetails();
             }
         },
         // hack to refresh css rendering due to bars being fucked up in their CSS
@@ -304,14 +348,16 @@ export default {
         /**
          * Shows the edit button dialog.
          * @param {BarItem} [item] The item to edit.
+         * @return {Promise} Resolves when the dialog is closed, result is false if cancelled.
          */
         showEditDialog: function (item) {
-            this.editDialog.showDialog(item).then(changed => {
+            return this.editDialog.showDialog(item).then(changed => {
                 Bar.checkBar(this.barDetails);
                 if (changed) {
                     this.onBarChanged();
                 }
                 this.$forceUpdate();
+                return changed;
             });
         },
 
@@ -338,31 +384,29 @@ export default {
 
         },
 
-        loadBarMembers: function () {
-            getCommunityBars(this.communityId)
-                .then(resp => {
-                    const barsData = resp.data.bars;
-                    getCommunityMembers(this.communityId)
-                        .then((resp) => {
-                            this.barsList = barsData;
-                            this.membersList = resp.data.members;
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        });
-                })
-                .catch(err => {
-                    console.error(err);
-                });
+        /**
+         * Loads the bars and members
+         * @return {Promise} Resolves when complete.
+         */
+        loadBarMembers: async function () {
+            const barsResponse = getCommunityBars(this.communityId);
+            const membersResponse = getCommunityMembers(this.communityId);
+
+            const bars = await barsResponse;
+            const members = await membersResponse;
+            this.barsList = bars.data.bars;
+            this.membersList = members.data.members;
+            return true;
         },
+
+        /**
+         * Loads the community data.
+         * @return {Promise} Resolves when complete.
+         */
         getCommunityData: function () {
-            getCommunity(this.communityId)
-                .then((community) => {
-                    this.community = community.data;
-                })
-                .catch(err => {
-                    console.error(err);
-                });
+            return getCommunity(this.communityId).then((community) => {
+                this.community = community.data;
+            });
         },
         /**
          * Update the filtered arrays of bars.
@@ -474,6 +518,11 @@ export default {
     },
     mounted() {
         this.loadAllData();
+
+        // Move the footer text
+        const footer = document.querySelector("#PageContainer > footer");
+        const editorFooter = document.querySelector("#EditorFooter");
+        editorFooter.innerHTML = footer.outerHTML.replace(/(<\/?)footer/g, "$1div");
     },
     watch: {
         "memberDetails.id": function (newValue, oldValue) {

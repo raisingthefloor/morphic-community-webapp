@@ -21,6 +21,8 @@
           :state="state"
           :id="inputId"
           class="h-20 w-80"
+          :class="{autofocus}"
+          :autofocus="autofocus"
           :aria-required="required"
           :type="inputType"
           v-bind="$attrs"
@@ -57,8 +59,8 @@
 <style lang="scss">
 .requiredText {
   float: right;
-  margin-top: 0.5em;
-  font-size: 0.9rem;
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
 }
 .invalid-feedback span {
   font-size: 0.9rem;
@@ -106,7 +108,8 @@ export default {
         /** Show the toggle button to show/hide the password */
         passwordToggle: Boolean,
         /** ID of the related password confirm input */
-        passwordConfirm: String
+        passwordConfirm: String,
+        autofocus: Boolean
     },
     data() {
         return {

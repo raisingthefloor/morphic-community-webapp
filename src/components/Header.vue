@@ -1,18 +1,22 @@
 <template>
-  <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="">
-    <b-navbar-brand role="banner">
-      <b-link to="/">
-        <img src="/img/logo-color.svg" class="logo" alt="Return to dashboard" />
-      </b-link>
-      <span class="headerTitle"
-            v-t="'Header.product-name'" />
-    </b-navbar-brand>
+  <b-navbar toggleable="md" type="light" variant="light" id="top" ref="nav" tag="div" role="banner">
+    <header>
+      <a class="contentLink" id="SkipToContent" href="#PageContent" @click.prevent="skipToContent">Skip to content</a>
+      <b-navbar-brand>
+        <b-link to="/">
+          <img src="/img/logo-color.svg" class="logo" :alt="$t('Header.product-name')" />
+        </b-link>
+        <span class="headerTitle"
+              aria-hidden="true"
+              v-t="'Header.product-name'" />
+      </b-navbar-brand>
+    </header>
 
     <template v-if="isLoggedIn">
       <b-navbar-toggle target="nav-actions" ref="navToggle"/>
       <b-collapse id="nav-actions" is-nav v-model="showMenu">
-        <b-navbar-nav v-if="isLoggedIn" class="ml-auto loggedInNav">
-          <b-nav-text>
+        <b-navbar-nav class="ml-auto loggedInNav" :role="isMobile && 'presentation'">
+          <b-nav-text v-if="!isMobile">
             <b-button v-if="focusMode && !isMobile"
                       variant="invert-dark"
                       @click="showMenu = false; setFocusMode(false)" v-t="'Header.standard-mode_button'" />
@@ -28,9 +32,9 @@
       </b-collapse>
     </template>
 
-    <b-navbar-nav v-else-if="$route.name !== 'Login'" class="ml-auto loggedOutNav">
+    <b-navbar-nav v-else-if="$route.name !== 'Login'" class="ml-auto loggedOutNav" role="presentation">
       <b-nav-text>
-        <b-button variant="invert-dark" :to="{name: 'Login'}"><b-icon icon="box-arrow-left"/> {{ $t('Header.login_button') }}</b-button>
+        <b-button variant="invert-dark" :to="{name: 'Login'}"><b-icon icon="box-arrow-in-right"/> {{ $t('Header.login_button') }}</b-button>
       </b-nav-text>
     </b-navbar-nav>
 
@@ -46,6 +50,24 @@
     border-bottom: 2px solid $morphic-blue-color;
     padding: 0;
 
+    // Skip to content link - off-screen until focused
+    .contentLink {
+      font-size: larger;
+      background-color: white;
+      padding: 2px;
+      position: absolute;
+      z-index: 100;
+      transform: translateX(-100%);
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 250ms ease-out;
+      }
+
+      &:not(.screenReader):focus-visible {
+        transform: translateX(0);
+      }
+    }
+
     a.nav-link:focus {
       outline: 0;
     }
@@ -57,7 +79,7 @@
     }
 
 
-    & > :first-child {
+    .navbar-brand {
       margin-left: 1rem;
       @include media-breakpoint-down(sm) {
         margin-left: 3px;
@@ -199,6 +221,17 @@ export default {
          */
         setFocusMode: function (flag) {
             this.$store.dispatch("forceFocusMode", !!flag);
+        },
+        /**
+         * Scroll the content to the top of the window, and set the focus to the first focusable element in the content.
+         */
+        skipToContent() {
+            const content = document.querySelector("#PageContent");
+            content.scrollIntoView(true);
+            const firstFocusable = content.querySelector("a,input,button,[tabindex]");
+            if (firstFocusable?.focus) {
+                firstFocusable.focus();
+            }
         }
     },
     watch: {

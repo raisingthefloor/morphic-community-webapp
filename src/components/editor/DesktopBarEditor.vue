@@ -99,7 +99,13 @@
                   @click="showEditDialog(item, $event)"
                   @cut="removeButton(item, barDetails.items)"
                   class="buttonDragger">
-              <div :key="item.id" class="previewHolder" :ref="buttonRef(item)">
+              <div :key="item.id"
+                   :class="{
+                     previewHolder: true,
+                     newItem: item.data.isNew
+                   }"
+                   :ref="buttonRef(item)"
+              >
                 <PreviewItem :item="item" />
               </div>
             </drag>
@@ -109,10 +115,10 @@
           </template>
         </drop-list>
       </div>
-      <div class="logoHolder">
-        <b-img src="/img/logo-color.svg" alt="Morphic Logo" />
+      <div class="logoHolder" aria-hidden="true">
+        <b-img src="/img/logo-color.svg" alt=""/>
       </div>
-      <div class="openDrawerIconHolder">
+      <div class="openDrawerIconHolder" aria-hidden="true">
         <span @click="openDrawer = !openDrawer" class="">
           <b-icon :icon="openDrawer ? 'arrow-right-circle-fill' : 'arrow-left-circle-fill'"></b-icon>
         </span>
@@ -263,6 +269,10 @@
 
         & > div {
           min-width: 50px;
+        }
+
+        .newItem {
+          opacity: 0.4;
         }
 
         // Place-holder for dropping a new button.

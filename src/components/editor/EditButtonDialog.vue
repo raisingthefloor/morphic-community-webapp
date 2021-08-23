@@ -2,12 +2,12 @@
   <b-modal id="modalEditGeneric"
            ref="EditDialog"
            v-bind="dialogAttrs"
-           @ok="okClicked" @cancel="closeDialog(false)" @hide="onHide"
+           @ok="okClicked" @hide="onHide" @cancel="closeDialog(false)"  @close="closeDialog(false)"
            size="lg"
            :title="dialogTitle">
 
     <template v-if="!isLite" #modal-footer="{ok, cancel, hide}" >
-        <b-button @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove</b-button>
+        <b-button v-if="showDeleteButton" @click="hide('remove')" variant="outline-danger" style="position: absolute; left: 0; margin-left: 20px"><b-icon icon="trash"/>Remove</b-button>
         <b-button @click="cancel()" variant="secondary">Cancel</b-button>
         <b-button @click="ok()"
                   variant="primary"
@@ -23,7 +23,7 @@
             <div>
               <b-form-group v-if="isLite"
               >
-                <b-button variant="invert-danger"
+                <b-button v-if="showDeleteButton" variant="invert-danger"
                           @click="editDialog.hide('remove');">Remove Button</b-button>
 
               </b-form-group>
@@ -43,10 +43,14 @@
                               boundary="viewport"
                               @show="relatedDropdown(true)"
                               @hidden="relatedDropdown(false)"
+                              @shown="relatedDropdownFocusSelected()"
                   >
                     <template #button-content>
                       <template v-if="!button.data.isPlaceholder">
-                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url" :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)" :alt="relatedButtons[button.data.buttonKey].configuration.label + ' logo'" />
+                        <b-img v-if="relatedButtons[button.data.buttonKey].configuration.image_url"
+                               :src="getIconUrl(relatedButtons[button.data.buttonKey].configuration.image_url)"
+                               aria-hidden="true"
+                               alt="" />
                         {{
                           relatedButtons[button.data.buttonKey].data.catalogLabel || relatedButtons[button.data.buttonKey].configuration.label
                         }}
@@ -57,14 +61,15 @@
                     </template>
 
 
-                    <template v-for="(item, buttonKey) in relatedButtons"
-                              :class="buttonKey === button.data.buttonKey && 'selected'">
+                    <template v-for="(item, buttonKey) in relatedButtons">
 
                       <b-dropdown-item-button v-if="!item.data.isPlaceholder"
                                               :key="buttonKey"
                                               @click="setButton(item)"
+                                              :class="{ selected: buttonKey === button.data.buttonKey }"
                       >
                       <b-img v-if="item.configuration.image_url" :src="getIconUrl(item.configuration.image_url)"
+                             aria-hidden="true"
                              alt="" />{{ item.data.catalogLabel || item.configuration.label }}
                       </b-dropdown-item-button>
                   </template>
@@ -102,8 +107,7 @@
               >
 
                 <!-- colour selection -->
-                <b-form-group label="Color for button"
-                              label-for="ColorSelection">
+                <b-form-group label="Color for button">
                   <b-form-radio-group id="ColorSelection"
                                       class="colorSelection"
                                       v-model="button.configuration.color"
@@ -111,21 +115,21 @@
                     <b-form-radio v-for="(hex, name) in colors"
                                   :key="name"
                                   :value="hex"
-                                  class="customRadio colorRadio">
-                      <span class="screenReader">{{name}}</span>
+                                  class="customRadio colorRadio" :aria-labelledby="`${name}_label`">
+                      <span class="screenReader" :id="`${name}_label`">{{name}}</span>
                       <div class="colorBlock" :style="'background-color: ' + hex + ';'" />
                     </b-form-radio>
                   </b-form-radio-group>
                 </b-form-group>
 
                 <!-- icon selection -->
-                <div class="buttonIcons">
+                <div class="buttonIcons" aria-live="polite">
                   <div class="actionButtons">
-                    <b-button variant="invert-morphic-blue"
+                    <b-button variant="primary"
                               size="sm"
                               :disabled="!selectedIcon && !showImages"
                               @click="selectedIcon = null, showImages = false">Remove button image</b-button>
-                    <b-button variant="invert-morphic-blue"
+                    <b-button variant="primary"
                               size="sm"
                               :disabled="showImages"
                               @click="showImages = true">{{ selectedIcon ? "Change button image" : "Add button image"}}</b-button>
@@ -158,14 +162,14 @@
           </b-col>
 
           <b-col v-if="!isLite" md="6">
-            <div class="sticky-top bg-silver rounded p-3 text-center">
+            <div class="sticky-top bg-silver rounded p-3  d-flex flex-column align-items-center">
               <p class="">This is the button you are making</p>
+              <p class="" style="margin-top: 4em; order: 1">{{ button.configuration.description }}</p>
               <div class="barPreview rounded">
                 <div class="previewHolder" :aria-description="'Preview of button with ' + (selectedIcon ? 'image' : 'no image') ">
-                  <PreviewItem :item="button" />
+                  <PreviewItem :item="button" disabled />
                 </div>
               </div>
-              <p class="" style="margin-top: 4em">{{ button.configuration.description }}</p>
             </div>
           </b-col>
         </b-row>
@@ -365,6 +369,7 @@ import * as Bar from "@/utils/bar";
 import BarItemFields from "@/components/editor/BarItemFields";
 import { CONFIG } from "@/config/config";
 import { dialogMixin } from "@/mixins/dialog.js";
+import { a11yMixin } from "@/mixins/a11y";
 
 export default {
     name: "EditButtonDialog",
@@ -373,7 +378,7 @@ export default {
         bar: Object
     },
 
-    mixins: [dialogMixin],
+    mixins: [dialogMixin, a11yMixin],
 
     components: {
         BarItemFields,
@@ -505,6 +510,14 @@ export default {
         },
 
         /**
+         * Determines if the delete button should be shown.
+         * @return {Boolean} true to show the delete button.
+         */
+        showDeleteButton: function () {
+            return !this.button.data.isNew;
+        },
+
+        /**
          * Get the text for the site/app drop-down if nothing is selected
          * @return {String} The text to display on the drop-down.
          */
@@ -613,6 +626,8 @@ export default {
                 this.removeButton();
                 // removeButton() will close the dialog, if required.
                 e.preventDefault();
+            } else if (e.trigger === "esc") {
+                this.closeDialog(false);
             }
         },
         /**
@@ -671,6 +686,16 @@ export default {
         },
 
         /**
+         * Focus the selected item on the drop-down.
+         */
+        relatedDropdownFocusSelected: function () {
+            const selected = document.querySelector("#relatedDropdown .dropdown-menu .selected .dropdown-item");
+            if (selected) {
+                selected.focus();
+            }
+        },
+
+        /**
          * Shows a message of problems.
          * @return {Promise<Boolean>} true to continue with saving.
          */
@@ -701,8 +726,10 @@ export default {
             this.fixFavicon();
             this.$bvModal.show("modalEditGeneric");
 
-
             setTimeout(() => {
+                this.a11yWrapDropdown(this.$refs.RelatedDropdown);
+                this.a11yDropdownMnemonics(this.$refs.RelatedDropdown);
+
                 // The drop-down doesn't support autofocus.
                 if (this.showRelated && this.button.data.isPlaceholder) {
                     document.querySelector("#relatedDropdown button").focus();
@@ -731,7 +758,7 @@ export default {
          * Removes this button from the bar.
          */
         removeButton: function () {
-            this.showConfirm("Do you want to remove this item from the bar?").then(result => {
+            this.showConfirm("Do you want to remove this item from the bar?", null, `Delete the '${this.selectedItem.configuration.label}' button`, {dangerous: true}).then(result => {
                 if (result) {
                     Bar.removeItem(this.selectedItem, this.bar);
                     this.selectedItem.deleted = true;
