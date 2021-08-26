@@ -214,6 +214,11 @@ const authHomeRoute = routes.find(r => r.meta.authHome);
 const homeRoute = routes.find(r => r.meta.home);
 
 router.beforeEach((to, from, next) => {
+    if (store.getters.isLoggedIn) {
+        // Refresh the user's community info. The side-effect of this is to check if the current session token is still
+        // active.
+        store.dispatch("userCommunities", store.getters.userId).catch(() => undefined);
+    }
 
     // Merge the route meta data
     /** @type {RouteMeta} */
