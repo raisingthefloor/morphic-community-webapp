@@ -1,4 +1,12 @@
-export default {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="2; url=/" />
+
+  <title>Morphic</title>
+  <script>
+    var links = {
     morphicHome: "https://morphic.org/",
     getMorphic: "https://morphic.org/notify/",
     privacyPolicy: "https://morphic.org/privacy-policy/",
@@ -10,3 +18,12 @@ export default {
     // Email link, for managers to help users get setup.
     helpSetup: "https://morphic.org"
 };
+
+
+
+    window.location.href = links[window.location.hash.replace(/[^a-z0-9]/gi, "")] || "/";
+  </script>
+</head>
+<body>
+</body>
+</html>
