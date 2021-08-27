@@ -46,6 +46,7 @@
 
               <UserRegistration ref="UserRegistration"
                                 no-buttons
+                                stay-on-page
                                 existing-account-button
                                 :initial-email="invitation.email"
                                 :email-description="$t('Invite.register-email_description')"
@@ -138,7 +139,7 @@ export default {
         };
     },
     props: {
-        /** @type {"accept"|"decline"|"report"} */
+        /** @type {"accept"|"reject"|"report"} */
         action: String,
         id: String,
         page: String
@@ -186,7 +187,7 @@ export default {
          * Called when the dialog has been shown.
          */
         dialogShown: function () {
-            if (this.action === "decline") {
+            if (this.action === "reject") {
                 this.confirmDecline();
             }
         },
