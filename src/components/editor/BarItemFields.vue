@@ -34,7 +34,6 @@
       </b-form-group>
     </div>
   </template>
-  <pre>{{ barItem }}</pre>
 </div>
 </template>
 
