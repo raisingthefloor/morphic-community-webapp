@@ -228,7 +228,7 @@ router.beforeEach((to, from, next) => {
                 // redirect back to the page visited before login
                 redirect = store.getters.beforeLoginPage;
                 store.commit("beforeLoginPage", undefined);
-            } else if (!store.getters.hasAccount) {
+            } else if (!store.getters.hasAccount || !store.getters.isManager) {
                 // no account - tell them to get one.
                 redirect = {name: "NoSubscription"};
             } else {
