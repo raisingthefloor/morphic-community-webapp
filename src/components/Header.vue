@@ -34,7 +34,7 @@
 
     <b-navbar-nav v-else-if="$route.name !== 'Login'" class="ml-auto loggedOutNav" role="presentation">
       <b-nav-text>
-        <b-button variant="invert-dark" :to="{name: 'Login'}"><b-icon icon="box-arrow-left"/> {{ $t('Header.login_button') }}</b-button>
+        <b-button variant="invert-dark" :to="{name: 'Login'}"><b-icon icon="box-arrow-in-right"/> {{ $t('Header.login_button') }}</b-button>
       </b-nav-text>
     </b-navbar-nav>
 

@@ -13,6 +13,7 @@ export default new Vuex.Store({
         userId: localStorage.getItem("userId") || "",
         communityId: localStorage.getItem("communityId") || "",
         email: localStorage.getItem("email") || "",
+        role: localStorage.getItem("role") || "",
         user: {},
         community: {},
         errorMessage: {},
@@ -65,6 +66,10 @@ export default new Vuex.Store({
         },
         community(state, communityId) {
             state.communityId = communityId;
+        },
+        role(state, role) {
+            state.role = role;
+            localStorage.setItem("role", role);
         },
         unsavedChanges(state, isChanged) {
             state.unsavedChanges = isChanged;
@@ -136,6 +141,7 @@ export default new Vuex.Store({
                 localStorage.removeItem("token");
                 localStorage.removeItem("userId");
                 localStorage.removeItem("communityId");
+                localStorage.removeItem("role");
                 localStorage.removeItem("email");
                 delete HTTP.defaults.headers.common.Authorization;
                 window.location.href = "/#/";
@@ -177,6 +183,7 @@ export default new Vuex.Store({
                         if (communities.length !== 0) {
                             localStorage.setItem("communityId", communities[0].id);
                             commit("community", communities[0].id);
+                            commit("role", communities[0].role);
                             resolve(communities);
                         } else {
                             reject(new Error("User doesn't have communities."));
@@ -220,6 +227,8 @@ export default new Vuex.Store({
         userId: state => state.userId,
         email: state => state.email,
         communityId: state => state.communityId,
+        role: state => state.role,
+        isManager: state => state.role === "manager",
         hasAccount: state => !!state.communityId,
         unsavedChanges: state => state.unsavedChanges,
         /** @type {BarDetails} */
