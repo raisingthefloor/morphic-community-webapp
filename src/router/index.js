@@ -24,6 +24,8 @@ import MorphicBarEditor from "@/views/MorphicBarEditor.vue";
 
 import RegistrationInvite from "@/views/RegistrationInvite";
 
+// Email call-backs
+import AcceptInvite from "@/views/email/AcceptInvite.vue";
 
 Vue.use(VueRouter);
 
@@ -202,6 +204,16 @@ const routes = [
         meta: {
             title: "Register",
             public: "only"
+        }
+    },
+    // Email call-backs
+    {
+        path: "/invite/:action/:id/:page",
+        name: "Email.Invite",
+        component: AcceptInvite,
+        props: true,
+        meta: {
+            public: true
         }
     }
 ];

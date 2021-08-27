@@ -136,3 +136,13 @@
  * @property {Boolean} isCurrent true if this member is the current user accessing the site.
  */
 
+/**
+ * Invitation details
+ * @typedef {Object} Invitation
+ * @property {GUID} invitationId The invitation id.
+ * @property {GUID} communityId The community id.
+ * @property {String} communityName The community name.
+ * @property {String} email The invitee's email.
+ * @property {String} name The invitee's name.
+ *
+ */

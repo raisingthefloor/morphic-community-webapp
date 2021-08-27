@@ -16,13 +16,21 @@ export const dialogMixin = {
          * @return {Object<String,String>} A modified $attrs object
          */
         dialogAttrs: function () {
+            const noClose = (this.$attrs["no-close"] !== undefined) ? {
+                noCloseOnBackdrop: true,
+                noCloseOnEsc: true,
+                hideHeaderClose: true
+            } : {
+                noCloseOnBackdrop: this.isLite
+            };
+
             // Make some adjustments to the dialogs for mobiles
             const attrs = {
+                ...noClose,
                 ...this.$attrs,
                 largeDialog: this.isLite,
                 // Stop the back-drop covering the header (the dialog will be stretched over the screen anyway)
                 hideBackdrop: this.isLite,
-                noCloseOnBackdrop: this.isLite,
                 // The buttons take up too much space when the on-screen keyboard is open
                 scrollable: !this.isLite
             };

@@ -226,6 +226,7 @@ export default {
                     // Add some rules to adjust position and height of things while taking the header into consideration
                     [".", "body.focusMode .focus-", "body.isMobile .mobile-", "body:not(.isMobile, .focusMode) .desktop-"].forEach(prefix => {
                         styleSheet.insertRule(`${prefix}headerMarginTop { margin-top: ${height}px !important; }`);
+                        styleSheet.insertRule(`${prefix}headerPaddingTop { padding-top: ${height}px !important; }`);
                         styleSheet.insertRule(`${prefix}headerMaxHeight { max-height: calc(100vh - ${height}px) !important; }`);
                         styleSheet.insertRule(`${prefix}headerMinHeight { min-height: calc(100vh - ${height}px) !important; }`);
                     });

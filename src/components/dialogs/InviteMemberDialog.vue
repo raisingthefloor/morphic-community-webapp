@@ -9,7 +9,7 @@
           :ok-title="$t('InviteMemberDialog.invite_button')"
           :cancel-title="$t('InviteMemberDialog.cancel_button')"
 
-          @ok="$event.promise = memberInvite(member, inviteForm.email)"
+          @ok="$event.promise = memberInvite(member, inviteForm.email, inviteForm.phone)"
           @show="onShow"
 
           :v="$v"

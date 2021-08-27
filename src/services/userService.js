@@ -22,3 +22,22 @@ export function register(user) {
 export function resetPassword(body) {
     return HTTP.post("/v1/auth/username/password_reset/request", body, {action: "reset password"});
 }
+
+
+/**
+ * Gets the details of an invitation.
+ * @see https://github.com/raisingthefloor/morphic-api-server/blob/master/Documentation/API.md#v1invitationsid
+ * @param {String} invitationId The invitation ID.
+ * @return {Promise<AxiosResponse<Invitation>>} Response.
+ */
+export function getInvitation(invitationId) {
+    return HTTP.get(`/v1/invitations/${invitationId}`, {action: "get invitation details"}).then(resp => {
+        return resp?.data && {
+            communityId: resp.data.community.id,
+            communityName: resp.data.community.name,
+            invitationId: invitationId,
+            email: resp.data.email,
+            name: `${resp.data.first_name || ""} ${resp.data.last_name || ""}`.trim()
+        };
+    });
+}
