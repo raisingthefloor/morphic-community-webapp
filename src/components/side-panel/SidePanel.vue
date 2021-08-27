@@ -2,9 +2,11 @@
   <div id="SidePanel">
     <div class="panelSection">
       <div class="accountName">{{ community.name }}</div>
+      <!-- temporarily removed
       <div class="accountInfo">
         <b-link :to="{ name: 'MyCommunity'}" ><b-icon icon="gear-fill" />{{ $t('SidePanel.account-settings_link') }}</b-link>
       </div>
+      -->
 
       <!-- member's own bars -->
       <div class="panelDetails" >
@@ -475,10 +477,7 @@ export default {
          * @return {Promise<BarDetails>} Resolves when the new bar has been created.
          */
         async createBar(member, name) {
-            let barName = name || (member ? `Bar for ${member.fullName}` : undefined);
-            if (barName === "(no name)") {
-                barName = "My MorphicBar";
-            }
+            const barName = name || (member.isCurrent ? "My MorphicBar" : `Bar for ${member.fullName}`);
 
             const existingNames = this.bars.filter(b => member.bar_ids.includes(b.id)).map(b => b.name);
             let suffixNumber = 2;
