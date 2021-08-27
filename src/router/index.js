@@ -213,6 +213,7 @@ const routes = [
         component: AcceptInvite,
         props: true,
         meta: {
+            title: "Invitation to Morphic",
             public: true
         }
     }
