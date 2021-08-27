@@ -41,6 +41,7 @@ Vue.use(VueRouter);
  * @property {Boolean|"only"} public true if this page can be accessed without authentication. "only" if it can only
  *  be accessed without authentication (authenticated users are redirected away).
  * @property {Boolean} noAccount true if an authenticated user with no account can access.
+ * @property {Array<String>} roles Array of roles which can access the page.
  * @property {Boolean} redirect true if this is not a real page, just used to redirect to another (hides routing errors).
  * @property {Boolean} authHome true if this the default home page for authenticated users ("/dashboard").
  * @property {Boolean} home true if this the home page ("/").
@@ -117,7 +118,8 @@ const routes = [
         meta: {
             title: "No Subscription",
             showHeading: true,
-            noAccount: true
+            noAccount: true,
+            roles: ["member"]
         }
     },
     {
@@ -214,15 +216,18 @@ const authHomeRoute = routes.find(r => r.meta.authHome);
 const homeRoute = routes.find(r => r.meta.home);
 
 router.beforeEach((to, from, next) => {
-    if (store.getters.isLoggedIn) {
-        // Refresh the user's community info. The side-effect of this is to check if the current session token is still
-        // active.
-        store.dispatch("userCommunities", store.getters.userId).catch(() => undefined);
-    }
-
     // Merge the route meta data
     /** @type {RouteMeta} */
     const meta = to.matched.reduce((obj, cur) => Object.assign(obj, cur.meta), {});
+
+    if (store.getters.isLoggedIn) {
+        // Refresh the user's community info. This will also check if the current session token is still active.
+        store.dispatch("userCommunities", store.getters.userId).then(() => {
+            // re-check the page, to see if the user should still view it.
+            const newRoute = checkPageAccess(meta, to);
+            return newRoute && router.replace(newRoute);
+        }).catch(() => undefined);
+    }
 
     let redirect;
 
@@ -244,20 +249,41 @@ router.beforeEach((to, from, next) => {
             // show the login form
             redirect = {name: "Login"};
         }
-    } else if (!meta.public && !store.getters.isLoggedIn) {
-        // User needs to be authenticated for this page.
-        store.commit("beforeLoginPage", to.fullPath);
-        redirect = {name: "Login"};
-    } else if (meta.public === "only" && store.getters.isLoggedIn) {
-        // Authenticated users can't access this page.
-        redirect = homeRoute.path;
-    } else if (!meta.public && !meta.noAccount && !store.getters.hasAccount) {
-        // only account holders can access this page
-        redirect = homeRoute.path;
+    } else {
+        const result = checkPageAccess(meta, to);
+        if (result) {
+            redirect = result;
+        }
     }
 
     next(redirect);
 });
+
+/**
+ * Determine if a page can be viewed by the current user.
+ * @param {RouteMeta} meta Metadata for the route.
+ * @param {Route} to The destination route.
+ * @return {String|Object} undefined if the page can be viewed, otherwise another route to use.
+ */
+function checkPageAccess(meta, to) {
+    let result;
+    if (!meta.public && !store.getters.isLoggedIn) {
+        // User needs to be authenticated for this page.
+        store.commit("beforeLoginPage", to.fullPath);
+        result = {name: "Login"};
+    } else if (meta.public === "only" && store.getters.isLoggedIn) {
+        // Authenticated users can't access this page.
+        result = false;
+    } else if (!meta.public && !meta.noAccount && !store.getters.hasAccount) {
+        // only account holders can access this page
+        result = false;
+    } else if (meta.roles && !meta.roles.includes(store.getters.role)) {
+        // role is not in the list of accepted roles.
+        result = false;
+    }
+
+    return result === false ? homeRoute.path : result;
+}
 
 // Make the router not report navigation failures, due to redirecting from / to a different page.
 const routerPush = VueRouter.prototype.push;
