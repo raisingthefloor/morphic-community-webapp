@@ -4,7 +4,7 @@
     <b-alert variant="danger" :show="errorAlert">
       {{ errorMessage }}
     </b-alert>
-    <b-form @submit.stop.prevent="onSubmit" role="form" aria-labelledby="user-login-heading">
+    <b-form @submit.stop.prevent="onSubmit(false)" role="form" aria-labelledby="user-login-heading">
       <ValidatedInput id="login-user-email"
                       :label="$t('UserLogin.email_label')"
                       :validation="$v.userInfo.email"
