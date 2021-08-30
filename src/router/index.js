@@ -118,6 +118,16 @@ const routes = [
         meta: {
             title: "No Subscription",
             showHeading: true,
+            noAccount: true
+        }
+    },
+    {
+        path: "/member-message",
+        name: "NonManager",
+        component: NoSubscription,
+        meta: {
+            title: "Not a manger",
+            showHeading: true,
             noAccount: true,
             roles: ["member"]
         }
@@ -238,9 +248,12 @@ router.beforeEach((to, from, next) => {
                 // redirect back to the page visited before login
                 redirect = store.getters.beforeLoginPage;
                 store.commit("beforeLoginPage", undefined);
-            } else if (!store.getters.hasAccount || !store.getters.isManager) {
+            } else if (!store.getters.hasAccount) {
                 // no account - tell them to get one.
                 redirect = {name: "NoSubscription"};
+            } else if (!store.getters.isManager) {
+                // not a manager
+                redirect = {name: "NonManager"};
             } else {
                 // redirect to the auth home page
                 redirect = store.getters.homePage || authHomeRoute.path;
