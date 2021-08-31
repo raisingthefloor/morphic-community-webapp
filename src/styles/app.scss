@@ -164,3 +164,11 @@ body.isMobile {
     height: 0;
   }
 }
+
+// this gets overridden in App.vue with the real value - sane default to avoid adjustment during load.
+body:not(.isMobile, .focusMode) .desktop-headerMarginTop {
+  margin-top: 56px;
+}
+body:not(.isMobile, .focusMode) .desktop-headerPaddingTop {
+  padding-top: 56px;
+}

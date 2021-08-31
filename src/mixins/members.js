@@ -167,10 +167,11 @@ export const membersMixin = {
          * Invites a member to enjoy fruits of morphic.
          * @param {CommunityMember} member The chosen member.
          * @param {String} invitationEmail The email address.
+         * @param {String} message Additional text for the invitation email.
          * @return {Promise} Resolves when complete.
          */
-        memberInvite: async function (member, invitationEmail) {
-            await communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail);
+        memberInvite: async function (member, invitationEmail, message) {
+            await communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail, message);
             member.state = "invited";
             return true;
         },

@@ -108,6 +108,7 @@ Vue.mixin({
          * @param {Boolean} assertive true for messages which require immediate attention.
          */
         screenReaderMessage(message, assertive) {
+            if (!message) { return; }
             // Add a full-stop to separate it from the next message.
             if (!message.endsWith(".")) {
                 message += ".";
