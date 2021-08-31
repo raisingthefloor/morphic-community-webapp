@@ -102,7 +102,7 @@ export default {
         name: {
             required: required,
             unique: function (value) {
-                return !this.checkDuplicate(value);
+                return !this.memberCheckDuplicate(value, this.memberDetails);
             }
         }
     },
@@ -148,17 +148,6 @@ export default {
         deleteMember: function () {
             const keepRoute = this.activeMemberId !== this.memberDetails.id;
             this.memberDelete(this.memberDetails, false, keepRoute).then(() => this.closeDialog());
-        },
-
-        /**
-         * Checks if a name has already been taken.
-         * @param {String} name The name to check.
-         * @return {Boolean} true if there is already a member with the given name.
-         */
-        checkDuplicate: function (name) {
-            return this.members.some(m => {
-                return m.fullName === name && m.id !== this.memberDetails.id;
-            });
         }
     },
     watch: {

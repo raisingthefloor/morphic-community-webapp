@@ -41,12 +41,20 @@ export const dialogMixin = {
          * OK button was clicked. Raises an "ok" event, and closes the dialog. If the event object comes back with the
          * promise field set, then the dialog is closed when the promise resolves with true.
          * @param {Event} event BvModalEvent object.
+         * @param {Object} data Extra data for the event.
          */
-        onOK: function (event) {
+        onOK: function (event, data) {
             event.preventDefault();
 
+            if (this.$v) {
+                if (!this.validateForm(this.$v, document.getElementById(this.dialogId))) {
+                    return;
+                }
+            }
+
             const okEvent = {
-                promise: undefined
+                promise: undefined,
+                data: data
             };
 
             this.$emit("ok", okEvent);
@@ -58,14 +66,32 @@ export const dialogMixin = {
                     this.$emit("input", this.newValue);
                     this.hideDialog();
                 }
-            }).catch(err => {
-                this.errorMessage = err.message;
-            });
+            }).catch(this.handleServerError);
 
         },
         hideDialog: function () {
             this.$bvModal.hide(this.dialogId);
-        }
+        },
 
+        /**
+         * Displays a modal dialog, resolving when the dialog is dismissed.
+         * @param {String} modalId The id of the modal dialog.
+         * @return {Promise<String>} Resolves with the trigger value of the modal's hide event.
+         */
+        showModalDialog(modalId) {
+            return new Promise((resolve, reject) => {
+
+                const onHide = (event, id) => {
+                    if (id === modalId) {
+                        resolve(event.trigger);
+                        this.$root.$off("bv::modal::hide", onHide);
+                    }
+                };
+
+                this.$root.$on("bv::modal::hide", onHide);
+
+                this.$bvModal.show(modalId);
+            });
+        }
     }
 };

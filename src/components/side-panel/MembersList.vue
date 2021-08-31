@@ -93,10 +93,10 @@
       </li>
     </ul>
     <div class="">
-      <b-button v-b-modal="'addMemberDialog'"
-                v-bind="buttonAttrs"
+      <b-button v-bind="buttonAttrs"
                 variant="morphic-blue"
                 class="addNew addNewMember border-white"
+                @click="$emit('addMember')"
       ><b-icon icon="person-plus-fill"/> {{ $t('MembersList.add-member_button') }}</b-button>
     </div>
     <div v-if="!anyMembers">
@@ -106,13 +106,6 @@
 
     <InviteMemberDialog id="membersList-inviteMemberDialog"
                         :member="invitingMember" />
-
-    <TextInputDialog id="addMemberDialog"
-                     title="Add new member"
-                     prompt="Enter the name of the new member"
-                     clear
-                     @ok="$event.promise = addMember($event.newValue)"
-    />
     <svg class="fa-chevron-circle-down d-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zM273 369.9l135.5-135.5c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L256 285.1 154.4 183.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L239 369.9c9.4 9.4 24.6 9.4 34 0z"/></svg>
   </div>
 </template>
@@ -121,13 +114,12 @@
 </style>
 
 <script>
-import TextInputDialog from "@/components/dialogs/TextInputDialog";
 import BarsList from "@/components/side-panel/BarsList";
 import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 
 export default {
     name: "MembersList",
-    components: {InviteMemberDialog, BarsList, TextInputDialog},
+    components: {InviteMemberDialog, BarsList},
     props: {
         /** @type {Array<CommunityMember>} */
         members: Array,
@@ -179,24 +171,6 @@ export default {
 
     },
     methods: {
-        /**
-         * Adds a new member
-         * @param {String} name Name of the new member.
-         * @return {Promise} Resolves when complete.
-         */
-        addMember(name) {
-
-            const event = {
-                name: name,
-                promise: null
-            };
-
-            // let the parent component deal with it.
-            this.$emit("addMember", event);
-
-            return event.promise;
-        },
-
         isCommunityBar: function (barId) {
             for (let i = 0; i < this.bars.length; i++) {
                 if (this.bars[i].id === barId) {
