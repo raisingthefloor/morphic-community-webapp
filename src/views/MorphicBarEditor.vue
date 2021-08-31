@@ -192,12 +192,15 @@ export default {
                 barItem.configuration.image_url = "";
             }
 
-            // Edit the button, if it has parameterised fields.
+            // close the catalog
+            this.showCatalog(false);
+            this.onBarChanged();
+
             let showEdit;
-            if (barItem.data.isPlaceholder) {
-                showEdit = true;
+            if (barItem.data.showEdit === undefined) {
+                showEdit = barItem.data.paramFields.length > 1 || barItem.data.isPlaceholder || barItem.data.hasError;
             } else {
-                showEdit = barItem.data.hasError;
+                showEdit = barItem.data.showEdit;
             }
 
             const cancelled = showEdit && !(await this.showEditDialog(barItem));
