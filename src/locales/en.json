@@ -8,11 +8,11 @@
   },
   "CopyBarDialog": {
     "confirm-dialog": {
-      "no_button": "No",
+      "no_button": "@:(General.no_button)",
       "question": "Do you wish to continue?",
       "summary": "This will copy the contents of the bar {barToCopy}, replacing all items of the current bar, {currentBar}.",
       "title": "Confirm Bar Copy",
-      "yes_button": "Yes"
+      "yes_button": "@:(General.yes_button)"
     },
     "intro": "You can copy any of the MorphicBars below into the MorphicBar you are editing. (Replacing the ALL of current contents of the MorphicBar you are editing)",
     "no-bars": "There are no other bars to copy items from.",
@@ -26,6 +26,10 @@
     "try-it_button": "Try it"
   },
   "General": {
+    "no_button": "No",
+    "yes_button": "Yes",
+    "ok_button": "OK",
+    "cancel_button": "Cancel",
     "member-state": {
       "active": "Active",
       "invited": "Not yet accepted",
@@ -82,7 +86,7 @@
   },
   "NewMemberDialog": {
     "add_button": "Add Person",
-    "cancel_button": "Cancel",
+    "cancel_button": "@:(General.cancel_button)",
     "lead": "Manage MorphicBars for other people by adding them to your Morphic Plus subscription.",
     "manager-steps": "First, you will need to...",
     "manager-steps_list": [
@@ -159,10 +163,26 @@
   "Home": {
   },
   "InviteMemberDialog": {
-    "email_prompt": "Please enter the email address for {name}",
-    "invite-member_title": "Invite {name}"
-  },
-  "MemberInvite": {
+    "cancel_button": "@:(General.cancel_button)",
+    "email-copy": "Morphic will also send you a copy of the invitation email that will include steps & videos for helping.",
+    "email_label": "Email of person to be invited",
+    "form-lead": "Morphic recommends that you contact the person, so they know the email invitation is coming (and don't delete it).",
+    "from-email_aria-label": "From email",
+    "from-name_aria-label": "From name",
+    "from_heading": "From:",
+    "invite-member_title": "Invite {name}",
+    "invite_button": "Invite",
+    "phone_description": "Number the invited person can call for assistance in getting Morphic set up",
+    "phone_label": "Phone number (optional)",
+    "steps-info": "Some people might need some extra help from you to get set up. You can do this in person or using remote tools.",
+    "steps-lead": "After you send the invitation, the person you invited will need to...",
+    "steps_heading": "What are the steps?",
+    "steps_list": [
+      "Click the link in the invitation email",
+      "Sign up for a Morphic account & accept the invitation",
+      "Download & install the Morphic app on their computer",
+      "Sign into the Morphic app"
+    ]
   },
   "MembersList": {
     "add-bar_button": "Add a new bar",
@@ -325,19 +345,19 @@
   "members": {
     "changeRole": {
       "apply_button": "Change to {role}",
-      "cancel_button": "Cancel",
+      "cancel_button": "@:(General.cancel_button)",
       "confirm": "Please confirm changing the role of {member} to {role}",
       "title": "Change member role"
     },
     "delete": {
       "apply_button": "Remove {member}",
-      "cancel_button": "Cancel",
+      "cancel_button": "@:(General.cancel_button)",
       "confirm": "Please confirm the removal of {member} from the group",
       "title": "Remove member"
     },
     "removeBar": {
       "apply_button": "Delete bar",
-      "cancel_button": "Cancel",
+      "cancel_button": "@:(General.cancel_button)",
       "confirm": "Are you sure you want to delete the bar?\nThis will remove the bar from this account. This cannot be undone."
     }
   }

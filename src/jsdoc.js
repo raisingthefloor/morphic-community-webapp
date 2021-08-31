@@ -130,7 +130,7 @@
  * @property {String} fullName The member's full name (auto-generated).
  * @property {String} displayName The member's full name, for displaying (adds "(you)" for the current user).
  * @property {String} role The member's role ("manager" or "member").
- * @property {String} state The member's state.
+ * @property {"active"|"invited"|"uninvited"} state The member's state.
  * @property {String} stateText The member's state, for displaying (auto-generated).
  * @property {Array<GUID>} bar_ids The member's bars
  * @property {String} userId The member's userId.

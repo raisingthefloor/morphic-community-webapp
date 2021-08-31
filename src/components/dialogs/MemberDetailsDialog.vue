@@ -8,7 +8,7 @@
            @hidden="dialogClosed()"
            xv-if="memberDetails && memberDetails.id"
   >
-    <InviteMemberDialog id="MemberDetailsDialog-inviteMemberDialog" :member="memberDetails" />
+    <InviteMemberDialog id="MemberDetailsDialog-inviteMemberDialog" :member="memberDetails" :members="members" />
 
     <template #modal-title>
       <b-icon-person-circle /> Settings for {{ memberDetails.displayName }}
@@ -86,7 +86,6 @@ export default {
         members: Array,
         /** @type {GUID} */
         activeMemberId: null,
-
         id: String
     },
     data: function () {

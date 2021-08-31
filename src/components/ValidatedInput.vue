@@ -122,7 +122,7 @@ export default {
     },
     computed: {
         state: function () {
-            return (this.validation && this.validation.$anyDirty) ? !this.validation.$anyError : null;
+            return (this.validation && this.validation.$anyDirty && (this.required || this.currentValue !== "")) ? !this.validation.$anyError : null;
         },
         required: function () {
             return this.validation && this.validation.required !== undefined;

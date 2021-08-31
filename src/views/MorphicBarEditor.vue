@@ -4,6 +4,7 @@
     <!-- MODALs: BEGIN -->
     <EditButtonDialog ref="editDialog" :bar="barDetails" />
     <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
+    <InviteMemberDialog id="InviteMemberDialog-MorphicBarEditor" :member="memberDetails" :members="membersList" />
 
     <b-modal id="unsavedChanges" title="Unsaved Changes">
       <p>You have made some changes to this bar, but they are not saved yet.</p>
@@ -15,6 +16,37 @@
         <b-button @click="hide('save')" variant="primary">Save</b-button>
       </template>
     </b-modal>
+
+    <b-modal id="SaveConfirmation"
+             title="MorphicBar Saved"
+             ok-only
+    >
+      <p>This MorphicBar has been saved.</p>
+      <p>
+        It will show up automatically on their computer soon. Users may need to open Morphic and switch to this MorphicBar to see it.
+      </p>
+    </b-modal>
+
+    <b-modal id="SaveConfirmationUninvited"
+             title="MorphicBar Saved"
+             ok-title="Invite now"
+             cancel-title="Invite later"
+             @ok="showModalDialog('InviteMemberDialog-MorphicBarEditor')"
+
+    >
+      <p>This MorphicBar has been saved.</p>
+      <p>
+        Now that the bar has been saved, it is ready for the person to start using it.
+      </p>
+      <p>
+        If you are ready for the person to use it, you can invite the following person to download, install, and sign
+        into Morphic, which will get this bar on the person's computer:
+      </p>
+      <p class="font-weight-bold ml-2">{{memberDetails.displayName}}</p>
+    </b-modal>
+
+
+
     <!-- MODALs: END -->
 
     <div v-if="!isLite" class="editorSide left">
@@ -162,10 +194,13 @@ import CopyBarDialog from "@/components/dialogs/CopyBarDialog";
 import EditorDetails from "@/components/editor/EditorDetails";
 import DesktopBarEditor from "@/components/editor/DesktopBarEditor";
 import LiteBarEditor from "@/components/editor/LiteBarEditor";
+import { dialogMixin } from "@/mixins/dialog";
+import InviteMemberDialog from "@/components/dialogs/InviteMemberDialog";
 
 export default {
     name: "MorphicBarEditor",
     components: {
+        InviteMemberDialog,
         LiteBarEditor,
         DesktopBarEditor,
         EditorDetails,
@@ -174,6 +209,7 @@ export default {
         EditButtonDialog,
         SidePanel
     },
+    mixins: [dialogMixin],
     props: {
         catalogView: Boolean
     },
@@ -324,7 +360,7 @@ export default {
          * Saves the bar.
          * @return {Promise} Resolves when complete.
          */
-        saveBar: function () {
+        saveBar: async function () {
             this.onSave = true;
             const data = this.barDetails;
             // const drawerItems = this.drawerItems.concat(this.drawerItemsSecond)
@@ -335,14 +371,15 @@ export default {
                 item.configuration.image_path = this.getIconUrl(item.configuration.image_url);
             });
 
-            return updateCommunityBar(this.communityId, this.$route.query.barId, data)
-                .then((resp) => {
-                    if (resp.status === 200) {
-                        this.showMessage(MESSAGES.barUpdated);
-                        this.isChanged = false;
-                        this.updateOriginalBarDetails();
-                    }
-                });
+            const success = await this.requestToBool(updateCommunityBar(this.communityId, this.$route.query.barId, data));
+            if (success) {
+                this.isChanged = false;
+                this.updateOriginalBarDetails();
+
+                const dialogId = this.memberDetails.state === "uninvited" ? "SaveConfirmationUninvited" : "SaveConfirmation";
+
+                await this.showModalDialog(dialogId);
+            }
         },
 
         /**

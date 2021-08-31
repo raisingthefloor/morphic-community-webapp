@@ -12,6 +12,7 @@ export default new Vuex.Store({
         token: localStorage.getItem("token") || "",
         userId: localStorage.getItem("userId") || "",
         communityId: localStorage.getItem("communityId") || "",
+        email: localStorage.getItem("email") || "",
         role: localStorage.getItem("role") || "",
         user: {},
         community: {},
@@ -35,6 +36,7 @@ export default new Vuex.Store({
             state.token = data.token;
             state.user = data.user;
             state.userId = data.user.id;
+            state.email = data.email;
         },
         auth_error(state, error) {
             state.status = "authentication failed";
@@ -112,7 +114,8 @@ export default new Vuex.Store({
                 const resp = await login(user);
                 userData = {
                     user: resp.data.user,
-                    token: resp.data.token
+                    token: resp.data.token,
+                    email: user.email
                 };
             } catch (err) {
                 commit("auth_error", err);
@@ -122,6 +125,7 @@ export default new Vuex.Store({
 
             localStorage.setItem("token", userData.token);
             localStorage.setItem("userId", userData.user.id);
+            localStorage.setItem("email", user.email);
             HTTP.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
 
             commit("auth_success", userData);
@@ -138,6 +142,7 @@ export default new Vuex.Store({
                 localStorage.removeItem("userId");
                 localStorage.removeItem("communityId");
                 localStorage.removeItem("role");
+                localStorage.removeItem("email");
                 delete HTTP.defaults.headers.common.Authorization;
                 window.location.href = "/#/";
                 resolve();
@@ -220,6 +225,7 @@ export default new Vuex.Store({
         isLoggedIn: state => !!state.token,
         authStatus: state => state.status,
         userId: state => state.userId,
+        email: state => state.email,
         communityId: state => state.communityId,
         role: state => state.role,
         isManager: state => state.role === "manager",
