@@ -23,6 +23,7 @@ import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
 import MorphicBarEditor from "@/views/MorphicBarEditor.vue";
 
 import RegistrationInvite from "@/views/RegistrationInvite";
+import ConfirmEmail from "@/views/email/ConfirmEmail.vue";
 
 // Email call-backs
 import AcceptInvite from "@/views/email/AcceptInvite.vue";
@@ -218,6 +219,25 @@ const routes = [
             public: "only"
         }
     },
+    {
+        path: "/confirm-email",
+        name: "ConfirmEmail",
+        component: ConfirmEmail,
+        meta: {
+            title: "Confirm your email address"
+        }
+    },
+    {
+        path: "/confirm-email/sign-in",
+        name: "ConfirmEmail.SignIn",
+        component: ConfirmEmail,
+        props: {
+            signIn: true
+        },
+        meta: {
+            title: "Confirm your email address"
+        }
+    },
     // Email call-backs
     {
         path: "/invite/:action/:id/:page",
@@ -226,6 +246,16 @@ const routes = [
         props: true,
         meta: {
             title: "Invitation to Morphic",
+            public: true
+        }
+    },
+    {
+        path: "/confirm-email/:confirmUserId/:token",
+        name: "Email.Confirm",
+        component: ConfirmEmail,
+        props: true,
+        meta: {
+            title: "Confirm email address",
             public: true
         }
     }
