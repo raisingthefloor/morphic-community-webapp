@@ -179,7 +179,8 @@ const routes = [
         component: Dashboard,
         meta: {
             title: "Home: MorphicBar Customization Tool",
-            authHome: true
+            authHome: true,
+            roles: ["manager"]
         }
     },
     {
@@ -198,7 +199,8 @@ const routes = [
         meta: {
             title: "MorphicBar Editor",
             hideHeading: true,
-            isEditorPage: true
+            isEditorPage: true,
+            roles: ["manager"]
         }
     },
     {
