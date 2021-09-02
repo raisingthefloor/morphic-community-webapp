@@ -223,7 +223,7 @@ const routes = [
     },
     {
         path: "/confirm-email",
-        name: "ConfirmEmail",
+        name: "ConfirmEmail.Registered",
         component: ConfirmEmail,
         meta: {
             title: "Confirm your email address"

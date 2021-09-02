@@ -12,7 +12,8 @@
         <span v-else-if="accepted" v-t="'Invite.message-accepted'" />
         </p>
         <template #footer>
-          <div class="d-flex justify-content-around">
+          <b-button v-if="isLoggedIn" variant="primary" to="/" class="alignRight pl-4 pr-4" v-t="'General.ok_button'" />
+          <div v-else class="d-flex justify-content-around">
             <b-button variant="primary" :href="externalLinks.morphicHome" v-t="'Invite.home-page_button'" />
             <b-button variant="primary" to="/"><b-icon icon="box-arrow-in-right"/>{{ $t('Invite.sign-in_button') }}</b-button>
           </div>
@@ -218,7 +219,9 @@ export default {
             const success = await this.formComponent.onSubmit(true);
             if (success) {
                 await acceptCommunityMemberInvite(this.invitation.communityId, this.invitation.invitationId);
-                this.state = "accepted";
+
+                // Go to email confirmation
+                this.$router.push({name: "ConfirmEmail.Registered"});
             }
             return success;
         }
