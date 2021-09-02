@@ -115,7 +115,10 @@ export default {
         };
     },
     props: {
+        // Accessed during sign in.
         signIn: Boolean,
+        // Accessed after registration.
+        registered: Boolean,
         confirmUserId: String,
         token: String
     },
@@ -154,8 +157,18 @@ export default {
             } else {
                 this.confirmed = true;
             }
+        } else if (!this.isLoggedIn) {
+            this.$router.replace({name: "Home"});
         } else {
             await this.waitForConfirmation();
+
+            if (this.confirmed) {
+                if (this.registered) {
+                    this.$router.replace({name: "Download"});
+                } else {
+                    this.$router.replace({name: "Home"});
+                }
+            }
         }
 
         this.loaded = true;
@@ -179,7 +192,7 @@ export default {
 
         /**
          * Starts a timer that polls the confirmation state.
-         * @return {Promise<void>}
+         * @return {Promise<Boolean?>} Resolves with the current confirmation state.
          */
         waitForConfirmation: async function () {
             if (this.checkTimer === "here") {
@@ -190,8 +203,10 @@ export default {
 
             this.checkTimer = "here";
 
-            if (!this.confirming && !this.confirmed) {
+            let togo;
+            if (this.isLoggedIn && !this.confirming && !this.confirmed) {
                 this.confirmed = await this.getConfirmationState();
+                togo = this.confirmed;
 
                 if (!this.confirmed && this.checkTimerCount++ < 100) {
                     this.checkTimer = setTimeout(() => this.waitForConfirmation(), 5000);

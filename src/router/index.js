@@ -222,14 +222,19 @@ const routes = [
         }
     },
     {
-        path: "/confirm-email",
+        // Confirming email - from the registration page.
+        path: "/confirm-email/registered",
         name: "ConfirmEmail.Registered",
         component: ConfirmEmail,
+        props: {
+            registered: true
+        },
         meta: {
             title: "Confirm your email address"
         }
     },
     {
+        // Confirming email - after sign-in.
         path: "/confirm-email/sign-in",
         name: "ConfirmEmail.SignIn",
         component: ConfirmEmail,
