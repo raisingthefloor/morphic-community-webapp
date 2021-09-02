@@ -60,14 +60,14 @@
         <template #info>
           <p id="EmailSteps">If you didn't get an email from Morphic, here are some steps you can try:</p>
           <ul aria-describedby="EmailSteps">
-            <li>Wait a couple of minues to the email to arrive.</li>
+            <li>Wait a couple of minutes to the email to arrive.</li>
             <li>Check your junk or spam folder.</li>
             <li>Go back and check your email address.</li>
             <li>Press the "Resend email" button to get another copy.</li>
           </ul>
 
           <div class="text-center p-3">
-            <b-button variant="invert-dark" class="pl-4 pr-4">Resend Email</b-button>
+            <b-button variant="invert-dark" class="pl-4 pr-4" @click="resendEmail()">Resend Email</b-button>
           </div>
 
         </template>
@@ -97,7 +97,7 @@ body:not(.isMobile) #ConfirmEmailDialog {
 <script>
 
 import TwoColumnDialog from "@/components/dialogs/TwoColumnDialog";
-import { confirmEmail, getUser } from "@/services/userService";
+import { confirmEmail, getUser, resendEmailConfirmation } from "@/services/userService";
 
 export default {
     name: "ConfirmEmail",
@@ -212,6 +212,15 @@ export default {
                     this.checkTimer = setTimeout(() => this.waitForConfirmation(), 5000);
                 }
             }
+
+            return togo;
+        },
+
+        /**
+         * Re-sends the confirmation email.
+         */
+        resendEmail: function () {
+            resendEmailConfirmation(this.userId).then(() => this.showMessage("Re-sent your confirmation email"));
         }
     }
 };
