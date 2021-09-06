@@ -49,8 +49,9 @@
           <b-button variant="none" class="memberSettings whenExpanded"
                     @click="$emit('memberDetails', member)"
                     v-b-tooltip.hover="$t('MembersList.settings_tooltip', {name : member.displayName})"
-                    :aria-label="$t('MembersList.settings_tooltip', {name : member.displayName})">
-            <b-icon icon="gear-fill" variant="morphic-blue" scale="1.3" />
+                    :aria-label="$t('MembersList.settings_tooltip', {name : member.displayName})"
+                    style="font-size: 1.3em">
+            <b-icon icon="gear-fill" variant="morphic-blue" />
           </b-button>
         </div>
 
