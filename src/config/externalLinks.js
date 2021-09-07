@@ -7,5 +7,8 @@ export default {
     // Email link, Learn more about morphic
     learnMore: "https://morphic.org",
     // Email link, for managers to help users get setup.
-    helpSetup: "https://morphic.org"
+    helpSetup: "https://morphic.org",
+    download: "https://morphic.org/notify/",
+    downloadMac: "https://morphic.org/help/installation-for-macos/",
+    downloadWin: "https://morphic.org/help/installation-for-windows/"
 };

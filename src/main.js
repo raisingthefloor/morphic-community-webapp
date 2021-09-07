@@ -57,21 +57,23 @@ Vue.mixin({
          * @param {Error} err The error object.
          */
         handleServerError(err) {
-            if (this.errorMessage !== undefined && this.errorAlert !== undefined) {
-                err.handled = true;
-                const message = this.getErrorMessage(err, true);
-                this.errorMessage = message.message;
-                if (this.errorMessageTitle !== undefined) {
-                    this.errorMessageTitle = message.title;
+            if (!err.handled) {
+                if (this.errorMessage !== undefined && this.errorAlert !== undefined) {
+                    err.handled = true;
+                    const message = this.getErrorMessage(err, true);
+                    this.errorMessage = message.message;
+                    if (this.errorMessageTitle !== undefined) {
+                        this.errorMessageTitle = message.title;
+                    }
+                    this.errorAlert = true;
                 }
-                this.errorAlert = true;
-            }
 
-            // Get the autofocus input, or just the first one.
-            const elem = this.$el && this.$el.querySelector ? this.$el : document.getElementById(this.dialogId);
-            const f = elem.querySelector("input.autofocus") || elem.querySelector("input");
-            if (f && f.focus) {
-                f.focus();
+                // Get the autofocus input, or just the first one.
+                const elem = this.$el && this.$el.querySelector ? this.$el : document.getElementById(this.dialogId);
+                const f = elem.querySelector("input.autofocus") || elem.querySelector("input");
+                if (f && f.focus) {
+                    f.focus();
+                }
             }
         },
         /**
