@@ -48,7 +48,7 @@ Vue.use(VueRouter);
  * @property {Boolean} noAccount true if an authenticated user with no account can access.
  * @property {Array<String>} roles Array of roles which can access the page.
  * @property {Boolean} redirect true if this is not a real page, just used to redirect to another (hides routing errors).
- * @property {Boolean} authHome true if this the default home page for authenticated users ("/dashboard").
+ * @property {"manager"|"member"} userHome The role for which this page is the home page.
  * @property {Boolean} home true if this the home page ("/").
  */
 
@@ -134,7 +134,8 @@ const routes = [
             title: "Not a manger",
             showHeading: true,
             noAccount: true,
-            roles: ["member"]
+            roles: ["member"],
+            userHome: "member"
         }
     },
     {
@@ -181,8 +182,8 @@ const routes = [
         component: Dashboard,
         meta: {
             title: "Home: MorphicBar Customization Tool",
-            authHome: true,
-            roles: ["manager"]
+            roles: ["manager"],
+            userHome: "manager"
         }
     },
     {
@@ -190,7 +191,8 @@ const routes = [
         name: "MorphicBar Preconfigured",
         component: MorphicBarPreconfigured,
         meta: {
-            title: "Pick a bar"
+            title: "Pick a bar",
+            roles: ["manager"]
         }
     },
     {
@@ -296,8 +298,23 @@ const router = new VueRouter({
     routes
 });
 
-const authHomeRoute = routes.find(r => r.meta.authHome);
-const homeRoute = routes.find(r => r.meta.home);
+/**
+ * Gets the route to the home page for the current user, depending on their role.
+ * @return {AppRouteRecord} The route.
+ */
+function getUserHomeRoute() {
+    let route;
+
+    if (store.getters.homePage) {
+        route = store.getters.homePage;
+    } else {
+        route = routes.find(r => r.meta.userHome === store.getters.role);
+    }
+
+    return route;
+}
+
+const homeRoute = {name: "Home"};
 
 router.beforeEach((to, from, next) => {
     // Merge the route meta data
@@ -325,12 +342,9 @@ router.beforeEach((to, from, next) => {
             } else if (!store.getters.hasAccount) {
                 // no account - tell them to get one.
                 redirect = {name: "NoSubscription"};
-            } else if (!store.getters.isManager) {
-                // not a manager
-                redirect = {name: "NonManager"};
             } else {
                 // redirect to the auth home page
-                redirect = store.getters.homePage || authHomeRoute.path;
+                redirect = getUserHomeRoute();
             }
         } else {
             // show the login form
@@ -369,7 +383,7 @@ function checkPageAccess(meta, to) {
         result = false;
     }
 
-    return result === false ? homeRoute.path : result;
+    return result === false ? homeRoute : result;
 }
 
 // Make the router not report navigation failures, due to redirecting from / to a different page.
