@@ -2,6 +2,7 @@
 import * as communityService from "@/services/communityService";
 import { MESSAGES } from "@/utils/constants";
 import { deleteCommunityBar } from "@/services/communityService";
+import { resendEmailConfirmation } from "@/services/userService";
 
 /**
  * Mix-in for member management related things.
@@ -171,7 +172,18 @@ export const membersMixin = {
          * @return {Promise} Resolves when complete.
          */
         memberInvite: async function (member, invitationEmail, message) {
-            await communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail, message);
+            try {
+                await communityService.inviteCommunityMember(this.communityId, member.id, invitationEmail, message);
+            } catch (err) {
+                if (err.response?.data?.error === "email_verification_required") {
+                    err.handled = true;
+                    const resend = !await this.showConfirm("Until you have confirmed your own email address, you are unable to invite other members.", ["OK", "Resend confirmation email"]);
+                    if (resend) {
+                        await resendEmailConfirmation(this.userId);
+                    }
+                }
+                throw err;
+            }
             member.state = "invited";
             return true;
         },

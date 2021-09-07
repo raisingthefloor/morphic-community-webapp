@@ -144,7 +144,6 @@ export default new Vuex.Store({
                 localStorage.removeItem("role");
                 localStorage.removeItem("email");
                 delete HTTP.defaults.headers.common.Authorization;
-                window.location.href = "/#/";
                 resolve();
             });
         },

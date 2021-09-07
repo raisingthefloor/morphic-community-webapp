@@ -23,9 +23,12 @@ import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
 import MorphicBarEditor from "@/views/MorphicBarEditor.vue";
 
 import RegistrationInvite from "@/views/RegistrationInvite";
+import ConfirmEmail from "@/views/email/ConfirmEmail.vue";
 
 // Email call-backs
 import AcceptInvite from "@/views/email/AcceptInvite.vue";
+
+import Download from "@/views/Download";
 
 Vue.use(VueRouter);
 
@@ -178,7 +181,8 @@ const routes = [
         component: Dashboard,
         meta: {
             title: "Home: MorphicBar Customization Tool",
-            authHome: true
+            authHome: true,
+            roles: ["manager"]
         }
     },
     {
@@ -197,7 +201,8 @@ const routes = [
         meta: {
             title: "MorphicBar Editor",
             hideHeading: true,
-            isEditorPage: true
+            isEditorPage: true,
+            roles: ["manager"]
         }
     },
     {
@@ -218,6 +223,52 @@ const routes = [
             public: "only"
         }
     },
+    {
+        // Confirming email - from the registration page.
+        path: "/confirm-email/registered",
+        name: "ConfirmEmail.Registered",
+        component: ConfirmEmail,
+        props: {
+            registered: true
+        },
+        meta: {
+            title: "Confirm your email address"
+        }
+    },
+    {
+        // Confirming email - after sign-in.
+        path: "/confirm-email/sign-in",
+        name: "ConfirmEmail.SignIn",
+        component: ConfirmEmail,
+        props: {
+            signIn: true
+        },
+        meta: {
+            title: "Confirm your email address"
+        }
+    },
+    {
+        path: "/download",
+        name: "Download",
+        component: Download,
+        props: {
+        },
+        meta: {
+            title: "Download Morphic"
+        }
+    },
+    {
+        // Download page, when coming from the invitation flow.
+        path: "/download/invited",
+        name: "Download.Invited",
+        component: Download,
+        props: {
+            invited: true
+        },
+        meta: {
+            title: "Download Morphic"
+        }
+    },
     // Email call-backs
     {
         path: "/invite/:action/:id/:page",
@@ -226,6 +277,16 @@ const routes = [
         props: true,
         meta: {
             title: "Invitation to Morphic",
+            public: true
+        }
+    },
+    {
+        path: "/confirm-email/:confirmUserId/:token",
+        name: "Email.Confirm",
+        component: ConfirmEmail,
+        props: true,
+        meta: {
+            title: "Confirm email address",
             public: true
         }
     }
