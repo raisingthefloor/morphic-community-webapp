@@ -164,7 +164,7 @@ export default {
 
             if (this.confirmed) {
                 if (this.registered) {
-                    this.$router.replace({name: "Download"});
+                    this.$router.replace({name: "Download.Signup"});
                 } else {
                     this.$router.replace({name: "Home"});
                 }

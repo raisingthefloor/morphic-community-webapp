@@ -256,19 +256,21 @@ const routes = [
         props: {
         },
         meta: {
-            title: "Download Morphic"
+            title: "Download Morphic",
+            public: true
         }
     },
     {
         // Download page, when coming from the invitation flow.
-        path: "/download/invited",
-        name: "Download.Invited",
+        path: "/download/signup",
+        name: "Download.Signup",
         component: Download,
         props: {
             invited: true
         },
         meta: {
-            title: "Download Morphic"
+            title: "Download Morphic",
+            public: true
         }
     },
     // Email call-backs
