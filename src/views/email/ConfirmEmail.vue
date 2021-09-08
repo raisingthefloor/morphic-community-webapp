@@ -3,7 +3,7 @@
   <div>
     <div v-if="!loaded">{{ $t('ConfirmEmail.loading') }}</div>
     <div v-else-if="confirming || confirmed">
-      <b-card class="confirmEmailMessageBox" title="Confirm Email">
+      <b-card class="confirmEmailMessageBox" title="Your Email is Confirmed">
 
         <template v-if="confirmed">
           <template v-if="confirmedAlready">
