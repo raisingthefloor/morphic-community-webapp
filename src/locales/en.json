@@ -85,7 +85,7 @@
     "confirm-decline-no_button": "No",
     "confirm-decline_message": "Do you really want to decline your invitation for Morphic?",
     "confirm-decline-yes_button": "Yes, decline",
-    "confirm-decline_title": "Decline Morphic Invation",
+    "confirm-decline_title": "Decline Morphic Invitation",
     "dialog-sign-in_title": "Sign into Morphic to accept",
     "dialog-register_title": "Sign up for Morphic to accept",
     "home-page_button": "Go to Morphic home page",
@@ -229,7 +229,7 @@
     "no-members": "Create and manage MorphicBars for others! Your {subscription} Morphic subscription allows you to invite {maxMembers} people to your account.",
     "not-invited": "Not yet invited.",
     "re-invite_button": "Re-send invitation",
-    "re-invite_button_aria-label": "Re-send invation to {name}",
+    "re-invite_button_aria-label": "Re-send invitation to {name}",
     "settings_tooltip": "Settings for {name}"
   },
   "MorphicBarEditor": {
