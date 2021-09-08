@@ -36,9 +36,6 @@
     help walk you through the steps. Their contact information is in the Morphic invitation email you got earlier.
     </p>
 
-    <b-link :href="externalLinks.download">Support link with all available Morphic version downloads</b-link>.
-
-
   </b-card>
 </template>
 
