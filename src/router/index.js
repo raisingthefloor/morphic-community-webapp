@@ -166,6 +166,17 @@ const routes = [
         }
     },
     {
+        path: "/billing/details/update",
+        name: "BillingDetails.update",
+        component: BillingDetails,
+        props: {
+            updatePayment: true
+        },
+        meta: {
+            title: "Payment Details"
+        }
+    },
+    {
         path: "/reset-password",
         name: "Reset Password",
         component: ResetPassword,

@@ -1,22 +1,29 @@
 <template>
   <b-container>
-    <h1>Billing Information</h1>
+    <h2>Billing Information</h2>
 
-    <dl v-if="loaded">
-      <dt>Payment Card on file</dt>
-      <dd>
-        <ul class="list-unstyled">
-          <li >
+    <div v-if="loaded" class="billingDetails d-flex flex-column">
+      <b-card>
+        <b-card-title>Payment Card on file</b-card-title>
+
+        <ul class="list-unstyled" role="presentation">
+          <li>
             Card:
             <span v-if="billingInfo && billingInfo.card">{{billingInfo.card.last4}}</span>
             <span v-else>None</span>
           </li>
         </ul>
-      </dd>
 
-      <dt>Next billing date</dt>
-      <dd>
-        <ul v-if="plan && billingInfo" class="list-unstyled">
+        <b-button variant="primary"
+                  v-b-modal="'PaymentDialog'">
+          {{ billingInfo && billingInfo.card ? "Change Card" : "Add Card" }}
+        </b-button>
+
+      </b-card>
+
+      <b-card>
+        <b-card-title>Next billing date</b-card-title>
+        <ul v-if="plan && billingInfo" class="list-unstyled" role="presentation">
           <li>
             {{plan.price_text}} {{ plan.months === 1 ? "per month" : `every ${plan.months} months` }}
           </li>
@@ -24,21 +31,35 @@
         </ul>
 
         <b-button :to="{ name: 'Plans' }" variant="primary">Change Plan</b-button>
-      </dd>
-    </dl>
+      </b-card>
+    </div>
 
+    <PaymentDialog ref="PaymentDialog" id="PaymentDialog"/>
   </b-container>
+
+
 </template>
+
+<style lang="scss">
+.billingDetails {
+  width: fit-content;
+  max-width: 25em;
+  .card {
+    margin: 0.5em 0;
+  }
+}
+</style>
 
 <script>
 
 import * as communityService from "@/services/communityService";
 import * as billingService from "@/services/billingService";
 import * as billing from "@/utils/billing";
+import PaymentDialog from "@/components/dialogs/PaymentDialog";
 
 export default {
     name: "BillingDetails",
-
+    components: {PaymentDialog},
     data() {
         return {
             /** @type {Boolean} */
@@ -51,12 +72,18 @@ export default {
             plan: null
         };
     },
+    props: {
+        updatePayment: Boolean
+    },
     mounted() {
         Promise.all([
             this.loadCommunity(),
             this.loadBilling()
         ]).then(() => {
             this.loaded = true;
+            if (this.updatePayment) {
+                this.$bvModal.show("PaymentDialog");
+            }
         });
     },
     methods: {

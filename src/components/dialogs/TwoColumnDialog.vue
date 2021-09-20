@@ -8,11 +8,11 @@
           v-bind="dialogAttrs"
           hide-footer
           @show="onShow"
-          @shown="$emit('shown', $event)"
-          @hide="$emit('hide', $event)"
+          @shown="$emit('shown', $event); shown = true"
+          @hide="$emit('hide', $event); shown = false"
   >
-    <b-container class="p-0">
 
+    <b-container class="p-0">
       <b-row class="align-items-start">
 
         <b-col v-if="!isMobile" lg="6" cols="12" order="2" class="dialog-info">
@@ -125,7 +125,8 @@ export default {
             billingPlan: null,
             errorAlert: false,
             errorMessage: null,
-            errorMessageTitle: null
+            errorMessageTitle: null,
+            shown: false
         };
     },
     computed: {
@@ -144,6 +145,17 @@ export default {
 
         okClicked: function ($event) {
             this.onOK($event, this.formData);
+        },
+
+        waitForShown: function () {
+            return new Promise(resolve => {
+                console.log("shown", this.shown);
+                if (this.shown) {
+                    resolve();
+                } else {
+                    this.$once("shown", resolve);
+                }
+            });
         }
     }
 };

@@ -16,6 +16,7 @@ if (href.host.endsWith(".morphic.dev")) {
  * @typedef {Object} CONFIG
  * @property {String} API_URL The API server.
  * @property {String} RECAPTCHA_SITEKEY Site key for recaptcha.
+ * @property {String} STRIPE_KEY The publishable key for stripe.
  * @property {String} ENV The environment key (eg, "LOCAL", "DEVELOPMENT", "PRODUCTION")
  * @property {Boolean} PRODUCTION true if production.
  * @property {Boolean} DISABLE_FAVICONS true to disable the use of favicons in buttons.
@@ -34,6 +35,7 @@ const CONF = {
         ENV: ENV,
         PRODUCTION: false,
         RECAPTCHA_SITEKEY: "6LcDs3waAAAAAFGKPHxnNuPBO__5LqaEybnS6wn0",
+        STRIPE_KEY: "pk_test_51Gvm7ZFNS9zyw2T7RQNPwn9ckpAntJZaJauCH3TAbi3uywRWuuZelwRWu1EzeAu0feIbDZNBWLaL7z6utN2syGDl00m1R2iOF9",
         DISABLE_TRIAL: true,
         MAX_BARS: 5,
         MAC_VERSION: 10.14,
@@ -61,6 +63,7 @@ const CONF = {
     // production
     PRODUCTION: {
         API_URL: "https://api.morphic.org",
+        STRIPE_KEY: "pk_live_51Gvm7ZFNS9zyw2T7Rcxccj4GjheU8MZgre9rswkIZMd6x0rzsoD1gBMKy2P2pnEXut11dsg8eICIE708TuBYisgd00kMGP7SnY",
         PRODUCTION: true,
         DISABLE_FAVICONS: true,
         MAX_BARS: 5
