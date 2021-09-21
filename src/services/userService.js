@@ -32,6 +32,12 @@ export function confirmEmail(userId, token) {
 export function resendEmailConfirmation(userId) {
     return HTTP.post(`/v1/users/${userId}/resend_verification`, {}, {action: "resend email confirmation"});
 }
+export function changePassword(userId, currentPassword, newPassword) {
+    return HTTP.post(`/v1/users/${userId}/password`, {
+        existing_password: currentPassword,
+        new_password: newPassword
+    }, {action: "change password"});
+}
 
 
 /**
