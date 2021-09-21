@@ -79,19 +79,6 @@ export default {
     },
     computed: {
         /**
-         * @return {String} The main heading for the page.
-         */
-        heading: function () {
-            return !this.$route.meta.noHeading && (this.$route.meta.heading || this.$route.meta.title);
-        },
-        /**
-         * Determines if the heading should be hidden.
-         * @return {Boolean} true to hide the header.
-         */
-        hideHeading: function () {
-            return !this.$route.meta.showHeading && (!this.isLite || this.$route.meta.hideHeading);
-        },
-        /**
          * Gets the classes for the body element.
          * @return {Object} The classes.
          */
