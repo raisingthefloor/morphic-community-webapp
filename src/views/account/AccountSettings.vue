@@ -24,7 +24,7 @@
     </AccountSettingItem>
 
 
-    <AccountSettingItem icon="people-circle" title="My Morphic account">
+    <AccountSettingItem icon="people-fill" title="My Morphic account">
       <div class="lead font-weight-bold">{{ community.name }}</div>
 
       <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'">Change account name</b-button>
@@ -44,6 +44,29 @@
 
     </AccountSettingItem>
 
+    <AccountSettingItem icon="envelope-open" title="MorphicBars I have accepted">
+      <template #lead>
+        Listed below are the MorphicBars you have accepted from others and that are managed by them on your behalf.
+        If you "remove" their bar(s), then you will no longer have access to the bar(s) that they manage for you.
+      </template>
+
+      <ul class="list-unstyled">
+        <!-- TODO: unable to get invitation details from the API server -->
+        <li v-for="(memberCommunity) in memberCommunities" :key="memberCommunity.id" :aria-labelledby="`${memberCommunity.id}_name`">
+          <span :id="`${memberCommunity.id}_label`">
+            <b :id="`${memberCommunity.id}_name`">{{memberCommunity.name}}</b>
+            has provided the following bar(s) for you:
+          </span>
+
+          <ul :aria-labelledby="`${memberCommunity.id}_label`" class="mb-3">
+            <li v-for="bar in (memberBars[memberCommunity.id])" :key="bar.id">
+              {{bar.name}}
+            </li>
+          </ul>
+          <b-button variant="invert-dark">Remove</b-button>
+        </li>
+      </ul>
+    </AccountSettingItem>
 
   </div>
 </template>
@@ -83,16 +106,29 @@ export default {
             /** @type {BillingInfo} */
             billingInfo: {},
             /** @type {BillingPlan} */
-            plan: {}
+            plan: {},
+            /**
+             * Communities the user belongs to.
+             * @type {Array<Community>}
+             */
+            allCommunities: [],
+            /** @type {CommunityMember} */
+            memberDetails: {},
+            /**
+             * The bars for each community
+             * @type {Object<GUID,BarDetails>}
+             */
+            memberBars: {}
         };
     },
     props: {
         updatePayment: Boolean
     },
-    mounted() {
+    async mounted() {
         Promise.all([
-            this.loadCommunity(),
-            this.loadBilling()
+            await this.loadBilling(),
+            await this.loadCommunities().then(this.loadMember),
+            await this.loadCommunity(),
         ]).then(() => {
             this.loaded = true;
             if (this.updatePayment) {
@@ -101,6 +137,21 @@ export default {
         });
     },
     computed: {
+        /**
+         * Communities the user is a manager of.
+         * @return {Array<Community>} The communities.
+         */
+        managerCommunities: function () {
+            return this.allCommunities.filter(c => c.role === "manager");
+        },
+
+        /**
+         * Communities the user is a non-manager of.
+         * @return {Array<Community>} The communities.
+         */
+        memberCommunities: function () {
+            return this.allCommunities.filter(c => c.role === "member");
+        }
     },
     methods: {
         /**
@@ -122,6 +173,36 @@ export default {
             return communityService.getCommunity(this.communityId).then((community) => {
                 this.community = community.data;
             });
+        },
+
+        loadCommunities: async function () {
+            const communities = (await communityService.getUserCommunities(this.userId))?.data?.communities || [];
+
+            this.communityBars = {};
+            this.allCommunities = await Promise.all(communities.map(c => {
+                return communityService.getCommunity(c.id).then(r => {
+                    return {...r.data, role: c.role, memberId: c.member_id};
+                });
+            }));
+
+            return this.allCommunities;
+        },
+
+        /**
+         * Load the member and bar details of the user for each community the user is a member of.
+         * @return {Promise<void>}
+         */
+        loadMember: async function () {
+            this.memberDetails = {};
+            this.memberBars = {};
+            await Promise.all(this.memberCommunities.map(async community => {
+                const member = (await communityService.getCommunityMember(community.id, community.memberId)).data;
+                this.memberDetails[community.id] = member;
+
+                this.memberBars[community.id] = await Promise.all(member.bar_ids.map(async barId => {
+                    return (await communityService.getCommunityBar(community.id, barId)).data;
+                }));
+            }));
         },
 
         /**
