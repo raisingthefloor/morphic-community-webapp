@@ -2,7 +2,6 @@
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header ref="Header" />
     <div role="main" id="PageContent" class="main">
-      <h1 v-if="heading" id="MainHeading" :class="{screenReader: hideHeading}">{{ heading }}</h1>
       <router-view />
     </div>
     <div class="screenReader">
