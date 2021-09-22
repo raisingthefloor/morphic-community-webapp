@@ -23,6 +23,28 @@
 
     </AccountSettingItem>
 
+
+    <AccountSettingItem icon="people-circle" title="My Morphic account">
+      <div class="lead font-weight-bold">{{ community.name }}</div>
+
+      <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'">Change account name</b-button>
+
+      <div class="mt-3 mb-2">Subscription type: {{plan.name}}</div>
+      <div class="d-flex flex-wrap">
+        <span class="pr-1">Number of people you have added:</span>
+        <b>{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</b>
+      </div>
+
+      <TextInputDialog id="AccountNameDialog"
+                       title="Rename Account"
+                       prompt="Enter the new name for the account"
+                       :value="community.name"
+                       @ok="renameAccount($event.newValue)"
+      />
+
+    </AccountSettingItem>
+
+
   </div>
 </template>
 
@@ -47,10 +69,11 @@ import * as billingService from "@/services/billingService";
 import * as billing from "@/utils/billing";
 import AccountSettingItem from "@/components/AccountSettingItem";
 import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog";
+import TextInputDialog from "@/components/dialogs/TextInputDialog";
 
 export default {
     name: "AccountSettings",
-    components: {ChangePasswordDialog, AccountSettingItem},
+    components: {TextInputDialog, ChangePasswordDialog, AccountSettingItem},
     data() {
         return {
             /** @type {Boolean} */
@@ -80,6 +103,16 @@ export default {
     computed: {
     },
     methods: {
+        /**
+         * Renames the account, and refreshes the community data.
+         * @param {String} newName The new name of the account.
+         * @return {Promise} Resolves when complete.
+         */
+        async renameAccount(newName) {
+            await communityService.updateCommunity(this.communityId, newName, this.community.default_bar_id);
+            this.showMessage("Account name updated");
+            await this.loadCommunity();
+        },
 
         /**
          * Loads the community details.
