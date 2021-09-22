@@ -13,8 +13,6 @@
           @ok="$event.promise = $refs.ChangePassword.onSubmit(true)"
 
           v-bind="$attrs"
-
-          :v="$v"
   >
     <template #form>
       <ChangePassword ref="ChangePassword" stay-on-page no-buttons/>

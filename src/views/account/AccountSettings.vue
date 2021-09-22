@@ -5,6 +5,24 @@
       <b-link :to="{name:'Dashboard'}" >Back to Custom MorphicBar Tool</b-link>
     </div>
 
+    <AccountSettingItem icon="person-circle" title="My sign-in method">
+      <template #lead>You have currently set up the following ways to sign into your Morphic account</template>
+
+      <ul class="signInMethods list-unstyled">
+        <li aria-labelledby="SignIn-email">
+          <dl role="presentation">
+            <dt id="SignIn-email">Email &amp; Password</dt>
+            <dd>user@example.com (confirmed)</dd>
+          </dl>
+          <b-button variant="invert-dark" v-b-modal="'ChangePasswordDialog'">Change password</b-button>
+
+          <ChangePasswordDialog />
+
+        </li>
+      </ul>
+
+    </AccountSettingItem>
+
   </div>
 </template>
 
@@ -27,9 +45,12 @@
 import * as communityService from "@/services/communityService";
 import * as billingService from "@/services/billingService";
 import * as billing from "@/utils/billing";
+import AccountSettingItem from "@/components/AccountSettingItem";
+import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog";
 
 export default {
     name: "AccountSettings",
+    components: {ChangePasswordDialog, AccountSettingItem},
     data() {
         return {
             /** @type {Boolean} */
