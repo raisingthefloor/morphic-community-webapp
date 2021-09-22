@@ -2,7 +2,8 @@
   <div class="accountSettings">
 
     <div class="m-3">
-      <b-link :to="{name:'Dashboard'}" >Back to Custom MorphicBar Tool</b-link>
+      <b-link v-if="$store.getters.hasAccount && $store.getters.role === 'manager'" :to="{name:'Dashboard'}" >
+        <b-icon icon="arrow-return-right" rotate="180"/>Back to Custom MorphicBar Tool</b-link>
     </div>
 
     <AccountSettingItem icon="person-circle" title="My sign-in method">
@@ -24,7 +25,7 @@
     </AccountSettingItem>
 
 
-    <AccountSettingItem icon="people-fill" title="My Morphic account">
+    <AccountSettingItem v-if="isManager" icon="people-fill" title="My Morphic account">
       <div class="lead font-weight-bold">{{ community.name }}</div>
 
       <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'">Change account name</b-button>
@@ -44,10 +45,10 @@
 
     </AccountSettingItem>
 
-    <AccountSettingItem icon="envelope-open" title="MorphicBars I have accepted">
+    <AccountSettingItem v-if="hasAccount" icon="envelope-open" title="MorphicBars I have accepted">
       <template #lead>
         Listed below are the MorphicBars you have accepted from others and that are managed by them on your behalf.
-        If you "remove" their bar(s), then you will no longer have access to the bar(s) that they manage for you.
+<!--        If you "remove" their bar(s), then you will no longer have access to the bar(s) that they manage for you.-->
       </template>
 
       <ul class="list-unstyled">
@@ -63,7 +64,7 @@
               {{bar.name}}
             </li>
           </ul>
-          <b-button variant="invert-dark">Remove</b-button>
+<!--          <b-button variant="invert-dark">Remove</b-button>-->
         </li>
       </ul>
     </AccountSettingItem>
@@ -122,18 +123,15 @@ export default {
         };
     },
     props: {
-        updatePayment: Boolean
     },
     async mounted() {
         Promise.all([
             await this.loadBilling(),
             await this.loadCommunities().then(this.loadMember),
-            await this.loadCommunity(),
+            await this.loadCommunity()
         ]).then(() => {
             this.loaded = true;
-            if (this.updatePayment) {
-                this.$bvModal.show("PaymentDialog");
-            }
+            this.$forceUpdate();
         });
     },
     computed: {
@@ -151,6 +149,10 @@ export default {
          */
         memberCommunities: function () {
             return this.allCommunities.filter(c => c.role === "member");
+        },
+
+        isManager: function () {
+            return this.$store.getters.role === "manager";
         }
     },
     methods: {
@@ -181,7 +183,7 @@ export default {
             this.communityBars = {};
             this.allCommunities = await Promise.all(communities.map(c => {
                 return communityService.getCommunity(c.id).then(r => {
-                    return {...r.data, role: c.role, memberId: c.member_id};
+                    return {...r.data, role: c.role, member_id: c.member_id};
                 });
             }));
 
@@ -196,7 +198,8 @@ export default {
             this.memberDetails = {};
             this.memberBars = {};
             await Promise.all(this.memberCommunities.map(async community => {
-                const member = (await communityService.getCommunityMember(community.id, community.memberId)).data;
+
+                const member = (await communityService.getCommunityMember(community.id, community.member_id)).data;
                 this.memberDetails[community.id] = member;
 
                 this.memberBars[community.id] = await Promise.all(member.bar_ids.map(async barId => {
@@ -211,7 +214,7 @@ export default {
          */
         loadBilling: function () {
             let plans;
-            return Promise.all([
+            return this.isManager ? Promise.all([
                 billing.getPlans().then(p => {
                     plans = p;
                 }),
@@ -222,7 +225,7 @@ export default {
                 this.plan = (this.billingInfo && this.billingInfo.plan_id && plans)
                     ? plans[this.billingInfo.plan_id]
                     : null;
-            });
+            }) : Promise.resolve();
         }
     }
 };

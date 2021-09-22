@@ -134,8 +134,7 @@ const routes = [
             title: "Not a manger",
             showHeading: true,
             noAccount: true,
-            roles: ["member"],
-            userHome: "member"
+            roles: ["member"]
         }
     },
     {
@@ -162,7 +161,9 @@ const routes = [
         name: "AccountSettings",
         component: AccountSettings,
         meta: {
-            title: "Morphic Account Settings"
+            title: "Morphic Account Settings",
+            noAccount: true,
+            userHome: "member"
         }
     },
     {
@@ -363,7 +364,7 @@ router.beforeEach((to, from, next) => {
                 store.commit("beforeLoginPage", undefined);
             } else if (!store.getters.hasAccount) {
                 // no account - tell them to get one.
-                redirect = {name: "NoSubscription"};
+                redirect = {name: "AccountSettings"};
             } else {
                 // redirect to the auth home page
                 redirect = getUserHomeRoute();
