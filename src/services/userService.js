@@ -23,8 +23,27 @@ export function resetPassword(body) {
     return HTTP.post("/v1/auth/username/password_reset/request", body, {action: "reset password"});
 }
 
+/**
+ * Gets the user details.
+ * @param {GUID} userId User id - only works for the current user.
+ * @return {Promise<AxiosResponse<UserDetails>>} Resolves when complete.
+ */
 export function getUser(userId) {
-    return HTTP.get(`/v1/users/${userId}`, {action: "get user details"}).then(r => r.data);
+    return HTTP.get(`/v1/users/${userId}`, {action: "get user details"}).then(r => {
+        const user = {...r.data, email: r.data?.email_plaintext};
+        delete user.email_plaintext;
+
+        Object.defineProperty(user, "fullName", {
+            get() {
+                return !this.first_name && !this.last_name
+                    ? ""
+                    : `${this.first_name || ""} ${this.last_name || ""}`.trim();
+            }
+        });
+
+        return user;
+
+    });
 }
 export function confirmEmail(userId, token) {
     return HTTP.post(`/v1/users/${userId}/verify_email/${token}`, {}, {action: "confirm email"});

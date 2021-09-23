@@ -10,21 +10,35 @@
       <template #lead>You have currently set up the following ways to sign into your Morphic account</template>
 
       <ul class="signInMethods list-unstyled">
-        <li aria-labelledby="SignIn-email">
-          <dl role="presentation">
-            <dt id="SignIn-email">Email &amp; Password</dt>
-            <dd>user@example.com (confirmed)</dd>
-          </dl>
-          <b-button variant="invert-dark" v-b-modal="'ChangePasswordDialog'">Change password</b-button>
+        <li v-if="userDetails && userDetails.email"
+            :class="{error:!userDetails.email_verified}"
+            aria-labelledby="SignIn-email">
+          <div class="d-flex">
+            <div class="if-error" style="font-size: 1.5em; width: 1.8em">
+              <b-iconstack style="vertical-align: top">
+                <b-icon icon="circle-fill" variant="white" />
+                <b-icon icon="exclamation-circle-fill" variant="danger" />
+              </b-iconstack>
+            </div>
+            <dl role="presentation">
+              <dt id="SignIn-email">Email &amp; Password</dt>
+              <dd>
+                {{ userDetails.email }}
+                <span v-if="userDetails.email_verified">(confirmed)</span>
+              </dd>
+            </dl>
+          </div>
 
-          <ChangePasswordDialog />
+          <div v-if="!userDetails.email_verified" class="mb-3">
+            This email address is not confirmed. You will need to click a link sent you you by Morphic to confirm.
+            Check your junk or spam folder or re-send the confirmation email.
+          </div>
 
-        </li>
-        <li aria-labelledby="SignIn-email">
-          <dl role="presentation">
-            <dt id="SignIn-email">Email &amp; Password</dt>
-            <dd>user@example.com (confirmed)</dd>
-          </dl>
+          <b-button v-if="!userDetails.email_verified"
+                    variant="invert-dark"
+                    @click="resendEmailConfirmation()"
+                    class="mr-3">Re-send confirmation email</b-button>
+
           <b-button variant="invert-dark" v-b-modal="'ChangePasswordDialog'">Change password</b-button>
 
           <ChangePasswordDialog />
@@ -126,6 +140,7 @@
 
 import * as communityService from "@/services/communityService";
 import * as billingService from "@/services/billingService";
+import * as userService from "@/services/userService";
 import * as billing from "@/utils/billing";
 import AccountSettingItem from "@/components/AccountSettingItem";
 import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog";
@@ -149,22 +164,26 @@ export default {
              * @type {Array<Community>}
              */
             allCommunities: [],
-            /** @type {CommunityMember} */
+            /** @type {Object<GUID,CommunityMember>} */
             memberDetails: {},
             /**
              * The bars for each community
              * @type {Object<GUID,BarDetails>}
              */
-            memberBars: {}
+            memberBars: {},
+
+            /** @type {UserDetails} */
+            userDetails: {}
         };
     },
     props: {
     },
     async mounted() {
         Promise.all([
-            await this.loadBilling(),
-            await this.loadCommunities().then(this.loadMember),
-            await this.loadCommunity()
+            this.loadBilling(),
+            this.loadCommunities().then(this.loadMember),
+            this.loadCommunity(),
+            this.loadUser()
         ]).then(() => {
             this.loaded = true;
             this.$forceUpdate();
@@ -189,6 +208,10 @@ export default {
 
         isManager: function () {
             return this.$store.getters.role === "manager";
+        },
+
+        hasAccount: function () {
+            return this.$store.getters.hasAccount;
         }
     },
     methods: {
@@ -211,6 +234,15 @@ export default {
             if (confirmed) {
                 this.$bvModal.msgBoxOk("Not implemented", {title: "Delete Account"});
             }
+        },
+
+        resendEmailConfirmation: async function () {
+            await userService.resendEmailConfirmation(this.userId);
+            this.showMessage("Confirmation email sent");
+        },
+
+        loadUser: async function () {
+            this.userDetails = await userService.getUser(this.userId);
         },
 
         /**

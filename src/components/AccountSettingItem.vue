@@ -59,7 +59,7 @@
     margin-bottom: 1em;
   }
 
-  .itemContent > :not(ul), .itemContent > ul > li  {
+  .itemContent > :not(ul), .itemContent > ul > li {
     &:not(:last-child) {
       margin-bottom: 0.5em;
     }
@@ -68,10 +68,19 @@
     border-radius: 0.75em !important;
     padding: 0.5em;
 
+    .if-error {
+      display: none;
+    }
+
+    &.error {
+      background-color: #efc7cc;
+
+      .if-error {
+        display: unset;
+      }
+    }
   }
-
 }
-
 </style>
 
 <script>
