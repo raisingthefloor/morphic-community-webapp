@@ -69,6 +69,26 @@
       </ul>
     </AccountSettingItem>
 
+  <!-- TODO: Account deletion on the API server
+    <AccountSettingItem icon="gear-fill" title="Other actions for my personal account">
+      <h3><b-icon icon="trash-fill" scale="1.2"/> Deleting my personal Morphic account</h3>
+      <p>
+        If you no longer want to use Morphic to personalize computers you use, you can delete your account. Deleting
+        your account will erase all data and information associated with your account.
+      </p>
+      <p v-if="isManager">
+        Since you have a Morphic Plus subscription, deleting your personal account will also delete all the MorphicBars
+        that you manage for yourself and others.
+      </p>
+      <p v-else>
+        Because you have accepted one or more invitations for MorphicBars, all MorphicBars and buttons that others have
+        created specifically for you will also be deleted. This will remove all of the bars other people have created
+        for you from their accounts. They will not be able to undo this.
+      </p>
+
+      <b-button variant="invert-danger" @click="deleteAccount()">Delete my account</b-button>
+    </AccountSettingItem>
+  -->
   </div>
 </template>
 
@@ -79,6 +99,10 @@
 
   .accountItem:not(:last-child) {
     margin-bottom: 1em;
+  }
+
+  h3 {
+    font-size: 1.2em;
   }
 
 }
@@ -165,6 +189,16 @@ export default {
             await communityService.updateCommunity(this.communityId, newName, this.community.default_bar_id);
             this.showMessage("Account name updated");
             await this.loadCommunity();
+        },
+        async deleteAccount() {
+            const confirmed = await this.showConfirm("Are you sure you want to delete your account?",
+                ["Delete my account", "No"],
+                "Delete Account",
+                {dangerous: true});
+
+            if (confirmed) {
+                this.$bvModal.msgBoxOk("Not implemented", {title: "Delete Account"});
+            }
         },
 
         /**
