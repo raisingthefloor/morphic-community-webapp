@@ -20,28 +20,40 @@
           <ChangePasswordDialog />
 
         </li>
+        <li aria-labelledby="SignIn-email">
+          <dl role="presentation">
+            <dt id="SignIn-email">Email &amp; Password</dt>
+            <dd>user@example.com (confirmed)</dd>
+          </dl>
+          <b-button variant="invert-dark" v-b-modal="'ChangePasswordDialog'">Change password</b-button>
+
+          <ChangePasswordDialog />
+
+        </li>
       </ul>
 
     </AccountSettingItem>
 
 
     <AccountSettingItem v-if="isManager" icon="people-fill" title="My Morphic account">
-      <div class="lead font-weight-bold">{{ community.name }}</div>
+      <div>
+        <div class="lead font-weight-bold">{{ community.name }}</div>
 
-      <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'">Change account name</b-button>
+        <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'">Change account name</b-button>
 
-      <div class="mt-3 mb-2">Subscription type: {{plan.name}}</div>
-      <div class="d-flex flex-wrap">
-        <span class="pr-1">Number of people you have added:</span>
-        <b>{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</b>
+        <div class="mt-3 mb-2">Subscription type: {{plan.name}}</div>
+        <div class="d-flex flex-wrap">
+          <span class="pr-1">Number of people you have added:</span>
+          <b>{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</b>
+        </div>
+
+        <TextInputDialog id="AccountNameDialog"
+                         title="Rename Account"
+                         prompt="Enter the new name for the account"
+                         :value="community.name"
+                         @ok="renameAccount($event.newValue)"
+        />
       </div>
-
-      <TextInputDialog id="AccountNameDialog"
-                       title="Rename Account"
-                       prompt="Enter the new name for the account"
-                       :value="community.name"
-                       @ok="renameAccount($event.newValue)"
-      />
 
     </AccountSettingItem>
 

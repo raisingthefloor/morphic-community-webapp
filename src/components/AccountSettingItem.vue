@@ -14,7 +14,7 @@
 
       <div class="itemLead"><slot name="lead" /></div>
 
-      <div class="itemContent rounded-lg bg-silver">
+      <div class="itemContent">
         <slot>content</slot>
       </div>
 
@@ -25,6 +25,7 @@
 </template>
 
 <style lang="scss">
+@import "~@/styles/bootstrap-util";
 
 .accountItem {
 
@@ -58,9 +59,15 @@
     margin-bottom: 1em;
   }
 
-  .itemContent {
+  .itemContent > :not(ul), .itemContent > ul > li  {
+    &:not(:last-child) {
+      margin-bottom: 0.5em;
+    }
+
+    background-color: $gray-200;
     border-radius: 0.75em !important;
     padding: 0.5em;
+
   }
 
 }
