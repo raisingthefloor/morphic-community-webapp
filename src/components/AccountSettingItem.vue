@@ -15,7 +15,7 @@
       <div class="itemLead"><slot name="lead" /></div>
 
       <div class="itemContent">
-        <slot>content</slot>
+        <slot />
       </div>
 
     </div>
@@ -65,8 +65,15 @@
     }
 
     background-color: $gray-200;
-    border-radius: 0.75em !important;
-    padding: 0.5em;
+
+    &, .box {
+      border-radius: 0.75em !important;
+      padding: 0.5em;
+    }
+
+    .box {
+      background-color: white;
+    }
 
     .if-error {
       display: none;

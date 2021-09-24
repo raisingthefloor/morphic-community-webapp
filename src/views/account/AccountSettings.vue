@@ -10,9 +10,11 @@
       <template #lead>You have currently set up the following ways to sign into your Morphic account</template>
 
       <ul class="signInMethods list-unstyled">
+
         <li v-if="userDetails && userDetails.email"
             :class="{error:!userDetails.email_verified}"
             aria-labelledby="SignIn-email">
+
           <div class="d-flex">
             <div class="if-error" style="font-size: 1.5em; width: 1.8em">
               <b-iconstack style="vertical-align: top">
@@ -20,7 +22,7 @@
                 <b-icon icon="exclamation-circle-fill" variant="danger" />
               </b-iconstack>
             </div>
-            <dl role="presentation">
+            <dl role="presentation" class="mb-0">
               <dt id="SignIn-email">Email &amp; Password</dt>
               <dd>
                 {{ userDetails.email }}
@@ -49,8 +51,8 @@
     </AccountSettingItem>
 
 
-    <AccountSettingItem v-if="isManager" icon="people-fill" title="My Morphic account">
-      <div>
+    <AccountSettingItem v-if="isManager || !hasAccount" icon="people-fill" title="My Morphic account">
+      <div v-if="hasAccount">
         <div class="lead font-weight-bold">{{ community.name }}</div>
 
         <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'">Change account name</b-button>
@@ -67,6 +69,37 @@
                          :value="community.name"
                          @ok="renameAccount($event.newValue)"
         />
+      </div>
+      <div v-else>
+        <p class="lead">You have a free account with basic Morphic features</p>
+
+        <div id="basic-features">With the free basic features of Morphic, you can...</div>
+        <ul aria-labelledby="basic-features">
+          <li>Apply your usability and accessibility settings on computers with Morphic installed</li>
+          <li>Use the Basic MorphicBar and any MorphicBars that you have been invited to use</li>
+        </ul>
+
+        <div class="box">
+          <b-container fluid>
+            <b-row>
+              <b-col cols="*">
+                <img src="/img/logo-color.svg" width="70" class="m-2"/>
+              </b-col>
+              <b-col>
+                <p class="lead">Upgrade to Morphic Plus</p>
+                <div id="plus-features">With a Morphic Plus subscription, you can...</div>
+                <ul aria-labelledby="plus-features">
+                  <li>Create MorphicBars for yourself</li>
+                  <li>Create and manage MorphicBars for other people</li>
+                </ul>
+
+                <b-button :to="{name:'EarlyReleaseProgram'}" variant="morphic-green">Sign up for a Morphic Plus subscription</b-button>
+              </b-col>
+            </b-row>
+          </b-container>
+
+        </div>
+
       </div>
 
     </AccountSettingItem>
@@ -129,6 +162,14 @@
 
   h3 {
     font-size: 1.2em;
+  }
+
+  .lead {
+    font-weight: bold;
+  }
+
+  .btn {
+    margin-top: 0.5em;
   }
 
 }
@@ -250,7 +291,7 @@ export default {
          * @return {Promise} Resolves when complete.
          */
         loadCommunity: function () {
-            return communityService.getCommunity(this.communityId).then((community) => {
+            return this.hasAccount && communityService.getCommunity(this.communityId).then((community) => {
                 this.community = community.data;
             });
         },
@@ -292,7 +333,7 @@ export default {
          */
         loadBilling: function () {
             let plans;
-            return this.isManager ? Promise.all([
+            return this.isManager && this.hasAccount ? Promise.all([
                 billing.getPlans().then(p => {
                     plans = p;
                 }),
