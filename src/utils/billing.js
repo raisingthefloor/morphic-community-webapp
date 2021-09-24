@@ -21,6 +21,7 @@ import * as billingService from "@/services/billingService";
  * @property {String} size Plan size (basic, medium, large).
  * @property {Boolean} listed Displayed in the list of plans.
  * @property {String} savings_text Bulk-buy savings (if any).
+ * @property {String} annual_price_text Price per year.
  */
 
 /**
@@ -140,7 +141,16 @@ export function getPlans() {
                 if (savings) {
                     p.savings_text = savings;
                 }
+
+                // Get the annual cost
+                if (p.months === 12) {
+                    p.annual_price_text = p.price_text;
+                } else {
+                    const annual = Math.round(p.price * (12 / p.months) / 100);
+                    p.annual_price_text = `$${annual}`;
+                }
             });
+
 
             return JSON.parse(JSON.stringify(allPlans));
         });

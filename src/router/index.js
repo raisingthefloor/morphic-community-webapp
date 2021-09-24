@@ -171,7 +171,7 @@ const routes = [
         name: "BillingDetails",
         component: BillingDetails,
         meta: {
-            title: "Billing"
+            title: "Morphic Subscription and Billing"
         }
     },
     {

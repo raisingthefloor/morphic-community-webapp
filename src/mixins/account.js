@@ -17,6 +17,8 @@ export const accountMixin = {
             community: {},
             /** @type {BillingInfo} */
             billingInfo: {},
+            /** @type {Object<String,BillingPlan>} */
+            allPlans: {},
             /** @type {BillingPlan} */
             plan: {},
             /**
@@ -123,17 +125,16 @@ export const accountMixin = {
          * @return {Promise} Resolves when complete.
          */
         loadBilling: function () {
-            let plans;
             return this.isManager && this.hasAccount ? Promise.all([
                 billing.getPlans().then(p => {
-                    plans = p;
+                    this.allPlans = p;
                 }),
                 billingService.getBillingInfo(this.communityId).then((r) => {
                     this.billingInfo = r.data;
                 })
             ]).then(() => {
-                this.plan = (this.billingInfo && this.billingInfo.plan_id && plans)
-                    ? plans[this.billingInfo.plan_id]
+                this.plan = (this.billingInfo && this.billingInfo.plan_id && this.allPlans)
+                    ? this.allPlans[this.billingInfo.plan_id]
                     : null;
             }) : Promise.resolve();
         }

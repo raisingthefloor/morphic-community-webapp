@@ -2,7 +2,7 @@
 <template>
   <div class="accountItem" :id="componentId" :aria-labelledby="headingId">
 
-    <div class="itemIcon">
+    <div v-if="icon" class="itemIcon">
       <slot name="icon">
         <b-icon :icon="icon"/>
       </slot>
@@ -50,7 +50,6 @@
 
   .itemHeading {
     position: relative;
-    font-size: 1.4em;
     line-height: #{$image-size * 16}px;
     margin: 0;
   }
@@ -64,11 +63,13 @@
       margin-bottom: 0.5em;
     }
 
-    background-color: $gray-200;
-
     &, .box {
       border-radius: 0.75em !important;
       padding: 0.5em;
+    }
+
+    &:not(.no-shade) {
+      background-color: $gray-200;
     }
 
     .box {

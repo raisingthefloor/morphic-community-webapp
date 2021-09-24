@@ -3,7 +3,7 @@
 
     <div class="m-3">
       <b-link v-if="$store.getters.hasAccount && $store.getters.role === 'manager'" :to="{name:'Dashboard'}" >
-        <b-icon icon="arrow-return-right" rotate="180"/>Back to Custom MorphicBar Tool</b-link>
+      <b-icon icon="arrow-return-right" rotate="180"/>Back to Custom MorphicBar Tool</b-link>
     </div>
 
     <AccountSettingItem icon="person-circle" title="My sign-in method">
@@ -47,7 +47,6 @@
 
         </li>
       </ul>
-
     </AccountSettingItem>
 
 
@@ -62,6 +61,9 @@
           <span class="pr-1">Number of people you have added:</span>
           <b>{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</b>
         </div>
+
+
+        <b-button variant="invert-dark" :to="{name:'BillingDetails'}">Manage subscription and billing</b-button>
 
         <TextInputDialog id="AccountNameDialog"
                          title="Rename Account"
@@ -160,6 +162,9 @@
     margin-bottom: 1em;
   }
 
+  h2 {
+    font-size: 1.4em;
+  }
   h3 {
     font-size: 1.2em;
   }
