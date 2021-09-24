@@ -71,41 +71,53 @@ var allPlans;
 
 // Extra front-end information for the plans.
 const planExtras = {
+    "plus-5": {
+        name: "Morphic Plus 5",
+        sizeName: "MorphicPlus 5"
+    },
+    "plus-5-monthly": {
+        name: "Morphic Plus 5 (monthly)",
+        sizeName: "MorphicPlus 5"
+    },
+    "plus-15": {
+        name: "Morphic Plus 15",
+        sizeName: "MorphicPlus 15"
+    },
+    "plus-15-monthly": {
+        name: "Morphic Plus 15 (monthly)",
+        sizeName: "MorphicPlus 15"
+    },
+
+    // old plans:
     "basic-1-month": {
         name: "Standard Monthly",
         sizeName: "Standard",
-        size: "basic",
-        listed: true
+        size: "basic"
     },
     "basic-6-month": {
         name: "Standard Plan",
         sizeName: "Standard",
-        size: "basic",
-        listed: true
+        size: "basic"
     },
     "midsize-1-month": {
         name: "Medium Monthly",
         sizeName: "Medium",
-        size: "medium",
-        listed: true
+        size: "medium"
     },
     "midsize-6-month": {
         name: "Medium Plan",
         sizeName: "Medium",
-        size: "medium",
-        listed: true
+        size: "medium"
     },
     "large-1-month": {
         name: "Large Monthly",
         sizeName: "Large",
-        size: "large",
-        listed: true
+        size: "large"
     },
     "large-6-month": {
         name: "Large Plan",
         sizeName: "Large",
-        size: "large",
-        listed: true
+        size: "large"
     },
     "enterprise-1": {
         name: "Enterprise",

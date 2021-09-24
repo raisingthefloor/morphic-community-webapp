@@ -41,7 +41,7 @@
         <div v-for="(plan, index) in (planData)"
              :key="index"
              class="plan"
-             :class="{isSubscription: !!plan.size}"
+             :class="{isSubscription: !plan.free}"
         >
           <h3 v-if="plan.size">Morphic Plus <div>{{plan.size}}</div></h3>
           <h3 v-else>Morphic <div>(Basic features only)</div></h3>
@@ -55,13 +55,13 @@
             </ul>
           </div>
           <div class="pricing">
-            <div v-if="plan.size">
+            <div v-if="plan.free">
+              Free!
+            </div>
+            <div v-else-if="plan.monthly && plan.yearly">
               {{plan.monthly.monthly_price_text}} per month ({{plan.monthly.annual_price_text}} over 12 months)<br/>
               or<br/>
               {{plan.yearly.price_text}} (12 month) subscription
-            </div>
-            <div v-else>
-              Free!
             </div>
           </div>
           <div>
@@ -74,9 +74,7 @@
       </div>
 
     </div>
-
   </div>
-
 
 </template>
 
@@ -186,22 +184,25 @@ export default {
          * @return {Array<PlanInfo>} the plan data.
          */
         planData: function () {
-            return [
+            const plans = [
                 {
-                    plan: null,
-                    size: 0
+                    free: true
                 },
                 {
-                    yearly: this.allPlans["basic-6-month"],
-                    monthly: this.allPlans["basic-1-month"],
-                    size: 5
+                    yearly: this.allPlans["plus-5"],
+                    monthly: this.allPlans["plus-5-monthly"]
                 },
                 {
-                    yearly: this.allPlans["midsize-6-month"],
-                    monthly: this.allPlans["midsize-1-month"],
-                    size: 15
+                    yearly: this.allPlans["plus-15"],
+                    monthly: this.allPlans["plus-15-monthly"]
                 }
             ];
+
+            return plans.map(p => {
+                const plan = p.yearly || p.monthly;
+                p.size = plan ? plan.member_limit : 0;
+                return p;
+            });
 
         }
     },
