@@ -180,55 +180,29 @@
 <script>
 
 import * as communityService from "@/services/communityService";
-import * as billingService from "@/services/billingService";
 import * as userService from "@/services/userService";
-import * as billing from "@/utils/billing";
 import AccountSettingItem from "@/components/AccountSettingItem";
 import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog";
 import TextInputDialog from "@/components/dialogs/TextInputDialog";
+import { accountMixin } from "@/mixins/account";
 
 export default {
     name: "AccountSettings",
     components: {TextInputDialog, ChangePasswordDialog, AccountSettingItem},
+    mixins: [accountMixin],
     data() {
         return {
             /** @type {Boolean} */
-            loaded: false,
-            /** @type {Community} */
-            community: {},
-            /** @type {BillingInfo} */
-            billingInfo: {},
-            /** @type {BillingPlan} */
-            plan: {},
-            /**
-             * Communities the user belongs to.
-             * @type {Array<Community>}
-             */
-            allCommunities: [],
-            /** @type {Object<GUID,CommunityMember>} */
-            memberDetails: {},
-            /**
-             * The bars for each community
-             * @type {Object<GUID,BarDetails>}
-             */
-            memberBars: {},
-
-            /** @type {UserDetails} */
-            userDetails: {}
+            loaded: false
         };
     },
     props: {
     },
     async mounted() {
-        Promise.all([
-            this.loadBilling(),
-            this.loadCommunities().then(this.loadMember),
-            this.loadCommunity(),
-            this.loadUser()
-        ]).then(() => {
-            this.loaded = true;
-            this.$forceUpdate();
-        });
+        this.loaded = false;
+        await this.accountLoadAll();
+        this.loaded = true;
+        this.$forceUpdate();
     },
     computed: {
         /**
@@ -245,14 +219,6 @@ export default {
          */
         memberCommunities: function () {
             return this.allCommunities.filter(c => c.role === "member");
-        },
-
-        isManager: function () {
-            return this.$store.getters.role === "manager";
-        },
-
-        hasAccount: function () {
-            return this.$store.getters.hasAccount;
         }
     },
     methods: {
@@ -280,72 +246,8 @@ export default {
         resendEmailConfirmation: async function () {
             await userService.resendEmailConfirmation(this.userId);
             this.showMessage("Confirmation email sent");
-        },
-
-        loadUser: async function () {
-            this.userDetails = await userService.getUser(this.userId);
-        },
-
-        /**
-         * Loads the community details.
-         * @return {Promise} Resolves when complete.
-         */
-        loadCommunity: function () {
-            return this.hasAccount && communityService.getCommunity(this.communityId).then((community) => {
-                this.community = community.data;
-            });
-        },
-
-        loadCommunities: async function () {
-            const communities = (await communityService.getUserCommunities(this.userId))?.data?.communities || [];
-
-            this.communityBars = {};
-            this.allCommunities = await Promise.all(communities.map(c => {
-                return communityService.getCommunity(c.id).then(r => {
-                    return {...r.data, role: c.role, member_id: c.member_id};
-                });
-            }));
-
-            return this.allCommunities;
-        },
-
-        /**
-         * Load the member and bar details of the user for each community the user is a member of.
-         * @return {Promise<void>}
-         */
-        loadMember: async function () {
-            this.memberDetails = {};
-            this.memberBars = {};
-            await Promise.all(this.memberCommunities.map(async community => {
-
-                const member = (await communityService.getCommunityMember(community.id, community.member_id)).data;
-                this.memberDetails[community.id] = member;
-
-                this.memberBars[community.id] = await Promise.all(member.bar_ids.map(async barId => {
-                    return (await communityService.getCommunityBar(community.id, barId)).data;
-                }));
-            }));
-        },
-
-        /**
-         * Loads the community plan and billing details.
-         * @return {Promise} Resolves when complete.
-         */
-        loadBilling: function () {
-            let plans;
-            return this.isManager && this.hasAccount ? Promise.all([
-                billing.getPlans().then(p => {
-                    plans = p;
-                }),
-                billingService.getBillingInfo(this.communityId).then((r) => {
-                    this.billingInfo = r.data;
-                })
-            ]).then(() => {
-                this.plan = (this.billingInfo && this.billingInfo.plan_id && plans)
-                    ? plans[this.billingInfo.plan_id]
-                    : null;
-            }) : Promise.resolve();
         }
+
     }
 };
 </script>
