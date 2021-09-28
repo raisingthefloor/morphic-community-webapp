@@ -8,6 +8,10 @@ export function login(user) {
     return HTTP.post("/v1/auth/username", auth, {action: "login"});
 }
 
+export function logout(user) {
+    return HTTP.delete("/v1/auth/token", {action: "logout"});
+}
+
 export function register(user) {
     const auth = {
         username: user.email,

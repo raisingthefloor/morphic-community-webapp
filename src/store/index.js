@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { HTTP } from "@/services/index";
-import { login, register, resetPassword } from "@/services/userService";
+import { login, register, resetPassword, logout } from "@/services/userService";
 import { createNewCommunity, getUserCommunities } from "@/services/communityService";
 
 Vue.use(Vuex);
@@ -135,8 +135,8 @@ export default new Vuex.Store({
 
             return "/";
         },
-        logout({ commit }) {
-            return new Promise((resolve, reject) => {
+        logout({ commit, state }) {
+            return logout(state.userId).finally(() => {
                 commit("logout");
                 localStorage.removeItem("token");
                 localStorage.removeItem("userId");
@@ -144,7 +144,6 @@ export default new Vuex.Store({
                 localStorage.removeItem("role");
                 localStorage.removeItem("email");
                 delete HTTP.defaults.headers.common.Authorization;
-                resolve();
             });
         },
         resetPassword({ commit }, email) {
