@@ -29,10 +29,10 @@ describe("Billing Test", () => {
         const result = {
             "basic-1-month": {
                 active: true,
+                annual_price_text: "$72",
                 currency: "USD",
                 default: true,
                 id: "basic-1-month",
-                listed: true,
                 member_limit: 5,
                 monthly_price_text: "$6",
                 months: 1,
