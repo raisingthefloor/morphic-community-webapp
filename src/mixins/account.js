@@ -35,7 +35,7 @@ export const accountMixin = {
             memberBars: {},
 
             /** @type {UserDetails} */
-            userDetails: {}
+            userDetails: null
         };
     },
     computed: {
@@ -58,17 +58,24 @@ export const accountMixin = {
         accountLoadAll: function () {
             this.accountLoaded = false;
             return Promise.all([
+                this.loadUser(),
                 this.loadBilling(),
                 this.loadCommunities().then(this.loadMember),
-                this.loadCommunity(),
-                this.loadUser()
+                this.loadCommunity()
             ]).finally(() => {
                 this.accountLoaded = true;
             });
         },
 
         loadUser: async function () {
-            this.userDetails = await userService.getUser(this.userId);
+            try {
+                this.userDetails = await userService.getUser(this.userId);
+            } finally {
+                // Potential fix for bug that's hard to reproduce, where the user's email isn't being displayed.
+                if (!this.userDetails?.email) {
+                    setTimeout(() => this.loadUser(), 1000);
+                }
+            }
         },
 
         /**

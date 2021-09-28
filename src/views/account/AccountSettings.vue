@@ -218,7 +218,7 @@ export default {
         this.loaded = false;
         await this.accountLoadAll();
         this.loaded = true;
-        this.$forceUpdate();
+        this.$nextTick(() => this.$forceUpdate());
     },
     computed: {
         /**
