@@ -69,7 +69,7 @@
             </div>
           </div>
           <div>
-            <b-button v-if="plan.member_limit" variant="primary" v-b-modal="'PrePaymentDialog'" @click="selectedPlan = plan; applyCoupon(null)">
+            <b-button :class="{invisible: !plan.member_limit}" variant="primary" v-b-modal="'PrePaymentDialog'" @click="selectedPlan = plan; applyCoupon(null)">
               {{ plan.member_limit ? `Morphic Plus ${plan.member_limit}` : `Basic features only` }}
             </b-button>
           </div>
