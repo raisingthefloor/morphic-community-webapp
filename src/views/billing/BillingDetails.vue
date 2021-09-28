@@ -8,30 +8,38 @@
 
     <AccountSettingItem class="mb-5" :title="`Current subscription for ${community.name}`">
 
-      <div class="no-shade">
-
-        <div class="mb-2">Subscription type: {{plan.name}}</div>
-        <div class="mb-3">
-          <div class="pr-1">Number of people you have added:</div>
-          <div class="font-weight-bold">{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</div>
+      <template v-if="plan.isBasic">
+        <div class="no-shade">
+          <div>Subscription type: {{plan.name}}</div>
         </div>
 
-        <div>If you want to add more people, change your subscription below.</div>
-      </div>
+      </template>
+      <template v-else>
+        <div class="no-shade">
 
-      <div class="no-shade">
-        <div v-if="!billingInfo.card">No credit card on file</div>
-        <div v-if="billingInfo.coupon">Coupon used: <b>{{billingInfo.coupon.code}}</b></div>
-        <div v-if="!plan.isBasic">
-          {{plan.price_text}} {{ plan.months === 1 ? "per month" : `every ${plan.months} months` }}
+          <div class="mb-2">Subscription type: {{plan.name}}</div>
+          <div class="mb-3">
+            <div class="pr-1">Number of people you have added:</div>
+            <div class="font-weight-bold">{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</div>
+          </div>
+
+          <div>If you want to add more people, change your subscription below.</div>
         </div>
-        <b-button variant="primary"
-                  v-b-modal="'PaymentDialog'">
-          {{ billingInfo && billingInfo.card ? "Change Card" : "Add Card" }}
-        </b-button>
 
-        <PaymentDialog ref="PaymentDialog" id="PaymentDialog"/>
-      </div>
+        <div class="no-shade">
+          <div v-if="!billingInfo.card">No credit card on file</div>
+          <div v-if="billingInfo.coupon">Coupon used: <b>{{billingInfo.coupon.code}}</b></div>
+          <div v-if="!plan.isBasic">
+            {{plan.price_text}} {{ plan.months === 1 ? "per month" : `every ${plan.months} months` }}
+          </div>
+          <b-button variant="primary"
+                    v-b-modal="'PaymentDialog'">
+            {{ billingInfo && billingInfo.card ? "Change Card" : "Add Card" }}
+          </b-button>
+
+          <PaymentDialog ref="PaymentDialog" id="PaymentDialog"/>
+        </div>
+      </template>
     </AccountSettingItem>
 
 
