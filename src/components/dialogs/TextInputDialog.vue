@@ -4,6 +4,8 @@
            @ok="onOK"
            @show="onShow"
            :ok-title="okTitle"
+           :ok-disabled="submitting"
+           :modal-class="{submitting}"
            :cancel-title="cancelTitle"
            :centered="centered"
            dialog-class="textInputDialog"
@@ -71,7 +73,8 @@ export default {
             newValue: null,
             changed: false,
             errorAlert: false,
-            errorMessage: null
+            errorMessage: null,
+            submitting: false
         };
     },
     validations() {
@@ -126,13 +129,16 @@ export default {
             this.$emit("ok", okEvent);
 
             const p = okEvent.promise || Promise.resolve(true);
+            this.submitting = !!okEvent.promise;
 
             p.then(success => {
+                this.submitting = false;
                 if (success) {
                     this.$emit("input", this.newValue);
                     this.hideDialog();
                 }
             }).catch(err => {
+                this.submitting = false;
                 // TODO: make it more sexy when MOR-450 is merged
                 this.errorMessage = err.message;
                 this.errorAlert = true;

@@ -140,6 +140,29 @@
     "steps-info": "Morphic recommends that you contact the person you are inviting ahead of time.",
     "steps_heading": "What are the steps?"
   },
+  "PaymentDialog": {
+    "cancel_button": "@:(General.cancel_button)",
+    "form": {
+      "address_country": "Country",
+      "address_country_description": "",
+      "card": "Card Details",
+      "card_description": "",
+      "name": "Name on Card",
+      "address_line1": "Address",
+      "address_line2": "",
+      "address_city": "City",
+      "address_state": "State/province",
+      "address_zip": "ZIP/postal code",
+      "name_description": "",
+      "address_line1_description": "",
+      "address_line2_description": "",
+      "address_city_description": "",
+      "address_state_description": "",
+      "address_zip_description": ""
+    },
+    "submit_button": "Update",
+    "title": "Billing Details"
+  },
   "SidePanel": {
     "account-settings_link": "Account settings",
     "group-bars_heading": "Group Bars",
@@ -279,7 +302,7 @@
       "Apply your settings quickly to any computer with Morphic on it",
       "Make your own MorphicBar (with a subscription or if part of the Early Release Program)"
     ],
-    "back_link": "I already have a Morphic account",
+    "back_link": "Return to Sign In",
     "form_heading": "New to Morphic?",
     "form_lead": "Create your Morphic account now",
     "side-heading": "Morphic is better with a Morphic account",

@@ -147,3 +147,14 @@
  * @property {String} name The invitee's name.
  *
  */
+
+/**
+ * User details
+ * @typedef {Object} UserDetails
+ * @property {GUID} id user id.
+ * @property {String} email The email address.
+ * @property {Boolean} email_verified true if the email address is verified.
+ * @property {String} first_name The first name.
+ * @property {String} last_name The last name.
+ * @property {String} fullName The full name (auto-generated).
+ */

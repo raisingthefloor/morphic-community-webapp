@@ -2,6 +2,7 @@
 <template>
   <div>
     <b-form-group
+            :id="inputId + '_group'"
         :label="labelText"
         :label-for="inputId"
         :class="{
@@ -11,22 +12,24 @@
         }"
     >
 
-      <template #label>{{labelText}}<span v-if="required" class="requiredText" aria-hidden="true">Required</span></template>
+      <template #label v-if="labelText">{{labelText}}<span v-if="required" class="requiredText" aria-hidden="true">Required</span></template>
 
-      <b-form-input
-          :value="value || (validation && validation.$model)"
-          ref="inputField"
-          @input="onInput"
-          @blur="onBlur"
-          :state="state"
-          :id="inputId"
-          class="h-20 w-80"
-          :class="{autofocus}"
-          :autofocus="autofocus"
-          :aria-required="required"
-          :type="inputType"
-          v-bind="$attrs"
-      />
+      <slot>
+        <b-form-input
+            :value="value || (validation && validation.$model)"
+            ref="inputField"
+            @input="onInput"
+            @blur="onBlur"
+            :state="state"
+            :id="inputId"
+            class="h-20 w-80"
+            :class="{autofocus}"
+            :autofocus="autofocus"
+            :aria-required="required"
+            :type="inputType"
+            v-bind="$attrs"
+        />
+      </slot>
 
       <template #invalid-feedback>
         <span v-if="state === false">{{ errorText }}</span>
@@ -128,15 +131,19 @@ export default {
             return this.validation && this.validation.required !== undefined;
         },
         labelText: function () {
-            return this.noColon ? this.label : `${this.label}:`;
+            return this.label && (this.noColon ? this.label : `${this.label}:`);
         },
         errorText: function () {
             let result;
             if (this.state === false) {
-                for (const [key, value] of Object.entries(this.validation)) {
-                    if (!key.startsWith("$") && !value) {
-                        result = this.errorMessages[key];
-                        break;
+                if (this.validation.$message) {
+                    result = this.validation.$message;
+                } else {
+                    for (const [key, value] of Object.entries(this.validation)) {
+                        if (!key.startsWith("$") && !value) {
+                            result = this.errorMessages[key];
+                            break;
+                        }
                     }
                 }
             }

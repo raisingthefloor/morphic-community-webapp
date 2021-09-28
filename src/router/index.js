@@ -13,6 +13,7 @@ import MyCommunities from "@/views/MyCommunities.vue";
 
 import Plans from "@/views/billing/Plans.vue";
 import BillingDetails from "@/views/billing/BillingDetails.vue";
+import AccountSettings from "@/views/account/AccountSettings.vue";
 import NoSubscription from "@/views/billing/NoSubscription.vue";
 
 import EarlyReleaseProgram from "@/views/billing/EarlyReleaseProgram.vue";
@@ -40,9 +41,8 @@ Vue.use(VueRouter);
  * @typedef {Object} RouteMeta
  * @property {String} title The page title.
  * @property {String} heading The page heading (if different to the title).
- * @property {Boolean} noHeading Do not render the heading.
- * @property {Boolean} showHeading Do not show the heading.
- *
+ * @property {Boolean} noHeading Do not render the heading - the page will have the h1 tag. (implies hideHeading)
+ * @property {Boolean} hideHeading Do not show the heading (it will be shown to screen-readers).
  * @property {Boolean|"only"} public true if this page can be accessed without authentication. "only" if it can only
  *  be accessed without authentication (authenticated users are redirected away).
  * @property {Boolean} noAccount true if an authenticated user with no account can access.
@@ -134,8 +134,7 @@ const routes = [
             title: "Not a manger",
             showHeading: true,
             noAccount: true,
-            roles: ["member"],
-            userHome: "member"
+            roles: ["member"]
         }
     },
     {
@@ -158,11 +157,32 @@ const routes = [
         }
     },
     {
+        path: "/account",
+        name: "AccountSettings",
+        component: AccountSettings,
+        meta: {
+            title: "Morphic Account Settings",
+            noAccount: true,
+            userHome: "member"
+        }
+    },
+    {
         path: "/billing/details",
         name: "BillingDetails",
         component: BillingDetails,
         meta: {
-            title: "Billing"
+            title: "Morphic Subscription and Billing"
+        }
+    },
+    {
+        path: "/billing/details/update",
+        name: "BillingDetails.update",
+        component: BillingDetails,
+        props: {
+            updatePayment: true
+        },
+        meta: {
+            title: "Payment Details"
         }
     },
     {
@@ -182,6 +202,7 @@ const routes = [
         component: Dashboard,
         meta: {
             title: "Home: MorphicBar Customization Tool",
+            hideHeading: true,
             roles: ["manager"],
             userHome: "manager"
         }
@@ -343,7 +364,7 @@ router.beforeEach((to, from, next) => {
                 store.commit("beforeLoginPage", undefined);
             } else if (!store.getters.hasAccount) {
                 // no account - tell them to get one.
-                redirect = {name: "NoSubscription"};
+                redirect = {name: "AccountSettings"};
             } else {
                 // redirect to the auth home page
                 redirect = getUserHomeRoute();

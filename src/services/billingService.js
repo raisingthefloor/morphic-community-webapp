@@ -67,3 +67,31 @@ export function updateBillingCard(communityId, token) {
 export function cancelBillingCard(communityId) {
     return HTTP.post(`/v1/communities/${communityId}/billing/cancel`, {action: "cancel billing card"});
 }
+
+/**
+ * Checks if a coupon can be applied to a plan, and returns the discount.
+ * @param {GUID} communityId The community ID.
+ * @param {Object<String, String>} planIds The plan(s) to check against.
+ * @param {String} couponCode The coupon code.
+ * @param {String} includeInactive true to return the information even if the coupon is inactive.
+ * @return {Promise<Object<String,DiscountedPlan>>} Response
+ */
+export function checkCoupon(communityId, planIds, couponCode, includeInactive) {
+    return HTTP.post(`/v1/communities/${communityId}/billing/coupon`, {
+        coupon_code: couponCode || "",
+        plans: planIds,
+        inactive: !!includeInactive
+    }, {action: "check coupon"}).then(r => r.data);
+}
+
+/**
+ * Updates the coupon
+ * @param {GUID} communityId The community ID.
+ * @param {String} couponCode The coupon code
+ * @return {Promise} Response
+ */
+export function setCoupon(communityId, couponCode) {
+    return HTTP.put(`/v1/communities/${communityId}/billing/coupon`, {
+        coupon_code: couponCode
+    }, {action: "set coupon"}).then(r => r.data);
+}

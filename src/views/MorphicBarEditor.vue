@@ -23,7 +23,7 @@
     >
       <p>This MorphicBar has been saved.</p>
       <p>
-        It will show up automatically on their computer soon. Users may need to open Morphic and switch to this MorphicBar to see it.
+        It will show up automatically on the computer soon. Users may need to open Morphic and switch to this MorphicBar to see it.
       </p>
     </b-modal>
 

@@ -6,9 +6,9 @@
         <b-link to="/">
           <img src="/img/logo-color.svg" class="logo" :alt="$t('Header.product-name')" />
         </b-link>
-        <span class="headerTitle"
-              aria-hidden="true"
-              v-t="'Header.product-name'" />
+
+        <span v-if="hideHeading || !heading" class="headerTitle" aria-hidden="true">{{ $t("Header.product-name") }}</span>
+        <h1 v-if="heading" class="headerTitle" :class="{screenReader: hideHeading}">{{ heading }}</h1>
       </b-navbar-brand>
     </header>
 
@@ -99,11 +99,12 @@
     .navbar-brand {
       flex-grow: 0;
       .headerTitle {
+        display: inline;
         color:  $morphic-blue-color;
 
         font-weight: bold;
 
-        margin-left: 0.8em;
+        margin: 0 0 0 0.8em;
         font-size: 22px;
 
         @include media-breakpoint-down(sm) {
@@ -189,6 +190,19 @@ export default {
         },
         dashboardUrl: function () {
             return this.getUrl(false).href;
+        },
+        /**
+         * @return {String} The main heading for the page.
+         */
+        heading: function () {
+            return this.$route.meta.noHeading ? null : this.$route.meta.heading || this.$route.meta.title;
+        },
+        /**
+         * Determines if the heading should be hidden.
+         * @return {Boolean} true to hide the header.
+         */
+        hideHeading: function () {
+            return this.$route.meta.hideHeading;
         }
     },
 

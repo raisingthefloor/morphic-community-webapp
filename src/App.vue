@@ -2,7 +2,6 @@
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header ref="Header" />
     <div role="main" id="PageContent" class="main">
-      <h1 v-if="heading" id="MainHeading" :class="{screenReader: hideHeading}">{{ heading }}</h1>
       <router-view />
     </div>
     <div class="screenReader">
@@ -78,19 +77,6 @@ export default {
         };
     },
     computed: {
-        /**
-         * @return {String} The main heading for the page.
-         */
-        heading: function () {
-            return !this.$route.meta.noHeading && (this.$route.meta.heading || this.$route.meta.title);
-        },
-        /**
-         * Determines if the heading should be hidden.
-         * @return {Boolean} true to hide the header.
-         */
-        hideHeading: function () {
-            return !this.$route.meta.showHeading && (!this.isLite || this.$route.meta.hideHeading);
-        },
         /**
          * Gets the classes for the body element.
          * @return {Object} The classes.
