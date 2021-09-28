@@ -25,7 +25,9 @@ if (token) {
 HTTP.interceptors.response.use(undefined, function (err) {
     return new Promise((resolve, reject) => {
         if (err.message.indexOf("401") > 1) {
-            store.dispatch("logout");
+            if (err.config.action !== "logout") {
+                store.dispatch("logout");
+            }
             resolve();
         }
         throw err;
