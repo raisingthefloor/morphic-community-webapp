@@ -64,6 +64,9 @@
               or<br/>
               {{plan.price_text}} (12 month) subscription
             </div>
+            <div v-if="plan.specialCoupon" class="hasCoupon">
+              Coupon available for a free year!
+            </div>
           </div>
           <div>
             <b-button variant="primary" v-b-modal="'PrePaymentDialog'" @click="selectedPlan = plan; applyCoupon(null)">
@@ -81,6 +84,14 @@
                :ok-disabled="!payFrequency || submittingPlan"
                :modal-class="{submitting: submittingPlan}"
       >
+        <div v-if="selectedPlan.specialCoupon" class="d-flex align-items-start rounded-lg border p-3 special-coupon">
+          <img src="/img/logo-color.svg" width="70" class="m-2" alt=""/>
+          <div class="pl-3 pr-3 d-flex flex-column align-items-center">
+            <div class="mb-2">{{selectedPlan.specialCoupon.text}}</div>
+            <b-button variant="morphic-green" @click="applyCoupon(selectedPlan.specialCoupon.code)">{{selectedPlan.specialCoupon.button}}</b-button>
+          </div>
+        </div>
+
         <b-form-group label="Coupon Code" :state="couponState">
 
           <b-input-group>
@@ -102,7 +113,7 @@
 
         <b-form-group v-for="(pp, frequency) in (paymentRadios)"
                       :key="frequency"
-                      :description="`(Renews automatically every ${frequency} until canceled)`">
+                      :description="frequency !== 'free' && `(Renews automatically every ${frequency} until canceled)`">
           <b-form-radio v-model="payFrequency"
                         name="payFrequency"
                         :value="frequency"
@@ -180,6 +191,11 @@
       .pricing {
         height: 10em;
         position: relative;
+        .hasCoupon {
+          margin-top: 1em;
+          font-weight: bold;
+          color:  $morphic-green-color;
+        }
       }
     }
 
@@ -204,6 +220,9 @@
   }
   .form-group .invalid-feedback, .form-group .valid-feedback {
     font-size: 1rem !important;
+  }
+  .rounded-lg {
+    border-radius: 0.8em !important;
   }
 }
 

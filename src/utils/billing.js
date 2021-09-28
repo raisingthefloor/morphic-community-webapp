@@ -101,6 +101,13 @@ export const PaymentStatus = {
  */
 var allPlans;
 
+const specialCoupon = {
+    code: "FreeYearCoupon",
+    text: "Thanks to a generous donor, you can get one year of Morphic Plus 5 for free for a limited time.",
+    button: "Get coupon for free year"
+};
+
+
 // Extra front-end information for the plans.
 const planExtras = {
     basic: {
@@ -110,11 +117,13 @@ const planExtras = {
     },
     "plus-5": {
         name: "Morphic Plus 5",
-        sizeName: "MorphicPlus 5"
+        sizeName: "MorphicPlus 5",
+        specialCoupon
     },
     "plus-5-monthly": {
         name: "Morphic Plus 5 (monthly)",
-        sizeName: "MorphicPlus 5"
+        sizeName: "MorphicPlus 5",
+        specialCoupon
     },
     "plus-15": {
         name: "Morphic Plus 15",

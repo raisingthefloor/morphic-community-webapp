@@ -85,7 +85,7 @@
           <b-container fluid>
             <b-row>
               <b-col cols="*">
-                <img src="/img/logo-color.svg" width="70" class="m-2"/>
+                <img src="/img/logo-color.svg" width="70" class="m-2" alt=""/>
               </b-col>
               <b-col>
                 <p class="lead">Upgrade to Morphic Plus</p>
