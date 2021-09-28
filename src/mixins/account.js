@@ -62,7 +62,7 @@ export const accountMixin = {
                 this.loadCommunities().then(this.loadMember),
                 this.loadCommunity(),
                 this.loadUser()
-            ]).then(() => {
+            ]).finally(() => {
                 this.accountLoaded = true;
             });
         },
@@ -132,10 +132,16 @@ export const accountMixin = {
                 billingService.getBillingInfo(this.communityId).then((r) => {
                     this.billingInfo = r.data;
                 })
-            ]).then(() => {
+            ]).then(async () => {
                 this.plan = (this.billingInfo && this.billingInfo.plan_id && this.allPlans)
                     ? this.allPlans[this.billingInfo.plan_id]
                     : null;
+                if (this.billingInfo.coupon?.code) {
+                    const couponResponse = await billingService.checkCoupon(this.communityId, {plan: this.billingInfo.plan_id}, this.billingInfo.coupon.code);
+                    if (couponResponse.discounted_plans?.plan) {
+                        this.plan = Object.assign({}, this.plan, couponResponse.discounted_plans.plan);
+                    }
+                }
             }) : Promise.resolve();
         }
 

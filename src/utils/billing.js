@@ -6,8 +6,8 @@ import * as billingService from "@/services/billingService";
  */
 
 /**
- * Billing plan
- * @typedef {Object} BillingPlan
+ * Plan from the server
+ * @typedef {Object} BasePlan
  * @property {String} id The plan's unique ID.
  * @property {Number} member_limit The number of members allowed under the plan.
  * @property {Number} months The number of months in the plan's billing cycle.
@@ -15,13 +15,32 @@ import * as billingService from "@/services/billingService";
  * @property {String} currency The currency of the price.
  * @property {String} price_text The price of the plan, for displaying.
  * @property {String} monthly_price_text The monthly price of the plan, for displaying.
- *
+ */
+
+/**
+ * Billing plan
+ * @typedef {BasePlan} BillingPlan
  * @property {String} name The name of the plan.
  * @property {String} sizeName The name of the plan, without the time period.
  * @property {String} size Plan size (basic, medium, large).
  * @property {Boolean} listed Displayed in the list of plans.
  * @property {String} savings_text Bulk-buy savings (if any).
  * @property {String} annual_price_text Price per year.
+ */
+
+/**
+ * Plan with coupon applied
+ * @typedef {BasePlan} DiscountedPlan
+ * @property {Number} coupon_saving
+ * @property {String} coupon_saving_text
+ * @property {Object} coupon
+ * @property {String} coupon.code
+ * @property {String} coupon.id
+ * @property {String} coupon.name
+ * @property {String} coupon.amount_off
+ * @property {String} coupon.percent_off
+ * @property {String} coupon.expired
+ * @property {String} coupon.active
  */
 
 /**
@@ -34,6 +53,7 @@ import * as billingService from "@/services/billingService";
  * @property {String} contact_member_id The ID of the member who is the billing contact.
  * @property {BillingCard} card The payment card.
  * @property {BillingPlan} [plan] The plan.
+ * @property {Coupon} [coupon] The coupon.
  */
 
 /**
@@ -45,6 +65,18 @@ import * as billingService from "@/services/billingService";
  * @property {String} brand The brand of the card.
  * @property {String} last4 The last four digits of the card.
  */
+
+/**
+ * @typedef {Object} Coupon A coupon.
+ * @property {String} code
+ * @property {String} id
+ * @property {String} name
+ * @property {Number?} amount_off
+ * @property {Number?} percent_off
+ * @property {Boolean} expired
+ * @property {Boolean} active
+ */
+
 
 
 export const PaymentStatus = {
@@ -71,6 +103,11 @@ var allPlans;
 
 // Extra front-end information for the plans.
 const planExtras = {
+    basic: {
+        name: "Morphic Basic",
+        sizeName: "Morphic Basic",
+        isBasic: true
+    },
     "plus-5": {
         name: "Morphic Plus 5",
         sizeName: "MorphicPlus 5"

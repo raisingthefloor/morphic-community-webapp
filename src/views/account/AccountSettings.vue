@@ -69,7 +69,7 @@
                          title="Rename Account"
                          prompt="Enter the new name for the account"
                          :value="community.name"
-                         @ok="renameAccount($event.newValue)"
+                         @ok="$event.promise = renameAccount($event.newValue)"
         />
       </div>
       <div v-else>
@@ -95,7 +95,18 @@
                   <li>Create and manage MorphicBars for other people</li>
                 </ul>
 
-                <b-button :to="{name:'EarlyReleaseProgram'}" variant="morphic-green">Sign up for a Morphic Plus subscription</b-button>
+                <b-button v-b-modal="'AccountNameDialog'" variant="morphic-green">Sign up for a Morphic Plus subscription</b-button>
+
+                <TextInputDialog v-if="isLoggedIn"
+                                 id="AccountNameDialog"
+                                 :title="$t('EarlyReleaseProgram.create-dialog-title')"
+                                 :prompt="$t('EarlyReleaseProgram.create-dialog-prompt')"
+                                 :description="$t('EarlyReleaseProgram.create-dialog-text-hint')"
+                                 :ok-title="$t('EarlyReleaseProgram.create-dialog-ok_button')"
+                                 centered
+                                 @ok="$event.promise = createAccount($event.newValue)"
+                />
+
               </b-col>
             </b-row>
           </b-container>
@@ -236,6 +247,7 @@ export default {
             await communityService.updateCommunity(this.communityId, newName, this.community.default_bar_id);
             this.showMessage("Account name updated");
             await this.loadCommunity();
+            return true;
         },
         async deleteAccount() {
             const confirmed = await this.showConfirm("Are you sure you want to delete your account?",
@@ -251,6 +263,25 @@ export default {
         resendEmailConfirmation: async function () {
             await userService.resendEmailConfirmation(this.userId);
             this.showMessage("Confirmation email sent");
+        },
+
+        /**
+         * Create the account
+         * @param {String} accountName Name of the new account.
+         * @return {Promise} Resolves when complete.
+         */
+        async createAccount(accountName) {
+            await this.$store.dispatch("userCommunities", this.userId).catch(() => undefined);
+
+            if (this.hasAccount) {
+                this.showMessage(this.$t("EarlyReleaseProgram.already-joined"));
+            } else {
+                await this.$store.dispatch("newCommunity", accountName);
+                this.showMessage(this.$t("EarlyReleaseProgram.account-created"));
+            }
+
+            this.$router.push({name: "BillingDetails"});
+
         }
 
     }
