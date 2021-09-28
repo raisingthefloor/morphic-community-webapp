@@ -339,7 +339,7 @@ export default {
                     couponResponse = await billingService.checkCoupon(this.communityId, {
                         yearly: this.selectedPlan.id,
                         monthly: this.selectedPlan.monthly.id
-                    }, couponCode);
+                    }, couponCode.replace(/[^a-zA-Z0-9]/g, ""), "");
                 } finally {
                     this.checkingCoupon = false;
                 }
