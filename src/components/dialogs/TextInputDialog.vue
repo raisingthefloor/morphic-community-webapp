@@ -66,7 +66,7 @@ export default {
         /** type of validation ("email") */
         validation: String,
         /** Clear the initial value when showing */
-        clear: Boolean,
+        clear: Boolean
     },
     data: function () {
         return {
