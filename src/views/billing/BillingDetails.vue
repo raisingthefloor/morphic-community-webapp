@@ -73,7 +73,7 @@
               {{plan.price_text}} (12 month) subscription
             </div>
             <div v-if="plan.specialCoupon" class="hasCoupon">
-              Coupon available for a free year!
+              Option available today for a free year!
             </div>
           </div>
           <div>
