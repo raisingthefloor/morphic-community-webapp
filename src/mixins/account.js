@@ -132,10 +132,12 @@ export const accountMixin = {
          * @return {Promise} Resolves when complete.
          */
         loadBilling: function () {
+            const planPromise = billing.getPlans().then(p => {
+                this.allPlans = p;
+            });
+
             return this.isManager && this.hasAccount ? Promise.all([
-                billing.getPlans().then(p => {
-                    this.allPlans = p;
-                }),
+                planPromise,
                 billingService.getBillingInfo(this.communityId).then((r) => {
                     this.billingInfo = r.data;
                 })
@@ -149,7 +151,7 @@ export const accountMixin = {
                         this.plan = Object.assign({}, this.plan, couponResponse.discounted_plans.plan);
                     }
                 }
-            }) : Promise.resolve();
+            }) : planPromise;
         }
 
     }

@@ -47,7 +47,7 @@
       <h2>Change your Morphic Subscription</h2>
 
       <div class="plans" v-if="planList">
-        <div v-for="(plan, index) in (planList)"
+        <div v-for="(plan, index) in (planList.filter(p => !p.hide))"
              :key="index"
              class="plan"
              :class="{isSubscription: !plan.free}"
@@ -72,8 +72,8 @@
               or<br/>
               {{plan.price_text}} (12 month) subscription
             </div>
-            <div v-if="plan.specialCoupon" class="hasCoupon">
-              Coupon available for a free year!
+            <div v-if="plan.specialCoupon" class="font-weight-bold text-morphic-green mt-3">
+              {{plan.specialCoupon.notice}}
             </div>
           </div>
           <div>
@@ -199,11 +199,6 @@
       .pricing {
         height: 10em;
         position: relative;
-        .hasCoupon {
-          margin-top: 1em;
-          font-weight: bold;
-          color:  $morphic-green-color;
-        }
       }
     }
 
@@ -330,7 +325,8 @@ export default {
 
             this.planList = [
                 {
-                    free: true
+                    free: true,
+                    hide: true
                 },
                 {
                     ...this.allPlans["plus-5"],
