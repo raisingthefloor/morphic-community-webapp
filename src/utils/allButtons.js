@@ -651,6 +651,17 @@ export const allButtons = {
             description: "Opens the Mail Online (Daily Mail) home page."
         }
     },
+    microsoft_access_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Access",
+            exe: "microsoftAccess",
+            color: "blue",
+            image_url: "msaccess"
+        }
+    },
     microsoft_edge_app: {
         kind: "application",
         is_primary: null,
@@ -660,6 +671,50 @@ export const allButtons = {
             exe: "microsoftEdge",
             color: "blue",
             image_url: "msedge"
+        }
+    },
+    microsoft_excel_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Excel",
+            exe: "microsoftExcel",
+            color: "blue",
+            image_url: "msexcel"
+        }
+    },
+    microsoft_onenote_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft OneNote",
+            exe: "microsoftOneNote",
+            color: "blue",
+            image_url: "msonenote"
+        }
+    },
+    microsoft_outlook_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Outlook",
+            exe: "microsoftOutlook",
+            color: "blue",
+            image_url: "msoutlook"
+        }
+    },
+    microsoft_powerpoint_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft PowerPoint",
+            exe: "microsoftPowerPoint",
+            color: "blue",
+            image_url: "mspowerpoint"
         }
     },
     microsoft_quick_assist_app: {
@@ -685,6 +740,28 @@ export const allButtons = {
             $skypeNoCall: true,
             url: "skype:${skypeNoCall?:$skypeId$skypeAction}",
             exe: "${skypeNoCall?microsoftSkype:}"
+        }
+    },
+    microsoft_teams_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Teams",
+            exe: "microsoftTeams",
+            color: "blue",
+            image_url: "msteams"
+        }
+    },
+    microsoft_word_app: {
+        kind: "application",
+        is_primary: null,
+        configuration: {
+            subkind: "app",
+            label: "Microsoft Word",
+            exe: "microsoftWord",
+            color: "blue",
+            image_url: "msword"
         }
     },
     national_weather_service: {
