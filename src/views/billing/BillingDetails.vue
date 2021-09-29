@@ -47,7 +47,7 @@
       <h2>Change your Morphic Subscription</h2>
 
       <div class="plans" v-if="planList">
-        <div v-for="(plan, index) in (planList)"
+        <div v-for="(plan, index) in (planList.filter(p => !p.hide))"
              :key="index"
              class="plan"
              :class="{isSubscription: !plan.free}"
@@ -330,7 +330,8 @@ export default {
 
             this.planList = [
                 {
-                    free: true
+                    free: true,
+                    hide: true
                 },
                 {
                     ...this.allPlans["plus-5"],
