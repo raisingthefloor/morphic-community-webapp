@@ -72,8 +72,8 @@
               or<br/>
               {{plan.price_text}} (12 month) subscription
             </div>
-            <div v-if="plan.specialCoupon" class="hasCoupon">
-              Option available today for a free year!
+            <div v-if="plan.specialCoupon" class="font-weight-bold text-morphic-green mt-3">
+              {{plan.specialCoupon.notice}}
             </div>
           </div>
           <div>
@@ -199,11 +199,6 @@
       .pricing {
         height: 10em;
         position: relative;
-        .hasCoupon {
-          margin-top: 1em;
-          font-weight: bold;
-          color:  $morphic-green-color;
-        }
       }
     }
 

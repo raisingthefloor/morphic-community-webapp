@@ -97,6 +97,10 @@
 
                 <b-button v-b-modal="'AccountNameDialog'" variant="morphic-green">Sign up for a Morphic Plus subscription</b-button>
 
+                <div v-if="specialCoupon" class="font-weight-bold text-morphic-green m-2">
+                  {{specialCoupon.notice}}
+                </div>
+
                 <TextInputDialog v-if="isLoggedIn"
                                  id="AccountNameDialog"
                                  :title="$t('EarlyReleaseProgram.create-dialog-title')"
@@ -165,6 +169,7 @@
 </template>
 
 <style lang="scss">
+@import "~@/styles/bootstrap-util";
 
 .accountSettings {
   width: 40em;
@@ -187,7 +192,9 @@
   .btn {
     margin-top: 0.5em;
   }
-
+  .hasCoupon {
+    //color:  $morphic-green-color;
+  }
 }
 
 
@@ -235,6 +242,9 @@ export default {
          */
         memberCommunities: function () {
             return this.allCommunities.filter(c => c.role === "member");
+        },
+        specialCoupon: function () {
+            return Object.values(this.allPlans).find(plan => plan.specialCoupon)?.specialCoupon;
         }
     },
     methods: {

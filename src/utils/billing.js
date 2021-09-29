@@ -104,7 +104,8 @@ var allPlans;
 const specialCoupon = {
     code: "FreeYearCoupon",
     text: "Thanks to a generous donor, you can get one year of Morphic Plus 5 for free for a limited time.",
-    button: "Get coupon for free year"
+    button: "Get coupon for free year",
+    notice: "Option available today for a free year!"
 };
 
 
