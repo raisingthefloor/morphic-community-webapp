@@ -96,7 +96,7 @@
     "loading": "Loading",
     "message-accepted": "You have accepted your Morphic invitation.",
     "message-declined": "You have declined your Morphic invitation.",
-    "message-invalid": "Your invitation has expired or this link is valid. Please ask for a new invitation (from the person who invited you).",
+    "message-invalid": "Your invitation has expired or this link is invalid. Please ask for a new invitation (from the person who invited you).",
     "message_title": "Morphic Invitation",
     "ok-sign-in_button": "Accept Invitation",
     "ok-register_button": "Accept & create account",
