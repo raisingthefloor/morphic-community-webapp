@@ -28,10 +28,16 @@
 
         <div class="no-shade">
           <div v-if="!billingInfo.card">No credit card on file</div>
+
           <div v-if="billingInfo.coupon">Coupon used: <b>{{billingInfo.coupon.code}}</b></div>
-          <div v-if="!plan.isBasic">
+
+          <div v-if="billingInfo.coupon && !plan.price">
+            {{getCouponFreeText(plan.coupon)}}
+          </div>
+          <div v-else-if="!plan.isBasic">
             {{plan.price_text}} {{ plan.months === 1 ? "per month" : `every ${plan.months} months` }}
           </div>
+
           <b-button variant="primary"
                     v-b-modal="'PaymentDialog'">
             {{ billingInfo && billingInfo.card ? "Change Card" : "Add Card" }}
@@ -305,30 +311,12 @@ export default {
             const isFree = this.payPlan.yearly.price === 0 && this.payPlan.monthly.price === 0;
 
             const coupon = isFree && this.payPlan.yearly.coupon;
-            let freeText;
-
-            if (coupon) {
-                switch (coupon.duration) {
-                case "repeating":
-                    if (coupon.duration_months === 12) {
-                        freeText = "Free for one year!";
-                    } else {
-                        freeText = `Free for ${coupon.duration_months} months!`;
-                    }
-                    break;
-                case "forever":
-                    freeText = "Free forever!";
-                    break;
-                default:
-                    freeText = "Free!";
-                    break;
-                }
-            }
+            const freeText = coupon && this.getCouponFreeText(coupon);
 
             return isFree ? {
                 year: {...this.selectedPlan, disabled: true},
                 month: {...this.selectedPlan.monthly, disabled: true},
-                free: {...this.payPlan.yearly, price_text: freeText}
+                free: {...this.payPlan.yearly, price_text: `${freeText}!`}
             } : {
                 year: this.payPlan.yearly,
                 month: this.payPlan.monthly
@@ -337,6 +325,34 @@ export default {
 
     },
     methods: {
+        /**
+         * Gets the text for how long a coupon is free.
+         * @param {Coupon} coupon The coupon
+         * @return {String} The text.
+         */
+        getCouponFreeText: function (coupon) {
+            let freeText;
+            switch (coupon?.duration) {
+            case "repeating":
+                if (coupon.duration_months === 12) {
+                    freeText = "Free for one year";
+                } else {
+                    freeText = `Free for ${coupon.duration_months} months`;
+                }
+                break;
+            case "forever":
+                freeText = "Free forever";
+                break;
+            case null:
+            case undefined:
+                break;
+            default:
+                freeText = "Free";
+                break;
+            }
+
+            return freeText;
+        },
         loadData: async function () {
             this.loaded = false;
             await Promise.all([
