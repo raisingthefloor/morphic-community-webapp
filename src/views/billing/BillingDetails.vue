@@ -304,10 +304,31 @@ export default {
         paymentRadios: function () {
             const isFree = this.payPlan.yearly.price === 0 && this.payPlan.monthly.price === 0;
 
+            const coupon = isFree && this.payPlan.yearly.coupon;
+            let freeText;
+
+            if (coupon) {
+                switch (coupon.duration) {
+                case "repeating":
+                    if (coupon.duration_months === 12) {
+                        freeText = "Free for one year!";
+                    } else {
+                        freeText = `Free for ${coupon.duration_months} months!`;
+                    }
+                    break;
+                case "forever":
+                    freeText = "Free forever!";
+                    break;
+                default:
+                    freeText = "Free!";
+                    break;
+                }
+            }
+
             return isFree ? {
                 year: {...this.selectedPlan, disabled: true},
                 month: {...this.selectedPlan.monthly, disabled: true},
-                free: {...this.payPlan.yearly, price_text: "Free for one year!"}
+                free: {...this.payPlan.yearly, price_text: freeText}
             } : {
                 year: this.payPlan.yearly,
                 month: this.payPlan.monthly
