@@ -24,6 +24,7 @@ if (href.host.endsWith(".morphic.dev")) {
  * @property {Number} MAX_BARS Number of bars a member can have, before hiding the add bar button.
  * @property {Number} MAC_VERSION Lowest macOS version supported
  * @property {Number} WIN_VERSION Lowest Windows version supported
+ * @property {Number} SESSION_DATA_EXPIRY Time, in minutes, the session data will last for.
  */
 
 /**
@@ -39,7 +40,8 @@ const CONF = {
         DISABLE_TRIAL: true,
         MAX_BARS: 5,
         MAC_VERSION: 10.14,
-        WIN_VERSION: 10
+        WIN_VERSION: 10,
+        SESSION_DATA_EXPIRY: 20
     },
 
     // Local development (npm run dev)
