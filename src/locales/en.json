@@ -118,6 +118,60 @@
     "new-bar_button_aria-label": "Add a new bar for {name}"
   },
   "BillingDetails": {
+    "CouponDialog": {
+      "apply_button": "Apply coupon",
+      "clear_button": "clear coupon",
+      "coupon-applied": "Coupon applied",
+      "coupon-not-applied": "You've entered a coupon, but have not applied it.",
+      "coupon-not-applied_title": "Coupon not applied",
+      "coupon_label": "Coupon Code",
+      "payment_radio": {
+        "free": "{price_text}",
+        "month": "{price_text} per month monthly subscription",
+        "year": "{price_text} per year yearly subscription"
+      },
+      "radio_description": {
+        "free": "Free",
+        "month": "Renews automatically every month until cancelled",
+        "year": "Renews automatically every year until cancelled"
+      },
+      "skip_button": "Skip"
+    },
+    "add-card_button": "Add Card",
+    "add-more": "If you want to add more people, change your subscription below.",
+    "back_link": "Back to Morphic Account Settings",
+    "basic-features": "(Basic features only)",
+    "basic-features_button": "Basic features only",
+    "basic-morphic-bar": "Use the Basic MorphicBar (no custom MorphicBars)",
+    "change-card_button": "Change Card",
+    "change-subscription_header": "Change your Morphic Subscription",
+    "coupon-error": {
+      "unknown": "Not a valid coupon",
+      "expired": "Coupon expired",
+      "inactive": "Coupon is no longer valid",
+      "invalid_email": "Coupon is not valid for your email address",
+      "wrong_plan": "Coupon is not valid for this plan"
+    },
+    "coupon-used": "Coupon used:",
+    "current-subscription_title": "Current subscription for {name}",
+    "custom-morphic-bars": "Make and use custom MorphicBars for yourself",
+    "free": "Free!",
+    "free-forever": "Free forever",
+    "free-months": "Free for {duration_months} months",
+    "free-year": "Free for one year",
+    "morphic": "Morphic",
+    "morphic-bars-for-others": "Make up to 5 MorphicBars each for up to {member_limit} other people",
+    "morphic-plus": "Morphic Plus",
+    "morphic-plus-number_button": "Morphic Plus {member_limit}",
+    "no-payment-method": "No credit card on file",
+    "number-of-people": "Number of people you have added:",
+    "number-of-people_value": "{member_count} (out of {member_limit} maximum allowed on this subscription)",
+    "or": "or",
+    "payment-monthly": "{monthly_price_text} per month ({annual_price_text} over 12 months)",
+    "payment-time": "| {price_text} per month |  {price_text} every {n} months",
+    "payment-yearly": "{price_text} (12 month) subscription",
+    "subscription-type": "Subscription type: {name}",
+    "transfer-settings": "Transfer your AT settings to any computer with Morphic on it"
   },
   "BlockLoginRegister": {
   },
