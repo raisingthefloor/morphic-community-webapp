@@ -3,11 +3,11 @@
 
     <div class="m-3">
       <b-link v-if="$store.getters.hasAccount && $store.getters.role === 'manager'" :to="{name:'Dashboard'}" >
-      <b-icon icon="arrow-return-right" rotate="180"/>Back to Custom MorphicBar Tool</b-link>
+      <b-icon icon="arrow-return-right" rotate="180"/>{{ $t('AccountSettings.back_link') }}</b-link>
     </div>
 
-    <AccountSettingItem icon="person-circle" title="My sign-in method">
-      <template #lead>You have currently set up the following ways to sign into your Morphic account</template>
+    <AccountSettingItem icon="person-circle" :title="$t('AccountSettings.sign-in.title')">
+      <template #lead>{{ $t('AccountSettings.sign-in.lead') }}</template>
 
       <ul class="signInMethods list-unstyled">
 
@@ -23,25 +23,22 @@
               </b-iconstack>
             </div>
             <dl role="presentation" class="mb-0">
-              <dt id="SignIn-email">Email &amp; Password</dt>
+              <dt id="SignIn-email" v-t="'AccountSettings.sign-in.email+password'" />
               <dd>
                 {{ userDetails.email }}
-                <span v-if="userDetails.email_verified">(confirmed)</span>
+                <span v-if="userDetails.email_verified" v-t="'AccountSettings.sign-in.email-confirmed'" />
               </dd>
             </dl>
           </div>
 
-          <div v-if="!userDetails.email_verified" class="mb-3">
-            This email address is not confirmed. You will need to click a link sent you you by Morphic to confirm.
-            Check your junk or spam folder or re-send the confirmation email.
-          </div>
+          <div v-if="!userDetails.email_verified" class="mb-3" v-t="'AccountSettings.sign-in.email-not-confirmed'" />
 
           <b-button v-if="!userDetails.email_verified"
                     variant="invert-dark"
                     @click="resendEmailConfirmation()"
-                    class="mr-3">Re-send confirmation email</b-button>
+                    class="mr-3" v-t="'AccountSettings.sign-in.resend-confirmation_button'" />
 
-          <b-button variant="invert-dark" v-b-modal="'ChangePasswordDialog'">Change password</b-button>
+          <b-button variant="invert-dark" v-b-modal="'ChangePasswordDialog'" v-t="'AccountSettings.sign-in.change-password_button'" />
 
           <ChangePasswordDialog />
 
@@ -50,35 +47,34 @@
     </AccountSettingItem>
 
 
-    <AccountSettingItem v-if="isManager || !hasAccount" icon="people-fill" title="My Morphic account">
+    <AccountSettingItem v-if="isManager || !hasAccount" icon="people-fill" :title="$t('AccountSettings.account.title')">
       <div v-if="hasAccount">
         <div class="lead font-weight-bold">{{ community.name }}</div>
 
-        <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'">Change account name</b-button>
+        <b-button variant="invert-dark" v-b-modal="'AccountNameDialog'" v-t="'AccountSettings.account.rename_button'" />
 
-        <div class="mt-3 mb-2">Subscription type: {{plan.name}}</div>
+        <div class="mt-3 mb-2">{{ $t('AccountSettings.account.subscription-type', {plan_name:plan.name}) }}</div>
         <div class="d-flex flex-wrap">
-          <span class="pr-1">Number of people you have added:</span>
-          <b>{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</b>
+          <span class="pr-1" v-t="'AccountSettings.account.number-of-people_label'" />
+          <b>{{ $t('AccountSettings.account.number-of-people', community) }}</b>
         </div>
 
 
-        <b-button variant="invert-dark" :to="{name:'BillingDetails'}">Manage subscription and billing</b-button>
+        <b-button variant="invert-dark" :to="{name:'BillingDetails'}" v-t="'AccountSettings.account.billing_button'" />
 
         <TextInputDialog id="AccountNameDialog"
-                         title="Rename Account"
-                         prompt="Enter the new name for the account"
+                         :title="$t('AccountSettings.account.rename-dialog_title')"
+                         :prompt="$t('AccountSettings.account.rename-dialog_prompt')"
                          :value="community.name"
                          @ok="$event.promise = renameAccount($event.newValue)"
         />
       </div>
       <div v-else>
-        <p class="lead">You have a free account with basic Morphic features</p>
+        <p class="lead" v-t="'AccountSettings.account.basic_lead'" />
 
-        <div id="basic-features">With the free basic features of Morphic, you can...</div>
+        <div id="basic-features" v-t="'AccountSettings.account.basic_list-label'" />
         <ul aria-labelledby="basic-features">
-          <li>Apply your usability and accessibility settings on computers with Morphic installed</li>
-          <li>Use the Basic MorphicBar and any MorphicBars that you have been invited to use</li>
+          <li v-for="(item, index) in $t('AccountSettings.account.basic_list')" :key="index">{{item}}</li>
         </ul>
 
         <div class="box">
@@ -88,14 +84,13 @@
                 <img src="/img/logo-color.svg" width="70" class="m-2" alt=""/>
               </b-col>
               <b-col>
-                <p class="lead">Upgrade to Morphic Plus</p>
-                <div id="plus-features">With a Morphic Plus subscription, you can...</div>
+                <p class="lead" v-t="'AccountSettings.account.upgrade_lead'" />
+                <div id="plus-features" v-t="'AccountSettings.account.upgrade-list'" />
                 <ul aria-labelledby="plus-features">
-                  <li>Create MorphicBars for yourself</li>
-                  <li>Create and manage MorphicBars for other people</li>
+                  <li v-for="(item, index) in $t('AccountSettings.account.update-list_items')" :key="index">{{item}}</li>
                 </ul>
 
-                <b-button v-b-modal="'AccountNameDialog'" variant="morphic-green">Sign up for a Morphic Plus subscription</b-button>
+                <b-button v-b-modal="'AccountNameDialog'" variant="morphic-green" v-t="'AccountSettings.account.signup_button'" />
 
                 <div v-if="specialCoupon" class="font-weight-bold text-morphic-green m-2">
                   {{specialCoupon.notice}}
@@ -121,19 +116,16 @@
 
     </AccountSettingItem>
 
-    <AccountSettingItem v-if="hasAccount" icon="envelope-open" title="MorphicBars I have accepted">
+    <AccountSettingItem v-if="hasAccount" icon="envelope-open" :title="$t('AccountSettings.bars.title')">
       <template #lead>
-        Listed below are the MorphicBars you have accepted from others and that are managed by them on your behalf.
-<!--        If you "remove" their bar(s), then you will no longer have access to the bar(s) that they manage for you.-->
+        {{ $t('AccountSettings.bars.lead') }}
+<!--        {{ $t('AccountSettings.bars.lead_remove') }}-->
       </template>
 
       <ul class="list-unstyled">
         <!-- TODO: unable to get invitation details from the API server -->
-        <li v-for="(memberCommunity) in memberCommunities" :key="memberCommunity.id" :aria-labelledby="`${memberCommunity.id}_name`">
-          <span :id="`${memberCommunity.id}_label`">
-            <b :id="`${memberCommunity.id}_name`">{{memberCommunity.name}}</b>
-            has provided the following bar(s) for you:
-          </span>
+        <li v-for="(memberCommunity) in memberCommunities" :key="memberCommunity.id" :aria-label="memberCommunity.name">
+          <span :id="`${memberCommunity.id}_label`" v-html="$t('AccountSettings.bars.list-item', {name:memberCommunity.name})"/>
 
           <ul :aria-labelledby="`${memberCommunity.id}_label`" class="mb-3">
             <li v-for="bar in (memberBars[memberCommunity.id])" :key="bar.id">
