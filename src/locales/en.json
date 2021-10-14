@@ -65,10 +65,28 @@
     "select-instruction": "Select a bar to copy from:",
     "title": "Copy bar"
   },
+  "DesktopBarEditor": {
+    "customize-tip": "Tip: To customize a button on the bar, click on it.",
+    "empty-hint_lead": "This is an empty MorphicBar.",
+    "empty-hint_text": "Click or drag a button from the Button Catalog (on the right) to add it to the bar.",
+    "bar-error": {
+      "duplicated": "{item} is duplicated",
+      "duplicate-action": "{item1} performs the same action as {item2}",
+      "error": "{item1} performs the same action as {item2}"
+    }
+  },
   "EditorDetails": {
+    "bar-members": "{memberCount} members",
+    "bar_heading": "Bar",
     "copy-bar_button": "Copy bar from...",
+    "delete-bar_button": "delete",
+    "person": "Person",
+    "rename-dialog_prompt": "Enter the new name for the bar",
+    "rename-dialog_title": "Rename Bar",
+    "rename-bar_button": "rename",
     "revert-bar_button": "Revert to user's current bar",
     "save-bar_button": "Save bar",
+    "shared-bar": "Shared bar",
     "try-it_button": "Try it"
   },
   "General": {
@@ -201,11 +219,39 @@
     "sign-in-register_link": "Sign up for a new Morphic account with a different email",
     "sign-in_button": "Sign in"
   },
+  "LiteBarEditor": {
+    "bar_header": "Buttons on the Bar",
+    "customize-tip": "Tip: To customize a button on the bar, click on it.",
+    "add-button_button": "Add a button"
+  },
   "MemberDetails": {
     "bar-unused": "This bar has no members using it.",
     "delete-member_button": "Delete member",
     "re-invite_button": "Send a new invitation",
     "invite_button": "Send an invitation"
+  },
+  "MorhpicBarEditor": {
+    "saved-dialog": {
+      "details": "It will show up automatically on the computer soon. Users may need to open Morphic and switch to this MorphicBar to see it.",
+      "lead": "This MorphicBar has been saved.",
+      "title": "MorphicBar Saved"
+    },
+    "saved-uninvited-dialog": {
+      "invite-later_button": "Invite later",
+      "invite_button": "Invite now",
+      "p1": "This MorphicBar has been saved.",
+      "p2": "Now that the bar has been saved, it is ready for the person to start using it.",
+      "p3": "If you are ready for the person to use it, you can invite the following person to download, install, and sign\n        into Morphic, which will get this bar on the person's computer:",
+      "title": "MorphicBar Saved"
+    },
+    "unsaved-dialog": {
+      "cancel_button": "@:(General.cancel_button)",
+      "continue_button": "Continue, without saving",
+      "p1": "You have made some changes to this bar, but they are not saved yet.",
+      "p2": "If you leave now, the recent modifications will be lost.",
+      "save_button": "Save",
+      "title": "Unsaved Changes"
+    }
   },
   "NewMember": {
       "title": "Add a person"
@@ -351,6 +397,7 @@
     "settings_tooltip": "Settings for {name}"
   },
   "MorphicBarEditor": {
+    "back_link": "Switch Bar or Person"
   },
   "MorphicBarPreconfigured": {
   },
@@ -490,6 +537,11 @@
     "success": "Registration completed successfully"
   },
   "ValidatedInput": {
+  },
+  "billing": {
+    "special-coupon_button": "Get coupon for free year",
+    "special-coupon_notice": "Option available today for a free year!",
+    "special-coupon_text": "Thanks to a generous donor, you can get one year of Morphic Plus 5 for free for a limited time."
   },
   "members": {
     "changeRole": {

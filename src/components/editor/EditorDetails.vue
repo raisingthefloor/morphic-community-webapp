@@ -6,8 +6,8 @@
                fluid="1">
 
     <TextInputDialog id="barNameDialog"
-                     title="Rename Bar"
-                     prompt="Enter the new name for the bar"
+                     :title="$t('EditorDetails.rename-dialog_title')"
+                     :prompt="$t('EditorDetails.rename-dialog_prompt')"
                      v-model="barDetails.name"
                      @ok="renameBar"
     />
@@ -28,24 +28,22 @@
         <div id="BarDetails" :class="isLite && 'bg-silver rounded p-2'">
           <!-- Bar name -->
           <div class="bar-name">
-            <h2>Bar: <span class="name">{{barName}}</span></h2>
+            <h2>{{ $t('EditorDetails.bar_heading') }}: <span class="name">{{barName}}</span></h2>
             <!-- rename bar -->
             <span v-if="barDetails.name !== 'Default'" class="actions">
-              <b-button variant="link" @click="showRenameBarDialog()">rename</b-button>
-              <b-button variant="link" @click="deleteBar()" class="text-danger">delete</b-button>
+              <b-button variant="link" @click="showRenameBarDialog()" v-t="'EditorDetails.rename-bar_button2'" />
+              <b-button variant="link" @click="deleteBar()" class="text-danger" v-t="'EditorDetails.delete-bar_button'" />
             </span>
 
           </div>
           <div class="mb-1">
             <span class="lead">
-              <template v-if="barMembers.length === 0">
-                Shared bar
-              </template>
+              <template v-if="barMembers.length === 0">{{ $t('EditorDetails.shared-bar') }}</template>
               <template v-else-if="barMembers.length === 1">
-                Person: <span class="name">{{ barMembers[0].displayName }}</span>
+                {{ $t('EditorDetails.person') }}: <span class="name">{{ barMembers[0].displayName }}</span>
               </template>
               <template v-else>
-                Person: <span class="name">{{ barMembers.length }} members</span>
+                {{ $t('EditorDetails.person') }}: <span class="name">{{ $t('EditorDetails.bar-members', {memberCount: barMembers.length}) }}</span>
               </template>
             </span>
           </div>
