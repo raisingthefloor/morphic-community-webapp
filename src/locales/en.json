@@ -45,7 +45,30 @@
     "rename_button": "Edit bar name"
   },
   "ButtonCatalog": {
-    "search-result-summary": "No items found | 1 item found | {n} items found"
+    "catalog-groups": {
+      "make": "Make a button",
+      "call": "Call a Person",
+      "meeting": "Meeting Room",
+      "action": "Action Buttons",
+      "local-calendar": "Calendar - App on Computer",
+      "calendar": "Calendar - Website",
+      "socialMedia": "Social Media Sites",
+      "local-email": "Email - App on Computer",
+      "email": "Email - Websites",
+      "photo": "Photo Sharing",
+      "news": "News",
+      "shopping": "Shopping",
+      "multimedia": "Media",
+      "onlineFileDrives": "Online Drives",
+      "app": "Local Apps"
+    },
+    "description": "Click or Drag name (below) to add button to the bar",
+    "description-lite": "Click on a button name to configure and add to MorphicBar",
+    "heading": "Button Catalog",
+    "no-results": "No buttons where found while searching for '<code>{searchText}</code>'",
+    "search-result-summary": "No items found | 1 item found | {n} items found",
+    "search-results": "Search results",
+    "search_label": "Search the button catalog"
   },
   "ConfirmEmail": {
     "dialog_title": "Confirm your email",
@@ -397,7 +420,8 @@
     "settings_tooltip": "Settings for {name}"
   },
   "MorphicBarEditor": {
-    "back_link": "Switch Bar or Person"
+    "back_link": "Switch Bar or Person",
+    "confirm-revert": "Are you sure you want reload last saved version of the bar? This means you will lose all unsaved changes!"
   },
   "MorphicBarPreconfigured": {
   },

@@ -35,7 +35,7 @@
       <p v-t="'MorhpicBarEditor.saved-uninvited-dialog.p1'" />
       <p v-t="'MorhpicBarEditor.saved-uninvited-dialog.p2'" />
       <p v-t="'MorhpicBarEditor.saved-uninvited-dialog.p3'" />
-      <p class="font-weight-bold ml-2">{{memberDetails.displayName}}</p>
+      <p v-if="memberDetails" class="font-weight-bold ml-2">{{memberDetails.displayName}}</p>
     </b-modal>
 
 
@@ -261,7 +261,7 @@ export default {
         },
 
         revertBar: function () {
-            if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will lose all unsaved changes!")) {
+            if (window.confirm(this.$t("MorphicBarEditor.confirm-revert"))) {
                 this.isChanged = false;
                 this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
             }
@@ -277,7 +277,9 @@ export default {
                 this.loadBarMembers()
             ]);
 
-            this.screenReaderMessage(`Now editing bar '${this.barDetails.name}', owned by '${this.memberDetails.displayName}`);
+            if (this.barDetails?.name && this.memberDetails?.displayName) {
+                this.screenReaderMessage(`Now editing bar '${this.barDetails.name}', owned by '${this.memberDetails.displayName}`);
+            }
         },
 
         /** Loads the initial bar data */
@@ -547,6 +549,17 @@ export default {
     },
     mounted() {
         this.loadAllData();
+
+        Object.entries(this.buttonCatalog).forEach(([key, value]) => {
+            if (!value.translated) {
+                const messageKey = `ButtonCatalog.catalog-groups.${key}`;
+                const message = this.$t(messageKey);
+                if (message !== messageKey) {
+                    value.title = message;
+                }
+                value.translated = true;
+            }
+        });
 
         // Move the footer text
         const footer = document.querySelector("#PageContainer > footer");

@@ -31,7 +31,7 @@
             <h2>{{ $t('EditorDetails.bar_heading') }}: <span class="name">{{barName}}</span></h2>
             <!-- rename bar -->
             <span v-if="barDetails.name !== 'Default'" class="actions">
-              <b-button variant="link" @click="showRenameBarDialog()" v-t="'EditorDetails.rename-bar_button2'" />
+              <b-button variant="link" @click="showRenameBarDialog()" v-t="'EditorDetails.rename-bar_button'" />
               <b-button variant="link" @click="deleteBar()" class="text-danger" v-t="'EditorDetails.delete-bar_button'" />
             </span>
 

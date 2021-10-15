@@ -6,15 +6,15 @@
                 searchResults: !!searchState
                }">
 
-    <h3 id="ButtonCatalogHeader">Button Catalog</h3>
+    <h3 id="ButtonCatalogHeader">{{ $t('ButtonCatalog.heading') }}</h3>
     <div id="CatalogDescription">
-      <span v-if="isLite">Click on a button name to configure and add to MorphicBar</span>
-      <span v-else>Click or Drag name (below) to add button to the bar</span>
+      <span v-if="isLite">{{ $t('ButtonCatalog.description-lite') }}</span>
+      <span v-else>{{ $t('ButtonCatalog.description') }}</span>
     </div>
 
     <!-- search -->
     <b-input-group id="search-group" class="catalogSearch" size="sm">
-      <b-form-input type="search" placeholder="Search buttons" v-model="searchText" aria-label="Search the button catalog"/>
+      <b-form-input type="search" placeholder="Search buttons" v-model="searchText" :aria-label="$t('ButtonCatalog.search_label')"/>
       <b-input-group-append>
         <b-button variant="outline-secondary" aria-label="Search" @click="searchButtonClick">
           <b-icon-search/>
@@ -36,7 +36,7 @@
           :class="{ searchResults: isSearchResult}">
 
         <li v-if="isSearchResult && searchResult && searchResult.itemsFound.hidden">
-          <small>No buttons where found while searching for '<code>{{searchText}}</code>'</small>
+          <small>{{ $t('ButtonCatalog.no-results', {searchText}) }}</small>
         </li>
         <template v-for="(buttonGroup, subkind) in catalog">
           <li v-if="!buttonGroup.hidden"
@@ -52,7 +52,7 @@
             <h4 v-if="buttonGroup.title">{{buttonGroup.title}}</h4>
 
             <ul class="buttonCatalogEntries"
-                :aria-label="buttonGroup.isSearchResult && 'Search results'">
+                :aria-label="buttonGroup.isSearchResult && $t('ButtonCatalog.search-results')">
               <template v-for="(button, buttonId) in buttonGroup.items">
                 <li v-if="!(button.data.isExpander && alwaysShowSecondaryItems)"
                     :key="button.data.buttonKey"
