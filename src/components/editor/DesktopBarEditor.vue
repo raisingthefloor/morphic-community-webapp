@@ -9,7 +9,7 @@
         <div class="bar-label">
           <strong class="bar-name" aria-label="Bar name">{{barDetails.name}}</strong>
           <span v-if="memberDetails" class="bar-owner" aria-label="Bar owner">{{memberDetails.displayName}}</span>
-          <small class="bar-tip">Tip: To customize a button on the bar, click on it.</small>
+          <small class="bar-tip" v-t="'DesktopBarEditor.customize-tip'" />
         </div>
       </div>
 
@@ -22,9 +22,7 @@
                 endpoint: {type: 'arrowHead'}
         }"/>
         <span class="arrowTo" />
-        <p>This is an empty MorphicBar.</p>
-        Click or drag a button from the Button Catalog (on the right) to add it to the bar.
-      </div>
+        <p v-t="'DesktopBarEditor.empty-hint_lead'" />{{ $t('DesktopBarEditor.empty-hint_text') }}</div>
 
       <!-- Bar item problems -->
       <div class="desktop-alerts">
@@ -46,28 +44,35 @@
             <!-- Duplicated labels -->
             <template
                     v-if="error.type === 'duplicate' && error.item.configuration.label === error.duplicates[0].configuration.label">
-              <BarItemLink :bar-item="error.item"
-                           @click="showEditDialog(error.item)"
-                           @mouseover="highlight(false, error.item)"
-                           @mouseleave="highlight(true, error.item)"
-              />
-              is duplicated.
+              <i18n path="DesktopBarEditor.bar-error.duplicated">
+                <template #item>
+                  <BarItemLink :bar-item="error.item"
+                               @click="showEditDialog(error.item)"
+                               @mouseover="highlight(false, error.item)"
+                               @mouseleave="highlight(true, error.item)"
+                  />
+                </template>
+              </i18n>
             </template>
 
             <!-- Duplicated actions -->
             <template v-else-if="error.type === 'duplicate'">
-              <BarItemLink :bar-item="error.item"
-                           @click="showEditDialog(error.item)"
-                           @mouseover="highlight(false, error.item)"
-                           @mouseleave="highlight(true, error.item)"
-              />
-
-              performs the same action as
-              <BarItemLink :bar-item="error.duplicates[0]"
-                           @click="showEditDialog(error.duplicates[0])"
-                           @mouseenter="highlight(false, error.duplicates)"
-                           @mouseleave="highlight(true, error.duplicates)"
-              />
+              <i18n path="DesktopBarEditor.bar-error.duplicate-action">
+                <template #item1>
+                  <BarItemLink :bar-item="error.item"
+                               @click="showEditDialog(error.item)"
+                               @mouseover="highlight(false, error.item)"
+                               @mouseleave="highlight(true, error.item)"
+                  />
+                </template>
+                <template #item2>
+                  <BarItemLink :bar-item="error.duplicates[0]"
+                               @click="showEditDialog(error.duplicates[0])"
+                               @mouseenter="highlight(false, error.duplicates)"
+                               @mouseleave="highlight(true, error.duplicates)"
+                  />
+                </template>
+              </i18n>
             </template>
 
             <!-- Generic problem -->

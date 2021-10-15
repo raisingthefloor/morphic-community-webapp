@@ -6,43 +6,36 @@
     <CopyBarDialog id="copyBarDialog" :bars="barsList" :members="membersList" :current-bar="barDetails" @change="onBarChanged" />
     <InviteMemberDialog id="InviteMemberDialog-MorphicBarEditor" :member="memberDetails" :members="membersList" />
 
-    <b-modal id="unsavedChanges" title="Unsaved Changes">
-      <p>You have made some changes to this bar, but they are not saved yet.</p>
-      <p>If you leave now, the recent modifications will be lost.</p>
+    <b-modal id="unsavedChanges" :title="$t('MorhpicBarEditor.unsaved-dialog.title')">
+      <p v-t="'MorhpicBarEditor.unsaved-dialog.p1'" />
+      <p v-t="'MorhpicBarEditor.unsaved-dialog.p2'" />
 
       <template #modal-footer="{ ok, cancel, hide }">
-        <b-button @click="cancel()" variant="secondary">Cancel</b-button>
-        <b-button @click="hide('no-save')" variant="secondary">Continue, without saving</b-button>
-        <b-button @click="hide('save')" variant="primary">Save</b-button>
+        <b-button @click="cancel()" variant="secondary" v-t="'MorhpicBarEditor.unsaved-dialog.cancel_button'" />
+        <b-button @click="hide('no-save')" variant="secondary" v-t="'MorhpicBarEditor.unsaved-dialog.continue_button'" />
+        <b-button @click="hide('save')" variant="primary" v-t="'MorhpicBarEditor.unsaved-dialog.save_button'" />
       </template>
     </b-modal>
 
     <b-modal id="SaveConfirmation"
-             title="MorphicBar Saved"
+             :title="$t('MorhpicBarEditor.saved-dialog.title')"
              ok-only
     >
-      <p>This MorphicBar has been saved.</p>
-      <p>
-        It will show up automatically on the computer soon. Users may need to open Morphic and switch to this MorphicBar to see it.
-      </p>
+      <p v-t="'MorhpicBarEditor.saved-dialog.lead'" />
+      <p v-t="'MorhpicBarEditor.saved-dialog.details'" />
     </b-modal>
 
     <b-modal id="SaveConfirmationUninvited"
-             title="MorphicBar Saved"
-             ok-title="Invite now"
-             cancel-title="Invite later"
+             :title="$t('MorhpicBarEditor.saved-uninvited-dialog.title')"
+             :ok-title="$t('MorhpicBarEditor.saved-uninvited-dialog.invite_button')"
+             :cancel-title="$t('MorhpicBarEditor.saved-uninvited-dialog.invite-later_button')"
              @ok="showModalDialog('InviteMemberDialog-MorphicBarEditor')"
 
     >
-      <p>This MorphicBar has been saved.</p>
-      <p>
-        Now that the bar has been saved, it is ready for the person to start using it.
-      </p>
-      <p>
-        If you are ready for the person to use it, you can invite the following person to download, install, and sign
-        into Morphic, which will get this bar on the person's computer:
-      </p>
-      <p class="font-weight-bold ml-2">{{memberDetails.displayName}}</p>
+      <p v-t="'MorhpicBarEditor.saved-uninvited-dialog.p1'" />
+      <p v-t="'MorhpicBarEditor.saved-uninvited-dialog.p2'" />
+      <p v-t="'MorhpicBarEditor.saved-uninvited-dialog.p3'" />
+      <p v-if="memberDetails" class="font-weight-bold ml-2">{{memberDetails.displayName}}</p>
     </b-modal>
 
 
@@ -56,8 +49,7 @@
       <div id="barEditor" class="pt-2">
 
         <b-link v-if="isLite" to="/">
-          <b-img src="/img/back-arrow.svg" width="20" height="20" class="switchBarIcon" />Switch Bar or Person
-        </b-link>
+          <b-img src="/img/back-arrow.svg" width="20" height="20" class="switchBarIcon" />{{ $t('MorphicBarEditor.back_link') }}</b-link>
 
         <!-- Bar info, actions, and editor tabs -->
         <EditorDetails ref="EditorDetails"
@@ -269,7 +261,7 @@ export default {
         },
 
         revertBar: function () {
-            if (window.confirm("Are you sure you want reload last saved version of the bar? This means you will lose all unsaved changes!")) {
+            if (window.confirm(this.$t("MorphicBarEditor.confirm-revert"))) {
                 this.isChanged = false;
                 this.barDetails = JSON.parse(JSON.stringify(this.originalBarDetails));
             }
@@ -285,7 +277,9 @@ export default {
                 this.loadBarMembers()
             ]);
 
-            this.screenReaderMessage(`Now editing bar '${this.barDetails.name}', owned by '${this.memberDetails.displayName}`);
+            if (this.barDetails?.name && this.memberDetails?.displayName) {
+                this.screenReaderMessage(`Now editing bar '${this.barDetails.name}', owned by '${this.memberDetails.displayName}`);
+            }
         },
 
         /** Loads the initial bar data */
@@ -555,6 +549,17 @@ export default {
     },
     mounted() {
         this.loadAllData();
+
+        Object.entries(this.buttonCatalog).forEach(([key, value]) => {
+            if (!value.translated) {
+                const messageKey = `ButtonCatalog.catalog-groups.${key}`;
+                const message = this.$t(messageKey);
+                if (message !== messageKey) {
+                    value.title = message;
+                }
+                value.translated = true;
+            }
+        });
 
         // Move the footer text
         const footer = document.querySelector("#PageContainer > footer");

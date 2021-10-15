@@ -1,4 +1,5 @@
 import * as billingService from "@/services/billingService";
+import i18n from "@/i18n/i18n";
 
 /**
  * Collection of billing plans, with the key being the plan ID.
@@ -103,9 +104,9 @@ var allPlans;
 
 const specialCoupon = {
     code: "FreeYearCoupon",
-    text: "Thanks to a generous donor, you can get one year of Morphic Plus 5 for free for a limited time.",
-    button: "Get coupon for free year",
-    notice: "Option available today for a free year!"
+    text: "",
+    button: "",
+    notice: ""
 };
 
 
@@ -189,6 +190,10 @@ export function getPlans() {
     if (allPlans) {
         togo = Promise.resolve(JSON.parse(JSON.stringify(allPlans)));
     } else {
+        specialCoupon.text = i18n.t("billing.special-coupon_text");
+        specialCoupon.button = i18n.t("billing.special-coupon_button");
+        specialCoupon.notice = i18n.t("billing.special-coupon_notice");
+
         togo = billingService.getCommunityPlans().then(result => {
             allPlans = {};
             result.data.plans.forEach(plan => {

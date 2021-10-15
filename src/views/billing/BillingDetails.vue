@@ -3,44 +3,42 @@
     <b-overlay :show="!loaded" no-wrap opacity="1"/>
     <div class="m-3">
       <b-link :to="{name:'AccountSettings'}" >
-        <b-icon icon="arrow-return-right" rotate="180"/>Back to Morphic Account Settings</b-link>
+        <b-icon icon="arrow-return-right" rotate="180"/>{{ $t('BillingDetails.back_link') }}</b-link>
     </div>
 
-    <AccountSettingItem class="mb-5" :title="`Current subscription for ${community.name}`">
+    <AccountSettingItem class="mb-5" :title="$t('BillingDetails.current-subscription_title', community)">
 
       <template v-if="plan.isBasic">
         <div class="no-shade">
-          <div>Subscription type: {{plan.name}}</div>
+          <div>{{ $t('BillingDetails.subscription-type', plan) }}</div>
         </div>
 
       </template>
       <template v-else>
         <div class="no-shade">
 
-          <div class="mb-2">Subscription type: {{plan.name}}</div>
+          <div class="mb-2">{{ $t('BillingDetails.subscription-type', plan) }}</div>
           <div class="mb-3">
-            <div class="pr-1">Number of people you have added:</div>
-            <div class="font-weight-bold">{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</div>
+            <div class="pr-1" v-t="'BillingDetails.number-of-people'" />
+            <div class="font-weight-bold">{{ $t('BillingDetails.number-of-people_value', community) }}</div>
           </div>
 
-          <div>If you want to add more people, change your subscription below.</div>
+          <div v-t="'BillingDetails.add-more'" />
         </div>
 
         <div class="no-shade">
-          <div v-if="!billingInfo.card">No credit card on file</div>
+          <div v-if="!billingInfo.card" v-t="'BillingDetails.no-payment-method'" />
 
-          <div v-if="billingInfo.coupon">Coupon used: <b>{{billingInfo.coupon.code}}</b></div>
+          <div v-if="billingInfo.coupon">{{ $t('BillingDetails.coupon-used') }}<b>{{billingInfo.coupon.code}}</b></div>
 
           <div v-if="billingInfo.coupon && !plan.price">
             {{getCouponFreeText(plan.coupon)}}
           </div>
-          <div v-else-if="!plan.isBasic">
-            {{plan.price_text}} {{ plan.months === 1 ? "per month" : `every ${plan.months} months` }}
-          </div>
+          <div v-else-if="!plan.isBasic">{{ $tc('BillingDetails.payment-time', plan.months, plan) }}</div>
 
           <b-button variant="primary"
                     v-b-modal="'PaymentDialog'">
-            {{ billingInfo && billingInfo.card ? "Change Card" : "Add Card" }}
+            {{ billingInfo && billingInfo.card ? $t('BillingDetails.change-card_button') : $t('BillingDetails.add-card_button') }}
           </b-button>
 
           <PaymentDialog ref="PaymentDialog" id="PaymentDialog"/>
@@ -50,7 +48,7 @@
 
 
     <div>
-      <h2>Change your Morphic Subscription</h2>
+      <h2 v-t="'BillingDetails.change-subscription_header'" />
 
       <div class="plans" v-if="planList">
         <div v-for="(plan, index) in (planList.filter(p => !p.hide))"
@@ -58,33 +56,29 @@
              class="plan"
              :class="{isSubscription: !plan.free}"
         >
-          <h3 v-if="plan.member_limit">Morphic Plus <div>{{plan.member_limit}}</div></h3>
-          <h3 v-else>Morphic <div>(Basic features only)</div></h3>
+          <h3 v-if="plan.member_limit">{{ $t('BillingDetails.morphic-plus') }}<div>{{plan.member_limit}}</div></h3>
+          <h3 v-else>{{ $t('BillingDetails.morphic') }}<div v-t="'BillingDetails.basic-features'" /></h3>
 
           <div class="info">
             <ul class="list-unstyled">
-              <li v-if="plan.free">Use the Basic MorphicBar (no custom MorphicBars)</li>
-              <li v-if="!plan.free">Make and use custom MorphicBars for yourself</li>
-              <li v-if="!plan.free">Make up to 5 MorphicBars each for up to {{plan.member_limit}} other people</li>
-              <li>Transfer your AT settings to any computer with Morphic on it</li>
+              <li v-if="plan.free" v-t="'BillingDetails.basic-morphic-bar'" />
+              <li v-if="!plan.free" v-t="'BillingDetails.custom-morphic-bars'" />
+              <li v-if="!plan.free">{{ $t('BillingDetails.morphic-bars-for-others', plan) }}</li>
+              <li v-t="'BillingDetails.transfer-settings'" />
             </ul>
           </div>
           <div class="pricing">
-            <div v-if="plan.free">
-              Free!
-            </div>
-            <div v-else-if="plan.monthly">
-              {{plan.monthly.monthly_price_text}} per month ({{plan.monthly.annual_price_text}} over 12 months)<br/>
-              or<br/>
-              {{plan.price_text}} (12 month) subscription
-            </div>
+            <div v-if="plan.free" v-t="'BillingDetails.free'" />
+            <div v-else-if="plan.monthly">{{ $t('BillingDetails.payment-monthly', plan.monthly) }}
+              <br/>{{ $t('BillingDetails.or') }}
+              <br/>{{ $t('BillingDetails.payment-yearly', plan) }}</div>
             <div v-if="plan.specialCoupon" class="font-weight-bold text-morphic-green mt-3">
               {{plan.specialCoupon.notice}}
             </div>
           </div>
           <div>
             <b-button :class="{invisible: !plan.member_limit}" variant="primary" v-b-modal="'PrePaymentDialog'" @click="selectedPlan = plan; applyCoupon(null)">
-              {{ plan.member_limit ? `Morphic Plus ${plan.member_limit}` : `Basic features only` }}
+              {{ plan.member_limit ? $t('BillingDetails.morphic-plus-number_button', plan) : $t('BillingDetails.basic-features_button') }}
             </b-button>
           </div>
 
@@ -106,7 +100,7 @@
           </div>
         </div>
 
-        <b-form-group label="Coupon Code" :state="couponState">
+        <b-form-group :label="$t('BillingDetails.CouponDialog.coupon_label')" :state="couponState">
 
           <b-input-group>
             <b-form-input id="coupon" v-model="couponCodeInput" :disabled="couponState" />
@@ -116,23 +110,26 @@
                         size="sm"
                         @click="applyCoupon(couponCodeInput)"
                         :class="{loading: checkingCoupon}"
-                        :disabled="couponState || checkingCoupon">Apply coupon</b-button>
+                        :disabled="couponState || checkingCoupon" v-t="'BillingDetails.CouponDialog.apply_button'" />
             </b-input-group-append>
           </b-input-group>
 
-          <template #valid-feedback>Coupon applied: "{{couponCode}}" (<b-button variant="link" @click.prevent="applyCoupon()">clear coupon</b-button>)</template>
+          <template #valid-feedback>
+            {{ $t('BillingDetails.CouponDialog.coupon-applied') }}: {{couponCode}}
+            (<b-button variant="link" @click.prevent="applyCoupon()" v-t="'BillingDetails.CouponDialog.clear_button'" />)
+          </template>
           <template #invalid-feedback>{{couponError}}</template>
         </b-form-group>
 
 
         <b-form-group v-for="(pp, frequency) in (paymentRadios)"
                       :key="frequency"
-                      :description="frequency !== 'free' && `(Renews automatically every ${frequency} until canceled)`">
+                      :description="$t('BillingDetails.CouponDialog.radio_description.' + frequency)">
           <b-form-radio v-model="payFrequency"
                         name="payFrequency"
                         :value="frequency"
-                        :disabled="pp.disabled">
-            {{pp.price_text}} {{ radioText[frequency] }}
+                        :disabled="pp.disabled">{{ $t('BillingDetails.CouponDialog.payment_radio.' + frequency, pp) }}<br/>
+
           </b-form-radio>
         </b-form-group>
 
@@ -250,14 +247,6 @@ import * as billingService from "@/services/billingService";
  * @property {Boolean} free true if it's not a plus subscription
  */
 
-const couponErrors = {
-    unknown: "Not a valid coupon",
-    expired: "Coupon expired",
-    inactive: "Coupon is no longer valid",
-    invalid_email: "Coupon is not valid for your email address",
-    wrong_plan: "Coupon is not valid for this plan"
-};
-
 export default {
     name: "BillingDetails",
     components: {AccountSettingItem, PaymentDialog},
@@ -284,10 +273,6 @@ export default {
                 monthly: null,
                 /** @type {DiscountedPlan} */
                 yearly: null
-            },
-            radioText: {
-                month: "per month monthly subscription",
-                year: "per year annual subscription"
             },
             payFrequency: null
         };
@@ -335,19 +320,19 @@ export default {
             switch (coupon?.duration) {
             case "repeating":
                 if (coupon.duration_months === 12) {
-                    freeText = "Free for one year";
+                    freeText = this.$t("BillingDetails.free-year");
                 } else {
-                    freeText = `Free for ${coupon.duration_months} months`;
+                    freeText = this.$t("BillingDetails.free-months", coupon);
                 }
                 break;
             case "forever":
-                freeText = "Free forever";
+                freeText = this.$t("BillingDetails.free-forever");
                 break;
             case null:
             case undefined:
                 break;
             default:
-                freeText = "Free";
+                freeText = this.$t("BillingDetails.free");
                 break;
             }
 
@@ -411,7 +396,7 @@ export default {
                 }
 
                 if (couponResponse.error) {
-                    this.couponError = couponErrors[couponResponse.error] || couponErrors.unknown;
+                    this.couponError = this.$t("BillingDetails.coupon-error." + couponResponse.error);
                     this.payPlan.yearly = {...this.selectedPlan};
                     this.payPlan.monthly = {...this.selectedPlan.monthly};
                 } else {
@@ -452,7 +437,11 @@ export default {
             }
 
             if (!this.couponCode && this.couponLastChecked !== this.couponCodeInput) {
-                const applyCoupon = await this.showConfirm("You've entered a coupon, but have not applied it.", ["Apply Coupon", "Skip"], "Coupon not applied");
+                const applyCoupon = await this.showConfirm(
+                    this.$t("BillingDetails.CouponDialog.coupon-not-applied"),
+                    [this.$t("BillingDetails.CouponDialog.apply_button"), this.$t("BillingDetails.CouponDialog.skip_button")],
+                    this.$t("BillingDetails.CouponDialog.coupon-not-applied_title"));
+
                 if (applyCoupon) {
                     this.applyCoupon(this.couponCodeInput);
                     return;

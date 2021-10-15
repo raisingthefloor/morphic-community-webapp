@@ -1,10 +1,74 @@
 {
+  "AccountSettings": {
+    "account": {
+      "basic_lead": "You have a free account with basic Morphic features",
+      "basic_list-label": "With the free basic features of Morphic, you can...",
+      "basic_list": [
+        "Apply your usability and accessibility settings on computers with Morphic installed",
+        "Use the Basic MorphicBar and any MorphicBars that you have been invited to use"
+      ],
+      "billing_button": "Manage subscription and billing",
+      "number-of-people": "{member_count} (out of {member_limit} maximum allowed on this subscription)",
+      "number-of-people_label": "Number of people you have added:",
+      "rename-dialog_title": "Rename Account",
+      "rename-dialog_prompt": "Enter the new name for the account",
+      "rename_button": "Change account name",
+      "signup_button": "Sign up for a Morphic Plus subscription",
+      "subscription-type": "Subscription type: {plan_name}",
+      "title": "My Morphic account",
+      "update-list_items": [
+        "Create MorphicBars for yourself",
+        "Create and manage MorphicBars for other people"
+      ],
+      "upgrade-list": "With a Morphic Plus subscription, you can...",
+      "upgrade_lead": "Upgrade to Morphic Plus"
+    },
+    "back_link": "Back to Custom MorphicBar Tool",
+    "bars": {
+      "lead": "Listed below are the MorphicBars you have accepted from others and that are managed by them on your behalf.",
+      "lead_remove": "If you \"remove\" their bar(s), then you will no longer have access to the bar(s) that they manage for you.",
+      "list-item": "<b>{name}</b> has provided the following bar(s) for you:",
+      "title": "MorphicBars I have accepted"
+    },
+    "sign-in": {
+      "change-password_button": "Change password",
+      "email+password": "Email & Password",
+      "email-confirmed": "(confirmed)",
+      "email-not-confirmed": "This email address is not confirmed. You will need to click a link sent you you by Morphic to confirm.\n            Check your junk or spam folder or re-send the confirmation email.",
+      "lead": "You have currently set up the following ways to sign into your Morphic account",
+      "resend-confirmation_button": "Re-send confirmation email",
+      "title": "My sign-in method"
+    }
+  },
   "BarSettings": {
     "delete_button": "Delete Bar",
     "rename_button": "Edit bar name"
   },
   "ButtonCatalog": {
-    "search-result-summary": "No items found | 1 item found | {n} items found"
+    "catalog-groups": {
+      "make": "Make a button",
+      "call": "Call a Person",
+      "meeting": "Meeting Room",
+      "action": "Action Buttons",
+      "local-calendar": "Calendar - App on Computer",
+      "calendar": "Calendar - Website",
+      "socialMedia": "Social Media Sites",
+      "local-email": "Email - App on Computer",
+      "email": "Email - Websites",
+      "photo": "Photo Sharing",
+      "news": "News",
+      "shopping": "Shopping",
+      "multimedia": "Media",
+      "onlineFileDrives": "Online Drives",
+      "app": "Local Apps"
+    },
+    "description": "Click or Drag name (below) to add button to the bar",
+    "description-lite": "Click on a button name to configure and add to MorphicBar",
+    "heading": "Button Catalog",
+    "no-results": "No buttons where found while searching for '<code>{searchText}</code>'",
+    "search-result-summary": "No items found | 1 item found | {n} items found",
+    "search-results": "Search results",
+    "search_label": "Search the button catalog"
   },
   "ConfirmEmail": {
     "dialog_title": "Confirm your email",
@@ -24,10 +88,28 @@
     "select-instruction": "Select a bar to copy from:",
     "title": "Copy bar"
   },
+  "DesktopBarEditor": {
+    "customize-tip": "Tip: To customize a button on the bar, click on it.",
+    "empty-hint_lead": "This is an empty MorphicBar.",
+    "empty-hint_text": "Click or drag a button from the Button Catalog (on the right) to add it to the bar.",
+    "bar-error": {
+      "duplicated": "{item} is duplicated",
+      "duplicate-action": "{item1} performs the same action as {item2}",
+      "error": "{item1} performs the same action as {item2}"
+    }
+  },
   "EditorDetails": {
+    "bar-members": "{memberCount} members",
+    "bar_heading": "Bar",
     "copy-bar_button": "Copy bar from...",
+    "delete-bar_button": "delete",
+    "person": "Person",
+    "rename-dialog_prompt": "Enter the new name for the bar",
+    "rename-dialog_title": "Rename Bar",
+    "rename-bar_button": "rename",
     "revert-bar_button": "Revert to user's current bar",
     "save-bar_button": "Save bar",
+    "shared-bar": "Shared bar",
     "try-it_button": "Try it"
   },
   "General": {
@@ -77,6 +159,60 @@
     "new-bar_button_aria-label": "Add a new bar for {name}"
   },
   "BillingDetails": {
+    "CouponDialog": {
+      "apply_button": "Apply coupon",
+      "clear_button": "clear coupon",
+      "coupon-applied": "Coupon applied",
+      "coupon-not-applied": "You've entered a coupon, but have not applied it.",
+      "coupon-not-applied_title": "Coupon not applied",
+      "coupon_label": "Coupon Code",
+      "payment_radio": {
+        "free": "{price_text}",
+        "month": "{price_text} per month monthly subscription",
+        "year": "{price_text} per year yearly subscription"
+      },
+      "radio_description": {
+        "free": "Free",
+        "month": "Renews automatically every month until cancelled",
+        "year": "Renews automatically every year until cancelled"
+      },
+      "skip_button": "Skip"
+    },
+    "add-card_button": "Add Card",
+    "add-more": "If you want to add more people, change your subscription below.",
+    "back_link": "Back to Morphic Account Settings",
+    "basic-features": "(Basic features only)",
+    "basic-features_button": "Basic features only",
+    "basic-morphic-bar": "Use the Basic MorphicBar (no custom MorphicBars)",
+    "change-card_button": "Change Card",
+    "change-subscription_header": "Change your Morphic Subscription",
+    "coupon-error": {
+      "unknown": "Not a valid coupon",
+      "expired": "Coupon expired",
+      "inactive": "Coupon is no longer valid",
+      "invalid_email": "Coupon is not valid for your email address",
+      "wrong_plan": "Coupon is not valid for this plan"
+    },
+    "coupon-used": "Coupon used:",
+    "current-subscription_title": "Current subscription for {name}",
+    "custom-morphic-bars": "Make and use custom MorphicBars for yourself",
+    "free": "Free!",
+    "free-forever": "Free forever",
+    "free-months": "Free for {duration_months} months",
+    "free-year": "Free for one year",
+    "morphic": "Morphic",
+    "morphic-bars-for-others": "Make up to 5 MorphicBars each for up to {member_limit} other people",
+    "morphic-plus": "Morphic Plus",
+    "morphic-plus-number_button": "Morphic Plus {member_limit}",
+    "no-payment-method": "No credit card on file",
+    "number-of-people": "Number of people you have added:",
+    "number-of-people_value": "{member_count} (out of {member_limit} maximum allowed on this subscription)",
+    "or": "or",
+    "payment-monthly": "{monthly_price_text} per month ({annual_price_text} over 12 months)",
+    "payment-time": "| {price_text} per month |  {price_text} every {n} months",
+    "payment-yearly": "{price_text} (12 month) subscription",
+    "subscription-type": "Subscription type: {name}",
+    "transfer-settings": "Transfer your AT settings to any computer with Morphic on it"
   },
   "BlockLoginRegister": {
   },
@@ -106,11 +242,39 @@
     "sign-in-register_link": "Sign up for a new Morphic account with a different email",
     "sign-in_button": "Sign in"
   },
+  "LiteBarEditor": {
+    "bar_header": "Buttons on the Bar",
+    "customize-tip": "Tip: To customize a button on the bar, click on it.",
+    "add-button_button": "Add a button"
+  },
   "MemberDetails": {
     "bar-unused": "This bar has no members using it.",
     "delete-member_button": "Delete member",
     "re-invite_button": "Send a new invitation",
     "invite_button": "Send an invitation"
+  },
+  "MorhpicBarEditor": {
+    "saved-dialog": {
+      "details": "It will show up automatically on the computer soon. Users may need to open Morphic and switch to this MorphicBar to see it.",
+      "lead": "This MorphicBar has been saved.",
+      "title": "MorphicBar Saved"
+    },
+    "saved-uninvited-dialog": {
+      "invite-later_button": "Invite later",
+      "invite_button": "Invite now",
+      "p1": "This MorphicBar has been saved.",
+      "p2": "Now that the bar has been saved, it is ready for the person to start using it.",
+      "p3": "If you are ready for the person to use it, you can invite the following person to download, install, and sign\n        into Morphic, which will get this bar on the person's computer:",
+      "title": "MorphicBar Saved"
+    },
+    "unsaved-dialog": {
+      "cancel_button": "@:(General.cancel_button)",
+      "continue_button": "Continue, without saving",
+      "p1": "You have made some changes to this bar, but they are not saved yet.",
+      "p2": "If you leave now, the recent modifications will be lost.",
+      "save_button": "Save",
+      "title": "Unsaved Changes"
+    }
   },
   "NewMember": {
       "title": "Add a person"
@@ -256,6 +420,8 @@
     "settings_tooltip": "Settings for {name}"
   },
   "MorphicBarEditor": {
+    "back_link": "Switch Bar or Person",
+    "confirm-revert": "Are you sure you want reload last saved version of the bar? This means you will lose all unsaved changes!"
   },
   "MorphicBarPreconfigured": {
   },
@@ -395,6 +561,11 @@
     "success": "Registration completed successfully"
   },
   "ValidatedInput": {
+  },
+  "billing": {
+    "special-coupon_button": "Get coupon for free year",
+    "special-coupon_notice": "Option available today for a free year!",
+    "special-coupon_text": "Thanks to a generous donor, you can get one year of Morphic Plus 5 for free for a limited time."
   },
   "members": {
     "changeRole": {
