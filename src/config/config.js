@@ -36,7 +36,7 @@ const CONF = {
         PRODUCTION: false,
         RECAPTCHA_SITEKEY: "6LcDs3waAAAAAFGKPHxnNuPBO__5LqaEybnS6wn0",
         STRIPE_KEY: "pk_test_51Gvm7ZFNS9zyw2T7RQNPwn9ckpAntJZaJauCH3TAbi3uywRWuuZelwRWu1EzeAu0feIbDZNBWLaL7z6utN2syGDl00m1R2iOF9",
-        DISABLE_TRIAL: true,
+        DISABLE_TRIAL: false,
         MAX_BARS: 5,
         MAC_VERSION: 10.14,
         WIN_VERSION: 10
