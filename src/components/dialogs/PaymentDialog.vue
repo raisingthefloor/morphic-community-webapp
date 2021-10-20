@@ -119,9 +119,7 @@
 
 <script>
 
-import * as communityService from "@/services/communityService";
 import * as billingService from "@/services/billingService";
-import * as billing from "@/utils/billing";
 import ValidatedInput from "@/components/ValidatedInput";
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
@@ -132,7 +130,6 @@ import { countries } from "@/utils/countries";
 const stripeScriptId = "stripe-script";
 
 function cardValidation(value, vm) {
-    console.log("cv", value, this.card, vm);
     return !!this.validateCard(value);
 
 }
@@ -145,12 +142,6 @@ export default {
         return {
             /** @type {Boolean} */
             loaded: false,
-            /** @type {Community} */
-            community: null,
-            /** @type {BillingInfo} */
-            billingInfo: null,
-            /** @type {BillingPlan} */
-            plan: null,
             /** @type {stripe.Stripe} */
             stripe: null,
             /** @type {stripe.elements.Element} */
@@ -255,7 +246,6 @@ export default {
                 this.stripeElement.on("ready", () => this.$nextTick(resolve));
 
                 this.stripeElement.on("change", e => {
-                    console.log("change", e);
                     this.form.card = e.empty ? "" : Math.random();
                     this.cardValidationError = !e.complete;
                     if (this.cardValidationError) {
@@ -274,7 +264,6 @@ export default {
         },
 
         validateCard: function (v) {
-            console.log("v", v, this.cardValidationError);
             return !this.cardValidationError;
         },
 
@@ -286,7 +275,6 @@ export default {
         submitCard: async function () {
             delete this.form.card;
             const tokenResponse = await this.stripe.createToken(this.stripeElement, this.form);
-            console.log(tokenResponse);
             if (tokenResponse.error) {
                 return Promise.reject(tokenResponse.error);
             } else {
@@ -294,36 +282,6 @@ export default {
             }
 
             return true;
-        },
-
-        /**
-         * Loads the community details.
-         * @return {Promise} Resolves when complete.
-         */
-        loadCommunity: function () {
-            return communityService.getCommunity(this.communityId).then((community) => {
-                this.community = community.data;
-            });
-        },
-
-        /**
-         * Loads the community plan and billing details.
-         * @return {Promise} Resolves when complete.
-         */
-        loadBilling: function () {
-            let plans;
-            return Promise.all([
-                billing.getPlans().then(p => {
-                    plans = p;
-                }),
-                billingService.getBillingInfo(this.communityId).then((r) => {
-                    this.billingInfo = r.data;
-                })
-            ]).then(() => {
-                this.plan = (this.billingInfo && this.billingInfo.plan_id && plans)
-                    ? plans[this.billingInfo.plan_id]
-                    : null;
-            });
         }
     }
 };

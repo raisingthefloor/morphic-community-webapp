@@ -283,7 +283,6 @@ export default {
             showHideHintsText: "Hide hints",
             arrows: [],
             barsHintCss: {},
-            billingInfo: null,
             sidePanel: null,
             hintTimer: null,
 
@@ -471,11 +470,6 @@ export default {
                 clearTimeout(this.hintTimer);
                 this.hintTimer = null;
             }
-        },
-        loadBilling: function () {
-            return billingService.getBillingInfo(this.communityId).then((info) => {
-                this.billingInfo = info.data;
-            });
         },
         playVideo: function (video) {
             if (video.url) {
