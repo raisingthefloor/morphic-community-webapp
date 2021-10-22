@@ -1,5 +1,15 @@
 <template>
   <div>
+    <b-modal id="TrialMessage"
+             title="Free trial"
+             :visible="accountState.disabled && !trialMessageShown"
+             ok-title="Go to Billing Page"
+             cancel-title="Dismiss"
+             @hidden="trialMessageShown = true"
+             @ok="$router.push({name: 'BillingDetails'})">
+      <p>Thank you for trying out Morphic!</p>
+      <p>However, your free trial has now ended. Please head to the billing page to update your payment details.</p>
+    </b-modal>
     <div class="dashboardContent">
       <div class="sidePanelColumn">
         <SidePanel :community="community" :bars="barsList" :members="membersList" ref="SidePanel" @reload="loadData()" />
@@ -261,7 +271,6 @@ import {
     getCommunityBars,
     getCommunityMembers
 } from "@/services/communityService";
-import * as billingService from "@/services/billingService";
 import Tutorial from "@/components/dashboard/Tutorial";
 
 export default {
@@ -308,6 +317,14 @@ export default {
             /** @type {CommunityMember} */
             const currentMember = this.membersList.find(m => m.isCurrent);
             return currentMember?.bar_ids?.length;
+        },
+        trialMessageShown: {
+            get: function () {
+                return sessionStorage.getItem("dashboard-trial-message");
+            },
+            set: function (value) {
+                sessionStorage.setItem("dashboard-trial-message", value);
+            }
         }
     },
     mounted: function () {

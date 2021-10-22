@@ -17,6 +17,17 @@
       </template>
     </b-modal>
 
+    <b-modal id="TrialMessage"
+             title="Free trial"
+             :visible="accountState.disabled"
+             ok-title="Go to Billing Page"
+             cancel-title="Back to Dashboard"
+             @hide="$router.push({name: 'Dashboard'})"
+             @ok="$router.push({name: 'BillingDetails'})">
+      <p>Thank you for trying out Morphic!</p>
+      <p>However, your free trial has now ended. Please head to the billing page to update your payment details.</p>
+    </b-modal>
+
     <b-modal id="SaveConfirmation"
              title="MorphicBar Saved"
              ok-only
