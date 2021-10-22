@@ -185,15 +185,11 @@
       }
   },
   "EarlyReleaseProgram": {
-    "account-created": "Your account has been created.",
-    "already-joined": "You already have an account",
-    "create-dialog-ok_button": "Create Account",
-    "create-dialog-prompt": "What would you like to name this account?",
-    "create-dialog-text-hint": "Examples: Your name, organization name, other...",
-    "create-dialog-title": "Create your account",
     "heading": "Morphic Early Release Program",
-    "intro": "Welcome to Morphic.",
-    "join_link": "Click here to begin"
+    "intro": "The Early Release Program is no longer available.",
+    "home_link": "Morphic Home Page",
+    "dashboard_link": "Go to Dashboard",
+    "sign-in_link": "Sign in"
   },
   "EditButtonDialog": {
     "color": {

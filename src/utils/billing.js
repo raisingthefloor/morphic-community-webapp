@@ -147,32 +147,38 @@ const planExtras = {
 
     // old plans:
     "basic-1-month": {
-        name: "Standard Monthly",
+        name: "Early Release Program (Standard): Free forever",
+        erp: true,
         sizeName: "Standard",
         size: "basic"
     },
     "basic-6-month": {
-        name: "Standard Plan",
+        name: "Early Release Program (Standard): Free forever",
+        erp: true,
         sizeName: "Standard",
         size: "basic"
     },
     "midsize-1-month": {
-        name: "Medium Monthly",
+        name: "Early Release Program (Medium): Free forever",
+        erp: true,
         sizeName: "Medium",
         size: "medium"
     },
     "midsize-6-month": {
-        name: "Medium Plan",
+        name: "Early Release Program (Medium): Free forever",
+        erp: true,
         sizeName: "Medium",
         size: "medium"
     },
     "large-1-month": {
-        name: "Large Monthly",
+        name: "Early Release Program (Large): Free forever",
+        erp: true,
         sizeName: "Large",
         size: "large"
     },
     "large-6-month": {
-        name: "Large Plan",
+        name: "Early Release Program (Large): Free forever",
+        erp: true,
         sizeName: "Large",
         size: "large"
     },

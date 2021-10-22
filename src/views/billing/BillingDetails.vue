@@ -26,7 +26,7 @@
           <div>If you want to add more people, change your subscription below.</div>
         </div>
 
-        <div class="no-shade">
+        <div v-if="!plan.erp" class="no-shade">
           <div v-if="!billingInfo.card">No credit card on file</div>
 
           <div v-if="billingInfo.coupon">Coupon used: <b>{{billingInfo.coupon.code}}</b></div>
