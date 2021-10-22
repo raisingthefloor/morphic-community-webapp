@@ -2,6 +2,8 @@
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header ref="Header" />
     <div role="main" id="PageContent" class="main">
+      <b-alert :show="billingInfo && billingInfo.trial_end_days > 0" variant="warning" dismissible style="margin: auto">You have {{ billingInfo && billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
+      <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
       <router-view />
     </div>
     <div class="screenReader">
@@ -58,6 +60,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { loadLocaleMessagesAsync } from "@/i18n/i18n";
 import * as errorHandler from "@/utils/errorHandler";
+import { accountMixin } from "@/mixins/account";
 
 export default {
     name: "App",
@@ -66,6 +69,7 @@ export default {
         Header,
         Footer
     },
+    mixins: [accountMixin],
     data() {
         return {
             loaded: false,
@@ -101,6 +105,8 @@ export default {
         });
 
         errorHandler.useErrorHandler(this.showError);
+
+        this.loadBilling().then(() => this.$forceUpdate());
 
         this.detectMobile();
 

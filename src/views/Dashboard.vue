@@ -1,7 +1,5 @@
 <template>
   <div>
-      <b-alert :show="billingInfo && billingInfo.trial_end_days > 0" variant="warning" dismissible style="margin: auto">You have {{ billingInfo && billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
-      <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
     <div class="dashboardContent">
       <div class="sidePanelColumn">
         <SidePanel :community="community" :bars="barsList" :members="membersList" ref="SidePanel" @reload="loadData()" />
