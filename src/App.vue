@@ -2,8 +2,14 @@
   <b-container v-if="loaded" fluid id="PageContainer" :class="focusMode ? 'focusMode' : 'dashboardMode'">
     <Header ref="Header" />
     <div role="main" id="PageContent" class="main">
-      <b-alert :show="billingInfo && billingInfo.trial_end_days > 0" variant="warning" dismissible style="margin: auto">You have {{ billingInfo && billingInfo.trial_end_days }} days left of your free trial. <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
-      <b-alert :show="billingInfo && billingInfo.trial_end_days < 0" variant="danger"  style="margin: auto">Your free trial has expired <b-link to="/billing/plans">Click here to purchase</b-link></b-alert>
+      <b-alert v-if="accountState.disabled || accountState.warn"
+               :show="!bannerHidden"
+               :dismissible="accountState.warn"
+               @dismissed="bannerHidden = true"
+               :variant="accountState.disabled ? 'danger' : 'warning'">
+        {{accountState.message}}
+        <b-link :to="{name:'BillingDetails'}">{{ accountState.trial ? $t('App.trial-purchase_link') : $t('App.account-disabled-billing_link')}}</b-link>
+      </b-alert>
       <router-view />
     </div>
     <div class="screenReader">
@@ -93,6 +99,17 @@ export default {
                 isLite: this.isLite,
                 editorPage: this.$route.meta.isEditorPage
             };
+        },
+        bannerHidden: {
+            get: function () {
+                return !this.accountState.disabled && (sessionStorage.getItem("hide-banner") === this.accountState.reason);
+            },
+            set: function () {
+                if (!this.accountState.disabled) {
+                    // Hide the banner for the rest of the session
+                    sessionStorage.setItem("hide-banner", this.accountState.reason);
+                }
+            }
         }
     },
     mounted() {
@@ -162,6 +179,7 @@ export default {
         },
         "$route.path": function (newValue, oldValue) {
             this.newPage();
+            this.loadBilling();
         }
     },
     methods: {

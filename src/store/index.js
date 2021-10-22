@@ -25,7 +25,8 @@ export default new Vuex.Store({
         // The page which "/" redirects authenticated users to (when not the default)
         homePage: undefined,
         isMobile: false,
-        forceFocusMode: false
+        forceFocusMode: false,
+        accountState: {}
     },
     mutations: {
         auth_request(state) {
@@ -47,6 +48,7 @@ export default new Vuex.Store({
             state.token = "";
             state.userId = "";
             state.communityId = "";
+            state.accountState = {};
         },
         reset_password_email(state, email) {
             state.resetPasswordEmail = email;
@@ -88,6 +90,9 @@ export default new Vuex.Store({
         },
         forceFocusMode(state, flag) {
             state.forceFocusMode = flag;
+        },
+        accountState(state, accountState) {
+            state.accountState = accountState;
         }
     },
     actions: {
@@ -217,6 +222,9 @@ export default new Vuex.Store({
                 localStorage.removeItem("focusMode");
             }
             commit("forceFocusMode", !!flag);
+        },
+        accountState({ commit }, accountState) {
+            commit("accountState", accountState);
         }
     },
     getters: {
@@ -235,6 +243,8 @@ export default new Vuex.Store({
         beforeLoginPage: state => state.beforeLoginPage,
         homePage: state => state.homePage,
         isMobile: state => state.isMobile,
-        forceFocusMode: state => state.forceFocusMode
+        forceFocusMode: state => state.forceFocusMode,
+        /** @type {AccountState} */
+        accountState: state => state.accountState
     }
 });

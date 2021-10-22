@@ -317,7 +317,6 @@ export default {
         this.$nextTick(function () {
             window.addEventListener("resize", function () { that.$forceUpdate(); });
         });
-        this.loadBilling();
     },
     beforeDestroy: function () {
         this.cleanUpArrows();

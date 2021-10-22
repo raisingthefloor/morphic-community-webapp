@@ -304,6 +304,8 @@ Vue.mixin({
         hasAccount: function () { return this.$store.getters.hasAccount; },
         communityId: function () { return this.$store.getters.communityId; },
         userId: function () { return this.$store.getters.userId; },
+        /** @return {AccountState} The account state. */
+        accountState: function () { return this.$store.getters.accountState; },
 
         /**
          * Determines if the page is currently in focused mode.

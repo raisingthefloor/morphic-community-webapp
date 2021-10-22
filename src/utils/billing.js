@@ -77,6 +77,16 @@ import * as billingService from "@/services/billingService";
  * @property {Boolean} active
  */
 
+/**
+ * @typedef {Object} AccountState State of the account.
+ * @property {Boolean} disabled The account is disabled due to billing.
+ * @property {Boolean} warn The account will soon be disabled.
+ * @property {Boolean} trial Currently in a free trial.
+ * @property {Boolean} basic Basic subscription.
+ * @property {String} message The message to display (site-wide banner).
+ * @property {String} reason
+ */
+
 
 
 export const PaymentStatus = {

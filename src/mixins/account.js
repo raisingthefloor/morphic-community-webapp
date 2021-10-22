@@ -140,6 +140,7 @@ export const accountMixin = {
                 planPromise,
                 billingService.getBillingInfo(this.communityId).then((r) => {
                     this.billingInfo = r.data;
+                    return this.getAccountState(this.billingInfo);
                 })
             ]).then(async () => {
                 this.plan = (this.billingInfo && this.billingInfo.plan_id && this.allPlans)
@@ -152,7 +153,38 @@ export const accountMixin = {
                     }
                 }
             }) : planPromise;
-        }
+        },
 
+        /**
+         * Gets the state of the account.
+         * @param {BillingInfo} billingInfo Billing info
+         * @return {AccountState} The account state
+         */
+        getAccountState: async function (billingInfo) {
+            /** @type {AccountState} */
+            const accountState = {
+                plan_id: billingInfo.plan_id,
+                billingInfo
+            };
+
+            if (billingInfo.plan_id === "basic") {
+                accountState.basic = true;
+            } else if (!billingInfo.card && !billingInfo.coupon?.active) {
+                accountState.trial = true;
+
+                if (billingInfo.trial_end_days >= 0) {
+                    accountState.message = this.$tc("account.state-message.trial", billingInfo.trial_end_days);
+                    accountState.warn = true;
+                    accountState.reason = "trial";
+                } else {
+                    accountState.message = this.$t("account.state-message.trial-end");
+                    accountState.disabled = true;
+                    accountState.reason = "trial-ended";
+                }
+            }
+
+            await this.$store.dispatch("accountState", accountState);
+            return accountState;
+        }
     }
 };

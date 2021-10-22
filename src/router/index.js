@@ -48,7 +48,7 @@ Vue.use(VueRouter);
  * @property {Boolean} noAccount true if an authenticated user with no account can access.
  * @property {Array<String>} roles Array of roles which can access the page.
  * @property {Boolean} redirect true if this is not a real page, just used to redirect to another (hides routing errors).
- * @property {"manager"|"member"} userHome The role for which this page is the home page.
+ * @property {Array<String>} userHome Array of roles for which this page is the home page.
  * @property {Boolean} home true if this the home page ("/").
  */
 
@@ -163,7 +163,7 @@ const routes = [
         meta: {
             title: "Morphic Account Settings",
             noAccount: true,
-            userHome: "member"
+            userHome: ["member", "basic"]
         }
     },
     {
@@ -204,7 +204,7 @@ const routes = [
             title: "Home: MorphicBar Customization Tool",
             hideHeading: true,
             roles: ["manager"],
-            userHome: "manager"
+            userHome: ["manager"]
         }
     },
     {
@@ -331,7 +331,8 @@ function getUserHomeRoute() {
     if (store.getters.homePage) {
         route = store.getters.homePage;
     } else {
-        route = routes.find(r => r.meta.userHome === store.getters.role);
+        const role = store.getters.accountState.basic ? "basic" : store.getters.role;
+        route = routes.find(r => r.meta.userHome && r.meta.userHome.includes(role));
     }
 
     return route;
@@ -391,6 +392,7 @@ router.beforeEach((to, from, next) => {
  */
 function checkPageAccess(meta, to) {
     let result;
+    const role = store.getters.accountState.basic ? "basic" : store.getters.role;
     if (!meta.public && !store.getters.isLoggedIn) {
         // User needs to be authenticated for this page.
         store.commit("beforeLoginPage", to.fullPath);
@@ -401,7 +403,7 @@ function checkPageAccess(meta, to) {
     } else if (!meta.public && !meta.noAccount && !store.getters.hasAccount) {
         // only account holders can access this page
         result = false;
-    } else if (meta.roles && !meta.roles.includes(store.getters.role)) {
+    } else if (meta.roles && !meta.roles.includes(role)) {
         // role is not in the list of accepted roles.
         result = false;
     }

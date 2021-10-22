@@ -63,6 +63,8 @@
     }
   },
   "App": {
+    "account-disabled-billing_link": "Go to the Billing Page",
+    "trial-purchase_link": "Click here to purchase"
   },
   "BarItemFields": {
   },
@@ -395,6 +397,12 @@
     "success": "Registration completed successfully"
   },
   "ValidatedInput": {
+  },
+  "account": {
+    "state-message": {
+      "trial": "Your free trial will end today. | Your free trial will end tomorrow. | You have {n} days left of your free trial.",
+      "trial-end": "Your free trial has ended."
+    }
   },
   "members": {
     "changeRole": {
