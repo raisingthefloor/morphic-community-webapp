@@ -30,6 +30,7 @@ import ConfirmEmail from "@/views/email/ConfirmEmail.vue";
 import AcceptInvite from "@/views/email/AcceptInvite.vue";
 
 import Download from "@/views/Download";
+import LoggedIn from "@/views/LoggedIn";
 
 Vue.use(VueRouter);
 
@@ -78,7 +79,17 @@ const routes = [
         meta: {
             title: "Sign in to Morphic",
             noHeading: true,
-            public: "only"
+            public: "only",
+            redirect: true
+        }
+    },
+    {
+        path: "/loggedin",
+        name: "LoggedIn",
+        component: LoggedIn,
+        meta: {
+            title: "Signing in to Morphic",
+            noHeading: true
         }
     },
     {
@@ -338,6 +349,22 @@ function getUserHomeRoute() {
     return route;
 }
 
+/**
+ * Determines if session initialisation is required.
+ * @return {Boolean} true if the session hasn't been initialised.
+ */
+function requiresInitialisation() {
+    let req;
+    if (store.getters.isLoggedIn) {
+        req = sessionStorage.getItem("init") !== store.getters.userId;
+    } else {
+        sessionStorage.removeItem("init");
+        req = false;
+    }
+
+    return req;
+}
+
 const homeRoute = {name: "Home"};
 
 router.beforeEach((to, from, next) => {
@@ -356,7 +383,9 @@ router.beforeEach((to, from, next) => {
 
     let redirect;
 
-    if (meta.home) {
+    if (requiresInitialisation() && to.name !== "LoggedIn") {
+        redirect = {name: "LoggedIn"};
+    } else if (meta.home) {
         // the home page, /
         if (store.getters.isLoggedIn) {
             if (store.getters.beforeLoginPage) {
