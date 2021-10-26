@@ -16,13 +16,24 @@ export default {
         messageId: String
     },
     async mounted() {
-
-        if (this.isLoggedIn) {
-            await this.loadBilling();
-            sessionStorage.setItem("init", this.userId);
+        const timeout = setTimeout(this.proceed, 3000);
+        try {
+            if (this.isLoggedIn) {
+                // pre-load the billing details, so the router knows about the account status.
+                await this.loadBilling(true);
+                sessionStorage.setItem("init", this.userId);
+            }
+        } finally {
+            clearTimeout(timeout);
+            await this.proceed();
         }
+    },
 
-        await this.$router.replace("/").catch(() => { });
+    methods: {
+        proceed: function () {
+            return this.$router.replace("/").catch(() => {});
+        }
     }
+
 };
 </script>

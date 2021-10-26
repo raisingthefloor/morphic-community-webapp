@@ -356,7 +356,7 @@ export default {
         loadData: async function () {
             this.loaded = false;
             await Promise.all([
-                this.loadBilling(),
+                this.loadBilling(true),
                 this.loadCommunity()
             ]);
 

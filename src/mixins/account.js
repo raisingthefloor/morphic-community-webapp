@@ -4,6 +4,13 @@ import * as billingService from "@/services/billingService";
 import * as userService from "@/services/userService";
 import * as billing from "@/utils/billing";
 
+const billingInfoCache = {
+    /** @type {Promise} */
+    loading: undefined,
+    /** @type {BillingInfo} */
+    data: undefined
+};
+
 /**
  * Mix-in used by the account and billing pages, for account management related things.
  * @type {Component}
@@ -59,7 +66,7 @@ export const accountMixin = {
             this.accountLoaded = false;
             return Promise.all([
                 this.loadUser(),
-                this.loadBilling(),
+                this.loadBilling(true),
                 this.loadCommunities().then(this.loadMember),
                 this.loadCommunity()
             ]).finally(() => {
@@ -128,18 +135,30 @@ export const accountMixin = {
 
         /**
          * Loads the community plan and billing details.
-         * @private
+         *
+         * Billing info can be loaded in multiple components on a page, so results are cached.
+         *
+         * @param {Boolean} force Always update from the service.
          * @return {Promise} Resolves when complete.
          */
-        loadBilling: function () {
+        loadBilling: function (force) {
+            // Return early if already loaded
+            if (billingInfoCache.loading) {
+                if (!force || !billingInfoCache.data) {
+                    return billingInfoCache.loading.then(() => {
+                        this.billingInfo = billingInfoCache.data;
+                    });
+                }
+            }
+
             const planPromise = billing.getPlans().then(p => {
                 this.allPlans = p;
             });
 
-            return this.isManager && this.hasAccount ? Promise.all([
+            billingInfoCache.loading = this.isManager && this.hasAccount ? Promise.all([
                 planPromise,
                 billingService.getBillingInfo(this.communityId).then((r) => {
-                    this.billingInfo = r.data;
+                    this.billingInfo = (billingInfoCache.data = r.data);
                     return this.getAccountState(this.billingInfo);
                 })
             ]).then(async () => {
@@ -153,6 +172,8 @@ export const accountMixin = {
                     }
                 }
             }) : planPromise;
+
+            return billingInfoCache.loading;
         },
 
         /**
