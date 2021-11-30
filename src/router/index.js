@@ -30,6 +30,7 @@ import ConfirmEmail from "@/views/email/ConfirmEmail.vue";
 import AcceptInvite from "@/views/email/AcceptInvite.vue";
 
 import Download from "@/views/Download";
+import AuthLanding from "@/views/AuthLanding";
 
 Vue.use(VueRouter);
 
@@ -79,6 +80,18 @@ const routes = [
             title: "Sign in to Morphic",
             noHeading: true,
             public: "only"
+        }
+    },
+    {
+        path: "/auth/login/:authUserId/:token",
+        name: "Auth",
+        component: AuthLanding,
+        props: true,
+        meta: {
+            title: "Signing in to Morphic",
+            noHeading: true,
+            public: true,
+            redirect: true
         }
     },
     {
