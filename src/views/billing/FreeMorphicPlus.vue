@@ -87,7 +87,7 @@ export default {
                 this.showMessage(this.$t("FreeMorphicPlus.account-created"));
             }
 
-            this.$router.push("/#/register");
+            this.$router.push("/");
 
         }
     }
