@@ -193,6 +193,17 @@
     "intro": "Welcome to Morphic.",
     "join_link": "Click here to begin"
   },
+  "FreeMorphicPlus": {
+    "account-created": "Your account has been created.",
+    "already-joined": "You already have an account",
+    "create-dialog-ok_button": "Create Account",
+    "create-dialog-prompt": "What would you like to name this account?",
+    "create-dialog-text-hint": "Examples: Your name, organization name, other...",
+    "create-dialog-title": "Create your account",
+    "heading": "Morphic Plus Sign-up",
+    "intro": "Get your free Morphic Plus subscription now.",
+    "join_link": "Click here to begin"
+  },
   "EditButtonDialog": {
     "color": {
       "teal": "Teal",
