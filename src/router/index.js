@@ -17,6 +17,7 @@ import AccountSettings from "@/views/account/AccountSettings.vue";
 import NoSubscription from "@/views/billing/NoSubscription.vue";
 
 import EarlyReleaseProgram from "@/views/billing/EarlyReleaseProgram.vue";
+import FreeMorphicPlus from "@/views/billing/FreeMorphicPlus.vue";
 
 // Dashboard Components
 import Dashboard from "@/views/Dashboard.vue";
@@ -153,6 +154,25 @@ const routes = [
         component: EarlyReleaseProgram,
         meta: {
             title: "MorphicBar Early Release Program",
+            noAccount: true
+        }
+    },
+    {
+        path: "/free-morphic-plus",
+        name: "FreeMorphicPlus",
+        component: FreeMorphicPlus,
+        meta: {
+            title: "Free Morphic Plus Subscription",
+            showHeading: true,
+            public: true
+        }
+    },
+    {
+        path: "/free-morphic-plus/join",
+        name: "FreeMorphicPlus.Join",
+        component: FreeMorphicPlus,
+        meta: {
+            title: "Free Morphic Plus Subscription",
             noAccount: true
         }
     },
