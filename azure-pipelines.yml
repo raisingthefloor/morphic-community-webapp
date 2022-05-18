@@ -55,15 +55,6 @@ stages:
       - job: build_and_publish_image
         condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/develop'), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
         steps: 
-          - task: UsePythonVersion@0
-            displayName: Use Python 3.x
-            inputs:
-              versionSpec: '3.x'
-              addToPath: true
-          - task: NodeTool@0
-            displayName: Use Node 14.x
-            inputs:
-              versionSpec: '14.x'
           - task: Docker@2
             displayName: Login to docker hub
             inputs:
