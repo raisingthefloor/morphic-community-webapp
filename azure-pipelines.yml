@@ -60,6 +60,10 @@ stages:
             inputs:
               versionSpec: '3.x'
               addToPath: true
+          - task: NodeTool@0
+            displayName: Use Node 14.x
+            inputs:
+              versionSpec: '14.x'
           - task: Docker@2
             displayName: Login to docker hub
             inputs:
