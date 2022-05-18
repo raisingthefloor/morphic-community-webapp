@@ -48,7 +48,7 @@ export default {
         if (this.$route.name === "FreeMorphicPlus.Join") {
             this.start();
         } else {
-            this.$store.commit("beforeLoginPage", "/free-morphic-plus/join");
+            this.$store.commit("beforeLoginPage", { name: "FreeMorphicPlus.Join" });
             this.$router.push({name: "Register"});
         }
     },
@@ -63,7 +63,7 @@ export default {
                 }
             } else {
                 // Route points to this page, but enforces login.
-                this.$store.commit("beforeLoginPage", "/free-morphic-plus/join");
+                this.$store.commit("beforeLoginPage", { name: "FreeMorphicPlus.Join" });
                 this.$router.push({name: "Register"});
             }
         },
