@@ -45,7 +45,7 @@ export default {
         };
     },
     mounted() {
-        if (this.$route.name === "FreeMorphicPlus.Join") {
+        if (this.isLoggedIn || this.$route.name === "FreeMorphicPlus.Join") {
             this.start();
         } else {
             this.$store.commit("beforeLoginPage", { name: "FreeMorphicPlus.Join" });
