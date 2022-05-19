@@ -168,15 +168,6 @@ const routes = [
         }
     },
     {
-        path: "/free-morphic-plus/join",
-        name: "FreeMorphicPlus.Join",
-        component: FreeMorphicPlus,
-        meta: {
-            title: "Free Morphic Plus Subscription",
-            noAccount: true
-        }
-    },
-    {
         path: "/account",
         name: "AccountSettings",
         component: AccountSettings,

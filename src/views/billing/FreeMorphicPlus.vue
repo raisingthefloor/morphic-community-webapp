@@ -45,22 +45,20 @@ export default {
         };
     },
     mounted() {
-        if (this.$route.name === "FreeMorphicPlus.Join") {
+        if (this.isLoggedIn) {
             this.start();
+        } else {
+            this.$store.commit("beforeLoginPage", { name: "FreeMorphicPlus" });
+            this.$router.push({name: "Register"});
         }
     },
     methods: {
         start() {
-            if (this.isLoggedIn) {
-                if (this.hasAccount) {
-                    this.showMessage(this.$t("FreeMorphicPlus.already-joined"));
-                    this.$router.push("/");
-                } else {
-                    this.$bvModal.show("accountNameDialog");
-                }
+            if (this.hasAccount) {
+                this.showMessage(this.$t("FreeMorphicPlus.already-joined"));
+                this.$router.push("/");
             } else {
-                // Route points to this page, but enforces login.
-                this.$router.push({name: "FreeMorphicPlus.Join"});
+                this.$bvModal.show("accountNameDialog");
             }
         },
 
