@@ -1255,6 +1255,26 @@ export const allButtons = {
             description: "Opens the USA Today home page."
         }
     },
+    usb_open_eject: {
+        kind: "action",
+        is_primary: true,
+        data: {
+            visual: {
+                type: "multiButton",
+                buttons: [
+                    "Open",
+                    "Eject"
+                ]
+            }
+        },
+        configuration: {
+            subkind: "action",
+            label: "USB Drives (All)",
+            description: "Opens or ejects USB drives",
+            identifier: "usbopeneject",
+            color: "blue"
+        }  
+    },    
     vimeo: {
         kind: "link",
         is_primary: false,
