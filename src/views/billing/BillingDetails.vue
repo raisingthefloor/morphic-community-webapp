@@ -23,10 +23,10 @@
             <div class="font-weight-bold">{{community.member_count}} (out of {{community.member_limit}} maximum allowed on this subscription)</div>
           </div>
 
-          <div>If you want to add more people, change your subscription below.</div>
+          <!-- <div>If you want to add more people, change your subscription below.</div> -->
         </div>
 
-        <div class="no-shade">
+        <!-- <div class="no-shade">
           <div v-if="!billingInfo.card">No credit card on file</div>
 
           <div v-if="billingInfo.coupon">Coupon used: <b>{{billingInfo.coupon.code}}</b></div>
@@ -44,12 +44,12 @@
           </b-button>
 
           <PaymentDialog ref="PaymentDialog" id="PaymentDialog"/>
-        </div>
+        </div> -->
       </template>
     </AccountSettingItem>
 
 
-    <div>
+    <!-- <div>
       <h2>Change your Morphic Subscription</h2>
 
       <div class="plans" v-if="planList">
@@ -140,7 +140,7 @@
       </b-modal>
 
 
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -239,7 +239,6 @@
 
 <script>
 
-import PaymentDialog from "@/components/dialogs/PaymentDialog";
 import { accountMixin } from "@/mixins/account";
 import AccountSettingItem from "@/components/AccountSettingItem";
 import * as billingService from "@/services/billingService";
@@ -260,7 +259,7 @@ const couponErrors = {
 
 export default {
     name: "BillingDetails",
-    components: {AccountSettingItem, PaymentDialog},
+    components: {AccountSettingItem},
     mixins: [accountMixin],
     data() {
         return {

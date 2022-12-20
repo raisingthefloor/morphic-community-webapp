@@ -63,7 +63,7 @@
         </div>
 
 
-        <b-button variant="invert-dark" :to="{name:'BillingDetails'}">Manage subscription and billing</b-button>
+        <!-- <b-button variant="invert-dark" :to="{name:'BillingDetails'}">Manage subscription and billing</b-button> -->
 
         <TextInputDialog id="AccountNameDialog"
                          title="Rename Account"
@@ -97,9 +97,18 @@
 
                 <b-button v-b-modal="'AccountNameDialog'" variant="morphic-green">Sign up for a Morphic Plus subscription</b-button>
 
-                <div v-if="specialCoupon" class="font-weight-bold text-morphic-green m-2">
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+
+              <div v-if="specialCoupon" class="font-weight-bold text-morphic-green text-center m-2">
                   {{specialCoupon.notice}}
-                </div>
+              </div>
+            </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
 
                 <TextInputDialog v-if="isLoggedIn"
                                  id="AccountNameDialog"
