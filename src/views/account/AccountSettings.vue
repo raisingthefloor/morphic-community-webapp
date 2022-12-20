@@ -102,7 +102,6 @@
             <b-row>
               <b-col>
 
-              
               <div v-if="specialCoupon" class="font-weight-bold text-morphic-green text-center m-2">
                   {{specialCoupon.notice}}
               </div>

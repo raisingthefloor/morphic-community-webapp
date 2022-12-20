@@ -62,7 +62,7 @@ export default {
                     this.$bvModal.show("accountNameDialog");
                 }
             } else {
-                // failsafe, in case the user clicked the "Get Started" link before the mounted() function could redirect them to the registration page	    
+                // failsafe, in case the user clicked the "Get Started" link before the mounted() function could redirect them to the registration page
                 this.$store.commit("beforeLoginPage", { name: "FreeMorphicPlus" });
                 this.$router.push({name: "Register"});
             }

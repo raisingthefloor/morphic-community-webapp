@@ -260,7 +260,7 @@ const couponErrors = {
 
 export default {
     name: "BillingDetails",
-    components: {AccountSettingItem, PaymentDialog},
+    components: {AccountSettingItem},
     mixins: [accountMixin],
     data() {
         return {
