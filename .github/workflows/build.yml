@@ -69,9 +69,6 @@ jobs:
                 github.issues.createComment(newComment);
             }
 
-      - name: Uploading build
-        run: curl -v -Fbuild=@web-app.tar.gz https://build.morphic.ste-test.net/build/upload/${{ github.event.number }}
-
       - name: Archiving prod
         uses: actions/upload-artifact@v2
         with:
