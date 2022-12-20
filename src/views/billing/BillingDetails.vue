@@ -239,7 +239,6 @@
 
 <script>
 
-import PaymentDialog from "@/components/dialogs/PaymentDialog";
 import { accountMixin } from "@/mixins/account";
 import AccountSettingItem from "@/components/AccountSettingItem";
 import * as billingService from "@/services/billingService";
