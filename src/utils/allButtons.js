@@ -1266,6 +1266,23 @@ export const allButtons = {
             url: "https://vimeo.com/"
         }
     },
+    voice_control: {
+        kind: "action",
+        is_primary: true,
+        data: {
+            visual: {
+                type: "",
+                buttons: ""
+            }
+        },
+        configuration: {
+            subkind: "action",
+            label: "Voice Control",
+            description: "Interact with your computer using voice.",
+            identifier: "voice-control",
+            color: "blue"
+        }
+    },
     volume: {
         kind: "action",
         is_primary: true,
