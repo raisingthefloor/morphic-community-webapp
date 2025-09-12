@@ -19,14 +19,12 @@
 </template>
 
 <script>
-// import BlockLoginRegister from "@/components/BlockLoginRegister";
 import { MESSAGES } from "@/utils/constants";
 import UserLogin from "@/components/UserLogin";
 
 export default {
     name: "Home",
     components: {
-        // BlockLoginRegister
         UserLogin
     },
     data() {

@@ -8,9 +8,6 @@ import Registration from "@/views/Registration";
 
 import ResetPassword from "@/views/ResetPassword.vue";
 
-import MyCommunity from "@/views/MyCommunity.vue";
-import MyCommunities from "@/views/MyCommunities.vue";
-
 import Plans from "@/views/billing/Plans.vue";
 import BillingDetails from "@/views/billing/BillingDetails.vue";
 import AccountSettings from "@/views/account/AccountSettings.vue";
@@ -21,10 +18,8 @@ import FreeMorphicPlus from "@/views/billing/FreeMorphicPlus.vue";
 
 // Dashboard Components
 import Dashboard from "@/views/Dashboard.vue";
-import MorphicBarPreconfigured from "@/views/MorphicBarPreconfigured.vue";
 import MorphicBarEditor from "@/views/MorphicBarEditor.vue";
 
-import RegistrationInvite from "@/views/RegistrationInvite";
 import ConfirmEmail from "@/views/email/ConfirmEmail.vue";
 
 // Email call-backs
@@ -80,33 +75,6 @@ const routes = [
             title: "Sign in to Morphic",
             noHeading: true,
             public: "only"
-        }
-    },
-    {
-        path: "/session-timed-out",
-        name: "Home-session-timed-out",
-        component: Home,
-        props: { messageId: "sessionTimedOut" },
-        meta: {
-            title: "Home",
-            public: "only"
-        }
-    },
-    {
-        path: "/my-community",
-        name: "MyCommunity",
-        component: MyCommunity,
-        meta: {
-            title: "My Community",
-            showHeading: true
-        }
-    },
-    {
-        path: "/my-communities",
-        name: "MyCommunities",
-        component: MyCommunities,
-        meta: {
-            title: "My Groups"
         }
     },
     {
@@ -219,15 +187,6 @@ const routes = [
         }
     },
     {
-        path: "/dashboard/morphicbar-preconfigured",
-        name: "MorphicBar Preconfigured",
-        component: MorphicBarPreconfigured,
-        meta: {
-            title: "Pick a bar",
-            roles: ["manager"]
-        }
-    },
-    {
         path: "/dashboard/morphicbar-editor/",
         name: "MorphicBar Editor",
         component: MorphicBarEditor,
@@ -243,15 +202,6 @@ const routes = [
         path: "/register",
         name: "Register",
         component: Registration,
-        meta: {
-            title: "Register",
-            public: "only"
-        }
-    },
-    {
-        path: "/register/invite",
-        name: "Register",
-        component: RegistrationInvite,
         meta: {
             title: "Register",
             public: "only"
