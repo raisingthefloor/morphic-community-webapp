@@ -3,22 +3,126 @@ import Vuex from "vuex";
 import { HTTP } from "@/services/index";
 import { login, register, resetPassword, logout } from "@/services/userService";
 import { createNewCommunity, getUserCommunities } from "@/services/communityService";
+import { CONFIG } from "@/config/config";
+import Cookies from "js-cookie";
 
 Vue.use(Vuex);
+
+/**
+ * Implementation of a Storage, to store session data in sessionStorage and backed by session cookies so it can be
+ * shared with other instances.
+ *
+ * This combination is used instead of localStorage, so data can be shared between other tabs and also get cleared when
+ * the user leaves the site.
+ *
+ * @type {Storage}
+ */
+const sharedStorage = {
+    values: {},
+
+    getItem: function (key) {
+        let value = sessionStorage.getItem(key);
+        if (value === null) {
+            value = Cookies.get(`session-${key}`);
+            if (value !== null && value !== undefined) {
+                sessionStorage.setItem(key, value);
+            }
+        }
+        return value;
+    },
+
+    setItem: function (key, value) {
+        const changed = sessionStorage.getItem(key) !== value;
+        Cookies.set(`session-${key}`, value, {expires: 1 / (24 * 60) * CONFIG.SESSION_DATA_EXPIRY});
+        if (changed) {
+            this.values[key] = value;
+            sessionStorage.setItem(key, value);
+            this.changed(key);
+        }
+    },
+
+    removeItem: function (key) {
+        const changed = !!sessionStorage.getItem(key);
+        sessionStorage.removeItem(key);
+        Cookies.remove(`session-${key}`);
+        if (changed) {
+            this.changed(key);
+        }
+    },
+
+    clear() {
+        Object.keys(this.values).forEach(key => Cookies.remove(`session-${key}`));
+        sessionStorage.clear();
+    },
+
+    key(index) {
+        return sessionStorage.key(index);
+    },
+
+    get length() {
+        return sessionStorage.length;
+    },
+
+    /**
+     * Called when a value has been changed. For interesting keys (like the token), an entry in localStorage is set to
+     * other tabs can act upon the `storage` event.
+     * @param {String} key The name of the key that was updated.
+     */
+    changed: function (key) {
+        // For important fields, which can affect what the user can access, let the other tabs know about the change.
+        if (["token", "userId", "role", "communityId"].includes(key)) {
+            localStorage.setItem("reload", key);
+            localStorage.removeItem("reload");
+        }
+    },
+
+    /**
+     * Continuously increase the expiry of the session cookies while the page is still open.
+     */
+    keepAlive: function () {
+        Object.entries(this.values).forEach(([key, value]) => this.setItem(key, value));
+        setTimeout(() => this.keepAlive(), 200000);
+    }
+};
+
+sharedStorage.keepAlive();
+
+// Refresh when some things have changed in another tab.
+let updateRequired;
+window.addEventListener("storage", (e) => {
+    if (e.key === "reload" && e.newValue) {
+        sessionStorage.removeItem(e.newValue);
+        // Reload hidden tabs when they are visible again.
+        if (document.visibilityState === "hidden") {
+            updateRequired = true;
+        } else {
+            location.reload();
+        }
+    }
+});
+
+// When the tab becomes visible, reload the page if it's required.
+window.addEventListener("visibilitychange", (e) => {
+    if (updateRequired && document.visibilityState !== "hidden") {
+        updateRequired = false;
+        location.reload();
+    }
+});
+
 
 export default new Vuex.Store({
     state: {
         status: "",
-        token: localStorage.getItem("token") || "",
-        userId: localStorage.getItem("userId") || "",
-        communityId: localStorage.getItem("communityId") || "",
-        role: localStorage.getItem("role") || "",
-        email: localStorage.getItem("email") || "",
+        token: sharedStorage.getItem("token") || "",
+        userId: sharedStorage.getItem("userId") || "",
+        communityId: sharedStorage.getItem("communityId") || "",
+        role: sharedStorage.getItem("role") || "",
+        email: sharedStorage.getItem("email") || "",
         user: {},
         community: {},
         errorMessage: {},
         unsavedChanges: false,
-        unsavedBar: JSON.parse(localStorage.getItem("unsavedBar") || "null"),
+        unsavedBar: JSON.parse(sharedStorage.getItem("unsavedBar") || "null"),
         resetPasswordEmail: "",
         // The url the visitor used, before authenticating - redirect to this after login completes.
         beforeLoginPage: undefined,
@@ -69,7 +173,7 @@ export default new Vuex.Store({
         },
         role(state, role) {
             state.role = role;
-            localStorage.setItem("role", role);
+            sharedStorage.setItem("role", role);
         },
         unsavedChanges(state, isChanged) {
             state.unsavedChanges = isChanged;
@@ -119,13 +223,13 @@ export default new Vuex.Store({
                 };
             } catch (err) {
                 commit("auth_error", err);
-                localStorage.removeItem("token");
+                sharedStorage.removeItem("token");
                 throw err;
             }
 
-            localStorage.setItem("token", userData.token);
-            localStorage.setItem("userId", userData.user.id);
-            localStorage.setItem("email", user.email);
+            sharedStorage.setItem("token", userData.token);
+            sharedStorage.setItem("userId", userData.user.id);
+            sharedStorage.setItem("email", user.email);
             HTTP.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
 
             commit("auth_success", userData);
@@ -138,11 +242,11 @@ export default new Vuex.Store({
         logout({ commit, state }) {
             return logout(state.userId).finally(() => {
                 commit("logout");
-                localStorage.removeItem("token");
-                localStorage.removeItem("userId");
-                localStorage.removeItem("communityId");
-                localStorage.removeItem("role");
-                localStorage.removeItem("email");
+                sharedStorage.removeItem("token");
+                sharedStorage.removeItem("userId");
+                sharedStorage.removeItem("communityId");
+                sharedStorage.removeItem("role");
+                sharedStorage.removeItem("email");
                 delete HTTP.defaults.headers.common.Authorization;
             });
         },
@@ -179,7 +283,7 @@ export default new Vuex.Store({
                     .then(resp => {
                         const communities = resp.data.communities;
                         if (communities.length !== 0) {
-                            localStorage.setItem("communityId", communities[0].id);
+                            sharedStorage.setItem("communityId", communities[0].id);
                             commit("community", communities[0].id);
                             commit("role", communities[0].role);
                             resolve(communities);
@@ -194,7 +298,7 @@ export default new Vuex.Store({
         },
         activeCommunity({ commit }, communityId) {
             return new Promise((resolve, reject) => {
-                localStorage.setItem("communityId", communityId);
+                sharedStorage.setItem("communityId", communityId);
                 commit("community", communityId);
                 resolve();
             });
@@ -204,17 +308,17 @@ export default new Vuex.Store({
         },
         unsavedBar({ commit }, barDetails) {
             if (barDetails) {
-                localStorage.setItem("unsavedBar", JSON.stringify(barDetails));
+                sharedStorage.setItem("unsavedBar", JSON.stringify(barDetails));
             } else {
-                localStorage.removeItem("unsavedBar");
+                sharedStorage.removeItem("unsavedBar");
             }
             commit("unsavedBar", barDetails);
         },
         forceFocusMode({ commit }, flag) {
             if (flag) {
-                localStorage.setItem("focusMode", true);
+                sharedStorage.setItem("focusMode", true);
             } else {
-                localStorage.removeItem("focusMode");
+                sharedStorage.removeItem("focusMode");
             }
             commit("forceFocusMode", !!flag);
         }

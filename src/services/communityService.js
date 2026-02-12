@@ -172,7 +172,7 @@ export function deleteCommunityBar(communityId, barId) {
  */
 export function getCommunityMembers(communityId) {
     return HTTP.get(`/v1/communities/${communityId}/members`).then((r) => {
-        var userId = localStorage.getItem("userId");
+        var userId = sessionStorage.getItem("userId");
         r.data.members.forEach(member => makeMember(member, userId));
         return r;
     }, {action: "get members"});
@@ -291,7 +291,7 @@ function storeBar(bar) {
  * @param {GUID} [currentUserId] The current user id
  */
 function makeMember(member, currentUserId) {
-    var userId = currentUserId || localStorage.getItem("userId");
+    var userId = currentUserId || sessionStorage.getItem("userId");
     const noName = "(no name)";
     member.isCurrent = userId && member.userId === userId;
 

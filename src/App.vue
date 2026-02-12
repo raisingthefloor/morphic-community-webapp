@@ -113,29 +113,6 @@ export default {
                 elem.setAttribute("role", "presentation");
             });
         });
-
-        // Refresh when some things have changed in another tab.
-        const watchKeys = ["token", "userId", "role", "communityId"];
-        let updateRequired;
-        window.addEventListener("storage", (e) => {
-            if (!e.key || watchKeys.includes(e.key)) {
-                if (this.$route.meta && !this.$route.meta.public) {
-                    if (document.visibilityState === "hidden") {
-                        updateRequired = true;
-                    } else {
-                        this.$router.go();
-                    }
-                }
-            }
-        });
-
-        window.addEventListener("visibilitychange", (e) => {
-            if (updateRequired && document.visibilityState !== "hidden") {
-                updateRequired = false;
-                this.$router.go();
-            }
-        });
-
     },
     watch: {
         bodyClasses: {

@@ -17,7 +17,7 @@ import "./styles/app.scss";
 
 import i18n from "./i18n/i18n";
 
-const token = localStorage.getItem("token");
+const token = sessionStorage.getItem("token");
 if (token) {
     HTTP.defaults.headers.common.Authorization = `Bearer ${token}`;
 }
@@ -26,7 +26,7 @@ HTTP.interceptors.response.use(undefined, function (err) {
     return new Promise((resolve, reject) => {
         if (err.message.indexOf("401") > 1) {
             if (err.config.action !== "logout") {
-                store.dispatch("logout");
+                store.dispatch("logout").then(() => location.replace("/"));
             }
             resolve();
         }
