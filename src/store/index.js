@@ -110,17 +110,28 @@ export default new Vuex.Store({
         },
         async login({ commit, dispatch, state }, user) {
             let userData;
-            try {
-                const resp = await login(user);
+
+            if (user.token) {
+                // Already got the token - just need to set things up.
                 userData = {
-                    user: resp.data.user,
-                    token: resp.data.token,
-                    email: user.email
+                    user: {
+                        id: user.userId
+                    },
+                    token: user.token
                 };
-            } catch (err) {
-                commit("auth_error", err);
-                localStorage.removeItem("token");
-                throw err;
+            } else {
+                try {
+                    const resp = await login(user);
+                    userData = {
+                        user: resp.data.user,
+                        token: resp.data.token,
+                        email: user.email
+                    };
+                } catch (err) {
+                    commit("auth_error", err);
+                    localStorage.removeItem("token");
+                    throw err;
+                }
             }
 
             localStorage.setItem("token", userData.token);
